@@ -8,11 +8,7 @@ index.php
 
 
 info.php
-* create file
-* develop information page based on referenced id. Include the following:
-	-how many times it was watched
-	-who watched it
-	-when it was watched
+* refine the look and content
 	
 
 charts.php 
