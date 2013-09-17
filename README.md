@@ -16,7 +16,7 @@ http://forums.plexapp.com/index.php/topic/72552-plexwatch-plex-notify-script-sen
 ### Install 
 -----------
 
-1. Install requirements
+* Install requirements
 
 	* Debian/Ubuntu
 
@@ -30,19 +30,22 @@ http://forums.plexapp.com/index.php/topic/72552-plexwatch-plex-notify-script-sen
 	sudo service apache2 restart
 	```
 	For more help, visit https://www.digitalocean.com/community/articles/how-to-install-linux-apache-mysql-php-lamp-stack-on-ubuntu
+	
+* Download and unzip the plexWatchWeb package.
+* Edit config.php file
 
-2. Download and unzip the plexWatchWeb package.
- 
-3. Edit config.php file
-	```sudo nano /var/www/plexWatch/config.php
-	```
-		* Modify Variables as needed
-	```php 
-		$plexWatch['pmsUrl'] = '0.0.0.0';								// Plex Media Server IP or hostname
-		$plexWatch['plexWatchDb'] = '/opt/plexWatch/plexWatch.db';		// Location of your plexWatch database 
-	```
+```
+sudo nano /var/www/plexWatch/config.php
+```
+  * Modify Variables as needed
 
-4. Upload the contents to the desired location on your web server "/var/www/plexwatch"
+```
+php 
+$plexWatch['pmsUrl'] = '0.0.0.0';				// Plex Media Server IP or hostname
+$plexWatch['plexWatchDb'] = '/opt/plexWatch/plexWatch.db';	// Location of your plexWatch database 
+```
+
+* Upload the contents to the desired location on your web server "/var/www/plexwatch"
 
 
 ###Use
