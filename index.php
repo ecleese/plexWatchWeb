@@ -346,7 +346,7 @@
 							$recentTime = $recent['time'];
 							$timeNow = time();
 							$age = time() - strtotime($recentTime);
-							include_once('timeago.php');
+							include_once('includes/timeago.php');
 							echo "<h4>Added ".TimeAgo($recentTime)."</h4>";
 							
 							echo "</div>";
