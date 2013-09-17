@@ -31,18 +31,22 @@ sudo service apache2 restart
 ```
 For more help, visit https://www.digitalocean.com/community/articles/how-to-install-linux-apache-mysql-php-lamp-stack-on-ubuntu
 
-2. Copy plexwatch directory to a directory inside of your web server directory "/var/www/"
-
+2. Download and unzip the plexWatchWeb package.
+ 
 3. Edit config.php file
 ```sudo nano /var/www/plexWatch/config.php
 ```
     * Modify Variables as needed
 ```php 
-    $plexWatch['pmsUrl'] = '0.0.0.0';								// Plex Media Server IP or hostname
+    $plexWatch['pmsUrl'] = '0.0.0.0';						// Plex Media Server IP or hostname
 	$plexWatch['plexWatchDb'] = '/opt/plexWatch/plexWatch.db';		// Location of your plexWatch database 
 ```
+
+3. Upload the contents to the desired location on your web server "/var/www/plexwatch"
+
 
 ###Use
 ------
 
-Navigate to http://<PMS IP or Hostname>/plexwatch
+Navigate to: http://ip-of-web-server/plexwatch
+
