@@ -311,7 +311,7 @@
 						
 							echo "<div class='dashboard-recent-media-instance'>";
 							echo "<li>";
-							echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml->Video['grandparentRatingKey']. "'><img src='".$recentThumbUrl."' class='poster-face'></img></a></div></div>";
+							echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml->Video['ratingKey']. "'><img src='".$recentThumbUrl."' class='poster-face'></img></a></div></div>";
 							
 							echo "<div class=dashboard-recent-media-metacontainer>";
 							$parentIndexPadded = sprintf("%01s", $recentXml->Video['parentIndex']);
