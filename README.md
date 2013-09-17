@@ -42,7 +42,7 @@ For more help, visit https://www.digitalocean.com/community/articles/how-to-inst
 	$plexWatch['plexWatchDb'] = '/opt/plexWatch/plexWatch.db';		// Location of your plexWatch database 
 ```
 
-3. Upload the contents to the desired location on your web server "/var/www/plexwatch"
+4. Upload the contents to the desired location on your web server "/var/www/plexwatch"
 
 
 ###Use
