@@ -3,8 +3,8 @@ plexWatch/Web - 0.0.1
 
 A web front-end for plexWatch.
 
-https://github.com/ljunkie/plexWatch
-http://forums.plexapp.com/index.php/topic/72552-plexwatch-plex-notify-script-send-push-alerts-on-new-sessions-and-stopped/
+* https://github.com/ljunkie/plexWatch
+* http://forums.plexapp.com/index.php/topic/72552-plexwatch-plex-notify-script-send-push-alerts-on-new-sessions-and-stopped/
 
 
 ###Requirements
