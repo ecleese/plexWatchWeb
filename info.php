@@ -80,16 +80,16 @@
 										echo "</div>";
 											echo "<div class='summary-content'>";
 												echo "<div class='summary-content-title'><h1>".$xml->Video['grandparentTitle']." (S".$xml->Video['parentIndex']."E".$xml->Video['index'].") \"".$xml->Video['title']."\"</h1></div>";
-												echo "<div class='summary-content-director'>Directed By ".$xml->Video->Director['tag']."</div>";
+												echo "<div class='summary-content-director'>Directed By <strong>".$xml->Video->Director['tag']."</strong></div>";
 												
 												$duration = $xml->Video['duration'];
 												$durationMinutes = $duration / 1000 / 60;
 												$durationRounded = floor($durationMinutes);
 												
-												echo "<div class='summary-content-duration'>".$durationRounded." min</div>";
-												echo "<div class='summary-content-contentRating'>".$xml->Video['contentRating']."</div>";
+												echo "<div class='summary-content-duration'><strong>".$durationRounded."</strong> min</div>";
+												echo "<div class='summary-content-content-rating'>Rated <strong>".$xml->Video['contentRating']."</strong></div>";
 
-												echo "<div class='summary-content-summary'><p>".$xml->Video['summary']."</p></div>";
+												echo "<div class='summary-content-summary'>".$xml->Video['summary']."</div>";
 											echo "</div>";
 										echo "</div>";
 										
@@ -129,16 +129,16 @@
 										echo "</div>";
 											echo "<div class='summary-content'>";
 												echo "<div class='summary-content-title'><h1>".$xml->Video['title']." (".$xml->Video['year'].")</h1></div>";
-												echo "<div class='summary-content-director'>Directed By ".$xml->Video->Director['tag']."</div>";
+												echo "<div class='summary-content-director'>Directed By <strong>".$xml->Video->Director['tag']."</strong></div>";
 												
 												$duration = $xml->Video['duration'];
 												$durationMinutes = $duration / 1000 / 60;
 												$durationRounded = floor($durationMinutes);
 												
-												echo "<div class='summary-content-duration'>".$durationRounded." min</div>";
-												echo "<div class='summary-content-contentRating'>".$xml->Video['contentRating']."</div>";
+												echo "<div class='summary-content-duration'><strong>".$durationRounded."</strong> min</div>";
+												echo "<div class='summary-content-content-rating'>Rated <strong>".$xml->Video['contentRating']."</strong></div>";
 
-												echo "<div class='summary-content-summary'><p>".$xml->Video['summary']."</p></div>";
+												echo "<div class='summary-content-summary'>".$xml->Video['summary']."</div>";
 											echo "</div>";
 										echo "</div>";
 										

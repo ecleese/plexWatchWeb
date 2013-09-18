@@ -4342,8 +4342,8 @@ a.thumbnail:focus {
 
 .progress {
   overflow: hidden;
-  height: 20px;
-  margin-bottom: 20px;
+  height: 4px;
+  margin-bottom: 5px;
   background-color: #111;
   -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
   -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -4352,7 +4352,7 @@ a.thumbnail:focus {
   -moz-border-radius: 0px;
   border-radius: 0px;
   float: left;
-  width: 55%;
+  width: 100%;
   margin-right: 10px;
   
 }
@@ -6479,10 +6479,6 @@ top: -190px;
 left: 140px;
 }
 
-
-
-
-
 .dashboard-wellheader {
 padding-left: 25px;
 background-image: url('../images/chevron.png');
@@ -6491,24 +6487,72 @@ background-position: 0 0;
 }
 
 .platform {
-padding-bottom: 20px;
+padding-bottom: 0px;
 margin-bottom: 0px;
-
+margin-left: 5px;
+float: left;
 }
 
 .dashboard-activity-metadata-wrapper {
 position: relative;
-left: 20px;
-float: left;
+left: 0px;
+width: 300px;
 
 }
 
-.dashboard-activity-metadata-user {
+.dashboard-activity-poster-face img {
+bottom: 0;
+overflow: hidden;
+-webkit-border-radius: 2px;
+-moz-border-radius: 2px;
+border-radius: 2px;
+-webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+-moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+box-shadow: 0 0 10px rgba(0,0,0,0.75);
+-webkit-transform: translateZ(0);
+-moz-transform: translateZ(0);
+-ms-transform: translateZ(0);
+-o-transform: translateZ(0);
+transform: translateZ(0);
+-webkit-transform-style: preserve-3d;
+-moz-transform-style: preserve-3d;
+-ms-transform-style: preserve-3d;
+-o-transform-style: preserve-3d;
+transform-style: preserve-3d;
+-webkit-perspective: 1000;
+-moz-perspective: 1000;
+-ms-perspective: 1000;
+-o-perspective: 1000;
+perspective: 1000;
+-webkit-backface-visibility: hidden;
+-moz-backface-visibility: hidden;
+-ms-backface-visibility: hidden;
+-o-backface-visibility: hidden;
+backface-visibility: hidden;
+height: 169px;
+width: 300px;
+}
 
+.dashboard-activity-poster-face img:hover {
+webkit-box-shadow: 0 0 0 2px #ff9d00;
+-moz-box-shadow: 0 0 0 2px #ff9d00;
+box-shadow: 0 0 0 2px #ff9d00;
+}
+
+.dashboard-activity-metadata-user {
+float: right;
+margin-right: 5px;
 }
 
 .dashboard-activity-metadata-title {
 color: #fff;
+text-overflow: ellipsis;
+overflow: hidden;
+white-space: nowrap;
+font-size: 14px;
+width: 98%;
+margin-left: 5px;
+margin-right: 5px;
 }
 
 .dashboard-activity-metadata-progress-wrapper {
@@ -6520,14 +6564,30 @@ color: #FF9522;
 }
 
 .dashboard-activity-metadata-progress-minutes {
-width: 100px;
+width: 100%;
 }
 
 
+.dashboard-activity-instance-overlay {
+position: relative;
+top: -59px;
+left: 0;
+right: 0;
+bottom: 5px;
+text-align: left;
+background-color: #000;
+background-color: rgba(0,0,0,0.85);
+border-top: 1px solid #000;
+height: 53px;
+}
+
 
 .instance {
-padding-bottom: 25px;
-min-height: 200px;
+padding-bottom: 0px;
+float: left;
+margin-right: 40px;
+position: relative;
+left: 20px;
 }
 
 .dashboard-recent-media-row {
@@ -6536,7 +6596,7 @@ min-height: 200px;
 
 .dashboard-recent-media {
 padding-top: 5px;
-margin: -5px 0 0 -35px;
+margin: -5px 0 0 0px;
 overflow-y: hidden;
 list-style: none;
 }
@@ -6547,9 +6607,10 @@ float: left;
 }
 
 .dashboard-recent-media li {
-
-margin-left: 35px;
+margin-right: 20px;
 padding-bottom: 25px;
+position: relative;
+left: 20px;
 }
 
 .dashboard-recent-media-metacontainer{
@@ -6607,7 +6668,9 @@ width: 80px;
 }
 
 .dashboard-status-wrapper {
-
+position: relative;
+left: -8px;
+top: -4px;
 }
 
 .dashboard-status-instance {
@@ -6731,10 +6794,10 @@ height: 300px;
 
 .summary-content {
 position: relative;
-top: 20px;
+top: 0px;
 left: 20px;
 color: #999;
-height: 230px;
+height: 250px;
 overflow: hidden;
 
 }
@@ -6750,39 +6813,49 @@ line-height: 29px;
 float: left;
 margin-right: 15px;
 line-height: 14px;
+margin-top: -5px;
+}
 
+.summary-content-director strong {
+color: #fff;
 }
 
 .summary-content-duration {
 float: left;
 margin-right: 15px;
 line-height: 14px;
+margin-top: -5px;
 }
 
-.summary-content-contentRating {
+.summary-content-duration strong {
+color: #fff;
+}
+
+.summary-content-content-rating {
 line-height: 14px;
+margin-top: -5px;
+}
+
+.summary-content-content-rating strong {
+color: #fff;
 }
 
 .summary-content-summary {
-height: 137px;
 overflow: hidden;
-margin-top: 15px;
+margin-top: 25px;
 text-overflow: ellipsis;
 overflow: hidden;
+
 }
 
-
-
 .summary-content-actors {
-margin-top: 10px;
+margin-top: 0px;
 margin-left: 35px;
 margin-right: 35px;
 font-size: 12px;
 line-height: 18px;
 color: #FF9522;
-
 overflow: hidden;
-
 }
 
 .summary-content-actors li{

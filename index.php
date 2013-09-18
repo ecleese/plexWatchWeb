@@ -60,176 +60,22 @@
 	<div class="container-fluid">
 		<div class='row-fluid'>
 		
-			<div class='span6'>
+			<div class='span12'>
 			<?php
+			
 			include_once('config.php');
 			
 			$statusSessions = simplexml_load_file("http://".$plexWatch['pmsUrl'].":32400/status/sessions");
 			
-			
-			echo "<div class='wellbg'>";
-				echo "<div class='wellheader'>";
-					echo "<div class='dashboard-wellheader'>";
-						echo "<h3>Current Activity <strong>".$statusSessions['size']."</strong> user(s)</h3>";
-					echo "</div>";
-				echo "</div>";
-							
-				// Run through each feed item
-				foreach ($statusSessions->Video as $sessions) {
-													
-				$sessionsthumbltrim1 = ltrim($sessions['grandparentThumb'], "/library/metadata/");
-				$sessionsthumbmeta = substr($sessionsthumbltrim1, 5, 19);
-				$sessionsthumb = ltrim($sessionsthumbmeta, "/thumb/");                        
-										
-				if ($sessions['type'] == "episode") {
-					
-					$sessionsArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$sessions['grandparentRatingKey']. "%2Fart%3Ft%3D" .$sessionsthumb. "&width=330&height=160";                                        
-					$sessionsThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$sessions['grandparentRatingKey']. "%2Fthumb%3Ft%3D" .$sessionsthumb. "&width=136&height=280";                                        
-					
-					echo "<div class='instance'>";
-						
-						echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$sessions['grandparentRatingKey']. "'><img src='".$sessionsThumbUrl."' class='poster-face'></img></a></div></div>";
-						echo "<div class='dashboard-activity-metadata-wrapper'>";
-							if (empty($sessions->User['title'])) {
-								if ($sessions->Player['state'] == "playing") {
-									echo "<div class='dashboard-activity-metadata-user'>";
-									echo "<a href='user.php?user=Local'>Local</a> is watching ";
-									echo "</div>";
-								}elseif ($sessions->Player['state'] == "paused") {	 
-									echo "<div class='dashboard-activity-metadata-user'>";
-									echo "<a href='user.php?user=Local'>Local</a> has paused ";
-									echo "</div>";
-								}
-															
-							}else{
-															
-								if ($sessions->Player['state'] == "playing") {
-									echo "<div class='dashboard-activity-metadata-user'>";
-									echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a> is watching ";
-									echo "</div>";
-								}elseif ($sessions->Player['state'] == "paused") {	 
-									echo "<div class='dashboard-activity-metadata-user'>";
-									echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a> has paused ";
-									echo "</div>";
-								}
-							}
-													
-							echo "<div class='dashboard-activity-metadata-title'>"; 
-							echo "<h2>".$sessions['grandparentTitle']." - \"".$sessions['title']."\"</h2>";
-							echo "</div>";
-							
-							echo "<div class='dashboard-activity-metadata-progress-minutes'>";
-																
-								$percentComplete = sprintf("%2d", ($sessions['viewOffset'] / $sessions['duration']) * 100);
-								if ($percentComplete >= 90) {	
-									$percentComplete = 100;    
-								}
-																	
-								echo "<div class='progress progress-warning'><div class='bar' style='width: ".$percentComplete."%'>".$percentComplete."%</div></div>";
-												
-								echo "<div class='progress-minutes'>";
-									$viewOffset = $sessions['viewOffset'];
-									$offsetMinutes = $viewOffset / 1000 / 60;
-									$offsetRounded = floor($offsetMinutes);
-									echo "".$offsetRounded."";
-																		
-									$duration = $sessions['duration'];
-									$durationMinutes = $duration / 1000 / 60;
-									$durationRounded = floor($durationMinutes);
-									echo " / ".$durationRounded." min";
-								echo "</div>";
-												
-																	
-							echo "</div>";
-																
-							echo "<div class='platform'>";
-								echo "<br>";
-								echo "Watching on <strong>".$sessions->Player['title']. "</strong> ";
-							echo "</div>";
-							
-						echo "</div>";
-						
-					echo "</div>";
-				
-					}elseif ($sessions['type'] == "movie") {
-						
-						$sessionsthumburl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$sessions['ratingKey']. "%2Fthumb%3Ft%3D" .$sessionsthumb. "&width=136&height=280";                                        
-						echo "<div class='instance'>";
-							echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$sessions['ratingKey']. "'><img src='".$sessionsthumburl."' class='poster-face'></img></a></div></div>";
-							echo "<div class='dashboard-activity-metadata-wrapper'>";
-							if (empty($sessions->User['title'])) {
-								
-								if ($sessions->Player['state'] == "playing") {
-									echo "<a href='user.php?user=Local'>Local</a> is <strong>watching</strong> ";
-								}elseif ($sessions->Player['state'] == "paused") {	 
-									echo "<a href='user.php?user=Local'>Local</a> has <strong>paused</strong> ";
-								}
-															
-							}else{
-															
-								if ($sessions->Player['state'] == "playing") {
-									echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a> is watching ";
-								}elseif ($sessions->Player['state'] == "paused") {	 
-									echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a> has paused ";
-								}
-							}
-													
-							echo "<div class='dashboard-activity-metadata-title'>"; 
-							echo "<h2>".$sessions['title']."</h2>";
-							echo "</div>";
-							
-							echo "<div class='dashboard-activity-metadata-progress-wrapper'>";
-																
-								$percentComplete = sprintf("%2d", ($sessions['viewOffset'] / $sessions['duration']) * 100);
-								if ($percentComplete >= 90) {	
-									$percentComplete = 100;    
-								}
-																	
-								echo "<div class='progress progress-warning'><div class='bar' style='width: ".$percentComplete."%'>".$percentComplete."%</div></div>";
-												
-								echo "<div class='.dashboard-activity-metadata-progress-minutes '>";
-									$viewOffset = $sessions['viewOffset'];
-									$offsetMinutes = $viewOffset / 1000 / 60;
-									$offsetRounded = floor($offsetMinutes);
-									echo "".$offsetRounded."";
-																		
-									$duration = $sessions['duration'];
-									$durationMinutes = $duration / 1000 / 60;
-									$durationRounded = floor($durationMinutes);
-									echo " / ".$durationRounded." min";
-								echo "</div>";
-												
-																	
-							echo "</div>";
-																
-							echo "<div class='platform'>";
-								echo "<br>";
-								echo "Watching on <strong>".$sessions->Player['title']. "</strong> ";
-							echo "</div>";
-							
-						echo "</div>";
-						
-					echo "</div>";
-			
-						
-					}else{
-					
-					}
-									   
-				
-		}	
-				echo "</div>";		
-			echo "</div>";	
-			echo "<div class='span6'>";
+			echo "<div class='span12'>";
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 						echo "<div class='dashboard-wellheader'>";
 							echo "<h3>Plex Status</h3>";
-							
 						echo "</div>";
-						echo "</div>";
+					echo "</div>";
 						
-						echo "<div class='dashboard-status-wrapper'>";
+					echo "<div class='dashboard-status-wrapper'>";
 							// Let's check Plex Media Server ports 32400, 32443
 							$pmsHttp = fsockopen($plexWatch['pmsUrl'], 32400);
 							$pmsHttps = fsockopen($plexWatch['pmsUrl'], 32443);
@@ -267,12 +113,155 @@
 								echo("$statusMyplex");
 							echo "</div>";
 						echo "</div>";
-
-						
-						
-						
 					echo "</div>";
-				echo "</div>";	
+				echo "</div>";
+			
+			
+			
+			
+			echo "<div class='wellbg'>";
+				echo "<div class='wellheader'>";
+					echo "<div class='dashboard-wellheader'>";
+						echo "<h3>Current Activity <strong>".$statusSessions['size']."</strong> user(s)</h3>";
+					echo "</div>";
+				echo "</div>";
+							
+				// Run through each feed item
+				foreach ($statusSessions->Video as $sessions) {
+													
+				$sessionsthumbltrim1 = ltrim($sessions['grandparentThumb'], "/library/metadata/");
+				$sessionsthumbmeta = substr($sessionsthumbltrim1, 5, 19);
+				$sessionsthumb = ltrim($sessionsthumbmeta, "/thumb/");                        
+										
+				if ($sessions['type'] == "episode") {
+					
+					$sessionsArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$sessions['grandparentRatingKey']. "%2Fart%3Ft%3D" .$sessionsthumb. "&width=330&height=160";                                        
+					$sessionsCoverUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$sessions['grandparentRatingKey']. "%2Fthumb%3Ft%3D" .$sessionsthumb. "&width=136&height=280";                                        
+					$sessionsThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$sessions['ratingKey']. "%2Fthumb%3Ft%3D" .$sessionsthumb. "&width=300&height=169";                                        
+					
+					echo "<div class='instance'>";
+
+						echo "<div class='poster'><div class='dashboard-activity-poster-face'><a href='info.php?id=" .$sessions['ratingKey']. "'><img src='".$sessionsThumbUrl."' ></img></a></div>";
+
+							echo "<div class='dashboard-activity-metadata-wrapper'>";
+
+								echo "<div class='dashboard-activity-instance-overlay'>";
+								
+									echo "<div class='dashboard-activity-metadata-progress-minutes'>";
+																		
+										$percentComplete = sprintf("%2d", ($sessions['viewOffset'] / $sessions['duration']) * 100);
+										if ($percentComplete >= 90) {	
+											$percentComplete = 100;    
+										}
+																			
+										echo "<div class='progress progress-warning'><div class='bar' style='width: ".$percentComplete."%'>".$percentComplete."%</div></div>";												
+																			
+									echo "</div>";
+
+									echo "<div class='dashboard-activity-metadata-title'>"; 
+										echo "".$sessions['grandparentTitle']." - \"".$sessions['title']."\"";
+									echo "</div>";
+								
+									echo "<div class='platform'>";
+										echo "".$sessions->Player['title']. "";
+									echo "</div>";
+							
+									if (empty($sessions->User['title'])) {
+										if ($sessions->Player['state'] == "playing") {
+											echo "<div class='dashboard-activity-metadata-user'>";
+											echo "<a href='user.php?user=Local'>Local</a>";
+											echo "</div>";
+										}elseif ($sessions->Player['state'] == "paused") {	 
+											echo "<div class='dashboard-activity-metadata-user'>";
+											echo "<a href='user.php?user=Local'>Local</a>";
+											echo "</div>";
+										}
+																	
+									}else{
+																	
+										if ($sessions->Player['state'] == "playing") {
+											echo "<div class='dashboard-activity-metadata-user'>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "</div>";
+										}elseif ($sessions->Player['state'] == "paused") {	 
+											echo "<div class='dashboard-activity-metadata-user'>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "</div>";
+										}
+									}
+								
+								echo "</div>";
+							echo "</div>";
+						echo "</div>";
+					echo "</div>";
+				
+					}elseif ($sessions['type'] == "movie") {
+						
+						$sessionsThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$sessions['ratingKey']. "%2Fart%3Ft%3D" .$sessionsthumb. "&width=300&height=169";                                        
+						echo "<div class='instance'>";
+
+						echo "<div class='poster'><div class='dashboard-activity-poster-face'><a href='info.php?id=" .$sessions['ratingKey']. "'><img src='".$sessionsThumbUrl."' ></img></a></div>";
+
+							echo "<div class='dashboard-activity-metadata-wrapper'>";
+
+								echo "<div class='dashboard-activity-instance-overlay'>";
+								
+									echo "<div class='dashboard-activity-metadata-progress-minutes'>";
+																		
+										$percentComplete = sprintf("%2d", ($sessions['viewOffset'] / $sessions['duration']) * 100);
+										if ($percentComplete >= 90) {	
+											$percentComplete = 100;    
+										}
+																			
+										echo "<div class='progress progress-warning'><div class='bar' style='width: ".$percentComplete."%'>".$percentComplete."%</div></div>";												
+																			
+									echo "</div>";
+
+									echo "<div class='dashboard-activity-metadata-title'>"; 
+										echo "".$sessions['title']."";
+									echo "</div>";
+								
+									echo "<div class='platform'>";
+										echo "".$sessions->Player['title']. "";
+									echo "</div>";
+							
+									if (empty($sessions->User['title'])) {
+										if ($sessions->Player['state'] == "playing") {
+											echo "<div class='dashboard-activity-metadata-user'>";
+											echo "<a href='user.php?user=Local'>Local</a>";
+											echo "</div>";
+										}elseif ($sessions->Player['state'] == "paused") {	 
+											echo "<div class='dashboard-activity-metadata-user'>";
+											echo "<a href='user.php?user=Local'>Local</a>";
+											echo "</div>";
+										}
+																	
+									}else{
+																	
+										if ($sessions->Player['state'] == "playing") {
+											echo "<div class='dashboard-activity-metadata-user'>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "</div>";
+										}elseif ($sessions->Player['state'] == "paused") {	 
+											echo "<div class='dashboard-activity-metadata-user'>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "</div>";
+										}
+									}
+								
+								echo "</div>";
+							echo "</div>";
+						echo "</div>";
+					echo "</div>";
+			
+						
+					}else{
+					
+					}
+				}	
+				echo "</div>";		
+			echo "</div>";	
+					
 		echo "</div>";
 		echo "<div class='row-fluid'>";
 		
