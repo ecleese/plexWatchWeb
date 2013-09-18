@@ -6809,9 +6809,14 @@ font-size: 29px;
 line-height: 29px;
 }
 
+.summary-content-details-wrapper {
+width: 100%;
+padding-bottom: 15px;
+}
+
 .summary-content-director {
 float: left;
-margin-right: 15px;
+margin-right: 10px;
 line-height: 14px;
 margin-top: -5px;
 }
@@ -6822,7 +6827,7 @@ color: #fff;
 
 .summary-content-duration {
 float: left;
-margin-right: 15px;
+margin-right: 10px;
 line-height: 14px;
 margin-top: -5px;
 }
@@ -6834,6 +6839,7 @@ color: #fff;
 .summary-content-content-rating {
 line-height: 14px;
 margin-top: -5px;
+float: left;
 }
 
 .summary-content-content-rating strong {
