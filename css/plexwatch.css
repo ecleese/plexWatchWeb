@@ -6812,13 +6812,13 @@ line-height: 29px;
 .summary-content-details-wrapper {
 width: 100%;
 padding-bottom: 15px;
+margin-top: -10px;
 }
 
 .summary-content-director {
 float: left;
 margin-right: 10px;
-line-height: 14px;
-margin-top: -5px;
+line-height: 24px;
 }
 
 .summary-content-director strong {
@@ -6828,8 +6828,8 @@ color: #fff;
 .summary-content-duration {
 float: left;
 margin-right: 10px;
-line-height: 14px;
-margin-top: -5px;
+line-height: 24px;
+
 }
 
 .summary-content-duration strong {
@@ -6837,9 +6837,8 @@ color: #fff;
 }
 
 .summary-content-content-rating {
-line-height: 14px;
-margin-top: -5px;
 float: left;
+line-height: 24px;
 }
 
 .summary-content-content-rating strong {
