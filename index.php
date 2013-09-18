@@ -82,25 +82,25 @@
 							$myplexUrl = fsockopen ('my.plexapp.com', 443);
 
 							if ($pmsHttp) {
-								$statusPmsHttp .= "<h5>Plex Media Server (HTTP):  <span class='label label-success'>Online</span></h5><br>";
+								$statusPmsHttp = "<h5>Plex Media Server (HTTP):  <span class='label label-success'>Online</span></h5><br>";
 							}
 
 							else {
-								$statusPmsHttp .= "<h5>Plex Media Server (HTTP):  <span class='label label-important'>Offline</span></h5><br>";
+								$statusPmsHttp = "<h5>Plex Media Server (HTTP):  <span class='label label-important'>Offline</span></h5><br>";
 							}
 
 							if ($pmsHttps) {
-								$statusPmsHttps .= "<h5>Plex Media Server (HTTPS):  <span class='label label-success'>Online</span></h5><br>";
+								$statusPmsHttps = "<h5>Plex Media Server (HTTPS):  <span class='label label-success'>Online</span></h5><br>";
 							}
 							else {
-								$statusPmsHttps .= "<h5>Plex Media Server (HTTPS):  <span class='label label-important'>Offline</span></h5><br>";
+								$statusPmsHttps = "<h5>Plex Media Server (HTTPS):  <span class='label label-important'>Offline</span></h5><br>";
 							}
 							
 							if ($myplexUrl) {
-								$statusMyplex .= "<h5>myPlex: (<a href='https://my.plexapp.com'>my.plexapp.com</a>):  <span class='label label-success'>Online</span></h5><br>";
+								$statusMyplex = "<h5>myPlex: (<a href='https://my.plexapp.com'>my.plexapp.com</a>):  <span class='label label-success'>Online</span></h5><br>";
 							}
 							else {
-								$statusMyplex .= "<h5>myPlex: (<a href='https://my.plexapp.com'>my.plexapp.com</a>):  <span class='label label-important'>Offline</span></h5><br>";
+								$statusMyplex = "<h5>myPlex: (<a href='https://my.plexapp.com'>my.plexapp.com</a>):  <span class='label label-important'>Offline</span></h5><br>";
 							}
 							
 							echo "<div class='dashboard-status-instance'>";
