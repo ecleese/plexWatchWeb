@@ -39,10 +39,10 @@
 				<div class="logo"></div>
 				<ul class="nav">
 					
-					<li><a href="/plexWatch"><i class="icon-home icon-white"></i> Home</a></li>
-					<li class="active"><a href="history.php"><i class="icon-calendar icon-white"></i> History</a></li>
-					<li><a href="users.php"><i class="icon-user icon-white"></i> Users</a></li>
-					<li><a href="charts.php"><i class="icon-list icon-white"></i> Charts</a></li>
+					<li><a href="index"><i class="icon-home icon-white"></i> Home</a></li>
+					<li class="active"><a href="history"><i class="icon-calendar icon-white"></i> History</a></li>
+					<li><a href="users"><i class="icon-user icon-white"></i> Users</a></li>
+					<li><a href="charts"><i class="icon-list icon-white"></i> Charts</a></li>
 					
 				</ul>
 			</div>
@@ -85,8 +85,8 @@
 								echo "<th align='left'><i class='icon-globe icon-white'></i> IP Address</th>";
 								echo "<th align='left'>Title</th>";
 								echo "<th align='center'><i class='icon-play icon-white'></i> Started</th>";
-								echo "<th align='center'><i class='icon-stop icon-white'></i> Stopped</th>";
 								echo "<th align='center'><i class='icon-pause icon-white'></i> Paused</th>";
+								echo "<th align='center'><i class='icon-stop icon-white'></i> Stopped</th>";
 								echo "<th align='center'><i class='icon-time icon-white'></i> Duration</th>";
 								echo "<th align='center'>% Completed</th>";
 							echo "</tr>";
@@ -117,11 +117,17 @@
 							echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
 							}else if ($type=="episode") {
 							echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
+							}else if (!array_key_exists($type)) {
+							echo "<td align='left'><a href='".$ratingKey."'>".$row['title']."</a></td>";
 							}else{
 
 							}
-
+							
 							echo "<td align='center'>".date("g:i a",$row['time'])."</td>";
+							
+							$paused_time = round(abs($row['paused_counter']) / 60,1);
+							echo "<td align='center'>".$paused_time." min</td>";
+							
 							$stopped_time = date("g:i a",$row['stopped']);
 							
 							if ($stopped_time == '7:00 pm') {								//need to find out why it's always this value and write an alternate method.
@@ -132,11 +138,11 @@
 
 							$to_time = strtotime(date("m/d/Y g:i a",$row['stopped']));
 							$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
-							$paused_time = round(abs($row['paused_counter']) / 60,1);
+							
 							$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
 							$viewed_time_length = strlen($viewed_time);
 							
-							echo "<td align='center'>".$paused_time." min</td>";
+							
 							
 							if ($viewed_time_length == 8) {
 								echo "<td align='center'>n/a</td>";

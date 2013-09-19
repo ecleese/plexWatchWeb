@@ -200,14 +200,16 @@
 					$db = new SQLite3($plexWatch['plexWatchDb']);
 
 					
-					$title = $db->querySingle("SELECT title FROM processed WHERE session_id LIKE '%metadata/".$id."%' ");
+					$title = $db->querySingle("SELECT title FROM processed WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\'  ");
 					echo "<div class='dashboard-wellheader'>";
 							echo"<h3>Watching History for <strong>".$title."</strong></h3>";
 						echo"</div>";
 					echo"</div>";
 					
 					$numRows = $db->querySingle("SELECT COUNT(*) as count FROM processed ");
-					$results = $db->query("SELECT * FROM processed WHERE session_id LIKE '%metadata/".$id."%' ORDER BY time DESC");
+					
+					$results = $db->query("SELECT * FROM processed WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
+					
 					
 					if ($numRows < 1) {
 

@@ -6675,7 +6675,8 @@ top: -4px;
 
 .dashboard-status-instance {
 float: left;
-width: 33%;
+width: 30%;
+margin-left: 30px;
 
 }
 .dashboard-status-instance h5 {
