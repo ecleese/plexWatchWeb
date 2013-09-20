@@ -6391,10 +6391,10 @@ box-shadow: 0 0 0 2px #ff9d00;
 .users-poster-face img{
 bottom: 0;
 overflow: hidden;
--webkit-border-radius: 2px;
--moz-border-radius: 2px;
-border-radius: 2px;
--webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+-webkit-border-radius: 1000px;
+-moz-border-radius: 1000px;
+border-radius: 1000px;
+-webkit-box-shadow: 0 0 0px rgba(0,0,0,0.75);
 -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
 box-shadow: 0 0 10px rgba(0,0,0,0.75);
 -webkit-transform: translateZ(0);
@@ -6755,7 +6755,7 @@ width: 960px;
 
 .summary-content-poster {
 position: relative;
-top: -56px;
+top: -60px;
 float: left;
 margin-left: 20px;
 }
@@ -6763,9 +6763,9 @@ margin-left: 20px;
 .summary-content-poster img {
 bottom: 0;
 overflow: hidden;
--webkit-border-radius: 2px;
--moz-border-radius: 2px;
-border-radius: 2px;
+-webkit-border-radius: 0px;
+-moz-border-radius: 0px;
+border-radius: 0px;
 -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
 -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
 box-shadow: 0 0 10px rgba(0,0,0,0.75);
@@ -6791,6 +6791,7 @@ perspective: 1000;
 backface-visibility: hidden;
 width: auto;
 height: 300px;
+border: 1px solid #999;
 }
 
 .summary-content {
@@ -6807,7 +6808,7 @@ overflow: hidden;
 margin-bottom: 15px;
 color: #FF9522;
 font-size: 29px;
-line-height: 29px;
+line-height: 32px;
 }
 
 .summary-content-details-wrapper {
@@ -6840,6 +6841,7 @@ color: #fff;
 .summary-content-content-rating {
 float: left;
 line-height: 24px;
+margin-right: 10px;
 }
 
 .summary-content-content-rating strong {
