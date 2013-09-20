@@ -1,10 +1,13 @@
 <?php
 
-include_once('../config.php');
+require '../config.php';
 			
-$statusSessions2 = simplexml_load_file("http://".$plexWatch['pmsUrl'].":32400/status/sessions");
-					
-echo "<h3>Current Activity <strong>".$statusSessions2['size']."</strong> user(s)</h3>";
-					
-					
+$statusSessions = simplexml_load_file("http://".$plexWatch['pmsUrl'].":32400/status/sessions");
+
+if ($statusSessions['size'] == '0') {				
+	echo "<h3>Current Activity</h3>";
+}else{
+	echo "<h3>Current Activity <strong>".$statusSessions['size']."</strong> user(s)</h3>";
+}
+				
 ?>

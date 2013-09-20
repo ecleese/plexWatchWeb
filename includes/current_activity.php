@@ -1,9 +1,12 @@
 <?php
 
-include_once('../config.php');
+require '../config.php';
+
 			
 $statusSessions = simplexml_load_file("http://".$plexWatch['pmsUrl'].":32400/status/sessions");		
-				
+if ($statusSessions['size'] == '0') {
+	echo "<h5><strong>Nothing is currently being watched.</strong></h5><br>";
+}else{
 // Run through each feed item
 				foreach ($statusSessions->Video as $sessions) {
 													
@@ -137,5 +140,5 @@ $statusSessions = simplexml_load_file("http://".$plexWatch['pmsUrl'].":32400/sta
 					
 					}
 				}	
-			
+}			
 ?>
