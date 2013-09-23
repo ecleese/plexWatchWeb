@@ -72,14 +72,15 @@
 .dataTables_info {
 	width: 60%;
 	float: left;
-	margin-top: 25px;
+	margin-top: 12px;
 	margin-left: 15px;
+	margin-bottom: 12px;
 }
 
 .dataTables_paginate {
 	float: right;
 	text-align: right;
-	margin-top: 25px;
+	margin-top: 7px;
 	margin-right: 15px;
 }
 

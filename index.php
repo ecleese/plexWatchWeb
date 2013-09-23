@@ -231,7 +231,7 @@
 		function currentActivityHeader() {
 			$('#currentActivityHeader').load('includes/current_activity_header.php');
 		}
-		setInterval('currentActivityHeader()', 5000);
+		setInterval('currentActivityHeader()', 15000);
 	
 	</script>
 	<script>
@@ -239,7 +239,7 @@
 		function currentActivity() {
 			$('#currentActivity').load('includes/current_activity.php');
 		}
-		setInterval('currentActivity()', 5000);
+		setInterval('currentActivity()', 15000);
 	
 	</script>
 	

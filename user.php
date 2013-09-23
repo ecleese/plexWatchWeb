@@ -117,6 +117,8 @@
 							echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
 							}else if ($type=="episode") {
 							echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
+							}else if (!array_key_exists('',$type)) {
+							echo "<td align='left'><a href='".$ratingKey."'>".$row['title']."</a></td>";
 							}else{
 
 							}

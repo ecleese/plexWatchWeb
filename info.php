@@ -56,14 +56,12 @@
 					
 					$infoUrl = "http://".$plexWatch['pmsUrl'].":32400/library/metadata/".$id."";
 					$xml = simplexml_load_file($infoUrl) or die ("Feed Not Found"); 
-					
-					
-					
-					$xmlThumbLtrim = ltrim($xml->Video['grandparentThumb'], "/library/metadata/");
-					$xmlThumbMeta = substr($xmlThumbLtrim, 5, 19);
-					$xmlThumb = ltrim($xmlThumbMeta, "/thumb/");                        
-								
+			
 					if ($xml->Video['type'] == "episode") {
+					
+						$xmlThumbLtrim = ltrim($xml->Video['grandparentThumb'], "/library/metadata/");
+						$xmlThumbMeta = substr($xmlThumbLtrim, 5, 19);
+						$xmlThumb = ltrim($xmlThumbMeta, "/thumb/"); 
 						
 						$xmlArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$xml->Video['grandparentRatingKey']. "%2Fart%3Ft%3D" .$xmlThumb. "&width=1920&height=1080";                                       
 						$xmlThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$xml->Video['grandparentRatingKey']. "%2Fthumb%3Ft%3D" .$xmlThumb. "&width=256&height=352";                                        
@@ -79,15 +77,15 @@
 											echo "<img src='".$xmlThumbUrl."'></img>";
 										echo "</div>";
 											echo "<div class='summary-content'>";
-												echo "<div class='summary-content-title'><h1>".$xml->Video['grandparentTitle']." (S".$xml->Video['parentIndex']."E".$xml->Video['index'].") \"".$xml->Video['title']."\"</h1></div>";
+												echo "<div class='summary-content-title'><h1>".$xml->Video['grandparentTitle']." (Season ".$xml->Video['parentIndex'].", Episode ".$xml->Video['index'].") <br> \"".$xml->Video['title']."\"</h1></div>";
 												echo "<div class='summary-content-details-wrapper'>";
-													echo "<div class='summary-content-director'>Directed By <strong>".$xml->Video->Director['tag']."</strong></div>";
+													echo "<div class='summary-content-director'>Directed by <strong>".$xml->Video->Director['tag']."</strong></div>";
 													
 													$duration = $xml->Video['duration'];
 													$durationMinutes = $duration / 1000 / 60;
 													$durationRounded = floor($durationMinutes);
 													
-													echo "<div class='summary-content-duration'><strong>".$durationRounded."</strong> min</div>";
+													echo "<div class='summary-content-duration'>Runtime <strong>".$durationRounded." mins</strong></div>";
 													echo "<div class='summary-content-content-rating'>Rated <strong>".$xml->Video['contentRating']."</strong></div>";
 												echo "</div>";
 												echo "<div class='summary-content-summary'>".$xml->Video['summary']."</div>";
@@ -101,7 +99,7 @@
 												$writers[] = "" .$xmlWriters['tag']. "";
 												if (++$writerCount == 4) break;
 											}
-											echo "<div class='summary-content-writers'><h6><strong>WRITTEN BY</strong></h6><ul><li>";
+											echo "<div class='summary-content-writers'><h6><strong>Written by</strong></h6><ul><li>";
 												echo implode('<li>', $writers);
 											echo "</li></div></ul>";
 										echo "</div>";
@@ -110,10 +108,111 @@
 									echo "</div>";
 								echo "</div>";
 							echo "</div>";
-						echo "</div>";			
+						echo "</div>";
+								
+					}else if ($xml->Directory['type'] == "show") {
+					
+						$xmlThumbLtrim = ltrim($xml->Directory['thumb'], "/library/metadata/");
+						$xmlThumbMeta = substr($xmlThumbLtrim, 5, 19);
+						$xmlThumb = ltrim($xmlThumbMeta, "/thumb/");
+						
+						$xmlArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$xml->Directory['ratingKey']. "%2Fart%3Ft%3D" .$xmlThumb. "&width=1920&height=1080";                                       
+						$xmlThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$xml->Directory['ratingKey']. "%2Fthumb%3Ft%3D" .$xmlThumb. "&width=256&height=352";                                        
+						
+							echo "<div class='art-face' style='background-image:url(".$xmlArtUrl.")'>";
+							
+							echo "<div class='summary-wrapper'>";
+								echo "<div class='summary-overlay'>";
+									echo "<div class='row-fluid'>";
+									
+									echo "<div class='span7'>";
+										echo "<div class='summary-content-poster'>";
+											echo "<img src='".$xmlThumbUrl."'></img>";
+										echo "</div>";
+											echo "<div class='summary-content'>";
+												echo "<div class='summary-content-title'><h1>".$xml->Directory['title']."</h1></div>";
+												echo "<div class='summary-content-details-wrapper'>";
+													echo "<div class='summary-content-director'>Studio <strong>".$xml->Directory['studio']."</strong></div>";
+													
+													$duration = $xml->Directory['duration'];
+													$durationMinutes = $duration / 1000 / 60;
+													$durationRounded = floor($durationMinutes);
+													
+													echo "<div class='summary-content-duration'>Runtime <strong>".$durationRounded." mins</strong></div>";
+													echo "<div class='summary-content-content-rating'>Rated <strong>".$xml->Directory['contentRating']."</strong></div>";
+												echo "</div>";
+												echo "<div class='summary-content-summary'>".$xml->Directory['summary']."</div>";
+											echo "</div>";
+										echo "</div>";
+										
+										echo "<div class='span5'>";
+											
+											
+										echo "</div>";
+										
+									echo "</div>";
+									echo "</div>";
+								echo "</div>";
+							echo "</div>";
+						echo "</div>";
+						
+					}else if ($xml->Directory['type'] == "season") {
+					
+						$xmlThumbLtrim = ltrim($xml->Directory['thumb'], "/library/metadata/");
+						$xmlThumbMeta = substr($xmlThumbLtrim, 5, 19);
+						$xmlThumb = ltrim($xmlThumbMeta, "/thumb/");
+						
+						$parentInfoUrl = "http://".$plexWatch['pmsUrl'].":32400/library/metadata/".$xml->Directory['parentRatingKey']."";
+						$parentXml = simplexml_load_file($parentInfoUrl) or die ("Feed Not Found");
+						
+						$xmlArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$parentXml->Directory['ratingKey']. "%2Fart%3Ft%3D" .$xmlThumb. "&width=1920&height=1080";                                       
+						$xmlThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$xml->Directory['ratingKey']. "%2Fthumb%3Ft%3D" .$xmlThumb. "&width=256&height=352";                                        
+						
+						
+						
+							echo "<div class='art-face' style='background-image:url(".$xmlArtUrl.")'>";
+							
+							echo "<div class='summary-wrapper'>";
+								echo "<div class='summary-overlay'>";
+									echo "<div class='row-fluid'>";
+									
+									echo "<div class='span7'>";
+										echo "<div class='summary-content-poster'>";
+											echo "<img src='".$xmlThumbUrl."'></img>";
+										echo "</div>";
+											echo "<div class='summary-content'>";
+												echo "<div class='summary-content-title'><h1>".$xml->Directory['parentTitle']." (".$xml->Directory['title'].")</h1></div>";
+												echo "<div class='summary-content-details-wrapper'>";
+													echo "<div class='summary-content-director'>Studio <strong>".$parentXml['studio']."</strong></div>";
+													
+													$duration = $parentXml->Directory['duration'];
+													$durationMinutes = $duration / 1000 / 60;
+													$durationRounded = floor($durationMinutes);
+													
+													echo "<div class='summary-content-duration'>Runtime <strong>".$durationRounded." mins</strong></div>";
+													echo "<div class='summary-content-content-rating'>Rated <strong>".$parentXml->Directory['contentRating']."</strong></div>";
+												echo "</div>";
+												echo "<div class='summary-content-summary'>".$parentXml->Directory['summary']."</div>";
+											echo "</div>";
+										echo "</div>";
+										
+										echo "<div class='span5'>";
+											
+											
+										echo "</div>";
+										
+									echo "</div>";
+									echo "</div>";
+								echo "</div>";
+							echo "</div>";
+						echo "</div>";
 							
 					}else if ($xml->Video['type'] == "movie") {				
-					
+						
+						$xmlThumbLtrim = ltrim($xml->Directory['thumb'], "/library/metadata/");
+						$xmlThumbMeta = substr($xmlThumbLtrim, 5, 19);
+						$xmlThumb = ltrim($xmlThumbMeta, "/thumb/");
+						
 						$xmlArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$xml->Video['ratingKey']. "%2Fart%3Ft%3D" .$xmlThumb. "&width=1920&height=1080";                                        
 						$xmlThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$xml->Video['ratingKey']. "%2Fthumb%3Ft%3D" .$xmlThumb. "&width=256&height=352";                                        
 						
@@ -130,15 +229,18 @@
 										echo "</div>";
 											echo "<div class='summary-content'>";
 												echo "<div class='summary-content-title'><h1>".$xml->Video['title']." (".$xml->Video['year'].")</h1></div>";
+												echo "<div class='rateit' data-rateit-value='".$xml->Video['rating']."' data-rateit-ispreset='true' data-rateit-readonly='true'></div>";
 												echo "<div class='summary-content-details-wrapper'>";
-													echo "<div class='summary-content-director'>Directed By <strong>".$xml->Video->Director['tag']."</strong></div>";
+													echo "<div class='summary-content-director'>Directed by <strong>".$xml->Video->Director['tag']."</strong></div>";
+													
+													echo "<div class='summary-content-content-rating'>Rated <strong>".$xml->Video['contentRating']."</strong></div>";
 													
 													$duration = $xml->Video['duration'];
 													$durationMinutes = $duration / 1000 / 60;
 													$durationRounded = floor($durationMinutes);
 													
-													echo "<div class='summary-content-duration'><strong>".$durationRounded."</strong> min</div>";
-													echo "<div class='summary-content-content-rating'>Rated <strong>".$xml->Video['contentRating']."</strong></div>";
+													echo "<div class='summary-content-duration'>Runtime <strong>".$durationRounded." mins</strong></div>";
+													
 												echo "</div>";
 												echo "<div class='summary-content-summary'>".$xml->Video['summary']."</div>";
 											echo "</div>";
@@ -150,7 +252,7 @@
 												$actors[] = "" .$Roles['tag']. "";
 												if (++$roleCount == 4) break;
 											}
-											echo "<div class='summary-content-actors'><h6><strong>STARRING</strong></h6><ul><li>";
+											echo "<div class='summary-content-actors'><h6><strong>Starring</strong></h6><ul><li>";
 												echo implode('<li>', $actors);
 											echo "</li></div></ul>";
 											$writerCount = 0;
@@ -158,7 +260,7 @@
 												$writers[] = "" .$xmlWriters['tag']. "";
 												if (++$writerCount == 4) break;
 											}
-											echo "<div class='summary-content-writers'><h6><strong>WRITTEN BY</strong></h6><ul><li>";
+											echo "<div class='summary-content-writers'><h6><strong>Written by</strong></h6><ul><li>";
 												echo implode('<li>', $writers);
 											echo "</li></div></ul>";
 										echo "</div>";
@@ -173,15 +275,6 @@
 					}
 
 					?>
-					
-					
-					
-
-
-
-
-
-
 
 	<div class="container-fluid">
 		<div class='row-fluid'>	
@@ -316,6 +409,8 @@
 	<script src="js/bootstrap.js"></script>
 	<script src="js/jquery.dataTables.js"></script>
 	<script src="js/jquery.dataTables.plugin.bootstrap_pagination.js"></script>
+	<script src="js/jquery.rateit.js"></script>
+	
 	
 	<script>
 		$(document).ready(function() {

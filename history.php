@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+z<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -114,11 +114,11 @@
 							$viewOffset = $xmlfield['viewOffset'];
 
 							if ($type=="movie") {
-							echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
+								echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
 							}else if ($type=="episode") {
-							echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
-							}else if (!array_key_exists($type)) {
-							echo "<td align='left'><a href='".$ratingKey."'>".$row['title']."</a></td>";
+								echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
+							}else if (!array_key_exists('',$type)) {
+								echo "<td align='left'><a href='".$ratingKey."'>".$row['title']."</a></td>";
 							}else{
 
 							}

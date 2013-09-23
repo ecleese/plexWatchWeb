@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>plexWatch</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- css -->
+    <link href="css/plexwatch.css" rel="stylesheet">
+	
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+    </style>
+    
+
+    <!-- touch icons -->
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/icon_iphone.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/icon_ipad.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/icon_iphone@2x.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="images/icon_ipad@2x.png">
+  </head>
+
+  <body>
+
+  
+  
+	<div class="container">
+		<div class="navbar navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="logo"></div>
+				<ul class="nav">
+					
+					<li><a href="/plexWatch"><i class="icon-home icon-white"></i> Home</a></li>
+					<li><a href="history.php"><i class="icon-calendar icon-white"></i> History</a></li>
+					<li><a href="users.php"><i class="icon-user icon-white"></i> Users</a></li>
+					<li class="active"><a href="charts.php"><i class="icon-list icon-white"></i> Charts</a></li>
+					
+				</ul>
+				
+			</div>
+		</div>
+    </div>
+	
+	<div class="container-fluid">
+		<div class='row-fluid'>
+			<div class='span12'>
+				
+			</div>
+		</div>
+	</div>
+	
+	<div class="container-fluid">
+		<div class='row-fluid'>
+			<div class='span12'>
+			<?php
+				include_once('config.php');	
+				$db = new SQLite3($plexWatch['plexWatchDb']);
+				date_default_timezone_set('America/New_York');
+
+				echo "<div class='span3'>";
+					echo "<div class='wellbg'>";
+						echo "<div class='wellheader'>";
+							echo "<div class='dashboard-wellheader'>";
+								echo "<h3>Top 10 Watched Content 	(All Time)</h3>";
+							echo "</div>";
+						echo "</div>";
+						echo "<div class='charts-wrapper'>";
+							echo "<ul>";
+							
+							$queryTop10 = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(*) AS play_count FROM processed GROUP BY title HAVING play_count > 0 ORDER BY play_count DESC,time DESC LIMIT 10");
+				
+							// Run through each feed item
+							$num_rows = 0;
+							while ($top10 = $queryTop10->fetchArray()) {
+								$num_rows++;
+								
+								$xml = simplexml_load_string($top10['xml']) ;  
+								
+								$xmlThumbLtrim = ltrim($xml['thumb'], "/library/metadata/");
+								$xmlThumbMeta = substr($xmlThumbLtrim, 5, 19);
+								$xmlThumb = ltrim($xmlThumbMeta, "/thumb/"); 
+								$xmlMovieThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$xml['ratingKey']. "%2Fthumb%3Ft%3D" .$xmlThumb. "&width=100&height=149";                                        
+								$xmlEpisodeThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$xml['grandparentRatingKey']. "%2Fthumb%3Ft%3D" .$xmlThumb. "&width=100&height=149";                                        
+						
+								if ($xml['type'] == "movie") {
+									echo "<div class='charts-instance-wrapper'>";
+											
+										echo "<div class='charts-instance-position-circle'><h1>".$num_rows."</h1></div>";	
+										echo "<div class='charts-instance-poster'>";
+											echo "<img src='".$xmlMovieThumbUrl."'></img>";
+										echo "</div>";
+										echo "<div class='charts-instance-position-title'>";
+											echo "<li><h3><a href='info.php?id=".$xml['ratingKey']."'>".$top10['title']." (".$xml['year'].")</a></h3><h5> (".$top10['play_count']." views)<h5></li>";
+										echo "</div>";
+									echo "</div>";
+								} else if ($xml['type'] == "episode") {
+										echo "<div class='charts-instance-wrapper'>";
+											
+										echo "<div class='charts-instance-position-circle'><h1>".$num_rows."</h1></div>";	
+										echo "<div class='charts-instance-poster'>";
+											echo "<img src='".$xmlEpisodeThumbUrl."'></img>";
+										echo "</div>";
+										echo "<div class='charts-instance-position-title'>";
+											echo "<li><h3><a href='info.php?id=".$xml['ratingKey']."'>".$top10['orig_title']." - Season ".$top10['season'].", Episode".$top10['episode']."</a></h3><h5> (".$top10['play_count']." views)</h5></li>";
+										echo "</div>";
+									echo "</div>";
+								}else{
+								}
+							}
+							echo "</ul>";
+						echo "</div>";
+					echo "</div>";
+				echo "</div>";
+				
+				echo "<div class='span3'>";
+					echo "<div class='wellbg'>";
+						echo "<div class='wellheader'>";
+							echo "<div class='dashboard-wellheader'>";
+								echo "<h3>Top 10 Watched Films (All Time)</h3>";
+							echo "</div>";
+						echo "</div>";
+						echo "<div class='charts-wrapper'>";
+							echo "<ul>";
+							
+							$queryTop10Movies = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(*) AS play_count FROM processed GROUP BY title HAVING play_count > 0 ORDER BY play_count DESC,time DESC");
+				
+							// Run through each feed item
+							$top10Movies_Num_rows = 0;
+							while ($top10Movies = $queryTop10Movies->fetchArray()) {
+								
+								
+								$top10MoviesXml = simplexml_load_string($top10Movies['xml']) ;  
+								
+								$top10MoviesXmlThumbLtrim = ltrim($top10MoviesXml['thumb'], "/library/metadata/");
+								$top10MoviesXmlThumbMeta = substr($top10MoviesXmlThumbLtrim, 5, 19);
+								$top10MoviesXmlThumb = ltrim($top10MoviesXmlThumbMeta, "/thumb/"); 
+								$top10MoviesXmlMovieThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$top10MoviesXml['ratingKey']. "%2Fthumb%3Ft%3D" .$top10MoviesXmlThumb. "&width=100&height=149";                                        
+								
+								if ($top10MoviesXml['type'] == "movie") {
+									$top10Movies_Num_rows++;
+									if ($top10Movies_Num_rows == 11) {
+										break;
+									}else{
+										echo "<div class='charts-instance-wrapper'>";
+												
+											echo "<div class='charts-instance-position-circle'><h1>".$top10Movies_Num_rows."</h1></div>";	
+											echo "<div class='charts-instance-poster'>";
+												echo "<img src='".$top10MoviesXmlMovieThumbUrl."'></img>";
+											echo "</div>";
+											echo "<div class='charts-instance-position-title'>";
+												echo "<li><h3><a href='info.php?id=".$top10MoviesXml['ratingKey']."'>".$top10Movies['title']." (".$top10MoviesXml['year'].")</a></h3><h5> (".$top10Movies['play_count']." views)<h5></li>";
+											echo "</div>";
+										echo "</div>";
+										
+									}
+								}else{
+								}
+							}
+							echo "</ul>";
+						echo "</div>";
+					echo "</div>";
+				echo "</div>";
+				
+				echo "<div class='span3'>";
+					echo "<div class='wellbg'>";
+						echo "<div class='wellheader'>";
+							echo "<div class='dashboard-wellheader'>";
+								echo "<h3>Top 10 Watched TV Shows (All Time)</h3>";
+							echo "</div>";
+						echo "</div>";
+						echo "<div class='charts-wrapper'>";
+							echo "<ul>";
+							
+							$queryTop10Shows = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(orig_title) AS play_count FROM processed GROUP BY orig_title HAVING play_count > 0 ORDER BY play_count DESC,time DESC");
+				
+							// Run through each feed item
+							$top10Shows_Num_rows = 0;
+							while ($top10Shows = $queryTop10Shows->fetchArray()) {
+								
+								
+								$top10ShowsXml = simplexml_load_string($top10Shows['xml']) ;  
+								
+								$top10ShowsXmlThumbLtrim = ltrim($top10ShowsXml['thumb'], "/library/metadata/");
+								$top10ShowsXmlThumbMeta = substr($top10ShowsXmlThumbLtrim, 5, 19);
+								$top10ShowsXmlThumb = ltrim($top10ShowsXmlThumbMeta, "/thumb/"); 
+								$top10ShowsXmlShowThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$top10ShowsXml['grandparentRatingKey']. "%2Fthumb%3Ft%3D" .$top10ShowsXmlThumb. "&width=100&height=149";                                        
+								
+								if ($top10ShowsXml['type'] == "episode") {
+									$top10Shows_Num_rows++;
+									if ($top10Shows_Num_rows == 11) {
+										break;
+									}else{
+										echo "<div class='charts-instance-wrapper'>";
+												
+											echo "<div class='charts-instance-position-circle'><h1>".$top10Shows_Num_rows."</h1></div>";	
+											echo "<div class='charts-instance-poster'>";
+												echo "<img src='".$top10ShowsXmlShowThumbUrl."'></img>";
+											echo "</div>";
+											echo "<div class='charts-instance-position-title'>";
+												echo "<li><h3><a href='info.php?id=".$top10ShowsXml['ratingKey']."'>".$top10Shows['orig_title']."</a></h3><h5> (".$top10Shows['play_count']." views)</h5></li>";
+											echo "</div>";
+										echo "</div>";
+										
+									}
+								}else{
+								}
+							}
+							echo "</ul>";
+						echo "</div>";
+					echo "</div>";
+				echo "</div>";
+				
+				echo "<div class='span3'>";
+					echo "<div class='wellbg'>";
+						echo "<div class='wellheader'>";
+							echo "<div class='dashboard-wellheader'>";
+								echo "<h3>Top 10 Watched TV Episodes (All Time)</h3>";
+							echo "</div>";
+						echo "</div>";
+						echo "<div class='charts-wrapper'>";
+							echo "<ul>";
+							
+							$queryTop10Episodes = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(*) AS play_count FROM processed GROUP BY title HAVING play_count > 0 ORDER BY play_count DESC,time DESC");
+				
+							// Run through each feed item
+							$top10Episodes_Num_rows = 0;
+							while ($top10Episodes = $queryTop10Episodes->fetchArray()) {
+								
+								
+								$top10EpisodesXml = simplexml_load_string($top10Episodes['xml']) ;  
+								
+								$top10EpisodesXmlThumbLtrim = ltrim($top10EpisodesXml['thumb'], "/library/metadata/");
+								$top10EpisodesXmlThumbMeta = substr($top10EpisodesXmlThumbLtrim, 5, 19);
+								$top10EpisodesXmlThumb = ltrim($top10EpisodesXmlThumbMeta, "/thumb/"); 
+								$top10EpisodesXmlEpisodeThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$top10EpisodesXml['grandparentRatingKey']. "%2Fthumb%3Ft%3D" .$top10EpisodesXmlThumb. "&width=100&height=149";                                        
+								
+								if ($top10EpisodesXml['type'] == "episode") {
+									$top10Episodes_Num_rows++;
+									if ($top10Episodes_Num_rows == 11) {
+										break;
+									}else{
+										echo "<div class='charts-instance-wrapper'>";
+												
+											echo "<div class='charts-instance-position-circle'><h1>".$top10Episodes_Num_rows."</h1></div>";	
+											echo "<div class='charts-instance-poster'>";
+												echo "<img src='".$top10EpisodesXmlEpisodeThumbUrl."'></img>";
+											echo "</div>";
+											echo "<div class='charts-instance-position-title'>";
+												echo "<li><h3><a href='info.php?id=".$top10EpisodesXml['ratingKey']."'>".$top10Episodes['orig_title']." - Season ".$top10Episodes['season'].", Episode".$top10Episodes['episode']."</a></h3><h5> (".$top10Episodes['play_count']." views)</h5></li>";
+											echo "</div>";
+										echo "</div>";
+										
+									}
+								}else{
+								}
+							}
+							echo "</ul>";
+						echo "</div>";
+					echo "</div>";
+				echo "</div>";
+				
+				
+			?>
+			</div>
+		</div><!--/.fluid-row-->			
+			
+			
+
+		<footer>
+		
+		</footer>
+		
+    </div><!--/.fluid-container-->
+    
+    <!-- javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery-2.0.3.js"></script>
+	<script src="js/bootstrap.js"></script>
+	
+
+  </body>
+</html>
