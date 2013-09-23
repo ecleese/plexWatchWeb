@@ -206,7 +206,7 @@
 												echo "<img src='".$top10ShowsXmlShowThumbUrl."'></img>";
 											echo "</div>";
 											echo "<div class='charts-instance-position-title'>";
-												echo "<li><h3><a href='info.php?id=".$top10ShowsXml['ratingKey']."'>".$top10Shows['orig_title']."</a></h3><h5> (".$top10Shows['play_count']." views)</h5></li>";
+												echo "<li><h3><a href='info.php?id=".$top10ShowsXml['grandparentRatingKey']."'>".$top10Shows['orig_title']."</a></h3><h5> (".$top10Shows['play_count']." views)</h5></li>";
 											echo "</div>";
 										echo "</div>";
 										
