@@ -9,6 +9,7 @@ A web front-end for plexWatch.
 
 ###Requirements
 ---------------
+* a web server that supports php (apache, nginx, etc)
 * php5
 * php5-sqlite
 
