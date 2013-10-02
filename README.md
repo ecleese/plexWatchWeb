@@ -20,15 +20,17 @@ A web front-end for plexWatch.
 1. Install requirements
 2. Download and unzip the plexWatchWeb package.
 3. Edit config.php file
-
-  	* Modify Variables as needed
+ * Modify Variables as needed
 
 	```
 	$plexWatch['pmsUrl'] = '0.0.0.0';							// Plex Media Server IP or hostname
 	$plexWatch['plexWatchDb'] = '/opt/plexWatch/plexWatch.db';	// Location of your plexWatch database 
 	```
-
 4. Upload the contents to the desired location on your web server "/var/www/plexWatch"
+
+  	
+
+
 
 
 ###Use
