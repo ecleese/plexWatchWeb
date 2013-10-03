@@ -1,6 +1,6 @@
 <?php
 
-require '../config.php';
+require_once(dirname(__FILE__) . '/../config.php');
 
 			
 $statusSessions = simplexml_load_file("http://".$plexWatch['pmsUrl'].":32400/status/sessions");		
@@ -106,11 +106,11 @@ if ($statusSessions['size'] == '0') {
 												echo "<br>";
 
 												if (!array_key_exists('TranscodeSession',$sessions)) {
-													echo "Video: <strong>".$sessions->Media['videoCodec']." (".$sessions->Media['width']."x".$sessions->Media['height']."P)</strong>";
+													echo "Video: <strong>".$sessions->Media['videoCodec']." (".$sessions->Media['width']."x".$sessions->Media['height']."p)</strong>";
 												}else if ($sessions->TranscodeSession['videoDecision'] == "transcode") {
-													echo "Video: <strong>".$sessions->TranscodeSession['videoCodec']." (".$sessions->TranscodeSession['width']."x".$sessions->TranscodeSession['height']."P)</strong>";
+													echo "Video: <strong>".$sessions->TranscodeSession['videoCodec']." (".$sessions->TranscodeSession['width']."x".$sessions->TranscodeSession['height']."p)</strong>";
 												}else if ($sessions->TranscodeSession['videoDecision'] == "copy") {
-													echo "Video: <strong>".$sessions->TranscodeSession['videoCodec']." (".$sessions->TranscodeSession['width']."x".$sessions->TranscodeSession['height']."P)</strong>";
+													echo "Video: <strong>".$sessions->TranscodeSession['videoCodec']." (".$sessions->TranscodeSession['width']."x".$sessions->TranscodeSession['height']."p)</strong>";
 												}else{
 												}
 
@@ -220,11 +220,11 @@ if ($statusSessions['size'] == '0') {
 												echo "<br>";
 
 												if (!array_key_exists('TranscodeSession',$sessions)) {
-													echo "Video: <strong>".$sessions->Media['videoCodec']." (".$sessions->Media['width']."x".$sessions->Media['height']."P)</strong>";
+													echo "Video: <strong>".$sessions->Media['videoCodec']." (".$sessions->Media['width']."x".$sessions->Media['height']."p)</strong>";
 												}else if ($sessions->TranscodeSession['videoDecision'] == "transcode") {
-													echo "Video: <strong>".$sessions->TranscodeSession['videoCodec']." (".$sessions->TranscodeSession['width']."x".$sessions->TranscodeSession['height']."P)</strong>";
+													echo "Video: <strong>".$sessions->TranscodeSession['videoCodec']." (".$sessions->TranscodeSession['width']."x".$sessions->TranscodeSession['height']."p)</strong>";
 												}else if ($sessions->TranscodeSession['videoDecision'] == "copy") {
-													echo "Video: <strong>".$sessions->TranscodeSession['videoCodec']." (".$sessions->TranscodeSession['width']."x".$sessions->TranscodeSession['height']."P)</strong>";
+													echo "Video: <strong>".$sessions->TranscodeSession['videoCodec']." (".$sessions->TranscodeSession['width']."x".$sessions->TranscodeSession['height']."p)</strong>";
 												}else{
 												}
 

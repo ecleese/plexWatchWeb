@@ -39,7 +39,7 @@
 				<div class="logo"></div>
 				<ul class="nav">
 					
-					<li><a href="/plexWatch"><i class="icon-home icon-white"></i> Home</a></li>
+					<li><a href="index.php"><i class="icon-home icon-white"></i> Home</a></li>
 					<li><a href="history.php"><i class="icon-calendar icon-white"></i> History</a></li>
 					<li><a href="users.php"><i class="icon-user icon-white"></i> Users</a></li>
 					<li class="active"><a href="charts.php"><i class="icon-list icon-white"></i> Charts</a></li>
@@ -62,15 +62,15 @@
 		<div class='row-fluid'>
 			<div class='span12'>
 			<?php
-				include_once('config.php');	
+				require_once(dirname(__FILE__) . '/config.php');
 				$db = new SQLite3($plexWatch['plexWatchDb']);
-				date_default_timezone_set('America/New_York');
+				date_default_timezone_set(@date_default_timezone_get());
 
 				echo "<div class='span3'>";
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 							echo "<div class='dashboard-wellheader'>";
-								echo "<h3>Top 10 Watched Content 	(All Time)</h3>";
+								echo "<h3>Top 10 (All Time)</h3>";
 							echo "</div>";
 						echo "</div>";
 						echo "<div class='charts-wrapper'>";
@@ -125,7 +125,7 @@
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 							echo "<div class='dashboard-wellheader'>";
-								echo "<h3>Top 10 Watched Films (All Time)</h3>";
+								echo "<h3>Top 10 Films (All Time)</h3>";
 							echo "</div>";
 						echo "</div>";
 						echo "<div class='charts-wrapper'>";
@@ -174,7 +174,7 @@
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 							echo "<div class='dashboard-wellheader'>";
-								echo "<h3>Top 10 Watched TV Shows (All Time)</h3>";
+								echo "<h3>Top 10 TV Shows (All Time)</h3>";
 							echo "</div>";
 						echo "</div>";
 						echo "<div class='charts-wrapper'>";
@@ -223,7 +223,7 @@
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 							echo "<div class='dashboard-wellheader'>";
-								echo "<h3>Top 10 Watched TV Episodes (All Time)</h3>";
+								echo "<h3>Top 10 TV Episodes (All Time)</h3>";
 							echo "</div>";
 						echo "</div>";
 						echo "<div class='charts-wrapper'>";

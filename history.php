@@ -1,4 +1,4 @@
-z<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -39,10 +39,10 @@ z<!DOCTYPE html>
 				<div class="logo"></div>
 				<ul class="nav">
 					
-					<li><a href="index"><i class="icon-home icon-white"></i> Home</a></li>
-					<li class="active"><a href="history"><i class="icon-calendar icon-white"></i> History</a></li>
-					<li><a href="users"><i class="icon-user icon-white"></i> Users</a></li>
-					<li><a href="charts"><i class="icon-list icon-white"></i> Charts</a></li>
+					<li><a href="index.php"><i class="icon-home icon-white"></i> Home</a></li>
+					<li class="active"><a href="history.php"><i class="icon-calendar icon-white"></i> History</a></li>
+					<li><a href="users.php"><i class="icon-user icon-white"></i> Users</a></li>
+					<li><a href="charts.php"><i class="icon-list icon-white"></i> Charts</a></li>
 					
 				</ul>
 			</div>
@@ -61,10 +61,11 @@ z<!DOCTYPE html>
 						</div>
 					</div>
 					<?php
-					include_once('config.php');
+					require_once(dirname(__FILE__) . '/config.php');
 
-					date_default_timezone_set('America/New_York');
-
+					date_default_timezone_set(@date_default_timezone_get());
+					
+					
 					$db = new SQLite3($plexWatch['plexWatchDb']);
 					$numRows = $db->querySingle("SELECT COUNT(*) as count FROM processed ");
 

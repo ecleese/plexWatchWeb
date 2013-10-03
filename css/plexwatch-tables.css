@@ -192,9 +192,15 @@ table.display td.center {
 	text-align: center;
 }
 
-table.display tr:hover, a:hover{
-background-color: #c85a00;
+table.display tr:hover {
 
+background-color: #f17800;
+background-image: -moz-linear-gradient(top, #f58200, #eb6900);
+background-image: -ms-linear-gradient(top, #f58200, #eb6900);
+background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f58200), to(#eb6900));
+background-image: -webkit-linear-gradient(top, #f58200, #eb6900);
+background-image: -o-linear-gradient(top, #f58200, #eb6900);
+background-image: linear-gradient(top, #f58200, #eb6900);
 color: #fff; 
 }
 
