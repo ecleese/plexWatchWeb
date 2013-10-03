@@ -51,7 +51,7 @@
 	<?php
 	
 	date_default_timezone_set(@date_default_timezone_get());
-	echo date_default_timezone_get();
+	
 	
 	echo "<div class='container-fluid'>";
 		echo "<div class='row-fluid'>";
