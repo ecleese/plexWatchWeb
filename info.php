@@ -54,6 +54,8 @@
 	
 	<?php
 		require_once(dirname(__FILE__) . '/config.php');
+		date_default_timezone_set(@date_default_timezone_get());
+		echo date_default_timezone_get();
 		$id = $_GET['id'];
 					
 		$infoUrl = "http://".$plexWatch['pmsUrl'].":32400/library/metadata/".$id."";
@@ -130,7 +132,7 @@
 				echo "<div class='wellbg'>";
 					echo "<div class='wellheader'>";
 					
-						date_default_timezone_set(@date_default_timezone_get());
+						
 						$db = new SQLite3($plexWatch['plexWatchDb']);
 
 						

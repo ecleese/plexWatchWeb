@@ -49,20 +49,26 @@
 			</div>
 		</div>
     </div>
-	<div class="container-fluid">
-		<div class='row-fluid'>
-			<div class='span12'></div>
-		</div>
-		<div class='row-fluid'>	
-			<div class='span12'>
-				<div class='wellbg'>
-					<div class='wellheader'>
+	<?php
+	
+	date_default_timezone_set(@date_default_timezone_get());
+	echo date_default_timezone_get();
+	
+	echo "<div class='container-fluid'>";
+		echo "<div class='row-fluid'>";
+			echo "<div class='span12'></div>";
+		echo "</div>";
+		echo "<div class='row-fluid'>";
+			echo "<div class='span12'>";
+				echo "<div class='wellbg'>";
+					echo "<div class='wellheader'>";
 						
-					<?php
+					
 					require_once(dirname(__FILE__) . '/config.php');
 					$user = $_GET['user'];
-					date_default_timezone_set(@date_default_timezone_get());
-
+					
+					
+					
 					$db = new SQLite3($plexWatch['plexWatchDb']);
 					$numRows = $db->querySingle("SELECT COUNT(*) as count FROM processed ");
 
