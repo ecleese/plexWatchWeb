@@ -39,7 +39,7 @@
 				<div class="logo"></div>
 				<ul class="nav">
 					
-					<li><a href="/plexWatch"><i class="icon-home icon-white"></i> Home</a></li>
+					<li><a href="index.php"><i class="icon-home icon-white"></i> Home</a></li>
 					<li class="active"><a href="history.php"><i class="icon-calendar icon-white"></i> History</a></li>
 					<li><a href="users.php"><i class="icon-user icon-white"></i> Users</a></li>
 					<li><a href="charts.php"><i class="icon-list icon-white"></i> Charts</a></li>
@@ -48,23 +48,28 @@
 			</div>
 		</div>
     </div>
-	<div class="container-fluid">
-		<div class='row-fluid'>
-			<div class='span12'></div>
-		</div>
-		<div class='row-fluid'>	
-			<div class='span12'>
-				<div class='wellbg'>
-					<div class='wellheader'>
-						<div class='dashboard-wellheader'>
-							<h3>Watching History</h3>
-						</div>
-					</div>
-					<?php
-					include_once('config.php');
+	<?php
+	
+	date_default_timezone_set(@date_default_timezone_get());
+	
+	
+	echo "<div class='container-fluid'>";
+		echo "<div class='row-fluid'>";
+			echo "<div class='span12'></div>";
+		echo "</div>";
+		echo "<div class='row-fluid'>";
+			echo "<div class='span12'>";
+				echo "<div class='wellbg'>";
+					echo "<div class='wellheader'>";
+						echo "<div class='dashboard-wellheader'>";
+							echo "<h3>Watching History</h3>";
+						echo "</div>";
+					echo "</div>";
+					
+					require_once(dirname(__FILE__) . '/config.php');
 
-					date_default_timezone_set('America/New_York');
-
+					
+					
 					$db = new SQLite3($plexWatch['plexWatchDb']);
 					$numRows = $db->querySingle("SELECT COUNT(*) as count FROM processed ");
 
@@ -85,8 +90,8 @@
 								echo "<th align='left'><i class='icon-globe icon-white'></i> IP Address</th>";
 								echo "<th align='left'>Title</th>";
 								echo "<th align='center'><i class='icon-play icon-white'></i> Started</th>";
-								echo "<th align='center'><i class='icon-stop icon-white'></i> Stopped</th>";
 								echo "<th align='center'><i class='icon-pause icon-white'></i> Paused</th>";
+								echo "<th align='center'><i class='icon-stop icon-white'></i> Stopped</th>";
 								echo "<th align='center'><i class='icon-time icon-white'></i> Duration</th>";
 								echo "<th align='center'>% Completed</th>";
 							echo "</tr>";
@@ -95,7 +100,12 @@
 						while ($row = $results->fetchArray()) {
 						
 						echo "<tr>";
-							echo "<td align='center'>".date("m/d/Y",$row['time'])."</td>";
+							if (empty($row['stopped'])) {
+											echo "<td class='currentlyWatching' align='center'>Currently watching...</td>";
+										}else{
+											echo "<td align='center'>".date("m/d/Y",$row['time'])."</td>";
+							}
+							
 							echo "<td align='left'><a href='user.php?user=".$row['user']."'>".$row['user']."</td>";
 							echo "<td align='left'>".$row['platform']."</td>";
 
@@ -114,17 +124,23 @@
 							$viewOffset = $xmlfield['viewOffset'];
 
 							if ($type=="movie") {
-							echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
+								echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
 							}else if ($type=="episode") {
-							echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
+								echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
+							}else if (!array_key_exists('',$type)) {
+								echo "<td align='left'><a href='".$ratingKey."'>".$row['title']."</a></td>";
 							}else{
 
 							}
-
+							
 							echo "<td align='center'>".date("g:i a",$row['time'])."</td>";
+							
+							$paused_time = round(abs($row['paused_counter']) / 60,1);
+							echo "<td align='center'>".$paused_time." min</td>";
+							
 							$stopped_time = date("g:i a",$row['stopped']);
 							
-							if ($stopped_time == '7:00 pm') {								//need to find out why it's always this value and write an alternate method.
+							if (empty($row['stopped'])) {								
 								echo "<td align='center'>n/a</td>";
 							}else{
 								echo "<td align='center'>".$stopped_time."</td>";
@@ -132,11 +148,11 @@
 
 							$to_time = strtotime(date("m/d/Y g:i a",$row['stopped']));
 							$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
-							$paused_time = round(abs($row['paused_counter']) / 60,1);
+							
 							$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
 							$viewed_time_length = strlen($viewed_time);
 							
-							echo "<td align='center'>".$paused_time." min</td>";
+							
 							
 							if ($viewed_time_length == 8) {
 								echo "<td align='center'>n/a</td>";

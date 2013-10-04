@@ -1,4 +1,4 @@
-plexWatch/Web - 0.0.1
+plexWatch/Web - 0.0.2
 =====================
 
 A web front-end for plexWatch.
@@ -9,6 +9,7 @@ A web front-end for plexWatch.
 
 ###Requirements
 ---------------
+* a web server that supports php (apache, nginx, xampp, WampServer, EasyPHP, etc)
 * php5
 * php5-sqlite
 
@@ -19,23 +20,20 @@ A web front-end for plexWatch.
 1. Install requirements
 2. Download and unzip the plexWatchWeb package.
 3. Edit config.php file
+ * Modify Variables as needed
 
 	```
-	sudo nano /var/www/plexWatch/config.php
-	```
-  	* Modify Variables as needed
-
-	```
-	php 
 	$plexWatch['pmsUrl'] = '0.0.0.0';							// Plex Media Server IP or hostname
 	$plexWatch['plexWatchDb'] = '/opt/plexWatch/plexWatch.db';	// Location of your plexWatch database 
 	```
+4. Upload the contents to the desired location on your web server "/var/www/plexWatch"
 
-4. Upload the contents to the desired location on your web server "/var/www/plexwatch"
+  	
+
+
 
 
 ###Use
 ------
 
-Navigate to: http://ip-of-web-server/plexwatch
-
+Navigate to: http://ip-of-web-server/plexWatch

@@ -72,14 +72,15 @@
 .dataTables_info {
 	width: 60%;
 	float: left;
-	margin-top: 25px;
+	margin-top: 12px;
 	margin-left: 15px;
+	margin-bottom: 12px;
 }
 
 .dataTables_paginate {
 	float: right;
 	text-align: right;
-	margin-top: 25px;
+	margin-top: 7px;
 	margin-right: 15px;
 }
 
@@ -191,43 +192,47 @@ table.display td.center {
 	text-align: center;
 }
 
-table.display tr:hover, a:hover{
-background-color: #c85a00;
+table.display tr:hover {
 
-color: #fff; 
 }
 
 table.display tr:hover a {
 text-decoration:none;
-color: #fff; 
+
+}
+
+table.display td:hover a {
+color: #ff9d00; 
 }
 
 table.display thead tr:hover {
 background: transparent;
 }
 
+
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables sorting
  */
 
 .sorting_asc {
-	background: url('../images/sort_asc.png') no-repeat center right;
+	
 }
 
 .sorting_desc {
-	background: url('../images/sort_desc.png') no-repeat center right;
+	
 }
 
 .sorting {
-	background: url('../images/sort_both.png') no-repeat center right;
+	
 }
 
 .sorting_asc_disabled {
-	background: url('../images/sort_asc_disabled.png') no-repeat center right;
+	
 }
 
 .sorting_desc_disabled {
-	background: url('../images/sort_desc_disabled.png') no-repeat center right;
+	
 }
  
 table.display thead th:active,

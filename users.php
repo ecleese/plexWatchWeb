@@ -39,7 +39,7 @@
 				<div class="logo"></div>
 				<ul class="nav">
 					
-					<li><a href="/plexWatch"><i class="icon-home icon-white"></i> Home</a></li>
+					<li><a href="index.php"><i class="icon-home icon-white"></i> Home</a></li>
 					<li><a href="history.php"><i class="icon-calendar icon-white"></i> History</a></li>
 					<li class="active"><a href="users.php"><i class="icon-user icon-white"></i> Users</a></li>
 					<li><a href="charts.php"><i class="icon-list icon-white"></i> Charts</a></li>
@@ -62,9 +62,9 @@
 		<div class='row-fluid'>
 			<div class='span12'>
 			<?php
-			include_once('config.php');	
+			require_once(dirname(__FILE__) . '/config.php');	
 
-			date_default_timezone_set('America/New_York');
+			date_default_timezone_set(@date_default_timezone_get());
 
 			$db = new SQLite3($plexWatch['plexWatchDb']);
 			$users = $db->query("SELECT user as users,xml FROM processed GROUP BY user ORDER BY users");
