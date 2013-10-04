@@ -3,9 +3,9 @@
 * Change:	    user.php: history table has been moved to a seperate tab to make room for profile and chart tabs
 * Add:		    tables: in-progress streams are now reported in the date column as "Currently watching..."
 * Change:	    table row and cell colors altered to allow for better identity of important elements and links
-* Fix:		    tables: "Stopped" time would show and incorrect value if row element was empty due to an in-progress stream		
+* Fix:		    tables: "Stopped" time would show and incorrect value if row element was empty due to an in-progress stream
 * Fix: 		    inconsistent timezones between history.php, user.php and info.php
-* Change:       timezones are now automatically checked and set to webserver's default timezone 
+* Change:     timezones are now automatically checked and set to webserver's default timezone 
 * Wiki-add:	  information for XAMPP users about setting timezone and password protection
 
 
