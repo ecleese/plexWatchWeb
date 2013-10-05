@@ -54,9 +54,11 @@
 	date_default_timezone_set(@date_default_timezone_get());
 	
 	require_once(dirname(__FILE__) . '/config.php');
+	
 	$user = $_GET['user'];
 
 	$db = new SQLite3($plexWatch['plexWatchDb']);
+	
 	$numRows = $db->querySingle("SELECT COUNT(*) as count FROM processed ");
 	$userInfo = $db->query("SELECT user,xml FROM processed WHERE user = '$user' ORDER BY time DESC LIMIT 1");
 	$userStatsDailyCount = $db->querySingle("SELECT COUNT(*) FROM processed WHERE datetime(time, 'unixepoch') >= date('now') AND user='$user' ");
@@ -122,13 +124,8 @@
 	}
 	
 	$results = $db->query("SELECT * FROM processed WHERE user = '$user' ORDER BY time DESC");
-					
-	echo "<div class='container-fluid'>";
-		echo "<div class='row-fluid'>";
-			echo "<div class='span12'>";
-			echo"</div>";
-		echo "</div>";	
-	echo "</div>";
+	
+
 	echo "<div class='container-fluid'>";
 		echo "<div class='row-fluid'>";
 			echo "<div class='span12'>";
@@ -171,8 +168,10 @@
 								echo"</div>";
 							echo"</div>";
 							echo "<div class='user-overview-stats-wrapper'>";
-								echo "<div class='span3'>";
+								echo"<ul>";
+								
 									echo "<div class='user-overview-stats-instance'>";
+										echo "<li>";
 										echo "<div class='user-overview-stats-instance-text'>";
 											echo "<h4>Today</h4>";
 											echo "<h3>".$userStatsDailyCount."</h3><p>play(s)</p>";
@@ -182,10 +181,11 @@
 												echo "<h1> / </h1> <h3>".$userStatsDailyTimeViewedTime."</h3><p> minutes</p>";
 											}
 										echo"</div>";
+										echo "</li>";
 									echo"</div>";	
-								echo"</div>";
-								echo "<div class='span3'>";
+								
 									echo "<div class='user-overview-stats-instance'>";
+										echo "<li>";
 										echo "<div class='user-overview-stats-instance-text'>";
 										echo "<h4>This week</h4>";
 											echo "<h3>".$userStatsWeeklyCount."</h3><p>plays</p>";
@@ -195,11 +195,12 @@
 												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTime."</h3><p> minutes</p>";
 											}
 										echo"</div>";
+										echo "</li>";
 									echo"</div>";
-								echo"</div>";	
-								echo "<div class='span3'>";
+								
 									echo "<div class='user-overview-stats-instance'>";
-											echo "<div class='user-overview-stats-instance-text'>";
+										echo "<li>";
+										echo "<div class='user-overview-stats-instance-text'>";
 										echo "<h4>This month</h4>";
 											echo "<h3>".$userStatsMonthlyCount."</h3><p>plays</p>";
 											if ($userStatsMonthlyTimeViewedTimeRowLength == 8) {
@@ -208,10 +209,11 @@
 												echo "<h1> / </h1> <h3>".$userStatsMonthlyTimeViewedTime."</h3><p> minutes</p>";
 											}
 										echo"</div>";
+										echo "</li>";
 									echo"</div>";
-								echo"</div>";
-								echo "<div class='span3'>";
+								
 									echo "<div class='user-overview-stats-instance'>";
+										echo "<li>";
 										echo "<div class='user-overview-stats-instance-text'>";
 										echo "<h4>All Time</h4>";
 											echo "<h3>".$userStatsAlltimeCount."</h3><p>plays</p>";
@@ -221,8 +223,9 @@
 												echo "<h1> / </h1> <h3>".$userStatsAlltimeTimeViewedTime."</h3><p> minutes</p>";
 											}
 										echo"</div>";	
+										echo "</li>";
 									echo"</div>";
-								echo"</div>";
+								echo"</ul>";
 							echo"</div>";
 						echo "</div>";
 					echo "</div>";	
@@ -238,6 +241,59 @@
 									echo"<h3>Recently watched</h3>";
 								echo"</div>";
 							echo"</div>";
+							
+							echo "<div class='dashboard-recent-media-row'>";
+					echo "<ul class='dashboard-recent-media'>";
+						
+						$recentlyWatchedResults = $db->query("SELECT * FROM processed WHERE user = '$user' ORDER BY time DESC LIMIT 10");
+						// Run through each feed item
+						while ($recentlyWatchedRow = $recentlyWatchedResults->fetchArray()) {
+						
+						$request_url = $recentlyWatchedRow['xml'];
+						$recentXml = simplexml_load_string($request_url) ;
+												
+						$recentThumbLtrim = ltrim($recentXml['grandparentThumb'], "/library/metadata/");
+						$recentThumbMeta = substr($recentThumbLtrim, 5, 19);
+						$recentThumb = ltrim($recentThumbMeta, "/thumb/");                        
+		
+						if ($recentXml['type'] == "episode") {
+							
+							$recentArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$recentXml['grandparentRatingKey']. "%2Fart%3Ft%3D" .$recentThumb. "&width=320&height=160";                                        
+							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$recentXml['grandparentRatingKey']. "%2Fthumb%3Ft%3D" .$recentThumb. "&width=136&height=280";                                        
+							
+								echo "<div class='dashboard-recent-media-instance'>";
+								echo "<li>";
+								echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='".$recentThumbUrl."' class='poster-face'></img></a></div></div>";
+								
+								echo "<div class=dashboard-recent-media-metacontainer>";
+									$parentIndexPadded = sprintf("%01s", $recentXml['parentIndex']);
+									$indexPadded = sprintf("%02s", $recentXml['index']);
+									echo "<h3>Season ".$parentIndexPadded.", Episode ".$indexPadded."</h3>";
+								echo "</div>";
+								echo "</li>";
+								echo "</div>";
+						}else if ($recentXml['type'] == "movie") {				
+						
+							$recentArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$recentXml['ratingKey']. "%2Fart%3Ft%3D" .$recentThumb. "&width=320&height=160";                                        
+							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$recentXml['ratingKey']. "%2Fthumb%3Ft%3D" .$recentThumb. "&width=136&height=280";                                        
+							
+								echo "<div class='dashboard-recent-media-instance'>";
+								echo "<li>";
+								echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='".$recentThumbUrl."' class='poster-face'></img></a></div></div>";
+								
+								echo "<div class=dashboard-recent-media-metacontainer>";
+								$parentIndexPadded = sprintf("%01s", $recentXml['parentIndex']);
+								$indexPadded = sprintf("%02s", $recentXml['index']);
+								echo "<h3>".$recentXml['title']." (".$recentXml['year'].")</h3>";
+
+								echo "</div>";
+								echo "</li>";
+								echo "</div>";
+						}else{}
+						}
+					echo "</ul>";
+				echo "</div>";
+							
 						echo"</div>";	
 					echo "</div>";
 				echo "</div>";
