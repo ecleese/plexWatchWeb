@@ -61,51 +61,58 @@
 	
 	$numRows = $db->querySingle("SELECT COUNT(*) as count FROM processed ");
 	$userInfo = $db->query("SELECT user,xml FROM processed WHERE user = '$user' ORDER BY time DESC LIMIT 1");
-	$userStatsDailyCount = $db->querySingle("SELECT COUNT(*) FROM processed WHERE datetime(time, 'unixepoch') >= date('now') AND user='$user' ");
 	
-	$userStatsDailyTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM processed WHERE datetime(time, 'unixepoch') >= date('now') AND user='$user' ");
+	$userStatsDailyCount = $db->querySingle("SELECT COUNT(*) FROM processed WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now') AND user='$user' ");
+	$userStatsDailyTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM processed WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now') AND user='$user' ");
 	$userStatsDailyTimeViewedTime = 0;
 	while ($userStatsDailyTimeRow = $userStatsDailyTimeFetch->fetchArray()) {
 		$userStatsDailyTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsDailyTimeRow['stopped']));
 		$userStatsDailyTimeFromTimeRow = strtotime(date("m/d/Y g:i a",$userStatsDailyTimeRow['time']));
-		$userStatsDailyTimePausedTimeRow = round(abs($userStatsDailyTimeRow['paused_counter']) / 60,1);			
-		$userStatsDailyTimeViewedTimeRow = round(abs($userStatsDailyTimeToTimeRow - $userStatsDailyTimeFromTimeRow - $userStatsDailyTimePausedTimeRow) / 60,0);
+		$userStatsDailyTimePausedTimeRow = round(abs($userStatsDailyTimeRow['paused_counter']) ,1);			
+		$userStatsDailyTimeViewedTimeRow = round(abs($userStatsDailyTimeToTimeRow - $userStatsDailyTimeFromTimeRow - $userStatsDailyTimePausedTimeRow) ,0);
 		$userStatsDailyTimeViewedTimeRowLength = strlen($userStatsDailyTimeViewedTimeRow);
-		
+
 		$userStatsDailyTimeViewedTime += $userStatsDailyTimeViewedTimeRow;
+		$userStatsDailyTimeViewedTimeHours = floor($userStatsDailyTimeViewedTime / 3600);
+		$userStatsDailyTimeViewedTimeMinutes = floor(($userStatsDailyTimeViewedTime / 60) % 60);
+		
 	}								
 									
 									
 	
 	
 	
-	$userStatsWeeklyCount = $db->querySingle("SELECT COUNT(*) FROM processed WHERE datetime(time, 'unixepoch') >= datetime('now', '-7 days') AND user='$user' ");
+	$userStatsWeeklyCount = $db->querySingle("SELECT COUNT(*) FROM processed WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-7 days', 'localtime') AND user='$user' ");
 	
-	$userStatsWeeklyTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM processed WHERE datetime(time, 'unixepoch') >= datetime('now', '-7 days') AND user='$user' ");
+	$userStatsWeeklyTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM processed WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-7 days', 'localtime') AND user='$user' ");
 	$userStatsWeeklyTimeViewedTime = 0;
 	while ($userStatsWeeklyTimeRow = $userStatsWeeklyTimeFetch->fetchArray()) {
 		$userStatsWeeklyTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsWeeklyTimeRow['stopped']));
 		$userStatsWeeklyTimeFromTimeRow = strtotime(date("m/d/Y g:i a",$userStatsWeeklyTimeRow['time']));
-		$userStatsWeeklyTimePausedTimeRow = round(abs($userStatsWeeklyTimeRow['paused_counter']) / 60,1);			
-		$userStatsWeeklyTimeViewedTimeRow = round(abs($userStatsWeeklyTimeToTimeRow - $userStatsWeeklyTimeFromTimeRow - $userStatsWeeklyTimePausedTimeRow) / 60,0);
+		$userStatsWeeklyTimePausedTimeRow = round(abs($userStatsWeeklyTimeRow['paused_counter']) ,1);			
+		$userStatsWeeklyTimeViewedTimeRow = round(abs($userStatsWeeklyTimeToTimeRow - $userStatsWeeklyTimeFromTimeRow - $userStatsWeeklyTimePausedTimeRow) ,0);
 		$userStatsWeeklyTimeViewedTimeRowLength = strlen($userStatsWeeklyTimeViewedTimeRow);
 		
 		$userStatsWeeklyTimeViewedTime += $userStatsWeeklyTimeViewedTimeRow;
+		$userStatsWeeklyTimeViewedTimeHours = floor($userStatsWeeklyTimeViewedTime / 3600);
+		$userStatsWeeklyTimeViewedTimeMinutes = floor(($userStatsWeeklyTimeViewedTime / 60) % 60);
 	}
 	
 	
-	$userStatsMonthlyCount = $db->querySingle("SELECT COUNT(*) FROM processed WHERE datetime(time, 'unixepoch') >= datetime('now', '-30 days') AND user='$user' ");
+	$userStatsMonthlyCount = $db->querySingle("SELECT COUNT(*) FROM processed WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-30 days', 'localtime') AND user='$user' ");
 	
-	$userStatsMonthlyTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM processed WHERE datetime(time, 'unixepoch') >= datetime('now', '-30 days') AND user='$user' ");
+	$userStatsMonthlyTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM processed WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-30 days', 'localtime') AND user='$user' ");
 	$userStatsMonthlyTimeViewedTime = 0;
 	while ($userStatsMonthlyTimeRow = $userStatsMonthlyTimeFetch->fetchArray()) {
 		$userStatsMonthlyTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsMonthlyTimeRow['stopped']));
 		$userStatsMonthlyTimeFromTimeRow = strtotime(date("m/d/Y g:i a",$userStatsMonthlyTimeRow['time']));
-		$userStatsMonthlyTimePausedTimeRow = round(abs($userStatsMonthlyTimeRow['paused_counter']) / 60,1);			
-		$userStatsMonthlyTimeViewedTimeRow = round(abs($userStatsMonthlyTimeToTimeRow - $userStatsMonthlyTimeFromTimeRow - $userStatsMonthlyTimePausedTimeRow) / 60,0);
+		$userStatsMonthlyTimePausedTimeRow = round(abs($userStatsMonthlyTimeRow['paused_counter']) ,1);			
+		$userStatsMonthlyTimeViewedTimeRow = round(abs($userStatsMonthlyTimeToTimeRow - $userStatsMonthlyTimeFromTimeRow - $userStatsMonthlyTimePausedTimeRow) ,0);
 		$userStatsMonthlyTimeViewedTimeRowLength = strlen($userStatsMonthlyTimeViewedTimeRow);
 		
 		$userStatsMonthlyTimeViewedTime += $userStatsMonthlyTimeViewedTimeRow;
+		$userStatsMonthlyTimeViewedTimeHours = floor($userStatsMonthlyTimeViewedTime / 3600);
+		$userStatsMonthlyTimeViewedTimeMinutes = floor(($userStatsMonthlyTimeViewedTime / 60) % 60);
 	}
 	
 	
@@ -116,11 +123,14 @@
 	while ($userStatsAlltimeTimeRow = $userStatsAlltimeTimeFetch->fetchArray()) {
 		$userStatsAlltimeTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsAlltimeTimeRow['stopped']));
 		$userStatsAlltimeTimeFromTimeRow = strtotime(date("m/d/Y g:i a",$userStatsAlltimeTimeRow['time']));
-		$userStatsAlltimeTimePausedTimeRow = round(abs($userStatsAlltimeTimeRow['paused_counter']) / 60,1);			
-		$userStatsAlltimeTimeViewedTimeRow = round(abs($userStatsAlltimeTimeToTimeRow - $userStatsAlltimeTimeFromTimeRow - $userStatsAlltimeTimePausedTimeRow) / 60,0);
+		$userStatsAlltimeTimePausedTimeRow = round(abs($userStatsAlltimeTimeRow['paused_counter']) ,1);			
+		$userStatsAlltimeTimeViewedTimeRow = round(abs($userStatsAlltimeTimeToTimeRow - $userStatsAlltimeTimeFromTimeRow - $userStatsAlltimeTimePausedTimeRow) ,0);
 		$userStatsAlltimeTimeViewedTimeRowLength = strlen($userStatsAlltimeTimeViewedTimeRow);
 		
 		$userStatsAlltimeTimeViewedTime += $userStatsAlltimeTimeViewedTimeRow;
+		$userStatsAlltimeTimeViewedTimeHours = floor($userStatsAlltimeTimeViewedTime / 3600);
+		$userStatsAlltimeTimeViewedTimeMinutes = floor(($userStatsAlltimeTimeViewedTime / 60) % 60);
+		
 	}
 	
 	$results = $db->query("SELECT * FROM processed WHERE user = '$user' ORDER BY time DESC");
@@ -178,7 +188,7 @@
 											if ($userStatsDailyTimeViewedTimeRowLength == 8) {
 												echo "";
 											}else{
-												echo "<h1> / </h1> <h3>".$userStatsDailyTimeViewedTime."</h3><p> minutes</p>";
+												echo "<h1> / </h1><h3>".$userStatsDailyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsDailyTimeViewedTimeMinutes."</h3> <p>mins</p>";
 											}
 										echo"</div>";
 										echo "</li>";
@@ -192,7 +202,7 @@
 											if ($userStatsWeeklyTimeViewedTimeRowLength == 8) {
 												echo "";
 											}else{
-												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTime."</h3><p> minutes</p>";
+												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsWeeklyTimeViewedTimeMinutes."</h3> <p>mins</p>";
 											}
 										echo"</div>";
 										echo "</li>";
@@ -206,7 +216,7 @@
 											if ($userStatsMonthlyTimeViewedTimeRowLength == 8) {
 												echo "";
 											}else{
-												echo "<h1> / </h1> <h3>".$userStatsMonthlyTimeViewedTime."</h3><p> minutes</p>";
+												echo "<h1> / </h1><h3>".$userStatsMonthlyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsMonthlyTimeViewedTimeMinutes."</h3> <p>mins</p>";
 											}
 										echo"</div>";
 										echo "</li>";
@@ -220,7 +230,7 @@
 											if ($userStatsAlltimeTimeViewedTimeRowLength == 8) {
 												echo "";
 											}else{
-												echo "<h1> / </h1> <h3>".$userStatsAlltimeTimeViewedTime."</h3><p> minutes</p>";
+												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>mins</p>";
 											}
 										echo"</div>";	
 										echo "</li>";
