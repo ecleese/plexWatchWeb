@@ -1,4 +1,5 @@
 0.0.2:
+* Fix:		index.php: first recently added result was getting cut off on left side, changed episode image to season thumb
 * Fix:		global: updated images in Plex/Web would not appear in plexWatchWeb
 * Change:	user.php: general usage stats changed from minutes to days, hours, minutes
 * Add:		user.php: user profile tab with avatar image, general usage stats and recently watched list 

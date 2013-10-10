@@ -62,7 +62,8 @@ A web front-end for plexWatch.
 
 ###Requirements
 ---------------
-* a web server that supports php (apache, nginx, xampp, WampServer, EasyPHP, etc)
+* plexWatch (v0.1.0+)
+* a web server that supports php (apache, nginx, XAMPP, WampServer, EasyPHP, lighttpd, etc)
 * php5
 * php5-sqlite
 
