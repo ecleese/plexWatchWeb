@@ -3,12 +3,15 @@ plexWatch/Web - 0.0.1
 
 A web front-end for plexWatch.
 
-* https://github.com/ljunkie/plexWatch
-* http://forums.plexapp.com/index.php/topic/72552-plexwatch-plex-notify-script-send-push-alerts-on-new-sessions-and-stopped/
+* plexWatch: https://github.com/ljunkie/plexWatch
+* plexWatch Plex Forum Thread: http://forums.plexapp.com/index.php/topic/72552-plexwatch-plex-notify-script-send-push-alerts-on-new-sessions-and-stopped/
+
 
 ###Features
 -----------
 * Responsive web design viewable on desktop, tablet and mobile web browsers 
+
+* Themed to complement Plex/Web 
 
 * Status activity of Plex Media Server's ports (http, https)
 
@@ -29,7 +32,7 @@ A web front-end for plexWatch.
 	* date
 	* user
 	* platform
-	* ip address
+	* ip address (if enabled in plexWatch)
 	* title
 	* start time
 	* paused duration length
@@ -37,14 +40,13 @@ A web front-end for plexWatch.
 	* duration length
 	* percentage completed
 	
-* user list
+* full user list with gravatar
 
 * individual user information
 	- username and gravatar (if available)
 	- daily, weekly, monthly, all time stats for play count and duration length
 	- recently watched content
 	- watching history
-	
 * charts
 	- top 10 all time viewed content
 	- top 10 viewed movies
@@ -56,6 +58,7 @@ A web front-end for plexWatch.
 	- tv shows
 	- tv seasons
 	- tv episodes including watching history
+
 
 ###Requirements
 ---------------
@@ -77,10 +80,6 @@ A web front-end for plexWatch.
 	$plexWatch['plexWatchDb'] = '/opt/plexWatch/plexWatch.db';	// Location of your plexWatch database 
 	```
 4. Upload the contents to the desired location on your web server "/var/www/plexWatch"
-
-  	
-
-
 
 
 ###Use
