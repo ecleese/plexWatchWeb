@@ -136,7 +136,7 @@ if ($statusSessions['size'] == '0') {
 				
 					}elseif ($sessions['type'] == "movie") {
 						
-					$sessionsThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$sessions['ratingKey']. "%2Fart%3Ft%3D" .$sessionsthumb. "&width=300&height=169";                                        
+					$sessionsThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$sessions['art']."&width=300&height=169";                                        
 					echo "<div class='instance'>";
 						
 						echo "<div class='dashboard-activity-button-info'><button type='button' class='btn btn-warning' data-toggle='collapse' data-target='#infoDetails-".$sessions['ratingKey']."'><i class='icon-info-sign icon-white'></i></button></div>";
