@@ -41,11 +41,7 @@
 				<ul class="nav">
 					
 					<li><a href="index.php"><i class="icon-home icon-white"></i> Home</a></li>
-<<<<<<< HEAD
-					<li class="active"><a href="history.php"><i class="icon-calendar icon-white"></i> History</a></li>
-=======
 					<li><a href="history.php"><i class="icon-calendar icon-white"></i> History</a></li>
->>>>>>> origin/dev
 					<li><a href="users.php"><i class="icon-user icon-white"></i> Users</a></li>
 					<li><a href="charts.php"><i class="icon-list icon-white"></i> Charts</a></li>
 					
@@ -57,38 +53,9 @@
 	
 	date_default_timezone_set(@date_default_timezone_get());
 	
-<<<<<<< HEAD
-	
-	echo "<div class='container-fluid'>";
-		echo "<div class='row-fluid'>";
-			echo "<div class='span12'></div>";
-		echo "</div>";
-		echo "<div class='row-fluid'>";
-			echo "<div class='span12'>";
-				echo "<div class='wellbg'>";
-					echo "<div class='wellheader'>";
-						
-					
-					require_once(dirname(__FILE__) . '/config.php');
-					$user = $_GET['user'];
-					
-					
-					
-					$db = new SQLite3($plexWatch['plexWatchDb']);
-					$numRows = $db->querySingle("SELECT COUNT(*) as count FROM processed ");
-
-					$results = $db->query("SELECT * FROM processed WHERE user = '$user' ORDER BY time DESC");
-					echo "<div class='dashboard-wellheader'>";
-							echo"<h3>Watching History for <strong>".$user."</strong></h3>";
-						echo"</div>";
-					echo"</div>";
-					
-					if ($numRows < 1) {
-=======
 	require_once(dirname(__FILE__) . '/config.php');
 	
 	$user = $_GET['user'];
->>>>>>> origin/dev
 
 	$db = new SQLite3($plexWatch['plexWatchDb']);
 	
@@ -198,24 +165,6 @@
 				echo"</div>";		
 			echo"</div>";
 					
-<<<<<<< HEAD
-					echo "<table id='history' class='display'>";
-						echo "<thead>";
-							echo "<tr>";
-								echo "<th align='center'><i class='icon-calendar icon-white'></i> Date</th>";
-								echo "<th align='left'><i class='icon-hdd icon-white'></i> Platform</th>";
-								echo "<th align='left'><i class='icon-globe icon-white'></i> IP Address</th>";
-								echo "<th align='left'>Title</th>";
-								echo "<th align='center'><i class='icon-play icon-white'></i> Started</th>";
-								echo "<th align='center'><i class='icon-pause icon-white'></i> Paused</th>";
-								echo "<th align='center'><i class='icon-stop icon-white'></i> Stopped</th>";
-								echo "<th align='center'><i class='icon-time icon-white'></i> Duration</th>";
-								echo "<th align='center'>Completed</th>";
-							echo "</tr>";
-						echo "</thead>";
-						echo "<tbody>";
-						while ($row = $results->fetchArray()) {
-=======
 					
 		echo "</div>";
 	echo "</div>";
@@ -225,7 +174,6 @@
 			echo "<div class='container-fluid'>";	
 				echo "<div class='row-fluid'>";
 					echo "<div class='span12'>";
->>>>>>> origin/dev
 						
 						echo "<div class='wellbg'>";
 							echo "<div class='wellheader'>";
@@ -464,33 +412,6 @@
 						echo "<div class='wellbg'>";
 							echo "<div class='wellheader'>";
 
-<<<<<<< HEAD
-								echo "<td align='left'>".$row['ip_address']."</td>";
-							}
-							$request_url = $row['xml'];
-							$xmlfield = simplexml_load_string($request_url) ; 
-							$ratingKey = $xmlfield['ratingKey'];
-							$type = $xmlfield['type'];
-							$duration = $xmlfield['duration'];
-							$viewOffset = $xmlfield['viewOffset'];
-
-							if ($type=="movie") {
-							echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
-							}else if ($type=="episode") {
-							echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
-							}else if (!array_key_exists('',$type)) {
-							echo "<td align='left'><a href='".$ratingKey."'>".$row['title']."</a></td>";
-							}else{
-
-							}
-											
-							echo "<td align='center'>".date("g:i a",$row['time'])."</td>";
-							
-							$paused_time = round(abs($row['paused_counter']) / 60,1);
-							echo "<td align='center'>".$paused_time." min</td>";
-							
-							$stopped_time = date("g:i a",$row['stopped']);
-=======
 							echo "<div class='dashboard-wellheader'>";
 									echo"<h3>Watching History for <strong>".$user."</strong></h3>";
 								echo"</div>";
@@ -501,7 +422,6 @@
 							echo "No Results.";
 
 							} else {
->>>>>>> origin/dev
 							
 							echo "<table id='user-history' class='display'>";
 								echo "<thead>";
@@ -530,28 +450,7 @@
 									if (empty($row['ip_address'])) {
 										echo "<td align='left'>n/a</td>";
 
-<<<<<<< HEAD
-							$to_time = strtotime(date("m/d/Y g:i a",$row['stopped']));
-							$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
-							
-							$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
-							$viewed_time_length = strlen($viewed_time);
-							
-							
-							
-							if ($viewed_time_length == 8) {
-								echo "<td align='center'>n/a</td>";
-							}else{
-								echo "<td align='center'>".$viewed_time. " min</td>";
-							}
-							
-							$percentComplete = sprintf("%2d", ($viewOffset / $duration) * 100);
-								if ($percentComplete >= 90) {	
-								  $percentComplete = 100;    
-								}
-=======
 									}else{
->>>>>>> origin/dev
 
 										echo "<td align='left'>".$row['ip_address']."</td>";
 									}

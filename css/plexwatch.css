@@ -6522,7 +6522,6 @@ position: relative;
 left: 0px;
 width: 300px;
 }
-<<<<<<< HEAD
 
 .dashboard-activity-button-info {
 position: relative;
@@ -6531,16 +6530,6 @@ left: 5px;
 z-index: 1;
 }
 
-=======
-
-.dashboard-activity-button-info {
-position: relative;
-top: 35px;
-left: 5px;
-z-index: 1;
-}
-
->>>>>>> origin/dev
 .dashboard-activity-poster-face {
 height: 169px;
 width: 300px;
@@ -6643,10 +6632,6 @@ padding-bottom: 0px;
 float: left;
 margin-right: 40px;
 position: relative;
-<<<<<<< HEAD
-left: 20px;
-=======
->>>>>>> origin/dev
 }
 
 
@@ -6670,11 +6655,7 @@ float: left;
 margin-right: 20px;
 padding-bottom: 25px;
 position: relative;
-<<<<<<< HEAD
-left: 20px;
-=======
 
->>>>>>> origin/dev
 }
 
 .dashboard-recent-media-metacontainer{
@@ -6741,11 +6722,7 @@ top: -4px;
 
 .dashboard-status-instance {
 float: left;
-<<<<<<< HEAD
-width: 30%;
-=======
 width: 28%;
->>>>>>> origin/dev
 margin-left: 30px;
 
 }
@@ -6799,9 +6776,6 @@ background-size: 100%;
 height: 540px;
 min-width: 280px;
 position: relative;
-<<<<<<< HEAD
-
-=======
 -webkit-border-radius: 2px;
 -moz-border-radius: 2px;
 border-radius: 2px;
@@ -6828,7 +6802,6 @@ perspective: 1000;
 -ms-backface-visibility: hidden;
 -o-backface-visibility: hidden;
 backface-visibility: hidden;
->>>>>>> origin/dev
 
 
 }
@@ -6838,16 +6811,6 @@ backface-visibility: hidden;
 -moz-border-radius: 2px;
 border-radius: 2px;
 border-color: #1d1d1d;
-<<<<<<< HEAD
-
--webkit-box-shadow: 0 0 1px rgba(255,255,255,0.05);
--moz-box-shadow: 0 0 1px rgba(255,255,255,0.05);
-box-shadow: 0 0 1px rgba(255,255,255,0.05);
--webkit-box-sizing: border-box;
--moz-box-sizing: border-box;
--ms-box-sizing: border-box;
-box-sizing: border-box;	
-=======
 -webkit-border-radius: 2px;
 -moz-border-radius: 2px;
 border-radius: 2px;
@@ -6874,7 +6837,6 @@ perspective: 1000;
 -ms-backface-visibility: hidden;
 -o-backface-visibility: hidden;
 backface-visibility: hidden;
->>>>>>> origin/dev
 }
 
 .container-fluid-info {
@@ -6991,7 +6953,6 @@ color: #fff;
 
 .summary-content-duration {
 
-<<<<<<< HEAD
 float: left;
 margin-right: 10px;
 line-height: 24px;
@@ -7004,20 +6965,6 @@ color: #fff;
 
 .summary-content-content-rating {
 float: left;
-=======
-float: left;
-margin-right: 10px;
-line-height: 24px;
-
-}
-
-.summary-content-duration strong {
-color: #fff;
-}
-
-.summary-content-content-rating {
-float: left;
->>>>>>> origin/dev
 line-height: 24px;
 margin-right: 10px;
 
@@ -7398,8 +7345,6 @@ color: #111;
 text-shadow: none;
 }
 
-<<<<<<< HEAD
-=======
 .user-info-wrapper {
 height: 113px;
 margin-left: 15px;
@@ -7563,5 +7508,4 @@ left: 3px;
 .currentlyWatching {
 color: #ff9d00;
 }
->>>>>>> origin/dev
 

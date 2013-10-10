@@ -8,25 +8,11 @@ if ($statusSessions['size'] == '0') {
 	echo "<h5><strong>Nothing is currently being watched.</strong></h5><br>";
 }else{
 // Run through each feed item
-<<<<<<< HEAD
-				foreach ($statusSessions->Video as $sessions) {
-													
-				$sessionsthumbltrim1 = ltrim($sessions['grandparentThumb'], "/library/metadata/");
-				$sessionsthumbmeta = substr($sessionsthumbltrim1, 5, 19);
-				$sessionsthumb = ltrim($sessionsthumbmeta, "/thumb/");                        
-										
-				if ($sessions['type'] == "episode") {
-					
-					$sessionsArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$sessions['grandparentRatingKey']. "%2Fart%3Ft%3D" .$sessionsthumb. "&width=330&height=160";                                        
-					$sessionsCoverUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$sessions['grandparentRatingKey']. "%2Fthumb%3Ft%3D" .$sessionsthumb. "&width=136&height=280";                                        
-					$sessionsThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$sessions['ratingKey']. "%2Fthumb%3Ft%3D" .$sessionsthumb. "&width=300&height=169";                                        
-=======
 				foreach ($statusSessions->Video as $sessions) {                       
 										
 				if ($sessions['type'] == "episode") {
                                      
 					$sessionsThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$sessions['thumb']."&width=300&height=169";                                        
->>>>>>> origin/dev
 					
 					echo "<div class='instance'>";
 						

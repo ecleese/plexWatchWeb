@@ -194,17 +194,6 @@ table.display td.center {
 
 table.display tr:hover {
 
-<<<<<<< HEAD
-background-color: #f17800;
-background-image: -moz-linear-gradient(top, #f58200, #eb6900);
-background-image: -ms-linear-gradient(top, #f58200, #eb6900);
-background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f58200), to(#eb6900));
-background-image: -webkit-linear-gradient(top, #f58200, #eb6900);
-background-image: -o-linear-gradient(top, #f58200, #eb6900);
-background-image: linear-gradient(top, #f58200, #eb6900);
-color: #fff; 
-=======
->>>>>>> origin/dev
 }
 
 table.display tr:hover a {
