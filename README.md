@@ -13,7 +13,7 @@ A web front-end for plexWatch.
 
 * Themed to complement Plex/Web 
 
-* Status activity of Plex Media Server's ports (http, https)
+* Status activity of Plex Media Server's ports (online/offline)
 
 * Current Plex Media Server viewing activity including:
 	* number of current users
@@ -52,12 +52,12 @@ A web front-end for plexWatch.
 	- top 10 viewed movies
 	- top 10 viewed tv shows
 	- top 10 viewed tv episodes
-	
+
 * content information pages 
-	- movies including watching history
-	- tv shows
+	- movies (includes watching history)
+	- tv shows (includes top 10 watched episodes)
 	- tv seasons
-	- tv episodes including watching history
+	- tv episodes (includes watching history)
 
 
 ###Requirements
