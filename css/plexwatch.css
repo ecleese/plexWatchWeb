@@ -6484,6 +6484,7 @@ border-color: #333;
 border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
+
 .row-wrapper {
 overflow: hidden;
 margin: 0 0 0px 0px;
@@ -6505,6 +6506,8 @@ padding-left: 25px;
 background-image: url('../images/chevron.png');
 background-repeat: no-repeat;
 background-position: 0 0;
+border-bottom: 1px solid rgba(0,0,0,0.3);
+margin-bottom: -5px;
 }
 
 .platform {
@@ -6629,7 +6632,6 @@ padding-bottom: 0px;
 float: left;
 margin-right: 40px;
 position: relative;
-left: 20px;
 }
 
 
@@ -6653,7 +6655,7 @@ float: left;
 margin-right: 20px;
 padding-bottom: 25px;
 position: relative;
-left: 20px;
+
 }
 
 .dashboard-recent-media-metacontainer{
@@ -6670,7 +6672,7 @@ overflow: hidden;
 position: relative;
 font-size: 13px;
 margin: none;
-line-height: 13px;
+line-height: 15px;
 font-weight: bold;
 width: 140px;
 white-space: nowrap;
@@ -6720,7 +6722,7 @@ top: -4px;
 
 .dashboard-status-instance {
 float: left;
-width: 30%;
+width: 28%;
 margin-left: 30px;
 
 }
@@ -7436,6 +7438,14 @@ margin: 0px 0px 0px 0px;
 
 .user-overview-stats-instance {
 line-height: 11px;
+}
+
+.user-overview-stats-instance-device_icon {
+float: left;
+padding-right: 15px;
+}
+
+.user-overview-stats-instance-device_icon img{
 
 }
 
@@ -7443,7 +7453,7 @@ line-height: 11px;
 .user-overview-stats-instance li {
 float: left;
 list-style: none;
-width: 270px;
+width: 340px;
 height: 100px;
 }
 
