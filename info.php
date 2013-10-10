@@ -41,7 +41,7 @@
 				<ul class="nav">
 					
 					<li><a href="index.php"><i class="icon-home icon-white"></i> Home</a></li>
-					<li><a href="history.php"><i class="icon-calendar icon-white"></i> History</a></li>
+					<li class="active"><a href="history.php"><i class="icon-calendar icon-white"></i> History</a></li>
 					<li><a href="users.php"><i class="icon-user icon-white"></i> Users</a></li>
 					<li><a href="charts.php"><i class="icon-list icon-white"></i> Charts</a></li>
 					
@@ -62,9 +62,13 @@
 		$xml = simplexml_load_file($infoUrl) or die ("Feed Not Found"); 
 			
 		if ($xml->Video['type'] == "episode") {
+					
+			$xmlThumbLtrim = ltrim($xml->Video['grandparentThumb'], "/library/metadata/");
+			$xmlThumbMeta = substr($xmlThumbLtrim, 5, 19);
+			$xmlThumb = ltrim($xmlThumbMeta, "/thumb/"); 
 						
-			$xmlArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$xml->Video['art']."&width=1920&height=1080";                                       
-			$xmlThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$xml->Video['parentThumb']."&width=256&height=352";                                        
+			$xmlArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$xml->Video['grandparentRatingKey']. "%2Fart%3Ft%3D" .$xmlThumb. "&width=1920&height=1080";                                       
+			$xmlThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$xml->Video['grandparentRatingKey']. "%2Fthumb%3Ft%3D" .$xmlThumb. "&width=256&height=352";                                        
 						
 				echo "<div class='container-fluid'>";
 					
@@ -128,16 +132,20 @@
 				echo "<div class='wellbg'>";
 					echo "<div class='wellheader'>";
 					
-						$db = new SQLite3($plexWatch['plexWatchDb']);
-						$title = $db->querySingle("SELECT title FROM processed WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\'  ");
 						
+						$db = new SQLite3($plexWatch['plexWatchDb']);
+
+						
+						$title = $db->querySingle("SELECT title FROM processed WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\'  ");
 						echo "<div class='dashboard-wellheader'>";
 								echo"<h3>Watching history for <strong>".$title."</strong></h3>";
 							echo"</div>";
 						echo"</div>";
 						
 						$numRows = $db->querySingle("SELECT COUNT(*) as count FROM processed ");
+						
 						$results = $db->query("SELECT * FROM processed WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
+						
 						
 						if ($numRows < 1) {
 
@@ -227,12 +235,18 @@
 				echo "</div>";	
 			echo "</div>";
 		echo "</div>";	
-
-		
-					}else if ($xml->Directory['type'] == "show") {
+	
 						
-						$xmlArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$xml->Directory['art']."&width=1920&height=1080";                                       
-						$xmlThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$xml->Directory['thumb']."&width=256&height=352";                                        
+
+								
+					}else if ($xml->Directory['type'] == "show") {
+					
+						$xmlThumbLtrim = ltrim($xml->Directory['thumb'], "/library/metadata/");
+						$xmlThumbMeta = substr($xmlThumbLtrim, 5, 19);
+						$xmlThumb = ltrim($xmlThumbMeta, "/thumb/");
+						
+						$xmlArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$xml->Directory['ratingKey']. "%2Fart%3Ft%3D" .$xmlThumb. "&width=1920&height=1080";                                       
+						$xmlThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$xml->Directory['ratingKey']. "%2Fthumb%3Ft%3D" .$xmlThumb. "&width=256&height=352";                                        
 						
 					echo "<div class='container-fluid'>";
 							echo "<div class='art-face' style='background-image:url(".$xmlArtUrl.")'>";
@@ -282,14 +296,16 @@
 				echo "<div class='wellbg'>";
 					
 					echo "<div class='wellheader'>";
-
+					
+						
 						$db = new SQLite3($plexWatch['plexWatchDb']);
 						echo"<h3>The most watched episodes of <strong>".$xml->Directory['title']."</strong> are</h3>";	
 					
 					echo"</div>";
 																																		
 						$topWatchedResults = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(*) AS play_count FROM processed WHERE orig_title LIKE \"".$xml->Directory['title']."\" GROUP BY title HAVING play_count > 0 ORDER BY play_count DESC,time DESC LIMIT 7");
-
+						
+						
 						echo "<div class='info-top-watched-wrapper'>";
 							echo "<ul class='info-top-watched-instance'>";
 							// Run through each feed item
@@ -298,8 +314,14 @@
 							while ($topWatchedResultsRow = $topWatchedResults->fetchArray()) {
 							
 								$topWatchedXmlUrl = $topWatchedResultsRow['xml'];
-								$topWatchedXmlfield = simplexml_load_string($topWatchedXmlUrl) ;								   
-								$topWatchedThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$topWatchedXmlfield['thumb']."&width=205&height=115";                                        
+								$topWatchedXmlfield = simplexml_load_string($topWatchedXmlUrl) ;
+
+								$topWatchedThumbLtrim = ltrim($topWatchedXmlfield['thumb'], "/library/metadata/");
+								$topWatchedThumbMeta = substr($topWatchedThumbLtrim, 5, 19);
+								$topWatchedThumb = ltrim($topWatchedThumbMeta, "/thumb/");
+							
+																	   
+								$topWatchedThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$topWatchedXmlfield['ratingKey']. "%2Fthumb%3Ft%3D" .$topWatchedThumb. "&width=205&height=115";                                        
 
 								$numRows++;
 
@@ -330,12 +352,16 @@
 					
 					
 					}else if ($xml->Directory['type'] == "season") {
+					
+						$xmlThumbLtrim = ltrim($xml->Directory['thumb'], "/library/metadata/");
+						$xmlThumbMeta = substr($xmlThumbLtrim, 5, 19);
+						$xmlThumb = ltrim($xmlThumbMeta, "/thumb/");
 						
 						$parentInfoUrl = "http://".$plexWatch['pmsUrl'].":32400/library/metadata/".$xml->Directory['parentRatingKey']."";
 						$parentXml = simplexml_load_file($parentInfoUrl) or die ("Feed Not Found");
 						
-						$xmlArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$xml->Directory['art']. "&width=1920&height=1080";                                       
-						$xmlThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$xml->Directory['thumb']. "&width=256&height=352";                                        
+						$xmlArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$parentXml->Directory['ratingKey']. "%2Fart%3Ft%3D" .$xmlThumb. "&width=1920&height=1080";                                       
+						$xmlThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$xml->Directory['ratingKey']. "%2Fthumb%3Ft%3D" .$xmlThumb. "&width=256&height=352";                                        
 						
 					echo "<div class='container-fluid'>";	
 						
@@ -380,8 +406,12 @@
 							
 					}else if ($xml->Video['type'] == "movie") {				
 						
-						$xmlArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$xml->Video['art']."&width=1920&height=1080";                                        
-						$xmlThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$xml->Video['thumb']."&width=256&height=352";                                        
+						$xmlThumbLtrim = ltrim($xml->Directory['thumb'], "/library/metadata/");
+						$xmlThumbMeta = substr($xmlThumbLtrim, 5, 19);
+						$xmlThumb = ltrim($xmlThumbMeta, "/thumb/");
+						
+						$xmlArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$xml->Video['ratingKey']. "%2Fart%3Ft%3D" .$xmlThumb. "&width=1920&height=1080";                                        
+						$xmlThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$xml->Video['ratingKey']. "%2Fthumb%3Ft%3D" .$xmlThumb. "&width=256&height=352";                                        
 						
 				echo "<div class='container-fluid'>";		
 					echo "<div class='art-face' style='background-image:url(".$xmlArtUrl.")'>";

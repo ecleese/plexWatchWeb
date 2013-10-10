@@ -1,6 +1,5 @@
 0.0.2:
-* Fix:		global: updated images in Plex/Web would not appear in plexWatchWeb
-* Change:	user.php: general usage stats changed from minutes to days, hours, minutes
+* Change:	user.php: general usage stats changed from minutes to hours, minutes
 * Add:		user.php: user profile tab with avatar image, general usage stats and recently watched list 
 * Change:	user.php: history table has been moved to a seperate tab to make room for profile and chart tabs
 * Add:		tables: in-progress streams are now reported in the date column as "Currently watching..."

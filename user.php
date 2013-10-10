@@ -62,9 +62,8 @@
 	$numRows = $db->querySingle("SELECT COUNT(*) as count FROM processed ");
 	$userInfo = $db->query("SELECT user,xml FROM processed WHERE user = '$user' ORDER BY time DESC LIMIT 1");
 	
-	$userStatsDailyCount = $db->querySingle("SELECT COUNT(*) FROM processed WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now', 'localtime') AND user='$user' ");
-	
-	$userStatsDailyTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM processed WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now', 'localtime') AND user='$user' ");
+	$userStatsDailyCount = $db->querySingle("SELECT COUNT(*) FROM processed WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now') AND user='$user' ");
+	$userStatsDailyTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM processed WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now') AND user='$user' ");
 	$userStatsDailyTimeViewedTime = 0;
 	while ($userStatsDailyTimeRow = $userStatsDailyTimeFetch->fetchArray()) {
 		$userStatsDailyTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsDailyTimeRow['stopped']));
@@ -74,16 +73,16 @@
 		$userStatsDailyTimeViewedTimeRowLength = strlen($userStatsDailyTimeViewedTimeRow);
 
 		$userStatsDailyTimeViewedTime += $userStatsDailyTimeViewedTimeRow;
-		$userStatsDailyTimeViewedTimeDays = floor($userStatsDailyTimeViewedTime / 86400);
-		$userStatsDailyTimeViewedTimeHours = floor(($userStatsDailyTimeViewedTime % 86400 ) / 3600);
-		$userStatsDailyTimeViewedTimeMinutes = floor(($userStatsDailyTimeViewedTime % 3600 ) / 60);
+		$userStatsDailyTimeViewedTimeHours = floor($userStatsDailyTimeViewedTime / 3600);
+		$userStatsDailyTimeViewedTimeMinutes = floor(($userStatsDailyTimeViewedTime / 60) % 60);
+		
 	}								
+									
+									
 	
 	
 	
-	
-	
-	$userStatsWeeklyCount = $db->querySingle("SELECT COUNT(*) FROM processed WHERE datetime(stopped, 'unixepoch') >= datetime('now', '-7 days', 'localtime') AND user='$user' ");
+	$userStatsWeeklyCount = $db->querySingle("SELECT COUNT(*) FROM processed WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-7 days', 'localtime') AND user='$user' ");
 	
 	$userStatsWeeklyTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM processed WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-7 days', 'localtime') AND user='$user' ");
 	$userStatsWeeklyTimeViewedTime = 0;
@@ -95,9 +94,8 @@
 		$userStatsWeeklyTimeViewedTimeRowLength = strlen($userStatsWeeklyTimeViewedTimeRow);
 		
 		$userStatsWeeklyTimeViewedTime += $userStatsWeeklyTimeViewedTimeRow;
-		$userStatsWeeklyTimeViewedTimeDays = floor($userStatsWeeklyTimeViewedTime / 86400);
-		$userStatsWeeklyTimeViewedTimeHours = floor(($userStatsWeeklyTimeViewedTime % 86400 ) / 3600);
-		$userStatsWeeklyTimeViewedTimeMinutes = floor(($userStatsWeeklyTimeViewedTime % 3600 ) / 60);
+		$userStatsWeeklyTimeViewedTimeHours = floor($userStatsWeeklyTimeViewedTime / 3600);
+		$userStatsWeeklyTimeViewedTimeMinutes = floor(($userStatsWeeklyTimeViewedTime / 60) % 60);
 	}
 	
 	
@@ -113,9 +111,8 @@
 		$userStatsMonthlyTimeViewedTimeRowLength = strlen($userStatsMonthlyTimeViewedTimeRow);
 		
 		$userStatsMonthlyTimeViewedTime += $userStatsMonthlyTimeViewedTimeRow;
-		$userStatsMonthlyTimeViewedTimeDays = floor($userStatsMonthlyTimeViewedTime / 86400);
-		$userStatsMonthlyTimeViewedTimeHours = floor(($userStatsMonthlyTimeViewedTime % 86400 ) / 3600);
-		$userStatsMonthlyTimeViewedTimeMinutes = floor(($userStatsMonthlyTimeViewedTime % 3600 ) / 60);
+		$userStatsMonthlyTimeViewedTimeHours = floor($userStatsMonthlyTimeViewedTime / 3600);
+		$userStatsMonthlyTimeViewedTimeMinutes = floor(($userStatsMonthlyTimeViewedTime / 60) % 60);
 	}
 	
 	
@@ -131,9 +128,8 @@
 		$userStatsAlltimeTimeViewedTimeRowLength = strlen($userStatsAlltimeTimeViewedTimeRow);
 		
 		$userStatsAlltimeTimeViewedTime += $userStatsAlltimeTimeViewedTimeRow;
-		$userStatsAlltimeTimeViewedTimeDays = floor($userStatsAlltimeTimeViewedTime / 86400);
-		$userStatsAlltimeTimeViewedTimeHours = floor(($userStatsAlltimeTimeViewedTime % 86400 ) / 3600);
-		$userStatsAlltimeTimeViewedTimeMinutes = floor(($userStatsAlltimeTimeViewedTime % 3600 ) / 60);
+		$userStatsAlltimeTimeViewedTimeHours = floor($userStatsAlltimeTimeViewedTime / 3600);
+		$userStatsAlltimeTimeViewedTimeMinutes = floor(($userStatsAlltimeTimeViewedTime / 60) % 60);
 		
 	}
 	
@@ -178,7 +174,7 @@
 						echo "<div class='wellbg'>";
 							echo "<div class='wellheader'>";
 								echo "<div class='dashboard-wellheader'>";
-									echo"<h3>User Stats</h3>";
+									echo"<h3>User Profile Stats</h3>";
 								echo"</div>";
 							echo"</div>";
 							echo "<div class='user-overview-stats-wrapper'>";
@@ -188,34 +184,11 @@
 										echo "<li>";
 										echo "<div class='user-overview-stats-instance-text'>";
 											echo "<h4>Today</h4>";
-											if ($userStatsDailyCount == 1) {
-												echo "<h3>".$userStatsDailyCount."</h3><p>play</p>";
-											}else{
-												echo "<h3>".$userStatsDailyCount."</h3><p>plays</p>";
-											}
-											
-											if ($userStatsDailyTimeViewedTimeRowLength == 10) {
+											echo "<h3>".$userStatsDailyCount."</h3><p>play(s)</p>";
+											if ($userStatsDailyTimeViewedTimeRowLength == 8) {
 												echo "";
-											}else if (empty($userStatsDailyTimeViewedTimeMinutes) && empty($userStatsDailyTimeViewedTimeHours) && empty($userStatsDailyTimeViewedTimeDays)) {
-												echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
-											}else if ($userStatsDailyTimeViewedTimeDays == 0 && $userStatsDailyTimeViewedTimeHours == 0 && $userStatsDailyTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsDailyTimeViewedTimeMinutes."</h3> <p>min</p>";
-											}else if ($userStatsDailyTimeViewedTimeDays == 0 && $userStatsDailyTimeViewedTimeHours == 0) {
-												echo "<h1> / </h1><h3>".$userStatsDailyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsDailyTimeViewedTimeDays == 0 && $userStatsDailyTimeViewedTimeHours == 1) {
-												echo "<h1> / </h1><h3>".$userStatsDailyTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsDailyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsDailyTimeViewedTimeDays == 0 && $userStatsDailyTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsDailyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsDailyTimeViewedTimeMinutes."</h3> <p>min</p>";
-											}else if ($userStatsDailyTimeViewedTimeDays == 0) {
-												echo "<h1> / </h1><h3>".$userStatsDailyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsDailyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsDailyTimeViewedTimeDays == 1) {
-												echo "<h1> / </h1><h3>".$userStatsDailyTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsDailyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsDailyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsDailyTimeViewedTimeDays == 1 && $userStatsDailyTimeViewedTimeHours == 1) {
-												echo "<h1> / </h1><h3>".$userStatsDailyTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsDailyTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsDailyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsDailyTimeViewedTimeDays == 1 && $userStatsDailyTimeViewedTimeHours == 1 && $userStatsDailyTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsDailyTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsDailyTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsDailyTimeViewedTimeMinutes."</h3> <p>min</p>";
 											}else{
-												echo "<h1> / </h1><h3>".$userStatsDailyTimeViewedTimeDays."</h3> <p>days </p><h3>".$userStatsDailyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsDailyTimeViewedTimeMinutes."</h3> <p>mins</p>";
+												echo "<h1> / </h1><h3>".$userStatsDailyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsDailyTimeViewedTimeMinutes."</h3> <p>mins</p>";
 											}
 										echo"</div>";
 										echo "</li>";
@@ -224,35 +197,12 @@
 									echo "<div class='user-overview-stats-instance'>";
 										echo "<li>";
 										echo "<div class='user-overview-stats-instance-text'>";
-										echo "<h4>Last week</h4>";
-											if ($userStatsWeeklyCount == 1) {
-												echo "<h3>".$userStatsWeeklyCount."</h3><p>play</p>";
-											}else{
-												echo "<h3>".$userStatsWeeklyCount."</h3><p>plays</p>";
-											}
-											
-											if ($userStatsWeeklyTimeViewedTimeRowLength == 10) {
+										echo "<h4>This week</h4>";
+											echo "<h3>".$userStatsWeeklyCount."</h3><p>plays</p>";
+											if ($userStatsWeeklyTimeViewedTimeRowLength == 8) {
 												echo "";
-											}else if (empty($userStatsWeeklyTimeViewedTimeMinutes) && empty($userStatsWeeklyTimeViewedTimeHours) && empty($userStatsWeeklyTimeViewedTimeDays)) {
-												echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
-											}else if ($userStatsWeeklyTimeViewedTimeDays == 0 && $userStatsWeeklyTimeViewedTimeHours == 0 && $userStatsWeeklyTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTimeMinutes."</h3> <p>min</p>";
-											}else if ($userStatsWeeklyTimeViewedTimeDays == 0 && $userStatsWeeklyTimeViewedTimeHours == 0) {
-												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsWeeklyTimeViewedTimeDays == 0 && $userStatsWeeklyTimeViewedTimeHours == 1) {
-												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsWeeklyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsWeeklyTimeViewedTimeDays == 0 && $userStatsWeeklyTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsWeeklyTimeViewedTimeMinutes."</h3> <p>min</p>";
-											}else if ($userStatsWeeklyTimeViewedTimeDays == 0) {
-												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsWeeklyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsWeeklyTimeViewedTimeDays == 1) {
-												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsWeeklyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsWeeklyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsWeeklyTimeViewedTimeDays == 1 && $userStatsWeeklyTimeViewedTimeHours == 1) {
-												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsWeeklyTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsWeeklyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsWeeklyTimeViewedTimeDays == 1 && $userStatsWeeklyTimeViewedTimeHours == 1 && $userStatsWeeklyTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsWeeklyTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsWeeklyTimeViewedTimeMinutes."</h3> <p>min</p>";
 											}else{
-												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTimeDays."</h3> <p>days </p><h3>".$userStatsWeeklyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsWeeklyTimeViewedTimeMinutes."</h3> <p>mins</p>";
+												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsWeeklyTimeViewedTimeMinutes."</h3> <p>mins</p>";
 											}
 										echo"</div>";
 										echo "</li>";
@@ -261,35 +211,12 @@
 									echo "<div class='user-overview-stats-instance'>";
 										echo "<li>";
 										echo "<div class='user-overview-stats-instance-text'>";
-										echo "<h4>Last month</h4>";
-											if ($userStatsMonthlyCount == 1) {
-												echo "<h3>".$userStatsMonthlyCount."</h3><p>play</p>";
-											}else{
-												echo "<h3>".$userStatsMonthlyCount."</h3><p>plays</p>";
-											}
-											
-											if ($userStatsMonthlyTimeViewedTimeRowLength == 10) {
+										echo "<h4>This month</h4>";
+											echo "<h3>".$userStatsMonthlyCount."</h3><p>plays</p>";
+											if ($userStatsMonthlyTimeViewedTimeRowLength == 8) {
 												echo "";
-											}else if (empty($userStatsMonthlyTimeViewedTimeMinutes) && empty($userStatsMonthlyTimeViewedTimeHours) && empty($userStatsMonthlyTimeViewedTimeDays)) {
-												echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
-											}else if ($userStatsMonthlyTimeViewedTimeDays == 0 && $userStatsMonthlyTimeViewedTimeHours == 0 && $userStatsMonthlyTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsMonthlyTimeViewedTimeMinutes."</h3> <p>min</p>";
-											}else if ($userStatsMonthlyTimeViewedTimeDays == 0 && $userStatsMonthlyTimeViewedTimeHours == 0) {
-												echo "<h1> / </h1><h3>".$userStatsMonthlyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsMonthlyTimeViewedTimeDays == 0 && $userStatsMonthlyTimeViewedTimeHours == 1) {
-												echo "<h1> / </h1><h3>".$userStatsMonthlyTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsMonthlyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsMonthlyTimeViewedTimeDays == 0 && $userStatsMonthlyTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsMonthlyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsMonthlyTimeViewedTimeMinutes."</h3> <p>min</p>";
-											}else if ($userStatsMonthlyTimeViewedTimeDays == 0) {
-												echo "<h1> / </h1><h3>".$userStatsMonthlyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsMonthlyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsMonthlyTimeViewedTimeDays == 1) {
-												echo "<h1> / </h1><h3>".$userStatsMonthlyTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsMonthlyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsMonthlyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsMonthlyTimeViewedTimeDays == 1 && $userStatsMonthlyTimeViewedTimeHours == 1) {
-												echo "<h1> / </h1><h3>".$userStatsMonthlyTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsMonthlyTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsMonthlyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsMonthlyTimeViewedTimeDays == 1 && $userStatsMonthlyTimeViewedTimeHours == 1 && $userStatsMonthlyTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsMonthlyTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsMonthlyTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsMonthlyTimeViewedTimeMinutes."</h3> <p>min</p>";
 											}else{
-												echo "<h1> / </h1><h3>".$userStatsMonthlyTimeViewedTimeDays."</h3> <p>days </p><h3>".$userStatsMonthlyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsMonthlyTimeViewedTimeMinutes."</h3> <p>mins</p>";
+												echo "<h1> / </h1><h3>".$userStatsMonthlyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsMonthlyTimeViewedTimeMinutes."</h3> <p>mins</p>";
 											}
 										echo"</div>";
 										echo "</li>";
@@ -299,34 +226,11 @@
 										echo "<li>";
 										echo "<div class='user-overview-stats-instance-text'>";
 										echo "<h4>All Time</h4>";
-											if ($userStatsAlltimeCount == 1) {
-												echo "<h3>".$userStatsAlltimeCount."</h3><p>play</p>";
-											}else{
-												echo "<h3>".$userStatsAlltimeCount."</h3><p>plays</p>";
-											}
-											
-											if ($userStatsAlltimeTimeViewedTimeRowLength == 10) {
+											echo "<h3>".$userStatsAlltimeCount."</h3><p>plays</p>";
+											if ($userStatsAlltimeTimeViewedTimeRowLength == 8) {
 												echo "";
-											}else if (empty($userStatsAlltimeTimeViewedTimeMinutes) && empty($userStatsAlltimeTimeViewedTimeHours) && empty($userStatsAlltimeTimeViewedTimeDays)) {
-												echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
-											}else if ($userStatsAlltimeTimeViewedTimeDays == 0 && $userStatsAlltimeTimeViewedTimeHours == 0 && $userStatsAlltimeTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>min</p>";
-											}else if ($userStatsAlltimeTimeViewedTimeDays == 0 && $userStatsAlltimeTimeViewedTimeHours == 0) {
-												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsAlltimeTimeViewedTimeDays == 0 && $userStatsAlltimeTimeViewedTimeHours == 1) {
-												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsAlltimeTimeViewedTimeDays == 0 && $userStatsAlltimeTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>min</p>";
-											}else if ($userStatsAlltimeTimeViewedTimeDays == 0) {
-												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsAlltimeTimeViewedTimeDays == 1) {
-												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsAlltimeTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsAlltimeTimeViewedTimeDays == 1 && $userStatsAlltimeTimeViewedTimeHours == 1) {
-												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsAlltimeTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsAlltimeTimeViewedTimeDays == 1 && $userStatsAlltimeTimeViewedTimeHours == 1 && $userStatsAlltimeTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsAlltimeTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>min</p>";
 											}else{
-												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeDays."</h3> <p>days </p><h3>".$userStatsAlltimeTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>mins</p>";
+												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>mins</p>";
 											}
 										echo"</div>";	
 										echo "</li>";
@@ -338,7 +242,6 @@
 					
 				echo "</div>";		
 			echo "</div>";	
-				
 			echo "<div class='container-fluid'>";	
 				echo "<div class='row-fluid'>";
 					echo "<div class='span12'>";
@@ -357,12 +260,16 @@
 						while ($recentlyWatchedRow = $recentlyWatchedResults->fetchArray()) {
 						
 						$request_url = $recentlyWatchedRow['xml'];
-						$recentXml = simplexml_load_string($request_url) ;                      
+						$recentXml = simplexml_load_string($request_url) ;
+												
+						$recentThumbLtrim = ltrim($recentXml['grandparentThumb'], "/library/metadata/");
+						$recentThumbMeta = substr($recentThumbLtrim, 5, 19);
+						$recentThumb = ltrim($recentThumbMeta, "/thumb/");                        
 		
 						if ($recentXml['type'] == "episode") {
-							$recentMetadata = "http://".$plexWatch['pmsUrl'].":32400/library/metadata/".$recentXml['ratingKey']."";
-                            $recentThumbUrlRequest = simplexml_load_file ($recentMetadata);                                       
-							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentThumbUrlRequest->Video['parentThumb']."&width=136&height=280";                                        
+							
+							$recentArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$recentXml['grandparentRatingKey']. "%2Fart%3Ft%3D" .$recentThumb. "&width=320&height=160";                                        
+							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$recentXml['grandparentRatingKey']. "%2Fthumb%3Ft%3D" .$recentThumb. "&width=136&height=280";                                        
 							
 								echo "<div class='dashboard-recent-media-instance'>";
 								echo "<li>";
@@ -375,10 +282,10 @@
 								echo "</div>";
 								echo "</li>";
 								echo "</div>";
-						}else if ($recentXml['type'] == "movie") {	
-							$recentMetadata = "http://".$plexWatch['pmsUrl'].":32400/library/metadata/".$recentXml['ratingKey']."";
-                            $recentThumbUrlRequest = simplexml_load_file ($recentMetadata);         
-							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentThumbUrlRequest->Video['thumb']."&width=136&height=280";                                        
+						}else if ($recentXml['type'] == "movie") {				
+						
+							$recentArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$recentXml['ratingKey']. "%2Fart%3Ft%3D" .$recentThumb. "&width=320&height=160";                                        
+							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$recentXml['ratingKey']. "%2Fthumb%3Ft%3D" .$recentThumb. "&width=136&height=280";                                        
 							
 								echo "<div class='dashboard-recent-media-instance'>";
 								echo "<li>";
