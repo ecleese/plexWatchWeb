@@ -4,8 +4,8 @@ plexWatch/Web - 0.0.2
 A web front-end for plexWatch.
 
 * plexWatch: https://github.com/ljunkie/plexWatch
-* plexWatch Plex Forum Thread: http://forums.plexapp.com/index.php/topic/72552-plexwatch-plex-notify-script-send-push-alerts-on-new-sessions-and-stopped/
-
+* plexWatch Plex forum thread: http://forums.plexapp.com/index.php/topic/72552-plexwatch-plex-notify-script-send-push-alerts-on-new-sessions-and-stopped/
+* plexWatch (Windows branch) Plex forum thread: http://forums.plexapp.com/index.php/topic/79616-plexwatch-windows-branch/
 
 ###Features
 -----------
@@ -62,6 +62,7 @@ A web front-end for plexWatch.
 
 ###Requirements
 ---------------
+* Plex Media Server (v0.9.8+) and a PlexPass membership
 * plexWatch (v0.1.0+)
 * a web server that supports php (apache, nginx, XAMPP, WampServer, EasyPHP, lighttpd, etc)
 * php5
