@@ -84,12 +84,17 @@
 								$num_rows++;
 								
 								$xml = simplexml_load_string($top10['xml']) ;  
+<<<<<<< HEAD
 								
 								$xmlThumbLtrim = ltrim($xml['thumb'], "/library/metadata/");
 								$xmlThumbMeta = substr($xmlThumbLtrim, 5, 19);
 								$xmlThumb = ltrim($xmlThumbMeta, "/thumb/"); 
 								$xmlMovieThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$xml['ratingKey']. "%2Fthumb%3Ft%3D" .$xmlThumb. "&width=100&height=149";                                        
 								$xmlEpisodeThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$xml['grandparentRatingKey']. "%2Fthumb%3Ft%3D" .$xmlThumb. "&width=100&height=149";                                        
+=======
+								$xmlMovieThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$xml['thumb']."&width=100&height=149";                                        
+								$xmlEpisodeThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$xml['grandparentThumb']."&width=100&height=149";                                        
+>>>>>>> origin/dev
 						
 								if ($xml['type'] == "movie") {
 									echo "<div class='charts-instance-wrapper'>";
@@ -136,6 +141,7 @@
 							// Run through each feed item
 							$top10Movies_Num_rows = 0;
 							while ($top10Movies = $queryTop10Movies->fetchArray()) {
+<<<<<<< HEAD
 								
 								
 								$top10MoviesXml = simplexml_load_string($top10Movies['xml']) ;  
@@ -144,6 +150,11 @@
 								$top10MoviesXmlThumbMeta = substr($top10MoviesXmlThumbLtrim, 5, 19);
 								$top10MoviesXmlThumb = ltrim($top10MoviesXmlThumbMeta, "/thumb/"); 
 								$top10MoviesXmlMovieThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$top10MoviesXml['ratingKey']. "%2Fthumb%3Ft%3D" .$top10MoviesXmlThumb. "&width=100&height=149";                                        
+=======
+
+								$top10MoviesXml = simplexml_load_string($top10Movies['xml']) ;  
+								$top10MoviesXmlMovieThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$top10MoviesXml['thumb']."&width=100&height=149";                                        
+>>>>>>> origin/dev
 								
 								if ($top10MoviesXml['type'] == "movie") {
 									$top10Movies_Num_rows++;
@@ -185,6 +196,7 @@
 							// Run through each feed item
 							$top10Shows_Num_rows = 0;
 							while ($top10Shows = $queryTop10Shows->fetchArray()) {
+<<<<<<< HEAD
 								
 								
 								$top10ShowsXml = simplexml_load_string($top10Shows['xml']) ;  
@@ -193,6 +205,11 @@
 								$top10ShowsXmlThumbMeta = substr($top10ShowsXmlThumbLtrim, 5, 19);
 								$top10ShowsXmlThumb = ltrim($top10ShowsXmlThumbMeta, "/thumb/"); 
 								$top10ShowsXmlShowThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$top10ShowsXml['grandparentRatingKey']. "%2Fthumb%3Ft%3D" .$top10ShowsXmlThumb. "&width=100&height=149";                                        
+=======
+
+								$top10ShowsXml = simplexml_load_string($top10Shows['xml']) ;  
+								$top10ShowsXmlShowThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$top10ShowsXml['grandparentThumb']."&width=100&height=149";                                        
+>>>>>>> origin/dev
 								
 								if ($top10ShowsXml['type'] == "episode") {
 									$top10Shows_Num_rows++;
@@ -234,6 +251,7 @@
 							// Run through each feed item
 							$top10Episodes_Num_rows = 0;
 							while ($top10Episodes = $queryTop10Episodes->fetchArray()) {
+<<<<<<< HEAD
 								
 								
 								$top10EpisodesXml = simplexml_load_string($top10Episodes['xml']) ;  
@@ -242,6 +260,12 @@
 								$top10EpisodesXmlThumbMeta = substr($top10EpisodesXmlThumbLtrim, 5, 19);
 								$top10EpisodesXmlThumb = ltrim($top10EpisodesXmlThumbMeta, "/thumb/"); 
 								$top10EpisodesXmlEpisodeThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$top10EpisodesXml['grandparentRatingKey']. "%2Fthumb%3Ft%3D" .$top10EpisodesXmlThumb. "&width=100&height=149";                                        
+=======
+
+								$top10EpisodesXml = simplexml_load_string($top10Episodes['xml']) ;  
+
+								$top10EpisodesXmlEpisodeThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$top10EpisodesXml['parentThumb']."&width=100&height=149";                      
+>>>>>>> origin/dev
 								
 								if ($top10EpisodesXml['type'] == "episode") {
 									$top10Episodes_Num_rows++;

@@ -110,8 +110,11 @@
 							echo "<div class='dashboard-status-instance'>";
 								echo("$statusMyplex");
 							echo "</div>";
+<<<<<<< HEAD
 							
 							
+=======
+>>>>>>> origin/dev
 						
 					echo "</div>";
 			echo "</div>";
@@ -153,6 +156,7 @@
 						// Run through each feed item
 						while ($recent = $recentResults->fetchArray()) {
 					
+<<<<<<< HEAD
 						$recentXml = simplexml_load_file("http://".$plexWatch['pmsUrl'].":32400".$recent['item_id']."");
 						
 						$recentThumbLtrim = ltrim($recentXml->Video['grandparentThumb'], "/library/metadata/");
@@ -163,6 +167,14 @@
 							
 							$recentArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$recentXml->Video['grandparentRatingKey']. "%2Fart%3Ft%3D" .$recentThumb. "&width=320&height=160";                                        
 							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$recentXml->Video['grandparentRatingKey']. "%2Fthumb%3Ft%3D" .$recentThumb. "&width=136&height=280";                                        
+=======
+						$recentXml = simplexml_load_file("http://".$plexWatch['pmsUrl'].":32400".$recent['item_id']."");                       
+		
+						if ($recentXml->Video['type'] == "episode") {
+							
+							$recentArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['art']."&width=320&height=160";                                        
+							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['grandparentThumb']."&width=136&height=280";                                        
+>>>>>>> origin/dev
 							
 								echo "<div class='dashboard-recent-media-instance'>";
 								echo "<li>";
@@ -185,8 +197,13 @@
 								echo "</div>";
 						}else if ($recentXml->Video['type'] == "movie") {				
 						
+<<<<<<< HEAD
 							$recentArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$recentXml->Video['ratingKey']. "%2Fart%3Ft%3D" .$recentThumb. "&width=320&height=160";                                        
 							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http%3A%2F%2F127.0.0.1%3A32400%2Flibrary%2Fmetadata%2F" .$recentXml->Video['ratingKey']. "%2Fthumb%3Ft%3D" .$recentThumb. "&width=136&height=280";                                        
+=======
+							$recentArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['art']."&width=320&height=160";                                        
+							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['thumb']."&width=136&height=280";                                        
+>>>>>>> origin/dev
 							
 								echo "<div class='dashboard-recent-media-instance'>";
 								echo "<li>";

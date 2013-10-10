@@ -194,6 +194,7 @@ table.display td.center {
 
 table.display tr:hover {
 
+<<<<<<< HEAD
 background-color: #f17800;
 background-image: -moz-linear-gradient(top, #f58200, #eb6900);
 background-image: -ms-linear-gradient(top, #f58200, #eb6900);
@@ -202,16 +203,24 @@ background-image: -webkit-linear-gradient(top, #f58200, #eb6900);
 background-image: -o-linear-gradient(top, #f58200, #eb6900);
 background-image: linear-gradient(top, #f58200, #eb6900);
 color: #fff; 
+=======
+>>>>>>> origin/dev
 }
 
 table.display tr:hover a {
 text-decoration:none;
-color: #fff; 
+
+}
+
+table.display td:hover a {
+color: #ff9d00; 
 }
 
 table.display thead tr:hover {
 background: transparent;
 }
+
+
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables sorting

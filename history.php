@@ -100,7 +100,12 @@
 						while ($row = $results->fetchArray()) {
 						
 						echo "<tr>";
-							echo "<td align='center'>".date("m/d/Y",$row['time'])."</td>";
+							if (empty($row['stopped'])) {
+											echo "<td class='currentlyWatching' align='center'>Currently watching...</td>";
+										}else{
+											echo "<td align='center'>".date("m/d/Y",$row['time'])."</td>";
+							}
+							
 							echo "<td align='left'><a href='user.php?user=".$row['user']."'>".$row['user']."</td>";
 							echo "<td align='left'>".$row['platform']."</td>";
 
@@ -135,7 +140,7 @@
 							
 							$stopped_time = date("g:i a",$row['stopped']);
 							
-							if ($stopped_time == '7:00 pm') {								//need to find out why it's always this value and write an alternate method.
+							if (empty($row['stopped'])) {								
 								echo "<td align='center'>n/a</td>";
 							}else{
 								echo "<td align='center'>".$stopped_time."</td>";
