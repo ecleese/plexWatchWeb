@@ -6642,7 +6642,6 @@ position: relative;
 .dashboard-recent-media {
 padding-top: 5px;
 margin: -5px 0 0 0px;
-overflow-y: hidden;
 list-style: none;
 }
 

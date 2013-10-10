@@ -138,7 +138,7 @@
 
 			$db = new SQLite3($plexWatch['plexWatchDb']);
 
-			$recentResults = $db->query("SELECT item_id,time,datetime(time, 'unixepoch', 'localtime') AS datetime FROM recently_added GROUP BY item_id ORDER BY time DESC LIMIT 10");
+			$recentResults = $db->query("SELECT item_id,time,datetime(time, 'unixepoch', 'localtime') AS datetime FROM recently_added GROUP BY item_id ORDER BY time DESC LIMIT 11");
 		
 			echo "<div class='wellbg'>";
 				echo "<div class='wellheader'>";
@@ -156,7 +156,7 @@
 						if ($recentXml->Video['type'] == "episode") {
 							
 							$recentArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['art']."&width=320&height=160";                                        
-							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['grandparentThumb']."&width=136&height=280";                                        
+							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['parentThumb']."&width=136&height=280";                                        
 							
 								echo "<div class='dashboard-recent-media-instance'>";
 								echo "<li>";
