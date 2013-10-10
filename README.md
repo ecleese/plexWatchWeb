@@ -40,7 +40,11 @@ A web front-end for plexWatch.
 	* duration length
 	* percentage completed
 	
+<<<<<<< HEAD
 * full user list with gravatar
+=======
+* full user list w/gravatar
+>>>>>>> 42aba624952da8624ebaefda91d5249b9a4d9114
 
 * individual user information
 	- username and gravatar (if available)
@@ -52,7 +56,11 @@ A web front-end for plexWatch.
 	- top 10 viewed movies
 	- top 10 viewed tv shows
 	- top 10 viewed tv episodes
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 42aba624952da8624ebaefda91d5249b9a4d9114
 * content information pages 
 	- movies (includes watching history)
 	- tv shows (includes top 10 watched episodes)
@@ -82,12 +90,15 @@ A web front-end for plexWatch.
 4. Upload the contents to the desired location on your web server "/var/www/plexWatch"
 <<<<<<< HEAD
 
+<<<<<<< HEAD
   	
 
 
 =======
 >>>>>>> origin/dev
 
+=======
+>>>>>>> 42aba624952da8624ebaefda91d5249b9a4d9114
 
 ###Use
 ------
