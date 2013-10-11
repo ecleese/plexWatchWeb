@@ -63,9 +63,9 @@
 			
 				require_once(dirname(__FILE__) . '/config.php');
 			
-				$statusSessions = simplexml_load_file("http://".$plexWatch['pmsUrl'].":32400/status/sessions");
-			
 				
+				$statusSessions = simplexml_load_file("http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/status/sessions") or die ("Failed to access Plex Media Server. Please check your server and config.php settings.");;
+
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 						echo "<div class='dashboard-wellheader'>";
@@ -155,8 +155,8 @@
 		
 						if ($recentXml->Video['type'] == "episode") {
 							
-							$recentArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['art']."&width=320&height=160";                                        
-							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['grandparentThumb']."&width=136&height=280";                                        
+							$recentArtUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['art']."&width=320&height=160";                                        
+							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['parentThumb']."&width=136&height=280";                                        
 							
 								echo "<div class='dashboard-recent-media-instance'>";
 								echo "<li>";
@@ -179,8 +179,8 @@
 								echo "</div>";
 						}else if ($recentXml->Video['type'] == "movie") {				
 						
-							$recentArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['art']."&width=320&height=160";                                        
-							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['thumb']."&width=136&height=280";                                        
+							$recentArtUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['art']."&width=320&height=160";                                        
+							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['thumb']."&width=136&height=280";                                        
 							
 								echo "<div class='dashboard-recent-media-instance'>";
 								echo "<li>";

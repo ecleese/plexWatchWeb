@@ -67,7 +67,7 @@
 			date_default_timezone_set(@date_default_timezone_get());
 
 			$db = new SQLite3($plexWatch['plexWatchDb']);
-			$users = $db->query("SELECT user as users,xml FROM processed GROUP BY user ORDER BY users");
+			$users = $db->query("SELECT user as users,xml FROM processed GROUP BY user ORDER BY users") or die ("Failed to access plexWatch database. Please check your server and config.php settings.");
 		
 			echo "<div class='span12'>";
 			echo "<div class='wellbg'>";

@@ -60,7 +60,7 @@
 	$db = new SQLite3($plexWatch['plexWatchDb']);
 	
 	$numRows = $db->querySingle("SELECT COUNT(*) as count FROM processed ");
-	$userInfo = $db->query("SELECT user,xml FROM processed WHERE user = '$user' ORDER BY time DESC LIMIT 1");
+	$userInfo = $db->query("SELECT user,xml FROM processed WHERE user = '$user' ORDER BY time DESC LIMIT 1") or die ("Failed to access plexWatch database. Please check your server and config.php settings.");
 	
 	$userStatsDailyCount = $db->querySingle("SELECT COUNT(*) FROM processed WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now', 'localtime') AND user='$user' ");
 	
@@ -360,9 +360,9 @@
 						$recentXml = simplexml_load_string($request_url) ;                      
 		
 						if ($recentXml['type'] == "episode") {
-							$recentMetadata = "http://".$plexWatch['pmsUrl'].":32400/library/metadata/".$recentXml['ratingKey']."";
+							$recentMetadata = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/library/metadata/".$recentXml['ratingKey']."";
                             $recentThumbUrlRequest = simplexml_load_file ($recentMetadata);                                       
-							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentThumbUrlRequest->Video['parentThumb']."&width=136&height=280";                                        
+							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsPort']."".$recentThumbUrlRequest->Video['parentThumb']."&width=136&height=280";                                        
 							
 								echo "<div class='dashboard-recent-media-instance'>";
 								echo "<li>";
@@ -376,9 +376,9 @@
 								echo "</li>";
 								echo "</div>";
 						}else if ($recentXml['type'] == "movie") {	
-							$recentMetadata = "http://".$plexWatch['pmsUrl'].":32400/library/metadata/".$recentXml['ratingKey']."";
+							$recentMetadata = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/library/metadata/".$recentXml['ratingKey']."";
                             $recentThumbUrlRequest = simplexml_load_file ($recentMetadata);         
-							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentThumbUrlRequest->Video['thumb']."&width=136&height=280";                                        
+							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsPort']."".$recentThumbUrlRequest->Video['thumb']."&width=136&height=280";                                        
 							
 								echo "<div class='dashboard-recent-media-instance'>";
 								echo "<li>";

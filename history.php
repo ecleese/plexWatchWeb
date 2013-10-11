@@ -73,7 +73,7 @@
 					$db = new SQLite3($plexWatch['plexWatchDb']);
 					$numRows = $db->querySingle("SELECT COUNT(*) as count FROM processed ");
 
-					$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM processed ORDER BY time DESC");
+					$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM processed ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your server and config.php settings.");
 
 					if ($numRows < 1) {
 
