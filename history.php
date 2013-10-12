@@ -36,7 +36,7 @@
 		    			
 		<div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
-				<div class="logo"></div>
+				<a href="index.php"><div class="logo"></div></a>
 				<ul class="nav">
 					
 					<li><a href="index.php"><i class="icon-home icon-white"></i> Home</a></li>
@@ -160,7 +160,7 @@
 								echo "<td align='center'>".$viewed_time. " min</td>";
 							}
 							
-							$percentComplete = sprintf("%2d", ($viewOffset / $duration) * 100);
+							$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
 								if ($percentComplete >= 90) {	
 								  $percentComplete = 100;    
 								}
