@@ -37,7 +37,7 @@
 		<div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
 				
-				<div class="logo"></div>
+				<a href="index.php"><div class="logo"></div></a>
 				<ul class="nav">
 					
 					<li><a href="index.php"><i class="icon-home icon-white"></i> Home</a></li>
@@ -54,22 +54,32 @@
 	
 	<?php
 		require_once(dirname(__FILE__) . '/config.php');
+		
+		if ($plexWatch['https'] == 'yes') {
+			$plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
+		}else if ($plexWatch['https'] == 'no') {
+			$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
+		}
+		
 		date_default_timezone_set(@date_default_timezone_get());
 		
 		$id = $_GET['id'];
 					
-		$infoUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/library/metadata/".$id."";
+		$infoUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."";
 		$xml = simplexml_load_file($infoUrl) or die ("Failed to access Plex Media Server. Please check your server and config.php settings.");
 		
 			if ($xml->Video['type'] == "episode") {
 							
-				$xmlArtUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsPort']."".$xml->Video['art']."&width=1920&height=1080";                                       
-				$xmlThumbUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsPort']."".$xml->Video['parentThumb']."&width=256&height=352";                                        
+				$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['art']."&width=1920&height=1080";                                       
+				$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['parentThumb']."&width=256&height=352";                                        
 							
 					echo "<div class='container-fluid'>";
 						
-							
-							echo "<div class='art-face' style='background-image:url(".$xmlArtUrl.")'>";
+							if($xml->Video['art']) {
+								echo "<div class='art-face' style='background-image:url(".$xmlArtUrl.")'>";
+							}else{
+								echo "<div class='art-face'>";
+							}
 								
 								echo "<div class='summary-wrapper'>";
 									echo "<div class='summary-overlay'>";
@@ -77,7 +87,13 @@
 										
 											echo "<div class='span9'>";
 												echo "<div class='summary-content-poster hidden-phone hidden-tablet'>";
-													echo "<img src='".$xmlThumbUrl."'></img>";
+													
+													if($xml->Video['parentThumb']) {
+														echo "<img src='".$xmlThumbUrl."'></img>";
+													}else{
+														echo "<img src='images/poster.png'></img>";
+													}
+													
 												echo "</div>";
 													echo "<div class='summary-content'>";
 														echo "<div class='summary-content-title'><h1>".$xml->Video['grandparentTitle']." (Season ".$xml->Video['parentIndex'].", Episode ".$xml->Video['index'].") \"".$xml->Video['title']."\"</h1></div>";
@@ -197,7 +213,7 @@
 										
 										$stopped_time = date("g:i a",$row['stopped']);
 										
-										if ($stopped_time == '7:00 pm') {								//need to find out why it's always this value and write an alternate method.
+										if (empty($row['stopped'])) {								
 											echo "<td align='center'>n/a</td>";
 										}else{
 											echo "<td align='center'>".$stopped_time."</td>";
@@ -237,11 +253,16 @@
 			
 						}else if ($xml->Directory['type'] == "show") {
 							
-							$xmlArtUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsPort']."".$xml->Directory['art']."&width=1920&height=1080";                                       
-							$xmlThumbUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsPort']."".$xml->Directory['thumb']."&width=256&height=352";                                        
+							$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['art']."&width=1920&height=1080";                                       
+							$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['thumb']."&width=256&height=352";                                        
 							
 						echo "<div class='container-fluid'>";
-								echo "<div class='art-face' style='background-image:url(".$xmlArtUrl.")'>";
+								
+								if($xml->Directory['art']) {
+									echo "<div class='art-face' style='background-image:url(".$xmlArtUrl.")'>";
+								}else{
+									echo "<div class='art-face'>";
+								}
 								
 								echo "<div class='summary-wrapper'>";
 									echo "<div class='summary-overlay'>";
@@ -249,7 +270,13 @@
 										
 										echo "<div class='span12'>";
 											echo "<div class='summary-content-poster hidden-phone hidden-tablet'>";
-												echo "<img src='".$xmlThumbUrl."'></img>";
+											
+												if($xml->Directory['thumb']) {
+													echo "<img src='".$xmlThumbUrl."'></img>";
+												}else{
+													echo "<img src='images/poster.png'></img>";
+												}
+												
 											echo "</div>";
 												echo "<div class='summary-content'>";
 													echo "<div class='summary-content-title'><h1>".$xml->Directory['title']."</h1></div>";
@@ -305,7 +332,7 @@
 								
 									$topWatchedXmlUrl = $topWatchedResultsRow['xml'];
 									$topWatchedXmlfield = simplexml_load_string($topWatchedXmlUrl) ;								   
-									$topWatchedThumbUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsPort']."".$topWatchedXmlfield['thumb']."&width=205&height=115";                                        
+									$topWatchedThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$topWatchedXmlfield['thumb']."&width=205&height=115";                                        
 
 									$numRows++;
 
@@ -337,15 +364,19 @@
 						
 						}else if ($xml->Directory['type'] == "season") {
 							
-							$parentInfoUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/library/metadata/".$xml->Directory['parentRatingKey']."";
+							$parentInfoUrl = "".$plexWatchPmsUrl."/library/metadata/".$xml->Directory['parentRatingKey']."";
 							$parentXml = simplexml_load_file($parentInfoUrl) or die ("Feed Not Found");
 							
-							$xmlArtUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsPort']."".$xml->Directory['art']. "&width=1920&height=1080";                                       
-							$xmlThumbUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsPort']."".$xml->Directory['thumb']. "&width=256&height=352";                                        
+							$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['art']. "&width=1920&height=1080";                                       
+							$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['thumb']. "&width=256&height=352";                                        
 							
 						echo "<div class='container-fluid'>";	
 							
-								echo "<div class='art-face' style='background-image:url(".$xmlArtUrl.")'>";
+								if($xml->Directory['art']) {
+									echo "<div class='art-face' style='background-image:url(".$xmlArtUrl.")'>";
+								}else{
+									echo "<div class='art-face'>";
+								}
 								
 								echo "<div class='summary-wrapper'>";
 									echo "<div class='summary-overlay'>";
@@ -353,7 +384,13 @@
 										
 										echo "<div class='span9'>";
 											echo "<div class='summary-content-poster hidden-phone hidden-tablet'>";
-												echo "<img src='".$xmlThumbUrl."'></img>";
+											
+												if($xml->Directory['thumb']) {
+													echo "<img src='".$xmlThumbUrl."'></img>";
+												}else{
+													echo "<img src='images/poster.png'></img>";
+												}
+												
 											echo "</div>";
 												echo "<div class='summary-content'>";
 													echo "<div class='summary-content-title'><h1>".$xml->Directory['parentTitle']." (".$xml->Directory['title'].")</h1></div>";
@@ -386,18 +423,26 @@
 								
 						}else if ($xml->Video['type'] == "movie") {				
 							
-							$xmlArtUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsPort']."".$xml->Video['art']."&width=1920&height=1080";                                        
-							$xmlThumbUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsPort']."".$xml->Video['thumb']."&width=256&height=352";                                        
+							$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['art']."&width=1920&height=1080";                                        
+							$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['thumb']."&width=256&height=352";                                        
 							
 					echo "<div class='container-fluid'>";		
-						echo "<div class='art-face' style='background-image:url(".$xmlArtUrl.")'>";
+						if($xml->Video['art']) {
+									echo "<div class='art-face' style='background-image:url(".$xmlArtUrl.")'>";
+								}else{
+									echo "<div class='art-face'>";
+								};
 								
 							echo "<div class='summary-wrapper'>";
 								echo "<div class='summary-overlay'>";
 									echo "<div class='row-fluid'>";
 										echo "<div class='span9'>";	
 											echo "<div class='summary-content-poster hidden-phone hidden-tablet'>";
-												echo "<img src='".$xmlThumbUrl."'></img>";
+												if($xml->Video['thumb']) {
+													echo "<img src='".$xmlThumbUrl."'></img>";
+												}else{
+													echo "<img src='images/poster.png'></img>";
+												}
 											echo "</div>";	
 												echo "<div class='summary-content'>";
 													echo "<div class='summary-content-title'><h1>".$xml->Video['title']." (".$xml->Video['year'].")</h1></div>";
@@ -540,7 +585,7 @@
 										
 										$stopped_time = date("g:i a",$row['stopped']);
 										
-										if ($stopped_time == '7:00 pm') {								//need to find out why it's always this value and write an alternate method.
+										if (empty($row['stopped'])) {								
 											echo "<td align='center'>n/a</td>";
 										}else{
 											echo "<td align='center'>".$stopped_time."</td>";

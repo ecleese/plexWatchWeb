@@ -36,7 +36,7 @@
 	<div class="container">
 		<div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
-				<div class="logo"></div>
+				<a href="index.php"><div class="logo"></div></a>
 				<ul class="nav">
 					
 					<li><a href="index.php"><i class="icon-home icon-white"></i> Home</a></li>
@@ -63,6 +63,13 @@
 			<div class='span12'>
 			<?php
 				require_once(dirname(__FILE__) . '/config.php');
+				
+				if ($plexWatch['https'] == 'yes') {
+					$plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
+				}else if ($plexWatch['https'] == 'no') {
+					$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
+				}
+				
 				$db = new SQLite3($plexWatch['plexWatchDb']);
 				date_default_timezone_set(@date_default_timezone_get());
 
@@ -84,8 +91,8 @@
 								$num_rows++;
 								
 								$xml = simplexml_load_string($top10['xml']) ;  
-								$xmlMovieThumbUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:32400".$xml['thumb']."&width=100&height=149";                                        
-								$xmlEpisodeThumbUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:32400".$xml['grandparentThumb']."&width=100&height=149";                                        
+								$xmlMovieThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$xml['thumb']."&width=100&height=149";                                        
+								$xmlEpisodeThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$xml['grandparentThumb']."&width=100&height=149";                                        
 						
 								if ($xml['type'] == "movie") {
 									echo "<div class='charts-instance-wrapper'>";
@@ -134,7 +141,7 @@
 							while ($top10Movies = $queryTop10Movies->fetchArray()) {
 
 								$top10MoviesXml = simplexml_load_string($top10Movies['xml']) ;  
-								$top10MoviesXmlMovieThumbUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:32400".$top10MoviesXml['thumb']."&width=100&height=149";                                        
+								$top10MoviesXmlMovieThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$top10MoviesXml['thumb']."&width=100&height=149";                                        
 								
 								if ($top10MoviesXml['type'] == "movie") {
 									$top10Movies_Num_rows++;
@@ -178,7 +185,7 @@
 							while ($top10Shows = $queryTop10Shows->fetchArray()) {
 
 								$top10ShowsXml = simplexml_load_string($top10Shows['xml']) ;  
-								$top10ShowsXmlShowThumbUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:32400".$top10ShowsXml['grandparentThumb']."&width=100&height=149";                                        
+								$top10ShowsXmlShowThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$top10ShowsXml['grandparentThumb']."&width=100&height=149";                                        
 								
 								if ($top10ShowsXml['type'] == "episode") {
 									$top10Shows_Num_rows++;
@@ -223,7 +230,7 @@
 
 								$top10EpisodesXml = simplexml_load_string($top10Episodes['xml']) ;  
 
-								$top10EpisodesXmlEpisodeThumbUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:32400".$top10EpisodesXml['parentThumb']."&width=100&height=149";                      
+								$top10EpisodesXmlEpisodeThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$top10EpisodesXml['parentThumb']."&width=100&height=149";                      
 								
 								if ($top10EpisodesXml['type'] == "episode") {
 									$top10Episodes_Num_rows++;

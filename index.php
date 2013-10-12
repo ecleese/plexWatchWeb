@@ -35,7 +35,7 @@
 	<div class="container">
 		<div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
-				<div class="logo"></div>
+				<a href="index.php"><div class="logo"></div></a>
 				<ul class="nav">
 					
 					<li class="active"><a href="index.php"><i class="icon-home icon-white"></i> Home</a></li>
@@ -63,8 +63,13 @@
 			
 				require_once(dirname(__FILE__) . '/config.php');
 			
+				if ($plexWatch['https'] == 'yes') {
+					$plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
+				}else if ($plexWatch['https'] == 'no') {
+					$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
+				}
 				
-				$statusSessions = simplexml_load_file("http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/status/sessions") or die ("Failed to access Plex Media Server. Please check your server and config.php settings.");;
+				$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or die ("Failed to access Plex Media Server. Please check your server and config.php settings.");
 
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
@@ -74,9 +79,9 @@
 					echo "</div>";
 						
 					echo "<div class='dashboard-status-wrapper'>";
-							// Let's check Plex Media Server ports 32400, 32443
-							$pmsHttp = fsockopen($plexWatch['pmsUrl'], 32400);
-							$pmsHttps = fsockopen($plexWatch['pmsUrl'], 32443);
+							// Let's check Plex Media Server ports
+							$pmsHttp = fsockopen($plexWatch['pmsIp'], $plexWatch['pmsHttpPort']);
+							$pmsHttps = fsockopen($plexWatch['pmsIp'], $plexWatch['pmsHttpsPort']);
 							$myplexUrl = fsockopen ('my.plexapp.com', 443);
 
 							if ($pmsHttp) {
@@ -137,8 +142,8 @@
 			date_default_timezone_set(@date_default_timezone_get());
 
 			$db = new SQLite3($plexWatch['plexWatchDb']);
-
-			$recentResults = $db->query("SELECT item_id,time,datetime(time, 'unixepoch', 'localtime') AS datetime FROM recently_added GROUP BY item_id ORDER BY time DESC LIMIT 10");
+			
+			$recentRequest = simplexml_load_file("".$plexWatchPmsUrl."/library/recentlyAdded?query=c&X-Plex-Container-Start=0&X-Plex-Container-Size=10") or die ("Failed to access Plex Media Server. Please check your server and config.php settings.");
 		
 			echo "<div class='wellbg'>";
 				echo "<div class='wellheader'>";
@@ -149,59 +154,73 @@
 				echo "<div class='dashboard-recent-media-row'>";
 					echo "<ul class='dashboard-recent-media'>";
 						// Run through each feed item
-						while ($recent = $recentResults->fetchArray()) {
-					
-						$recentXml = simplexml_load_file("http://".$plexWatch['pmsUrl'].":32400".$recent['item_id']."");                       
-		
-						if ($recentXml->Video['type'] == "episode") {
-							
-							$recentArtUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['art']."&width=320&height=160";                                        
-							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['parentThumb']."&width=136&height=280";                                        
-							
-								echo "<div class='dashboard-recent-media-instance'>";
-								echo "<li>";
-								echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml->Video['ratingKey']. "'><img src='".$recentThumbUrl."' class='poster-face'></img></a></div></div>";
-								
-								echo "<div class=dashboard-recent-media-metacontainer>";
-								$parentIndexPadded = sprintf("%01s", $recentXml->Video['parentIndex']);
-								$indexPadded = sprintf("%02s", $recentXml->Video['index']);
-								echo "<h3>Season ".$parentIndexPadded.", Episode ".$indexPadded."</h3>";
-								
-								
-								$recentTime = $recent['time'];
-								$timeNow = time();
-								$age = time() - strtotime($recentTime);
-								include_once('includes/timeago.php');
-								echo "<h4>Added ".TimeAgo($recentTime)."</h4>";
-								
-								echo "</div>";
-								echo "</li>";
-								echo "</div>";
-						}else if ($recentXml->Video['type'] == "movie") {				
+						foreach ($recentRequest->children() as $recentXml) {		              
 						
-							$recentArtUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['art']."&width=320&height=160";                                        
-							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":".$plexWatch['pmsPort']."/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['thumb']."&width=136&height=280";                                        
+							if ($recentXml['type'] == "season") {
+								
+								$recentArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['art']."&width=320&height=160";                                        
+								$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['thumb']."&width=136&height=280";                                        
+
+									echo "<div class='dashboard-recent-media-instance'>";
+									echo "<li>";
+									
+									if($recentXml['thumb']) {
+									
+										echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='".$recentThumbUrl."' class='poster-face'></img></a></div></div>";
+									}else{
+										echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='images/poster.png' class='poster-face'></img></a></div></div>";
+									}
+									
+									echo "<div class=dashboard-recent-media-metacontainer>";
+									$parentIndexPadded = sprintf("%01s", $recentXml['parentIndex']);
+									$indexPadded = sprintf("%02s", $recentXml['index']);
+									echo "<h3>Season ".$parentIndexPadded.", Episode ".$indexPadded."</h3>";
+									
+									
+									$recentTime = $recentXml['addedAt'];
+									$timeNow = time();
+									$age = time() - strtotime($recentTime);
+									include_once('includes/timeago.php');
+									echo "<h4>Added ".TimeAgo($recentTime)."</h4>";
+									
+									echo "</div>";
+									echo "</li>";
+									echo "</div>";
+
+						
+							}else if ($recentXml['type'] == "movie") {				
 							
-								echo "<div class='dashboard-recent-media-instance'>";
-								echo "<li>";
-								echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml->Video['ratingKey']. "'><img src='".$recentThumbUrl."' class='poster-face'></img></a></div></div>";
+								$recentArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['art']."&width=320&height=160";                                        
+								$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['thumb']."&width=136&height=280";                                        
 								
-								echo "<div class=dashboard-recent-media-metacontainer>";
-								$parentIndexPadded = sprintf("%01s", $recentXml->Video['parentIndex']);
-								$indexPadded = sprintf("%02s", $recentXml->Video['index']);
-								echo "<h3>".$recentXml->Video['title']." (".$recentXml->Video['year'].")</h3>";
-								
-								
-								$recentTime = $recent['time'];
-								$timeNow = time();
-								$age = time() - strtotime($recentTime);
-								include_once('includes/timeago.php');
-								echo "<h4>Added ".TimeAgo($recentTime)."</h4>";
-								
-								echo "</div>";
-								echo "</li>";
-								echo "</div>";
-						}else{}
+									echo "<div class='dashboard-recent-media-instance'>";
+									echo "<li>";
+									
+									if($recentXml['thumb']) {
+									
+										echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='".$recentThumbUrl."' class='poster-face'></img></a></div></div>";
+									}else{
+										echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml->Video['ratingKey']. "'><img src='images/poster.png' class='poster-face'></img></a></div></div>";
+									}
+									
+									echo "<div class=dashboard-recent-media-metacontainer>";
+									$parentIndexPadded = sprintf("%01s", $recentXml['parentIndex']);
+									$indexPadded = sprintf("%02s", $recentXml['index']);
+									echo "<h3>".$recentXml['title']." (".$recentXml['year'].")</h3>";
+									
+									
+									$recentTime = $recentXml['addedAt'];
+									$timeNow = time();
+									$age = time() - strtotime($recentTime);
+									include_once('includes/timeago.php');
+									echo "<h4>Added ".TimeAgo($recentTime)."</h4>";
+									
+									echo "</div>";
+									echo "</li>";
+									echo "</div>";
+							
+							}
+						
 						}
 					echo "</ul>";
 				echo "</div>";

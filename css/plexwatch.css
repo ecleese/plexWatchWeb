@@ -6642,7 +6642,6 @@ position: relative;
 .dashboard-recent-media {
 padding-top: 5px;
 margin: -5px 0 0 0px;
-overflow-y: hidden;
 list-style: none;
 }
 
@@ -6652,7 +6651,7 @@ float: left;
 }
 
 .dashboard-recent-media li {
-margin-right: 20px;
+margin-right: 30px;
 padding-bottom: 25px;
 position: relative;
 
@@ -6677,6 +6676,7 @@ font-weight: bold;
 width: 140px;
 white-space: nowrap;
 text-align: center;
+clear: both;
 }
 
 .dashboard-recent-media-metacontainer h4 {
@@ -6876,6 +6876,8 @@ position: relative;
 top: -10px;
 float: left;
 margin-left: 20px;
+width: auto;
+height: 300px;
 }
 
 .summary-content-poster img {
@@ -7328,7 +7330,7 @@ float: left;
 text-align: center;
 position: relative;
 top: -15px;
-left: 0px;
+left: 40%;
 z-index: 1;
 -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
 -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
