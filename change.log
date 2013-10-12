@@ -1,4 +1,5 @@
 0.0.3dev
+* Fix:		info.php: if content was deleted from PMS and watching history links to info.php with this information, an error to the connection was displayed. a message now lets the user know "This media is no longer available in the Plex Media Server database"
 * Add:		info.php: season episode list if displaying season information
 * Fix:		info.php: if "genres" variable is not available it throws an error
 * Fix:		info.php: if "actors" variable is not available it throws an error
