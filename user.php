@@ -194,7 +194,9 @@
 												echo "<h3>".$userStatsDailyCount."</h3><p>plays</p>";
 											}
 											
-											if ($userStatsDailyTimeViewedTimeRowLength == 10) {
+											if (empty($userStatsDailyTimeViewedTimeRowLength)){
+											    echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
+											}else if ($userStatsDailyTimeViewedTimeRowLength == 10) {
 												echo "";
 											}else if (empty($userStatsDailyTimeViewedTimeMinutes) && empty($userStatsDailyTimeViewedTimeHours) && empty($userStatsDailyTimeViewedTimeDays)) {
 												echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
@@ -231,7 +233,9 @@
 												echo "<h3>".$userStatsWeeklyCount."</h3><p>plays</p>";
 											}
 											
-											if ($userStatsWeeklyTimeViewedTimeRowLength == 10) {
+											if (empty($userStatsWeeklyTimeViewedTimeRowLength)){
+											    echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
+											}else if ($userStatsWeeklyTimeViewedTimeRowLength == 10) {
 												echo "";
 											}else if (empty($userStatsWeeklyTimeViewedTimeMinutes) && empty($userStatsWeeklyTimeViewedTimeHours) && empty($userStatsWeeklyTimeViewedTimeDays)) {
 												echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
@@ -268,7 +272,9 @@
 												echo "<h3>".$userStatsMonthlyCount."</h3><p>plays</p>";
 											}
 											
-											if ($userStatsMonthlyTimeViewedTimeRowLength == 10) {
+											if (empty($userStatsMonthlyTimeViewedTimeRowLength)){
+											    echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
+											}else if ($userStatsMonthlyTimeViewedTimeRowLength == 10) {
 												echo "";
 											}else if (empty($userStatsMonthlyTimeViewedTimeMinutes) && empty($userStatsMonthlyTimeViewedTimeHours) && empty($userStatsMonthlyTimeViewedTimeDays)) {
 												echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
@@ -305,7 +311,9 @@
 												echo "<h3>".$userStatsAlltimeCount."</h3><p>plays</p>";
 											}
 											
-											if ($userStatsAlltimeTimeViewedTimeRowLength == 10) {
+											if (empty($userStatsAlltimeTimeViewedTimeRowLength)){
+											    echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
+											}else if ($userStatsAlltimeTimeViewedTimeRowLength == 10) {
 												echo "";
 											}else if (empty($userStatsAlltimeTimeViewedTimeMinutes) && empty($userStatsAlltimeTimeViewedTimeHours) && empty($userStatsAlltimeTimeViewedTimeDays)) {
 												echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
