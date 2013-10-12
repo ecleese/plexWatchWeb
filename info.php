@@ -66,7 +66,7 @@
 		$id = $_GET['id'];
 					
 		$infoUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."";
-		$xml = simplexml_load_file($infoUrl) or die ("Failed to access Plex Media Server. Please check your server and config.php settings.");
+		$xml = simplexml_load_file($infoUrl) or die ("<div class='container-fluid'><div class='row-fluid'><div class='span12'><h3>This media is no longer available in the Plex Media Server database.</h3></div></div>");
 		
 			if ($xml->Video['type'] == "episode") {
 							
