@@ -37,7 +37,7 @@
 		<div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
 				
-				<div class="logo"></div>
+				<a href="index.php"><div class="logo"></div></a>
 				<ul class="nav">
 					
 					<li><a href="index.php"><i class="icon-home icon-white"></i> Home</a></li>
@@ -194,7 +194,9 @@
 												echo "<h3>".$userStatsDailyCount."</h3><p>plays</p>";
 											}
 											
-											if ($userStatsDailyTimeViewedTimeRowLength == 10) {
+											if (empty($userStatsDailyTimeViewedTimeRowLength)){
+											    echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
+											}else if ($userStatsDailyTimeViewedTimeRowLength == 10) {
 												echo "";
 											}else if (empty($userStatsDailyTimeViewedTimeMinutes) && empty($userStatsDailyTimeViewedTimeHours) && empty($userStatsDailyTimeViewedTimeDays)) {
 												echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
@@ -231,7 +233,9 @@
 												echo "<h3>".$userStatsWeeklyCount."</h3><p>plays</p>";
 											}
 											
-											if ($userStatsWeeklyTimeViewedTimeRowLength == 10) {
+											if (empty($userStatsWeeklyTimeViewedTimeRowLength)){
+											    echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
+											}else if ($userStatsWeeklyTimeViewedTimeRowLength == 10) {
 												echo "";
 											}else if (empty($userStatsWeeklyTimeViewedTimeMinutes) && empty($userStatsWeeklyTimeViewedTimeHours) && empty($userStatsWeeklyTimeViewedTimeDays)) {
 												echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
@@ -268,7 +272,9 @@
 												echo "<h3>".$userStatsMonthlyCount."</h3><p>plays</p>";
 											}
 											
-											if ($userStatsMonthlyTimeViewedTimeRowLength == 10) {
+											if (empty($userStatsMonthlyTimeViewedTimeRowLength)){
+											    echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
+											}else if ($userStatsMonthlyTimeViewedTimeRowLength == 10) {
 												echo "";
 											}else if (empty($userStatsMonthlyTimeViewedTimeMinutes) && empty($userStatsMonthlyTimeViewedTimeHours) && empty($userStatsMonthlyTimeViewedTimeDays)) {
 												echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
@@ -305,7 +311,9 @@
 												echo "<h3>".$userStatsAlltimeCount."</h3><p>plays</p>";
 											}
 											
-											if ($userStatsAlltimeTimeViewedTimeRowLength == 10) {
+											if (empty($userStatsAlltimeTimeViewedTimeRowLength)){
+											    echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
+											}else if ($userStatsAlltimeTimeViewedTimeRowLength == 10) {
 												echo "";
 											}else if (empty($userStatsAlltimeTimeViewedTimeMinutes) && empty($userStatsAlltimeTimeViewedTimeHours) && empty($userStatsAlltimeTimeViewedTimeDays)) {
 												echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
@@ -377,7 +385,7 @@
 								echo "</div>";
 						}else if ($recentXml['type'] == "movie") {	
 							$recentMetadata = "http://".$plexWatch['pmsUrl'].":32400/library/metadata/".$recentXml['ratingKey']."";
-                            $recentThumbUrlRequest = simplexml_load_file ($recentMetadata);         
+                            if ($recentThumbUrlRequest = @simplexml_load_file ($recentMetadata)) {         
 							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentThumbUrlRequest->Video['thumb']."&width=136&height=280";                                        
 							
 								echo "<div class='dashboard-recent-media-instance'>";
@@ -392,6 +400,7 @@
 								echo "</div>";
 								echo "</li>";
 								echo "</div>";
+							}
 						}else{}
 						}
 					echo "</ul>";
@@ -498,7 +507,7 @@
 										echo "<td align='center'>".$viewed_time. " min</td>";
 									}
 									
-									$percentComplete = sprintf("%2d", ($viewOffset / $duration) * 100);
+									$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
 										if ($percentComplete >= 90) {	
 										  $percentComplete = 100;    
 										}

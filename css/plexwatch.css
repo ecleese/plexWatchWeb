@@ -6851,7 +6851,7 @@ bottom: 0;
 }
 
 .summary-overlay {
-background-color: rgba(0,0,0,0.85);
+background-color: rgba(0,0,0,0.50);
 color: #fff;
 font-size: 14px;
 height: auto;
@@ -6875,6 +6875,8 @@ position: relative;
 top: -10px;
 float: left;
 margin-left: 20px;
+width: 200px;
+height: 300px;
 }
 
 .summary-content-poster img {
