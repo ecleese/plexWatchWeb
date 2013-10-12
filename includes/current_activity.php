@@ -31,7 +31,7 @@ if ($statusSessions['size'] == '0') {
 								
 									echo "<div class='dashboard-activity-metadata-progress-minutes'>";
 																		
-										$percentComplete = sprintf("%2d", ($sessions['viewOffset'] / $sessions['duration']) * 100);
+										$percentComplete = ($sessions['duration'] == 0 ? 0 : sprintf("%2d", ($sessions['viewOffset'] / $sessions['duration']) * 100));	
 										if ($percentComplete >= 90) {	
 											$percentComplete = 100;    
 										}
@@ -147,8 +147,8 @@ if ($statusSessions['size'] == '0') {
 								echo "<div class='dashboard-activity-instance-overlay'>";
 								
 									echo "<div class='dashboard-activity-metadata-progress-minutes'>";
-																		
-										$percentComplete = sprintf("%2d", ($sessions['viewOffset'] / $sessions['duration']) * 100);
+										
+										$percentComplete = ($sessions['duration'] == 0 ? 0 : sprintf("%2d", ($sessions['viewOffset'] / $sessions['duration']) * 100));									
 										if ($percentComplete >= 90) {	
 											$percentComplete = 100;    
 										}

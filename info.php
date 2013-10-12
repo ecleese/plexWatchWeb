@@ -211,7 +211,7 @@
 										echo "<td align='center'>".$viewed_time. " min</td>";
 									}
 									
-									$percentComplete = sprintf("%2d", ($viewOffset / $duration) * 100);
+									$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
 										if ($percentComplete >= 90) {	
 										  $percentComplete = 100;    
 										}
@@ -556,7 +556,7 @@
 										echo "<td align='center'>".$viewed_time. " min</td>";
 									}
 									
-									$percentComplete = sprintf("%2d", ($viewOffset / $duration) * 100);
+									$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
 										if ($percentComplete >= 90) {	
 										  $percentComplete = 100;    
 										}
