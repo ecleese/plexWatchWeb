@@ -38,7 +38,7 @@ $statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or
 								
 									echo "<div class='dashboard-activity-metadata-progress-minutes'>";
 																		
-										$percentComplete = sprintf("%2d", ($sessions['viewOffset'] / $sessions['duration']) * 100);
+										$percentComplete = ($sessions['duration'] == 0 ? 0 : sprintf("%2d", ($sessions['viewOffset'] / $sessions['duration']) * 100));
 										if ($percentComplete >= 90) {	
 											$percentComplete = 100;    
 										}
@@ -161,7 +161,7 @@ $statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or
 								
 									echo "<div class='dashboard-activity-metadata-progress-minutes'>";
 																		
-										$percentComplete = sprintf("%2d", ($sessions['viewOffset'] / $sessions['duration']) * 100);
+										$percentComplete = ($sessions['duration'] == 0 ? 0 : sprintf("%2d", ($sessions['viewOffset'] / $sessions['duration']) * 100));
 										if ($percentComplete >= 90) {	
 											$percentComplete = 100;    
 										}
@@ -264,7 +264,10 @@ $statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or
 						echo "</div>";
 					echo "</div>";
 					}
-					}elseif ($sessions['type'] == "movie") {
+				}else{
+				}
+
+				if ($sessions['type'] == "movie") {
 						
 					$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['art']."&width=300&height=169";                                         
 					echo "<div class='instance'>";

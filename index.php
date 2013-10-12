@@ -172,9 +172,8 @@
 									}
 									
 									echo "<div class=dashboard-recent-media-metacontainer>";
-									$parentIndexPadded = sprintf("%01s", $recentXml['parentIndex']);
-									$indexPadded = sprintf("%02s", $recentXml['index']);
-									echo "<h3>Season ".$parentIndexPadded.", Episode ".$indexPadded."</h3>";
+									
+									echo "<h3>Season ".$recentXml['index']."</h3>";
 									
 									
 									$recentTime = $recentXml['addedAt'];

@@ -1,4 +1,10 @@
 0.0.3dev
+* Add:		info.php: season episode list if displaying season information
+* Fix:		info.php: if "genres" variable is not available it throws an error
+* Fix:		info.php: if "actors" variable is not available it throws an error
+* Fix:		index.php: recently added season & episode information was incorrect. PMS does auto grouping of episodes for a season so only the season # is available when using this method. 
+* Fix:		current_activity.php: movie stream activity would not appear
+* Fix:		more divide by zero fixes (rcork)
 * Add:		global: link logo to main page (rcork)
 * Change:	index.php: current activity stream and codec details now better mimic the terminology PMS and Plex/Web use (thanks rcork)
 * Fix:		history.php: divide by zero errors (thanks rcork)

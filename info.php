@@ -233,7 +233,7 @@
 											echo "<td align='center'>".$viewed_time. " min</td>";
 										}
 										
-										$percentComplete = sprintf("%2d", ($viewOffset / $duration) * 100);
+										$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
 											if ($percentComplete >= 90) {	
 											  $percentComplete = 100;    
 											}
@@ -420,6 +420,52 @@
 							echo "</div>";
 							
 						echo "</div>";	
+						
+						echo "<div class='container-fluid'>";
+			echo "<div class='row-fluid'>";	
+				echo "<div class='span12'>";
+				echo "</div>";
+			echo "</div>";
+			
+			echo "<div class='row-fluid'>";
+				echo "<div class='span12'>";
+					echo "<div class='wellbg'>";
+						echo "<div class='wellheader'>";
+							echo "<div class='dashboard-wellheader'>";
+								echo"<h3>Episodes</h3>";
+							echo "</div>"; 
+						echo "</div>"; 
+						
+								$seasonEpisodesUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."/children";
+								$seasonEpisodesXml = simplexml_load_file($seasonEpisodesUrl) or die ("Feed Not Found");
+
+								echo "<div class='season-episodes-wrapper'>";
+									echo "<ul class='season-episodes-instance'>";
+										
+									foreach ($seasonEpisodesXml->Video as $seasonEpisodes) {
+																		  
+										$seasonEpisodesThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$seasonEpisodes['thumb']. "&width=205&height=115";                                       
+
+											echo "<li>";
+												
+												echo "<div class='season-episodes-poster'>";
+													echo "<div class='season-episodes-poster-face'><a href='info.php?id=" .$seasonEpisodes['ratingKey']. "'><img src='".$seasonEpisodesThumbUrl."' class='season-episodes-poster-face'></img></a></div>";
+													echo "<div class='season-episodes-card-overlay'><div class='season-episodes-season'>Episode ".$seasonEpisodes['index']."</div></div>";
+												echo "</div>";
+												echo "<div class='season-episodes-instance-text-wrapper'>";
+													echo "<div class='season-episodes-title'><a href='info.php?id=".$seasonEpisodes['ratingKey']."'>\"".$seasonEpisodes['title']." \"</a></div>";
+												echo "</div>";	
+											echo "</li>";	
+													
+										  
+									}
+									echo "</ul>"; 
+								echo "</div>";
+								
+						 		
+					echo "</div>";
+				echo "</div>";	
+			echo "</div>";
 								
 						}else if ($xml->Video['type'] == "movie") {				
 							
@@ -469,20 +515,30 @@
 											echo "<div class='span3'>";
 												echo "<div class='summary-content-people-wrapper hidden-phone hidden-tablet'>";
 													$genreCount = 0;
-													foreach($xml->Video->Genre as $xmlGenres) {
-														$genres[] = "" .$xmlGenres['tag']. "";
-														if (++$genreCount == 4) break;
+													if ($xml->Video->Genre['tag']) {
+														foreach($xml->Video->Genre as $xmlGenres) {
+															$genres[] = "" .$xmlGenres['tag']. "";
+															if (++$genreCount == 4) break;
+														}
+														echo "<div class='summary-content-actors'><h6><strong>Genres</strong></h6><ul><li>";
+															echo implode('<li>', $genres);
+													}else{
+														echo "<div class='summary-content-actors'><h6><strong>Genres</strong></h6><ul><li>";
+														echo "<li>n/a";
 													}
-													echo "<div class='summary-content-actors'><h6><strong>Genres</strong></h6><ul><li>";
-														echo implode('<li>', $genres);
 													echo "</li></div></ul>";
 													$roleCount = 0;
-													foreach($xml->Video->Role as $Roles) {
-														$actors[] = "" .$Roles['tag']. "";
-														if (++$roleCount == 4) break;
-													}
-													echo "<div class='summary-content-actors'><h6><strong>Starring</strong></h6><ul><li>";
-														echo implode('<li>', $actors);
+													if ($xml->Video->Role['tag']) {
+														foreach($xml->Video->Role as $Roles) {
+															$actors[] = "" .$Roles['tag']. "";
+															if (++$roleCount == 4) break;
+														}
+														echo "<div class='summary-content-actors'><h6><strong>Starring</strong></h6><ul><li>";
+															echo implode('<li>', $actors);
+													}else{
+														echo "<div class='summary-content-actors'><h6><strong>Starring</strong></h6><ul>";
+														echo "<li>n/a";
+													}			
 													echo "</li></div></ul>";
 													$writerCount = 0;
 													if ($xml->Video->Writer['tag']) {
@@ -605,7 +661,7 @@
 											echo "<td align='center'>".$viewed_time. " min</td>";
 										}
 										
-										$percentComplete = sprintf("%2d", ($viewOffset / $duration) * 100);
+										$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
 											if ($percentComplete >= 90) {	
 											  $percentComplete = 100;    
 											}
