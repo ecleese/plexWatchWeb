@@ -422,25 +422,33 @@
 													$genres[] = "" .$xmlGenres['tag']. "";
 													if (++$genreCount == 4) break;
 												}
+												if ($genreCount != 0){
 												echo "<div class='summary-content-actors'><h6><strong>Genres</strong></h6><ul><li>";
 													echo implode('<li>', $genres);
 												echo "</li></div></ul>";
+												}
+												
 												$roleCount = 0;
 												foreach($xml->Video->Role as $Roles) {
 													$actors[] = "" .$Roles['tag']. "";
 													if (++$roleCount == 4) break;
 												}
+												if ($roleCount != 0) {
 												echo "<div class='summary-content-actors'><h6><strong>Starring</strong></h6><ul><li>";
 													echo implode('<li>', $actors);
 												echo "</li></div></ul>";
+												}
+												
 												$writerCount = 0;
 												foreach($xml->Video->Writer as $xmlWriters) {
 													$writers[] = "" .$xmlWriters['tag']. "";
 													if (++$writerCount == 4) break;
 												}
+												if ($writerCount != 0) {
 												echo "<div class='summary-content-writers'><h6><strong>Written by</strong></h6><ul><li>";
 													echo implode('<li>', $writers);
 												echo "</li></div></ul>";
+												}
 											echo "</div>";
 										echo "</div>";
 										
