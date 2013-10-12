@@ -385,7 +385,7 @@
 								echo "</div>";
 						}else if ($recentXml['type'] == "movie") {	
 							$recentMetadata = "http://".$plexWatch['pmsUrl'].":32400/library/metadata/".$recentXml['ratingKey']."";
-                            $recentThumbUrlRequest = simplexml_load_file ($recentMetadata);         
+                            if ($recentThumbUrlRequest = @simplexml_load_file ($recentMetadata)) {         
 							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentThumbUrlRequest->Video['thumb']."&width=136&height=280";                                        
 							
 								echo "<div class='dashboard-recent-media-instance'>";
@@ -400,6 +400,7 @@
 								echo "</div>";
 								echo "</li>";
 								echo "</div>";
+							}
 						}else{}
 						}
 					echo "</ul>";
