@@ -73,6 +73,7 @@
 	
 	$userStatsDailyTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM processed WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now', 'localtime') AND user='$user' ");
 	$userStatsDailyTimeViewedTime = 0;
+	$userStatsDailyTimeViewedTimeRowLength = 0;
 	while ($userStatsDailyTimeRow = $userStatsDailyTimeFetch->fetchArray()) {
 		$userStatsDailyTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsDailyTimeRow['stopped']));
 		$userStatsDailyTimeFromTimeRow = strtotime(date("m/d/Y g:i a",$userStatsDailyTimeRow['time']));
@@ -94,6 +95,7 @@
 	
 	$userStatsWeeklyTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM processed WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-7 days', 'localtime') AND user='$user' ");
 	$userStatsWeeklyTimeViewedTime = 0;
+	$userStatsWeeklyTimeViewedTimeRowLength = 0;
 	while ($userStatsWeeklyTimeRow = $userStatsWeeklyTimeFetch->fetchArray()) {
 		$userStatsWeeklyTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsWeeklyTimeRow['stopped']));
 		$userStatsWeeklyTimeFromTimeRow = strtotime(date("m/d/Y g:i a",$userStatsWeeklyTimeRow['time']));
@@ -112,6 +114,7 @@
 	
 	$userStatsMonthlyTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM processed WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-30 days', 'localtime') AND user='$user' ");
 	$userStatsMonthlyTimeViewedTime = 0;
+	$userStatsMonthlyTimeViewedTimeRowLength = 0;
 	while ($userStatsMonthlyTimeRow = $userStatsMonthlyTimeFetch->fetchArray()) {
 		$userStatsMonthlyTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsMonthlyTimeRow['stopped']));
 		$userStatsMonthlyTimeFromTimeRow = strtotime(date("m/d/Y g:i a",$userStatsMonthlyTimeRow['time']));
@@ -130,6 +133,7 @@
 	
 	$userStatsAlltimeTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM processed WHERE user='$user' ");
 	$userStatsAlltimeTimeViewedTime = 0;
+	$userStatsAlltimeTimeViewedTimeRowLength = 0;
 	while ($userStatsAlltimeTimeRow = $userStatsAlltimeTimeFetch->fetchArray()) {
 		$userStatsAlltimeTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsAlltimeTimeRow['stopped']));
 		$userStatsAlltimeTimeFromTimeRow = strtotime(date("m/d/Y g:i a",$userStatsAlltimeTimeRow['time']));
