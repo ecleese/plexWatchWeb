@@ -142,13 +142,8 @@
 			date_default_timezone_set(@date_default_timezone_get());
 
 			$db = new SQLite3($plexWatch['plexWatchDb']);
-<<<<<<< HEAD
-
-			$recentResults = $db->query("SELECT item_id,time,datetime(time, 'unixepoch', 'localtime') AS datetime FROM recently_added GROUP BY item_id ORDER BY time DESC LIMIT 11");
-=======
 			
 			$recentRequest = simplexml_load_file("".$plexWatchPmsUrl."/library/recentlyAdded?query=c&X-Plex-Container-Start=0&X-Plex-Container-Size=10") or die ("Failed to access Plex Media Server. Please check your server and config.php settings.");
->>>>>>> origin/dev
 		
 			echo "<div class='wellbg'>";
 				echo "<div class='wellheader'>";
@@ -159,36 +154,9 @@
 				echo "<div class='dashboard-recent-media-row'>";
 					echo "<ul class='dashboard-recent-media'>";
 						// Run through each feed item
-<<<<<<< HEAD
-						while ($recent = $recentResults->fetchArray()) {
-					
-						$recentXml = simplexml_load_file("http://".$plexWatch['pmsUrl'].":32400".$recent['item_id']."");                       
-		
-						if ($recentXml->Video['type'] == "episode") {
-							
-							$recentArtUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['art']."&width=320&height=160";                                        
-							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentXml->Video['parentThumb']."&width=136&height=280";                                        
-							
-								echo "<div class='dashboard-recent-media-instance'>";
-								echo "<li>";
-								echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml->Video['ratingKey']. "'><img src='".$recentThumbUrl."' class='poster-face'></img></a></div></div>";
-								
-								echo "<div class=dashboard-recent-media-metacontainer>";
-								$parentIndexPadded = sprintf("%01s", $recentXml->Video['parentIndex']);
-								$indexPadded = sprintf("%02s", $recentXml->Video['index']);
-								echo "<h3>Season ".$parentIndexPadded.", Episode ".$indexPadded."</h3>";
-								
-								
-								$recentTime = $recent['time'];
-								$timeNow = time();
-								$age = time() - strtotime($recentTime);
-								include_once('includes/timeago.php');
-								echo "<h4>Added ".TimeAgo($recentTime)."</h4>";
-=======
 						foreach ($recentRequest->children() as $recentXml) {		              
 						
 							if ($recentXml['type'] == "season") {
->>>>>>> origin/dev
 								
 								$recentArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['art']."&width=320&height=160";                                        
 								$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['thumb']."&width=136&height=280";                                        

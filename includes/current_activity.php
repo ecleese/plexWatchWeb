@@ -269,11 +269,7 @@ $statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or
 
 				if ($sessions['type'] == "movie") {
 						
-<<<<<<< HEAD
-					$sessionsThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$sessions['art']."&width=300&height=169";                                        
-=======
 					$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['art']."&width=300&height=169";                                         
->>>>>>> origin/dev
 					echo "<div class='instance'>";
 						
 						echo "<div class='dashboard-activity-button-info'><button type='button' class='btn btn-warning' data-toggle='collapse' data-target='#infoDetails-".$sessions->Player['machineIdentifier']."'><i class='icon-info-sign icon-white'></i></button></div>";
