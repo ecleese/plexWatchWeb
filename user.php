@@ -37,7 +37,7 @@
 		<div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
 				
-				<div class="logo"></div>
+				<a href="index.php"><div class="logo"></div></a>
 				<ul class="nav">
 					
 					<li><a href="index.php"><i class="icon-home icon-white"></i> Home</a></li>
@@ -55,17 +55,25 @@
 	
 	require_once(dirname(__FILE__) . '/config.php');
 	
+	if ($plexWatch['https'] == "yes") {
+		$plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
+	}else if ($plexWatch['https'] == "no") {
+		$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
+	}else{
+	}
+	
 	$user = $_GET['user'];
 
 	$db = new SQLite3($plexWatch['plexWatchDb']);
 	
 	$numRows = $db->querySingle("SELECT COUNT(*) as count FROM processed ");
-	$userInfo = $db->query("SELECT user,xml FROM processed WHERE user = '$user' ORDER BY time DESC LIMIT 1");
+	$userInfo = $db->query("SELECT user,xml FROM processed WHERE user = '$user' ORDER BY time DESC LIMIT 1") or die ("Failed to access plexWatch database. Please check your server and config.php settings.");
 	
 	$userStatsDailyCount = $db->querySingle("SELECT COUNT(*) FROM processed WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now', 'localtime') AND user='$user' ");
 	
 	$userStatsDailyTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM processed WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now', 'localtime') AND user='$user' ");
 	$userStatsDailyTimeViewedTime = 0;
+	$userStatsDailyTimeViewedTimeRowLength = 0;
 	while ($userStatsDailyTimeRow = $userStatsDailyTimeFetch->fetchArray()) {
 		$userStatsDailyTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsDailyTimeRow['stopped']));
 		$userStatsDailyTimeFromTimeRow = strtotime(date("m/d/Y g:i a",$userStatsDailyTimeRow['time']));
@@ -87,6 +95,7 @@
 	
 	$userStatsWeeklyTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM processed WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-7 days', 'localtime') AND user='$user' ");
 	$userStatsWeeklyTimeViewedTime = 0;
+	$userStatsWeeklyTimeViewedTimeRowLength = 0;
 	while ($userStatsWeeklyTimeRow = $userStatsWeeklyTimeFetch->fetchArray()) {
 		$userStatsWeeklyTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsWeeklyTimeRow['stopped']));
 		$userStatsWeeklyTimeFromTimeRow = strtotime(date("m/d/Y g:i a",$userStatsWeeklyTimeRow['time']));
@@ -105,6 +114,7 @@
 	
 	$userStatsMonthlyTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM processed WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-30 days', 'localtime') AND user='$user' ");
 	$userStatsMonthlyTimeViewedTime = 0;
+	$userStatsMonthlyTimeViewedTimeRowLength = 0;
 	while ($userStatsMonthlyTimeRow = $userStatsMonthlyTimeFetch->fetchArray()) {
 		$userStatsMonthlyTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsMonthlyTimeRow['stopped']));
 		$userStatsMonthlyTimeFromTimeRow = strtotime(date("m/d/Y g:i a",$userStatsMonthlyTimeRow['time']));
@@ -123,6 +133,7 @@
 	
 	$userStatsAlltimeTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM processed WHERE user='$user' ");
 	$userStatsAlltimeTimeViewedTime = 0;
+	$userStatsAlltimeTimeViewedTimeRowLength = 0;
 	while ($userStatsAlltimeTimeRow = $userStatsAlltimeTimeFetch->fetchArray()) {
 		$userStatsAlltimeTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsAlltimeTimeRow['stopped']));
 		$userStatsAlltimeTimeFromTimeRow = strtotime(date("m/d/Y g:i a",$userStatsAlltimeTimeRow['time']));
@@ -194,7 +205,9 @@
 												echo "<h3>".$userStatsDailyCount."</h3><p>plays</p>";
 											}
 											
-											if ($userStatsDailyTimeViewedTimeRowLength == 10) {
+											if (empty($userStatsDailyTimeViewedTimeRowLength)){
+												echo "<h1> / </h1><h3>0</h3><p> mins</p>";
+											}else if ($userStatsDailyTimeViewedTimeRowLength == 10) {
 												echo "";
 											}else if (empty($userStatsDailyTimeViewedTimeMinutes) && empty($userStatsDailyTimeViewedTimeHours) && empty($userStatsDailyTimeViewedTimeDays)) {
 												echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
@@ -231,7 +244,9 @@
 												echo "<h3>".$userStatsWeeklyCount."</h3><p>plays</p>";
 											}
 											
-											if ($userStatsWeeklyTimeViewedTimeRowLength == 10) {
+											if (empty($userStatsWeeklyTimeViewedTimeRowLength)){
+												echo "<h1> / </h1><h3>0</h3><p> mins</p>";
+											}else if ($userStatsWeeklyTimeViewedTimeRowLength == 10) {
 												echo "";
 											}else if (empty($userStatsWeeklyTimeViewedTimeMinutes) && empty($userStatsWeeklyTimeViewedTimeHours) && empty($userStatsWeeklyTimeViewedTimeDays)) {
 												echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
@@ -268,7 +283,9 @@
 												echo "<h3>".$userStatsMonthlyCount."</h3><p>plays</p>";
 											}
 											
-											if ($userStatsMonthlyTimeViewedTimeRowLength == 10) {
+											if (empty($userStatsMonthlyTimeViewedTimeRowLength)){
+												echo "<h1> / </h1><h3>0</h3><p> mins</p>";
+											}else if ($userStatsMonthlyTimeViewedTimeRowLength == 10) {
 												echo "";
 											}else if (empty($userStatsMonthlyTimeViewedTimeMinutes) && empty($userStatsMonthlyTimeViewedTimeHours) && empty($userStatsMonthlyTimeViewedTimeDays)) {
 												echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
@@ -305,7 +322,9 @@
 												echo "<h3>".$userStatsAlltimeCount."</h3><p>plays</p>";
 											}
 											
-											if ($userStatsAlltimeTimeViewedTimeRowLength == 10) {
+											if (empty($userStatsAlltimeTimeViewedTimeRowLength)){
+												echo "<h1> / </h1><h3>0</h3><p> mins</p>";
+											}else if ($userStatsAlltimeTimeViewedTimeRowLength == 10) {
 												echo "";
 											}else if (empty($userStatsAlltimeTimeViewedTimeMinutes) && empty($userStatsAlltimeTimeViewedTimeHours) && empty($userStatsAlltimeTimeViewedTimeDays)) {
 												echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
@@ -355,43 +374,74 @@
 						$recentlyWatchedResults = $db->query("SELECT * FROM processed WHERE user = '$user' ORDER BY time DESC LIMIT 10");
 						// Run through each feed item
 						while ($recentlyWatchedRow = $recentlyWatchedResults->fetchArray()) {
-						
+
 						$request_url = $recentlyWatchedRow['xml'];
 						$recentXml = simplexml_load_string($request_url) ;                      
 		
 						if ($recentXml['type'] == "episode") {
-							$recentMetadata = "http://".$plexWatch['pmsUrl'].":32400/library/metadata/".$recentXml['ratingKey']."";
-                            $recentThumbUrlRequest = simplexml_load_file ($recentMetadata);                                       
-							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentThumbUrlRequest->Video['parentThumb']."&width=136&height=280";                                        
-							
-								echo "<div class='dashboard-recent-media-instance'>";
-								echo "<li>";
-								echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='".$recentThumbUrl."' class='poster-face'></img></a></div></div>";
+							$recentMetadata = "".$plexWatchPmsUrl."/library/metadata/".$recentXml['ratingKey']."";
+                            if ($recentThumbUrlRequest = @simplexml_load_file ($recentMetadata)) {                                       
+								$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['parentThumb']."&width=136&height=280";                                        
 								
-								echo "<div class=dashboard-recent-media-metacontainer>";
+									echo "<div class='dashboard-recent-media-instance'>";
+									echo "<li>";
+									
+									if($recentThumbUrlRequest->Video['parentThumb']) {
+										echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='".$recentThumbUrl."' class='poster-face'></img></a></div></div>";
+									}else{
+										echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='images/poster.png' class='poster-face'></img></a></div></div>";
+									}
+									
+									echo "<div class=dashboard-recent-media-metacontainer>";
+										$parentIndexPadded = sprintf("%01s", $recentXml['parentIndex']);
+										$indexPadded = sprintf("%02s", $recentXml['index']);
+										echo "<h3>Season ".$parentIndexPadded.", Episode ".$indexPadded."</h3>";
+									echo "</div>";
+									echo "</li>";
+									echo "</div>";
+							}		
+						}else if ($recentXml['type'] == "movie") {	
+							$recentMetadata = "".$plexWatchPmsUrl."/library/metadata/".$recentXml['ratingKey']."";
+                            if ($recentThumbUrlRequest = @simplexml_load_file ($recentMetadata)) {         
+								$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['thumb']."&width=136&height=280";                                        
+								
+									echo "<div class='dashboard-recent-media-instance'>";
+									echo "<li>";
+									
+									
+									if($recentThumbUrlRequest->Video['thumb']) {
+										echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='".$recentThumbUrl."' class='poster-face'></img></a></div></div>";
+									}else{
+										echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='images/poster.png' class='poster-face'></img></a></div></div>";
+									}
+									
+									echo "<div class=dashboard-recent-media-metacontainer>";
 									$parentIndexPadded = sprintf("%01s", $recentXml['parentIndex']);
 									$indexPadded = sprintf("%02s", $recentXml['index']);
-									echo "<h3>Season ".$parentIndexPadded.", Episode ".$indexPadded."</h3>";
-								echo "</div>";
-								echo "</li>";
-								echo "</div>";
-						}else if ($recentXml['type'] == "movie") {	
-							$recentMetadata = "http://".$plexWatch['pmsUrl'].":32400/library/metadata/".$recentXml['ratingKey']."";
-                            $recentThumbUrlRequest = simplexml_load_file ($recentMetadata);         
-							$recentThumbUrl = "http://".$plexWatch['pmsUrl'].":32400/photo/:/transcode?url=http://127.0.0.1:32400".$recentThumbUrlRequest->Video['thumb']."&width=136&height=280";                                        
-							
-								echo "<div class='dashboard-recent-media-instance'>";
-								echo "<li>";
-								echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='".$recentThumbUrl."' class='poster-face'></img></a></div></div>";
-								
-								echo "<div class=dashboard-recent-media-metacontainer>";
-								$parentIndexPadded = sprintf("%01s", $recentXml['parentIndex']);
-								$indexPadded = sprintf("%02s", $recentXml['index']);
-								echo "<h3>".$recentXml['title']." (".$recentXml['year'].")</h3>";
+									echo "<h3>".$recentXml['title']." (".$recentXml['year'].")</h3>";
 
-								echo "</div>";
-								echo "</li>";
-								echo "</div>";
+									echo "</div>";
+									echo "</li>";
+									echo "</div>";
+							}	
+						}else if ($recentXml['type'] == "clip") {	
+							$recentMetadata = "".$plexWatchPmsUrl."/library/metadata/".$recentXml['ratingKey']."";
+                            if ($recentThumbUrlRequest = @simplexml_load_file ($recentMetadata)) {         
+								$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['thumb']."&width=136&height=280";                                        
+								
+									echo "<div class='dashboard-recent-media-instance'>";
+									echo "<li>";
+									echo "<div class='poster'><div class='poster-face'><a href='" .$recentXml['ratingKey']. "'><img src='images/poster.png' class='poster-face'></img></a></div></div>";
+									
+									echo "<div class=dashboard-recent-media-metacontainer>";
+									$parentIndexPadded = sprintf("%01s", $recentXml['parentIndex']);
+									$indexPadded = sprintf("%02s", $recentXml['index']);
+									echo "<h3>".$recentXml['title']." (".$recentXml['year'].")</h3>";
+
+									echo "</div>";
+									echo "</li>";
+									echo "</div>";
+							}		
 						}else{}
 						}
 					echo "</ul>";
@@ -460,7 +510,8 @@
 									$type = $xmlfield['type'];
 									$duration = $xmlfield['duration'];
 									$viewOffset = $xmlfield['viewOffset'];
-
+										
+									
 									if ($type=="movie") {
 									echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
 									}else if ($type=="episode") {
@@ -498,7 +549,7 @@
 										echo "<td align='center'>".$viewed_time. " min</td>";
 									}
 									
-									$percentComplete = sprintf("%2d", ($viewOffset / $duration) * 100);
+									$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
 										if ($percentComplete >= 90) {	
 										  $percentComplete = 100;    
 										}

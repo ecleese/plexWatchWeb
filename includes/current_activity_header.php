@@ -1,8 +1,14 @@
 <?php
 
 require_once(dirname(__FILE__) . '/../config.php');
+
+if ($plexWatch['https'] == 'yes') {
+	$plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
+}else if ($plexWatch['https'] == 'no') {
+	$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
+}
 			
-$statusSessions = simplexml_load_file("http://".$plexWatch['pmsUrl'].":32400/status/sessions");
+$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or die ('Failed to access Plex Media Server. Please check your server and config.php settings.');;
 
 if ($statusSessions['size'] == '0') {				
 	echo "<h3>Current Activity</h3>";

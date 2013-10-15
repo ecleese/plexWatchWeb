@@ -36,7 +36,7 @@
 		    			
 		<div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
-				<div class="logo"></div>
+				<a href="index.php"><div class="logo"></div></a>
 				<ul class="nav">
 					
 					<li><a href="index.php"><i class="icon-home icon-white"></i> Home</a></li>
@@ -73,7 +73,7 @@
 					$db = new SQLite3($plexWatch['plexWatchDb']);
 					$numRows = $db->querySingle("SELECT COUNT(*) as count FROM processed ");
 
-					$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM processed ORDER BY time DESC");
+					$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM processed ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your server and config.php settings.");
 
 					if ($numRows < 1) {
 
@@ -160,7 +160,7 @@
 								echo "<td align='center'>".$viewed_time. " min</td>";
 							}
 							
-							$percentComplete = sprintf("%2d", ($viewOffset / $duration) * 100);
+							$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
 								if ($percentComplete >= 90) {	
 								  $percentComplete = 100;    
 								}

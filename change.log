@@ -1,3 +1,24 @@
+0.0.3
+* Fix:		user.php: user plays/time stats throws an error when counts are 0
+* Fix:		info.php: if content was deleted from PMS and watching history links to info.php with this information, an error to the connection was displayed. a message now lets the user know "This media is no longer available in the Plex Media Server database"
+* Add:		info.php: season episode list if displaying season information
+* Fix:		info.php: if "genres" variable is not available it throws an error
+* Fix:		info.php: if "actors" variable is not available it throws an error
+* Fix:		index.php: recently added season & episode information was incorrect. PMS does auto grouping of episodes for a season so only the season # is available when using this method. 
+* Fix:		current_activity.php: movie stream activity would not appear
+* Fix:		more divide by zero fixes (rcork)
+* Add:		global: link logo to main page (rcork)
+* Change:	index.php: current activity stream and codec details now better mimic the terminology PMS and Plex/Web use (thanks rcork)
+* Fix:		history.php: divide by zero errors (thanks rcork)
+* Fix:		info.php: poster image sizing issue with safari on mac (thanks rcork)
+* Add:		global: default poster image for results that do not have an associated poster image
+* Fix:		index.php/user.php: recently added/recently watched poster images would not appear if user moved or deleted item from PMS database
+* Add:		config.php: Plex Media Server http/https support including independant port numbers
+* Add:		index.php: current activity now supports "clips" from your myPlex queue
+* Fix:		info.php: if "writers" variable is not available it throws an error
+* Add:		global: check if PMS server and plexWatch database are accessible. print error output to user if they are not  	
+* Add:		config.php: Plex Media Server port# variable added for users using non-standard PMS ports
+
 0.0.2:
 * Fix:		index.php: first recently added result was getting cut off on left side, changed episode image to season thumb
 * Fix:		global: updated images in Plex/Web would not appear in plexWatchWeb
@@ -9,7 +30,7 @@
 * Fix:		tables: "Stopped" time would show and incorrect value if row element was empty due to an in-progress stream		
 * Fix: 		inconsistent timezones between history.php, user.php and info.php
 * Change:   timezones are now automatically checked and set to webserver's default timezone 
-* Wiki-add:	information for XAMPP users	about setting timezone and password protection
+* Wiki:		information for XAMPP users	about setting timezone and password protection
 
 0.0.1:
 * initial release

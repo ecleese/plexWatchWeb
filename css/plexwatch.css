@@ -6651,7 +6651,7 @@ float: left;
 }
 
 .dashboard-recent-media li {
-margin-right: 20px;
+margin-right: 30px;
 padding-bottom: 25px;
 position: relative;
 
@@ -6676,6 +6676,7 @@ font-weight: bold;
 width: 140px;
 white-space: nowrap;
 text-align: center;
+clear: both;
 }
 
 .dashboard-recent-media-metacontainer h4 {
@@ -6875,6 +6876,8 @@ position: relative;
 top: -10px;
 float: left;
 margin-left: 20px;
+width: 200px;
+height: 300px;
 }
 
 .summary-content-poster img {
@@ -7203,6 +7206,8 @@ margin: 0 0 0px 0px;
 float: left;
 height: 200px;
 width: 250px;
+position: relative;
+left: -12px;
 }
 
 .info-top-watched-poster {
@@ -7327,7 +7332,7 @@ float: left;
 text-align: center;
 position: relative;
 top: -15px;
-left: 0px;
+left: 40%;
 z-index: 1;
 -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
 -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
@@ -7343,6 +7348,128 @@ font-weight: bold;
 color: #111;
 text-shadow: none;
 }
+
+
+.season-episodes-wrapper {
+
+}
+
+.season-episodes-instance {
+
+list-style: none;
+margin: 0 0 0px 0px;
+}
+
+
+.season-episodes-instance>li {
+float: left;
+height: 200px;
+width: 250px;
+position: relative;
+left: 0px;
+}
+
+.season-episodes-poster {
+float: left;
+position: relative;
+left: 0px;
+}
+
+
+.season-episodes-poster-face img {
+bottom: 0;
+overflow: hidden;
+-webkit-border-radius: 2px;
+-moz-border-radius: 2px;
+border-radius: 2px;
+-webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+-moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+box-shadow: 0 0 10px rgba(0,0,0,0.75);
+-webkit-transform: translateZ(0);
+-moz-transform: translateZ(0);
+-ms-transform: translateZ(0);
+-o-transform: translateZ(0);
+transform: translateZ(0);
+-webkit-transform-style: preserve-3d;
+-moz-transform-style: preserve-3d;
+-ms-transform-style: preserve-3d;
+-o-transform-style: preserve-3d;
+transform-style: preserve-3d;
+-webkit-perspective: 1000;
+-moz-perspective: 1000;
+-ms-perspective: 1000;
+-o-perspective: 1000;
+perspective: 1000;
+-webkit-backface-visibility: hidden;
+-moz-backface-visibility: hidden;
+-ms-backface-visibility: hidden;
+-o-backface-visibility: hidden;
+backface-visibility: hidden;
+width: 205px;
+height: 115px;
+}
+
+
+.season-episodes-poster-face  img:hover {
+webkit-box-shadow: 0 0 0 2px #ff9d00;
+-moz-box-shadow: 0 0 0 2px #ff9d00;
+box-shadow: 0 0 0 2px #ff9d00;
+}
+
+
+.season-episodes-card-overlay {
+position: absolute;
+left: 0;
+right: 0;
+bottom: 5px;
+padding: 4px 8px;
+text-align: left;
+background-color: #000;
+background-color: rgba(0,0,0,0.7);
+border-top: 1px solid #000;
+}
+
+
+.season-episodes-card-overlay-index {
+color: #fff;
+font-size: 11px;
+text-shadow: 0 1px 5px rgba(0,0,0,0.2);
+}
+
+
+.season-episodes-instance-text-wrapper {
+clear: both;
+width: 205px;
+
+}
+
+
+.season-episodes-title, .season-episodes-title a {
+text-decoration: none;
+font-size: 14px;
+font-weight: normal;
+color: #fff;
+float: left;
+text-overflow: ellipsis;
+overflow: hidden;
+position: relative;
+white-space: nowrap;
+width: 205px;
+margin-top: 2px;
+margin-left: 8px;
+}
+
+.season-episodes a:hover {
+color: #ff9d00;
+
+}
+
+.season-episodes-season {
+color: #aaa;
+font-size: 12px;
+float: left;
+}
+
 
 .user-info-wrapper {
 height: 113px;
