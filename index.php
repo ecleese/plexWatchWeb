@@ -9,6 +9,7 @@
 
     <!-- Le styles -->
     <link href="css/plexwatch.css" rel="stylesheet">
+	<link href="css/font-awesome.min.css" rel="stylesheet" >
 	
     <style type="text/css">
       body {
@@ -38,10 +39,11 @@
 				<a href="index.php"><div class="logo"></div></a>
 				<ul class="nav">
 					
-					<li class="active"><a href="index.php"><i class="icon-home icon-white"></i> Home</a></li>
-					<li><a href="history.php"><i class="icon-calendar icon-white"></i> History</a></li>
-					<li><a href="users.php"><i class="icon-user icon-white"></i> Users</a></li>
-					<li><a href="charts.php"><i class="icon-list icon-white"></i> Charts</a></li>
+					<li class="active"><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
+					<li><a href="history.php"><i class="icon-2x icon-calendar icon-white" data-toggle="tooltip" data-placement="bottom" title="History" id="history"></i></a></li>
+					<li><a href="users.php"><i class="icon-2x icon-user icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
+					<li><a href="charts.php"><i class="icon-2x icon-bar-chart icon-white" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
+					<li><a href="settings.php"><i class="icon-2x icon-wrench icon-white" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
 					
 				</ul>
 				
@@ -60,17 +62,30 @@
 		<div class='row-fluid'>
 			<div class='span12'>
 				<?php
-			
-				require_once(dirname(__FILE__) . '/config.php');
-			
+				$guisettingsFile = "config/config.php";
+				if (file_exists($guisettingsFile)) { 
+					require_once(dirname(__FILE__) . '/config/config.php');
+				}else{
+					header("Location: settings.php");
+				}
+				
 				if ($plexWatch['https'] == 'yes') {
 					$plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
 				}else if ($plexWatch['https'] == 'no') {
 					$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
 				}
 				
-				$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or die ("Failed to access Plex Media Server. Please check your server and config.php settings.");
+				if (!empty($plexWatch['myPlexAuthToken'])) {
+					$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
+					$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$myPlexAuthToken."") or die ("Failed to access Plex Media Server. Please check your server and config.php settings.");
 
+				}else{
+					$myPlexAuthToken = '';
+					$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or die ("Failed to access Plex Media Server. Please check your server and config.php settings.");
+
+				}	
+				
+				
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 						echo "<div class='dashboard-wellheader'>";
@@ -85,7 +100,7 @@
 							$myplexUrl = fsockopen ('my.plexapp.com', 443);
 
 							if ($pmsHttp) {
-								$statusPmsHttp = "<h5>Plex Media Server (HTTP):  <span class='label label-success'>Online</span></h5><br>";
+								$statusPmsHttp = "<h5>Plex Media Server (HTTP):  <span class='label label-warning'>Online</span></h5><br>";
 							}
 
 							else {
@@ -93,14 +108,14 @@
 							}
 
 							if ($pmsHttps) {
-								$statusPmsHttps = "<h5>Plex Media Server (HTTPS):  <span class='label label-success'>Online</span></h5><br>";
+								$statusPmsHttps = "<h5>Plex Media Server (HTTPS):  <span class='label label-warning'>Online</span></h5><br>";
 							}
 							else {
 								$statusPmsHttps = "<h5>Plex Media Server (HTTPS):  <span class='label label-important'>Offline</span></h5><br>";
 							}
 							
 							if ($myplexUrl) {
-								$statusMyplex = "<h5>myPlex: (<a href='https://my.plexapp.com'>my.plexapp.com</a>):  <span class='label label-success'>Online</span></h5><br>";
+								$statusMyplex = "<h5>myPlex: (<a href='https://my.plexapp.com'>my.plexapp.com</a>):  <span class='label label-warning'>Online</span></h5><br>";
 							}
 							else {
 								$statusMyplex = "<h5>myPlex: (<a href='https://my.plexapp.com'>my.plexapp.com</a>):  <span class='label label-important'>Offline</span></h5><br>";
@@ -141,10 +156,15 @@
 		
 			date_default_timezone_set(@date_default_timezone_get());
 
-			$db = new SQLite3($plexWatch['plexWatchDb']);
+			if (!empty($plexWatch['myPlexAuthToken'])) {
+				$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
+				$recentRequest = simplexml_load_file("".$plexWatchPmsUrl."/library/recentlyAdded?query=c&X-Plex-Container-Start=0&X-Plex-Container-Size=10&X-Plex-Token=".$myPlexAuthToken."") or die ("<div class='alert alert-warning'>Failed to access Plex Media Server. Please check your server and config.php settings.</div>");
+			}else{
+				$myPlexAuthToken = '';
+				$recentRequest = simplexml_load_file("".$plexWatchPmsUrl."/library/recentlyAdded?query=c&X-Plex-Container-Start=0&X-Plex-Container-Size=10") or die ("<div class='alert alert-warning'>Failed to access Plex Media Server. Please check your server and config.php settings.</div>");
+
+			}
 			
-			$recentRequest = simplexml_load_file("".$plexWatchPmsUrl."/library/recentlyAdded?query=c&X-Plex-Container-Start=0&X-Plex-Container-Size=10") or die ("Failed to access Plex Media Server. Please check your server and config.php settings.");
-		
 			echo "<div class='wellbg'>";
 				echo "<div class='wellheader'>";
 					echo "<div class='dashboard-wellheader'>";
@@ -158,8 +178,8 @@
 						
 							if ($recentXml['type'] == "season") {
 								
-								$recentArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['art']."&width=320&height=160";                                        
-								$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['thumb']."&width=136&height=280";                                        
+								$recentArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['art']."&width=320&height=160&X-Plex-Token=".$myPlexAuthToken."";                                        
+								$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['thumb']."&width=136&height=280&X-Plex-Token=".$myPlexAuthToken."";                                        
 
 									echo "<div class='dashboard-recent-media-instance'>";
 									echo "<li>";
@@ -189,8 +209,8 @@
 						
 							}else if ($recentXml['type'] == "movie") {				
 							
-								$recentArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['art']."&width=320&height=160";                                        
-								$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['thumb']."&width=136&height=280";                                        
+								$recentArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['art']."&width=320&height=160&X-Plex-Token=".$myPlexAuthToken."";                                         
+								$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['thumb']."&width=136&height=280&X-Plex-Token=".$myPlexAuthToken."";                                         
 								
 									echo "<div class='dashboard-recent-media-instance'>";
 									echo "<li>";
@@ -257,7 +277,23 @@
 	
 	</script>
 	
-
+	<script>
+	$(document).ready(function() {
+		$('#home').tooltip();
+	});
+	$(document).ready(function() {
+		$('#history').tooltip();
+	});
+	$(document).ready(function() {
+		$('#users').tooltip();
+	});
+	$(document).ready(function() {
+		$('#charts').tooltip();
+	});
+	$(document).ready(function() {
+		$('#settings').tooltip();
+	});
+	</script>
 	
 	
 

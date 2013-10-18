@@ -10,6 +10,7 @@
     <!-- css styles -->
     <link href="css/plexwatch.css" rel="stylesheet">
 	<link href="css/plexwatch-tables.css" rel="stylesheet">
+	<link href="css/font-awesome.min.css" rel="stylesheet">
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -40,10 +41,11 @@
 				<a href="index.php"><div class="logo"></div></a>
 				<ul class="nav">
 					
-					<li><a href="index.php"><i class="icon-home icon-white"></i> Home</a></li>
-					<li><a href="history.php"><i class="icon-calendar icon-white"></i> History</a></li>
-					<li><a href="users.php"><i class="icon-user icon-white"></i> Users</a></li>
-					<li><a href="charts.php"><i class="icon-list icon-white"></i> Charts</a></li>
+					<li><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
+					<li><a href="history.php"><i class="icon-2x icon-calendar icon-white" data-toggle="tooltip" data-placement="bottom" title="History" id="history"></i></a></li>
+					<li><a href="users.php"><i class="icon-2x icon-user icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
+					<li><a href="charts.php"><i class="icon-2x icon-bar-chart icon-white" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
+					<li><a href="settings.php"><i class="icon-2x icon-wrench icon-white" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
 					
 				</ul>
 			</div>
@@ -53,7 +55,14 @@
 
 	
 	<?php
-		require_once(dirname(__FILE__) . '/config.php');
+		$guisettingsFile = "config/config.php";
+				if (file_exists($guisettingsFile)) { 
+					require_once(dirname(__FILE__) . '/config/config.php');
+				}else{
+					header("Location: settings.php");
+				}
+				
+				
 		
 		if ($plexWatch['https'] == 'yes') {
 			$plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
@@ -117,7 +126,7 @@
 														if ($xml->Video->Writer['tag']) {
 														foreach($xml->Video->Writer as $xmlWriters) {
 															$writers[] = "" .$xmlWriters['tag']. "";
-															if (++$writerCount == 4) break;
+															if (++$writerCount == 5) break;
 														}
 														echo "<div class='summary-content-writers'><h6><strong>Written by</strong></h6><ul><li>";
 															echo implode('<li>', $writers);
@@ -151,15 +160,22 @@
 						echo "<div class='wellheader'>";
 						
 							$db = new SQLite3($plexWatch['plexWatchDb']);
-							$title = $db->querySingle("SELECT title FROM processed WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\'  ");
+							
+							if ($plexWatch['globalHistoryGrouping'] == "yes") {
+								$plexWatchDbTable = "grouped";
+							}else if ($plexWatch['globalHistoryGrouping'] == "no") {
+								$plexWatchDbTable = "processed";
+							}
+							
+							$title = $db->querySingle("SELECT title FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\'  ");
 							
 							echo "<div class='dashboard-wellheader'>";
 									echo"<h3>Watching history for <strong>".$title."</strong></h3>";
 								echo"</div>";
 							echo"</div>";
 							
-							$numRows = $db->querySingle("SELECT COUNT(*) as count FROM processed ");
-							$results = $db->query("SELECT * FROM processed WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
+							$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable ");
+							$results = $db->query("SELECT * FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
 							
 							if ($numRows < 1) {
 
@@ -167,7 +183,7 @@
 
 							} else {
 							
-							echo "<table id='history' class='display'>";
+							echo "<table id='globalHistory' class='display'>";
 								echo "<thead>";
 									echo "<tr>";
 										echo "<th align='center'><i class='icon-calendar icon-white'></i> Date</th>";
@@ -317,11 +333,18 @@
 						echo "<div class='wellheader'>";
 
 							$db = new SQLite3($plexWatch['plexWatchDb']);
+							
+							if ($plexWatch['globalHistoryGrouping'] == "yes") {
+								$plexWatchDbTable = "grouped";
+							}else if ($plexWatch['globalHistoryGrouping'] == "no") {
+								$plexWatchDbTable = "processed";
+							}
+							
 							echo"<h3>The most watched episodes of <strong>".$xml->Directory['title']."</strong> are</h3>";	
 						
 						echo"</div>";
 																																			
-							$topWatchedResults = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(*) AS play_count FROM processed WHERE orig_title LIKE \"".$xml->Directory['title']."\" GROUP BY title HAVING play_count > 0 ORDER BY play_count DESC,time DESC LIMIT 7");
+							$topWatchedResults = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(*) AS play_count FROM $plexWatchDbTable WHERE orig_title LIKE \"".$xml->Directory['title']."\" GROUP BY title HAVING play_count > 0 ORDER BY play_count DESC,time DESC LIMIT 7");
 
 							echo "<div class='info-top-watched-wrapper'>";
 								echo "<ul class='info-top-watched-instance'>";
@@ -518,7 +541,7 @@
 													if ($xml->Video->Genre['tag']) {
 														foreach($xml->Video->Genre as $xmlGenres) {
 															$genres[] = "" .$xmlGenres['tag']. "";
-															if (++$genreCount == 4) break;
+															if (++$genreCount == 3) break;
 														}
 														echo "<div class='summary-content-actors'><h6><strong>Genres</strong></h6><ul><li>";
 															echo implode('<li>', $genres);
@@ -544,7 +567,7 @@
 													if ($xml->Video->Writer['tag']) {
 														foreach($xml->Video->Writer as $xmlWriters) {
 															$writers[] = "" .$xmlWriters['tag']. "";
-															if (++$writerCount == 4) break;
+															if (++$writerCount == 3) break;
 														}
 														echo "<div class='summary-content-writers'><h6><strong>Written by</strong></h6><ul><li>";
 															echo implode('<li>', $writers);
@@ -577,16 +600,21 @@
 							
 							$db = new SQLite3($plexWatch['plexWatchDb']);
 
+							if ($plexWatch['globalHistoryGrouping'] == "yes") {
+								$plexWatchDbTable = "grouped";
+							}else if ($plexWatch['globalHistoryGrouping'] == "no") {
+								$plexWatchDbTable = "processed";
+							}
 							
-							$title = $db->querySingle("SELECT title FROM processed WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\'  ");
+							$title = $db->querySingle("SELECT title FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\'  ");
 							echo "<div class='dashboard-wellheader'>";
 									echo"<h3>Watching history for <strong>".$xml->Video['title']."</strong></h3>";
 								echo"</div>";
 							echo"</div>";
 							
-							$numRows = $db->querySingle("SELECT COUNT(*) as count FROM processed ");
+							$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable ");
 							
-							$results = $db->query("SELECT * FROM processed WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
+							$results = $db->query("SELECT * FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
 							
 							
 							if ($numRows < 1) {
@@ -595,7 +623,7 @@
 
 							} else {
 							
-							echo "<table id='history' class='display'>";
+							echo "<table id='globalHistory' class='display'>";
 								echo "<thead>";
 									echo "<tr>";
 										echo "<th align='center'><i class='icon-calendar icon-white'></i> Date</th>";
@@ -713,7 +741,7 @@
 	
 	<script>
 		$(document).ready(function() {
-			var oTable = $('#history').dataTable( {
+			var oTable = $('#globalHistory').dataTable( {
 				"bPaginate": false,
 				"bLengthChange": true,
 				"bFilter": false,
@@ -728,6 +756,23 @@
 		} );
 	</script>
 	
-
+	<script>
+	$(document).ready(function() {
+		$('#home').tooltip();
+	});
+	$(document).ready(function() {
+		$('#history').tooltip();
+	});
+	$(document).ready(function() {
+		$('#users').tooltip();
+	});
+	$(document).ready(function() {
+		$('#charts').tooltip();
+	});
+	$(document).ready(function() {
+		$('#settings').tooltip();
+	});
+	</script>
+	
   </body>
 </html>

@@ -1,14 +1,22 @@
 <?php
 
-require_once(dirname(__FILE__) . '/../config.php');
+require_once(dirname(__FILE__) . '/../config/config.php');
 
 if ($plexWatch['https'] == 'yes') {
 	$plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
 }else if ($plexWatch['https'] == 'no') {
 	$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
 }
-			
-$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or die ('Failed to access Plex Media Server. Please check your server and config.php settings.');	
+
+if (!empty($plexWatch['myPlexAuthToken'])) {
+	$myPlexAuthToken = $plexWatch['myPlexAuthToken'];			
+	$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$plexWatch['myPlexAuthToken']."") or die ('Failed to access Plex Media Server. Please check your server and config.php settings.');	
+}else{
+	$myPlexAuthToken = '';			
+	$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or die ('Failed to access Plex Media Server. Please check your server and config.php settings.');	
+}
+
+
 	
 	if ($statusSessions['size'] == '0') {
 		echo "<h5><strong>Nothing is currently being watched.</strong></h5><br>";
@@ -19,7 +27,7 @@ $statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or
 				if (isset($sessions['librarySectionID'])) {
 					if ($sessions['type'] == "episode") {
                                      
-					$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['thumb']."&width=300&height=169";                                         
+					$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['thumb']."&width=300&height=169&X-Plex-Token=".$plexWatch['myPlexAuthToken']."";                                         
 					
 					echo "<div class='instance'>";
 						
@@ -269,7 +277,7 @@ $statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or
 
 				if ($sessions['type'] == "movie") {
 						
-					$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['art']."&width=300&height=169";                                         
+					$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['art']."&width=300&height=169&X-Plex-Token=".$plexWatch['myPlexAuthToken']."";                                         
 					echo "<div class='instance'>";
 						
 						echo "<div class='dashboard-activity-button-info'><button type='button' class='btn btn-warning' data-toggle='collapse' data-target='#infoDetails-".$sessions->Player['machineIdentifier']."'><i class='icon-info-sign icon-white'></i></button></div>";

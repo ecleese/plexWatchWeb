@@ -1,3 +1,13 @@
+0.0.4dev
+* Add:		myPlex authentication support for accessing plexWatch/Web from remote networks
+* Add:		introduction welcome screen modal with requirements quick test and briefing
+* Change:	charts.php: minor css adjustments to help with alignment issues
+* Change:	main menu change from text and icons to just icons(font-awesome) with tooltip on hover (same as Plex/Web). This allows mobile header to maintain the standard height dimension
+* Add:		user.php: user ip address history with geo tag location, google maps link and isp information
+* Add:		grouping support which is user selectable for history, user history and charts
+* Add:		settings.php page with full support for configuring plexWatch/Web. config.php is written dynamically by settings.php and was relocated to /config/config.php. This file no longer needs to be edited by the user.
+
+
 0.0.3dev
 * Fix:		info.php: if content was deleted from PMS and watching history links to info.php with this information, an error to the connection was displayed. a message now lets the user know "This media is no longer available in the Plex Media Server database"
 * Add:		info.php: season episode list if displaying season information
@@ -17,6 +27,7 @@
 * Fix:		info.php: if "writers" variable is not available it throws an error
 * Add:		global: check if PMS server and plexWatch database are accessible. print error output to user if they are not  	
 * Add:		config.php: Plex Media Server port# variable added for users using non-standard PMS ports
+
 
 0.0.2:
 * Fix:		index.php: first recently added result was getting cut off on left side, changed episode image to season thumb

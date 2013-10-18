@@ -10,6 +10,7 @@
     <!-- Le styles -->
     <link href="css/plexwatch.css" rel="stylesheet">
 	<link href="css/plexwatch-tables.css" rel="stylesheet">
+	<link href="css/font-awesome.min.css" rel="stylesheet" >
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -39,10 +40,11 @@
 				<a href="index.php"><div class="logo"></div></a>
 				<ul class="nav">
 					
-					<li><a href="index.php"><i class="icon-home icon-white"></i> Home</a></li>
-					<li class="active"><a href="history.php"><i class="icon-calendar icon-white"></i> History</a></li>
-					<li><a href="users.php"><i class="icon-user icon-white"></i> Users</a></li>
-					<li><a href="charts.php"><i class="icon-list icon-white"></i> Charts</a></li>
+					<li><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
+					<li class="active"><a href="history.php"><i class="icon-2x icon-calendar icon-white" data-toggle="tooltip" data-placement="bottom" title="History" id="history"></i></a></li>
+					<li><a href="users.php"><i class="icon-2x icon-user icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
+					<li><a href="charts.php"><i class="icon-2x icon-bar-chart icon-white" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
+					<li><a href="settings.php"><i class="icon-2x icon-wrench icon-white" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
 					
 				</ul>
 			</div>
@@ -66,14 +68,40 @@
 						echo "</div>";
 					echo "</div>";
 					
-					require_once(dirname(__FILE__) . '/config.php');
+					
+					$guisettingsFile = "config/config.php";
+					if (file_exists($guisettingsFile)) { 
+						require_once(dirname(__FILE__) . '/config/config.php');
+					}else{
+						header("Location: settings.php");
+					}
 
+					
+					if ($plexWatch['https'] == 'yes') {
+						$plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
+					}else if ($plexWatch['https'] == 'no') {
+						$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
+					}
+					
+					if (!empty($plexWatch['myPlexAuthToken'])) {
+						$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
+						
+					}else{
+						$myPlexAuthToken = '';
+						
+					}
 					
 					
 					$db = new SQLite3($plexWatch['plexWatchDb']);
-					$numRows = $db->querySingle("SELECT COUNT(*) as count FROM processed ");
-
-					$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM processed ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your server and config.php settings.");
+					
+					if ($plexWatch['globalHistoryGrouping'] == "yes") {
+						$plexWatchDbTable = "grouped";
+					}else if ($plexWatch['globalHistoryGrouping'] == "no") {
+						$plexWatchDbTable = "processed";
+					}
+					
+					$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable ");
+					$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM $plexWatchDbTable ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your server and config.php settings.");
 
 					if ($numRows < 1) {
 
@@ -81,19 +109,19 @@
 
 					} else {
 					
-					echo "<table id='history' class='display'>";
+					echo "<table id='globalHistory' class='display'>";
 						echo "<thead>";
 							echo "<tr>";
-								echo "<th align='center'><i class='icon-calendar icon-white'></i> Date</th>";
-								echo "<th align='left'><i class='icon-user icon-white'></i> User</th>";
-								echo "<th align='left'><i class='icon-hdd icon-white'></i> Platform</th>";
-								echo "<th align='left'><i class='icon-globe icon-white'></i> IP Address</th>";
-								echo "<th align='left'>Title</th>";
-								echo "<th align='center'><i class='icon-play icon-white'></i> Started</th>";
-								echo "<th align='center'><i class='icon-pause icon-white'></i> Paused</th>";
-								echo "<th align='center'><i class='icon-stop icon-white'></i> Stopped</th>";
-								echo "<th align='center'><i class='icon-time icon-white'></i> Duration</th>";
-								echo "<th align='center'>% Completed</th>";
+								echo "<th align='center'><i class='icon-sort icon-white'></i> Date</th>";
+								echo "<th align='left'><i class='icon-sort icon-white'></i> User </th>";
+								echo "<th align='left'><i class='icon-sort icon-white'></i> Platform</th>";
+								echo "<th align='left'><i class='icon-sort icon-white'></i> IP Address</th>";
+								echo "<th align='left'><i class='icon-sort icon-white'></i> Title</th>";
+								echo "<th align='center'><i class='icon-sort icon-white'></i> Started</th>";
+								echo "<th align='center'><i class='icon-sort icon-white'></i> Paused</th>";
+								echo "<th align='center'><i class='icon-sort icon-white'></i> Stopped</th>";
+								echo "<th align='center'><i class='icon-sort icon-white'></i> Duration</th>";
+								echo "<th align='center'><i class='icon-sort icon-white'></i> Completed</th>";
 							echo "</tr>";
 						echo "</thead>";
 						echo "<tbody>";
@@ -196,7 +224,7 @@
 	
 	<script>
 		$(document).ready(function() {
-			var oTable = $('#history').dataTable( {
+			var oTable = $('#globalHistory').dataTable( {
 				"bPaginate": true,
 				"bLengthChange": true,
 				"bFilter": true,
@@ -211,6 +239,23 @@
 		} );
 	</script>
 	
+	<script>
+	$(document).ready(function() {
+		$('#home').tooltip();
+	});
+	$(document).ready(function() {
+		$('#history').tooltip();
+	});
+	$(document).ready(function() {
+		$('#users').tooltip();
+	});
+	$(document).ready(function() {
+		$('#charts').tooltip();
+	});
+	$(document).ready(function() {
+		$('#settings').tooltip();
+	});
+	</script>
 
   </body>
 </html>

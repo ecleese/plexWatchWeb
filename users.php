@@ -9,7 +9,7 @@
 
     <!-- css -->
     <link href="css/plexwatch.css" rel="stylesheet">
-	
+	<link href="css/font-awesome.min.css" rel="stylesheet" >
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -39,10 +39,11 @@
 				<a href="index.php"><div class="logo"></div></a>
 				<ul class="nav">
 					
-					<li><a href="index.php"><i class="icon-home icon-white"></i> Home</a></li>
-					<li><a href="history.php"><i class="icon-calendar icon-white"></i> History</a></li>
-					<li class="active"><a href="users.php"><i class="icon-user icon-white"></i> Users</a></li>
-					<li><a href="charts.php"><i class="icon-list icon-white"></i> Charts</a></li>
+					<li><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
+					<li><a href="history.php"><i class="icon-2x icon-calendar icon-white" data-toggle="tooltip" data-placement="bottom" title="History" id="history"></i></a></li>
+					<li class="active"><a href="users.php"><i class="icon-2x icon-user icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
+					<li><a href="charts.php"><i class="icon-2x icon-bar-chart icon-white" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
+					<li><a href="settings.php"><i class="icon-2x icon-wrench icon-white" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
 					
 				</ul>
 				
@@ -62,12 +63,40 @@
 		<div class='row-fluid'>
 			<div class='span12'>
 			<?php
-			require_once(dirname(__FILE__) . '/config.php');	
-
+			$guisettingsFile = "config/config.php";
+			
+			if (file_exists($guisettingsFile)) { 
+				require_once(dirname(__FILE__) . '/config/config.php');
+			}else{
+				header("Location: settings.php");
+			}
+				
+			if ($plexWatch['https'] == 'yes') {
+				$plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
+			}else if ($plexWatch['https'] == 'no') {
+				$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
+			}	
+			
+			if (!empty($plexWatch['myPlexAuthToken'])) {
+					$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
+					
+				}else{
+					$myPlexAuthToken = '';
+					
+			}
+			
+				
 			date_default_timezone_set(@date_default_timezone_get());
 
 			$db = new SQLite3($plexWatch['plexWatchDb']);
-			$users = $db->query("SELECT user as users,xml FROM processed GROUP BY user ORDER BY users") or die ("Failed to access plexWatch database. Please check your server and config.php settings.");
+			
+			if ($plexWatch['chartsGrouping'] == "yes") {
+				$plexWatchDbTable = "grouped";
+			}else if ($plexWatch['chartsGrouping'] == "no") {
+				$plexWatchDbTable = "processed";
+			}
+			
+			$users = $db->query("SELECT user as users,xml FROM ".$plexWatchDbTable." GROUP BY user ORDER BY users") or die ("Failed to access plexWatch database. Please check your server and config.php settings.");
 		
 			echo "<div class='span12'>";
 			echo "<div class='wellbg'>";
@@ -114,6 +143,23 @@
     <script src="js/jquery-2.0.3.js"></script>
 	<script src="js/bootstrap.js"></script>
 	
+	<script>
+	$(document).ready(function() {
+		$('#home').tooltip();
+	});
+	$(document).ready(function() {
+		$('#history').tooltip();
+	});
+	$(document).ready(function() {
+		$('#users').tooltip();
+	});
+	$(document).ready(function() {
+		$('#charts').tooltip();
+	});
+	$(document).ready(function() {
+		$('#settings').tooltip();
+	});
+	</script>
 
   </body>
 </html>
