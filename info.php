@@ -70,17 +70,32 @@
 			$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
 		}
 		
+		if (!empty($plexWatch['myPlexAuthToken'])) {
+			$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
+			$id = $_GET['id'];
+			$infoUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."?query=c&X-Plex-Token=".$myPlexAuthToken."";
+		}else{
+			$myPlexAuthToken = '';		
+			$id = $_GET['id'];
+			$infoUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."";
+		}
+		
 		date_default_timezone_set(@date_default_timezone_get());
 		
-		$id = $_GET['id'];
+		
 					
-		$infoUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."";
+		
 		$xml = simplexml_load_file($infoUrl) or die ("<div class='container-fluid'><div class='row-fluid'><div class='span12'><h3>This media is no longer available in the Plex Media Server database.</h3></div></div>");
 		
 			if ($xml->Video['type'] == "episode") {
-							
-				$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['art']."&width=1920&height=1080";                                       
-				$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['parentThumb']."&width=256&height=352";                                        
+				
+				if (!empty($plexWatch['myPlexAuthToken'])) {				
+					$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['art']."&width=1920&height=1080&X-Plex-Token=".$myPlexAuthToken."";                                       
+					$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['parentThumb']."&width=256&height=352&X-Plex-Token=".$myPlexAuthToken."";         
+				}else{
+					$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['art']."&width=1920&height=1080";                                       
+					$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['parentThumb']."&width=256&height=352"; 
+				}	
 							
 					echo "<div class='container-fluid'>";
 						
@@ -269,8 +284,13 @@
 			
 						}else if ($xml->Directory['type'] == "show") {
 							
-							$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['art']."&width=1920&height=1080";                                       
-							$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['thumb']."&width=256&height=352";                                        
+							if (!empty($plexWatch['myPlexAuthToken'])) {
+								$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['art']."&width=1920&height=1080&X-Plex-Token=".$myPlexAuthToken."";                                       
+								$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['thumb']."&width=256&height=352&X-Plex-Token=".$myPlexAuthToken."";  
+							}else{
+								$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['art']."&width=1920&height=1080";                                       
+								$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['thumb']."&width=256&height=352"; 
+							}
 							
 						echo "<div class='container-fluid'>";
 								
@@ -354,8 +374,13 @@
 								while ($topWatchedResultsRow = $topWatchedResults->fetchArray()) {
 								
 									$topWatchedXmlUrl = $topWatchedResultsRow['xml'];
-									$topWatchedXmlfield = simplexml_load_string($topWatchedXmlUrl) ;								   
-									$topWatchedThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$topWatchedXmlfield['thumb']."&width=205&height=115";                                        
+									$topWatchedXmlfield = simplexml_load_string($topWatchedXmlUrl) ;					
+									
+									if (!empty($plexWatch['myPlexAuthToken'])) {
+										$topWatchedThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$topWatchedXmlfield['thumb']."&width=205&height=115&X-Plex-Token=".$myPlexAuthToken.""; 
+									}else{
+										$topWatchedThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$topWatchedXmlfield['thumb']."&width=205&height=115"; 
+									}
 
 									$numRows++;
 
@@ -387,11 +412,20 @@
 						
 						}else if ($xml->Directory['type'] == "season") {
 							
-							$parentInfoUrl = "".$plexWatchPmsUrl."/library/metadata/".$xml->Directory['parentRatingKey']."";
+							if (!empty($plexWatch['myPlexAuthToken'])) {
+								$parentInfoUrl = "".$plexWatchPmsUrl."/library/metadata/".$xml->Directory['parentRatingKey']."?query=c&X-Plex-Token=".$myPlexAuthToken."";
+							}else{
+								$parentInfoUrl = "".$plexWatchPmsUrl."/library/metadata/".$xml->Directory['parentRatingKey']."";
+							}
 							$parentXml = simplexml_load_file($parentInfoUrl) or die ("Feed Not Found");
 							
-							$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['art']. "&width=1920&height=1080";                                       
-							$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['thumb']. "&width=256&height=352";                                        
+							if (!empty($plexWatch['myPlexAuthToken'])) {
+								$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['art']. "&width=1920&height=1080&X-Plex-Token=".$myPlexAuthToken."";                                       
+								$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['thumb']. "&width=256&height=352&X-Plex-Token=".$myPlexAuthToken."";     
+							}else{
+								$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['art']. "&width=1920&height=1080";                                       
+								$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['thumb']. "&width=256&height=352";  
+							}
 							
 						echo "<div class='container-fluid'>";	
 							
@@ -458,17 +492,25 @@
 								echo"<h3>Episodes</h3>";
 							echo "</div>"; 
 						echo "</div>"; 
-						
-								$seasonEpisodesUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."/children";
+								
+								if (!empty($plexWatch['myPlexAuthToken'])) {
+									$seasonEpisodesUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."/children?query=c&X-Plex-Token=".$myPlexAuthToken."";
+								}else{
+									$seasonEpisodesUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."/children";
+								}	
 								$seasonEpisodesXml = simplexml_load_file($seasonEpisodesUrl) or die ("Feed Not Found");
 
 								echo "<div class='season-episodes-wrapper'>";
 									echo "<ul class='season-episodes-instance'>";
 										
 									foreach ($seasonEpisodesXml->Video as $seasonEpisodes) {
-																		  
-										$seasonEpisodesThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$seasonEpisodes['thumb']. "&width=205&height=115";                                       
-
+										
+										if (!empty($plexWatch['myPlexAuthToken'])) {
+											$seasonEpisodesThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$seasonEpisodes['thumb']."&width=205&height=115&X-Plex-Token=".$myPlexAuthToken."";                                       
+										}else{
+											$seasonEpisodesThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$seasonEpisodes['thumb']."&width=205&height=115";
+										}
+										
 											echo "<li>";
 												
 												echo "<div class='season-episodes-poster'>";
@@ -492,8 +534,13 @@
 								
 						}else if ($xml->Video['type'] == "movie") {				
 							
-							$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['art']."&width=1920&height=1080";                                        
-							$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['thumb']."&width=256&height=352";                                        
+							if (!empty($plexWatch['myPlexAuthToken'])) {
+								$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['art']."&width=1920&height=1080&X-Plex-Token=".$myPlexAuthToken."";                                        
+								$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['thumb']."&width=256&height=352&X-Plex-Token=".$myPlexAuthToken."";     
+							}else{
+								$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['art']."&width=1920&height=1080";                                        
+								$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['thumb']."&width=256&height=352"; 
+							}
 							
 					echo "<div class='container-fluid'>";		
 						if($xml->Video['art']) {

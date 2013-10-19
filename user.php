@@ -70,9 +70,7 @@
 		$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
 	}else{
 	}
-	
-	
-	
+
 	$user = $_GET['user'];
 
 	$db = new SQLite3($plexWatch['plexWatchDb']);
@@ -88,7 +86,7 @@
 	
 	$userStatsDailyCount = $db->querySingle("SELECT COUNT(*) FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now', 'localtime') AND user='$user' ");
 	
-	$userStatsDailyTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now', 'localtime') AND user='$user' ");
+	$userStatsDailyTimeFetch = $db->query("SELECT time,stopped,paused_counter FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now', 'localtime') AND user='$user' ");
 	$userStatsDailyTimeViewedTime = 0;
 	while ($userStatsDailyTimeRow = $userStatsDailyTimeFetch->fetchArray()) {
 		$userStatsDailyTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsDailyTimeRow['stopped']));
@@ -103,13 +101,10 @@
 		$userStatsDailyTimeViewedTimeMinutes = floor(($userStatsDailyTimeViewedTime % 3600 ) / 60);
 	}								
 	
-	
-	
-	
-	
+
 	$userStatsWeeklyCount = $db->querySingle("SELECT COUNT(*) FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch') >= datetime('now', '-7 days', 'localtime') AND user='$user' ");
 	
-	$userStatsWeeklyTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-7 days', 'localtime') AND user='$user' ");
+	$userStatsWeeklyTimeFetch = $db->query("SELECT time,stopped,paused_counter FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-7 days', 'localtime') AND user='$user' ");
 	$userStatsWeeklyTimeViewedTime = 0;
 	while ($userStatsWeeklyTimeRow = $userStatsWeeklyTimeFetch->fetchArray()) {
 		$userStatsWeeklyTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsWeeklyTimeRow['stopped']));
@@ -127,7 +122,7 @@
 	
 	$userStatsMonthlyCount = $db->querySingle("SELECT COUNT(*) FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-30 days', 'localtime') AND user='$user' ");
 	
-	$userStatsMonthlyTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-30 days', 'localtime') AND user='$user' ");
+	$userStatsMonthlyTimeFetch = $db->query("SELECT time,stopped,paused_counter FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-30 days', 'localtime') AND user='$user' ");
 	$userStatsMonthlyTimeViewedTime = 0;
 	while ($userStatsMonthlyTimeRow = $userStatsMonthlyTimeFetch->fetchArray()) {
 		$userStatsMonthlyTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsMonthlyTimeRow['stopped']));
@@ -145,7 +140,7 @@
 	
 	$userStatsAlltimeCount = $db->querySingle("SELECT COUNT(*) FROM ".$plexWatchDbTable." WHERE user='$user' ");
 	
-	$userStatsAlltimeTimeFetch = $db->query("SELECT time,stopped,xml,paused_counter FROM ".$plexWatchDbTable." WHERE user='$user' ");
+	$userStatsAlltimeTimeFetch = $db->query("SELECT time,stopped,paused_counter FROM ".$plexWatchDbTable." WHERE user='$user' ");
 	$userStatsAlltimeTimeViewedTime = 0;
 	while ($userStatsAlltimeTimeRow = $userStatsAlltimeTimeFetch->fetchArray()) {
 		$userStatsAlltimeTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsAlltimeTimeRow['stopped']));
@@ -161,7 +156,15 @@
 		
 	}
 	
-	$results = $db->query("SELECT * FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC");
+	if ($plexWatch['globalHistoryGrouping'] == "yes") {
+		
+		
+		$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM processed WHERE user = '$user' AND stopped IS NULL UNION ALL SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your server and config.php settings.");
+
+	}else if ($plexWatch['globalHistoryGrouping'] == "no") {	
+		$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your server and config.php settings.");
+	}
+	
 	
 
 	echo "<div class='container-fluid'>";
@@ -389,7 +392,7 @@
 							echo "<div class='dashboard-recent-media-row'>";
 								echo "<ul class='dashboard-recent-media'>";
 						
-									$recentlyWatchedResults = $db->query("SELECT * FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC LIMIT 10");
+									$recentlyWatchedResults = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC LIMIT 10");
 									// Run through each feed item
 									while ($recentlyWatchedRow = $recentlyWatchedResults->fetchArray()) {
 
