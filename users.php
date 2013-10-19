@@ -96,7 +96,7 @@
 				$plexWatchDbTable = "processed";
 			}
 			
-			$users = $db->query("SELECT user as users,xml FROM ".$plexWatchDbTable." GROUP BY user ORDER BY users") or die ("Failed to access plexWatch database. Please check your server and config.php settings.");
+			$users = $db->query("SELECT user as users,xml FROM ".$plexWatchDbTable." GROUP BY user ORDER BY users") or die ("Failed to access plexWatch database. Please check your settings.");
 		
 			echo "<div class='span12'>";
 			echo "<div class='wellbg'>";

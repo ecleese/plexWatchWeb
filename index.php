@@ -77,11 +77,11 @@
 				
 				if (!empty($plexWatch['myPlexAuthToken'])) {
 					$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
-					$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$myPlexAuthToken."") or die ("Failed to access Plex Media Server. Please check your server and config.php settings.");
+					$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$myPlexAuthToken."") or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
 
 				}else{
 					$myPlexAuthToken = '';
-					$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or die ("Failed to access Plex Media Server. Please check your server and config.php settings.");
+					$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
 
 				}	
 				
@@ -158,10 +158,10 @@
 
 			if (!empty($plexWatch['myPlexAuthToken'])) {
 				$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
-				$recentRequest = simplexml_load_file("".$plexWatchPmsUrl."/library/recentlyAdded?query=c&X-Plex-Container-Start=0&X-Plex-Container-Size=10&X-Plex-Token=".$myPlexAuthToken."") or die ("<div class='alert alert-warning'>Failed to access Plex Media Server. Please check your server and config.php settings.</div>");
+				$recentRequest = simplexml_load_file("".$plexWatchPmsUrl."/library/recentlyAdded?query=c&X-Plex-Container-Start=0&X-Plex-Container-Size=10&X-Plex-Token=".$myPlexAuthToken."") or die ("<div class='alert alert-warning'>Failed to access Plex Media Server. Please check your settings.</div>");
 			}else{
 				$myPlexAuthToken = '';
-				$recentRequest = simplexml_load_file("".$plexWatchPmsUrl."/library/recentlyAdded?query=c&X-Plex-Container-Start=0&X-Plex-Container-Size=10") or die ("<div class='alert alert-warning'>Failed to access Plex Media Server. Please check your server and config.php settings.</div>");
+				$recentRequest = simplexml_load_file("".$plexWatchPmsUrl."/library/recentlyAdded?query=c&X-Plex-Container-Start=0&X-Plex-Container-Size=10") or die ("<div class='alert alert-warning'>Failed to access Plex Media Server. Please check your settings.</div>");
 
 			}
 			

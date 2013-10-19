@@ -10,10 +10,10 @@ if ($plexWatch['https'] == 'yes') {
 
 if (!empty($plexWatch['myPlexAuthToken'])) {
 	$myPlexAuthToken = $plexWatch['myPlexAuthToken'];			
-	$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$plexWatch['myPlexAuthToken']."") or die ('Failed to access Plex Media Server. Please check your server and config.php settings.');	
+	$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$plexWatch['myPlexAuthToken']."") or die ('<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>');	
 }else{
 	$myPlexAuthToken = '';			
-	$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or die ('Failed to access Plex Media Server. Please check your server and config.php settings.');	
+	$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or die ('<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>');	
 }
 
 
@@ -26,8 +26,12 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 				
 				if (isset($sessions['librarySectionID'])) {
 					if ($sessions['type'] == "episode") {
-                                     
-					$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['thumb']."&width=300&height=169&X-Plex-Token=".$plexWatch['myPlexAuthToken']."";                                         
+                    
+					if (!empty($plexWatch['myPlexAuthToken'])) {
+						$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['thumb']."&width=300&height=169&X-Plex-Token=".$plexWatch['myPlexAuthToken']."";                                         
+					}else{
+						$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['thumb']."&width=300&height=169";
+					}
 					
 					echo "<div class='instance'>";
 						
@@ -276,8 +280,13 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 				}
 
 				if ($sessions['type'] == "movie") {
-						
-					$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['art']."&width=300&height=169&X-Plex-Token=".$plexWatch['myPlexAuthToken']."";                                         
+					
+					if (!empty($plexWatch['myPlexAuthToken'])) {
+						$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['art']."&width=300&height=169&X-Plex-Token=".$plexWatch['myPlexAuthToken']."";                                         
+					}else{
+						$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['art']."&width=300&height=169"; 
+					}
+					
 					echo "<div class='instance'>";
 						
 						echo "<div class='dashboard-activity-button-info'><button type='button' class='btn btn-warning' data-toggle='collapse' data-target='#infoDetails-".$sessions->Player['machineIdentifier']."'><i class='icon-info-sign icon-white'></i></button></div>";
