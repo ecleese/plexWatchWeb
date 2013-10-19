@@ -529,38 +529,38 @@
 										echo "<th align='center'><i class='icon-sort icon-white'></i> Last seen</th>";
 										echo "<th align='center'><i class='icon-sort icon-white'></i> IP Address</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Location</th>";
-										
+										echo "<th align='left'><i class='icon-sort icon-white'></i> Internet Provider</th>";
 									echo "</tr>";
 								echo "</thead>";
 								echo "<tbody>";
 								
 								while ($userIpAddresses = $userIpAddressesQuery->fetchArray()) {
 
-									if (!empty($userIpAddresses['ip_address'])) {
+										if (!empty($userIpAddresses['ip_address'])) {
 													
-										if (strstr($userIpAddresses['ip_address'], '192.168' )) {
+											if (strstr($userIpAddresses['ip_address'], '192.168' )) {
 													
-										}else if (strstr($userIpAddresses['ip_address'], '10.' )) {
+											}else if (strstr($userIpAddresses['ip_address'], '10.' )) {
 													
-										}else if (strstr($userIpAddresses['ip_address'], '172.16' )) {
+											}else if (strstr($userIpAddresses['ip_address'], '172.16' )) {
 											
-										}else{ 
+											}else{ 
 													
-											$userIpAddressesUrl = "http://www.geoplugin.net/xml.gp?ip=".$userIpAddresses['ip_address']."";
-											$userIpAddressesData = simplexml_load_file($userIpAddressesUrl) or die ("<div class=\"alert alert-warning \">Cannot access http://www.geoplugin.net.</div>");
-											
+												$userIpAddressesGeoUrl = "http://ipinfo.io/".$userIpAddresses['ip_address']."/json";
+												$userIpAddressesGeoJson = file_get_contents($userIpAddressesGeoUrl);
+												$userIpAddressesData = json_decode($userIpAddressesGeoJson, true);
+													
 												echo "<tr>";
 													echo "<td align='center'>".date("m/d/Y",$userIpAddresses['time'])."</td>";
 													echo "<td align='center'>".$userIpAddresses['ip_address']."</td>";
-													echo "<td align='left'><a href='https://maps.google.com/maps?q=".$userIpAddressesData->geoplugin_city.", ".$userIpAddressesData->geoplugin_region."'><i class='icon-map-marker icon-white'></i> ".$userIpAddressesData->geoplugin_city.", ".$userIpAddressesData->geoplugin_region."</a></td>";
-														
+													echo "<td align='left'><a href='https://maps.google.com/maps?q=".$userIpAddressesData['city'].", ".$userIpAddressesData['region']."'><i class='icon-map-marker icon-white'></i> ".$userIpAddressesData['city'].", ".$userIpAddressesData['region']."</a></td>";
+													echo "<td align='left' >".$userIpAddressesData['org']."</td>";
 												echo "</tr>";
-											
-										}
+											}
 												
-									}
+										}
 										
-								}	
+									}	
 										
 								echo "</tbody>";
 							echo "</table>";
