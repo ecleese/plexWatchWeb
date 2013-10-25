@@ -1,6 +1,7 @@
 <?php
 
-include_once dirname(dirname(__FILE__)) . '/config/config.php';
+  // this is wrong
+  //include_once dirname(dirname(__FILE__)) . '/config/config.php';
 
 /* either load or return the plexWatch config
  * we might want to time this at some point.
@@ -8,7 +9,7 @@ include_once dirname(dirname(__FILE__)) . '/config/config.php';
  */
 function loadPwConfig() {
   session_start();
-  unset($_SESSION['pwc']);
+  //unset($_SESSION['pwc']);
   if (!isset($_SESSION['pwc'])) {
     global $plexWatch;
     $db = dbconnect();
