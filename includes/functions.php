@@ -1,22 +1,27 @@
 <?php
-  if(!isset($_SESSION))  { session_start();  }
-  // this is wrong
-  //include_once dirname(dirname(__FILE__)) . '/config/config.php';
+  /* ini_set('display_errors', 1); // for debugging - we might want this set to 0 in production */
+
+if(!isset($_SESSION))  { session_start();  }
 
 /* either load or return the plexWatch config
  * we might want to time this at some point.
  * If a user doesn't close the browser, this will never update
  */
 function loadPwConfig() {
-
-  //unset($_SESSION['pwc']);
+  
+  /* if (isset($_SESSION['pwc'])) {   unset($_SESSION['pwc']); } // for testing */
   if (!isset($_SESSION['pwc'])) {
     global $plexWatch;
     $db = dbconnect();
-    $json = $db->querySingle("SELECT json_pretty from config");
-    $_SESSION['pwc'] =  keysToLower(json_decode($json));
+    if ($result = $db->querySingle("SELECT json_pretty from config")) {
+      if ($json = json_decode($result)) {
+	$_SESSION['pwc'] =  keysToLower($json);
+      }
+    }
   }
-  return $_SESSION['pwc'];
+  if (isset($_SESSION['pwc'])) {
+    return $_SESSION['pwc'];
+  }
 }
 
 /* return friends name based on user/platform */
@@ -25,14 +30,16 @@ function FriendlyName($user,$platform = NULL) {
   $platform = strtolower($platform);
   
   $config = loadPwConfig();
-  $fn = $config->{'user_display'};
-  if (is_object($fn)) {
-    if (isset($fn->{$user.'+'.$platform})) {
-      //print "user+platform match";
-      return $fn->{$user.'+'.$platform};
-    } else if (isset($fn->{$user})) {
-      //print "user match";
-      return $fn->{$user};
+  if (is_object($config)) {
+    $fn = $config->{'user_display'};
+    if (is_object($fn)) {
+      if (isset($fn->{$user.'+'.$platform})) {
+	//print "user+platform match";
+	return $fn->{$user.'+'.$platform};
+      } else if (isset($fn->{$user})) {
+	//print "user match";
+	return $fn->{$user};
+      }
     }
   }
   return $user;
