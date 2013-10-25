@@ -5,12 +5,12 @@ require_once(dirname(__FILE__) . '/../includes/timeago.php');
 
 if (isset($_GET['width'])) {
   $ContainerSize = 5; // min size?
-  $tmp = $_GET['width']/192;
+  $tmp = $_GET['width']/180;
   if ($tmp > 0) { 
     $ContainerSize = $tmp; 
     if (!isset($singlerow)) {  $ContainerSize = $ContainerSize*2;    }   
   }
-  $ContainerSize = floor($ContainerSize);
+  $ContainerSize = round($ContainerSize);
 }
 
 /* needs some indentation fixing */
