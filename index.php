@@ -68,7 +68,7 @@
 				}else{
 					header("Location: settings.php");
 				}
-				
+
 				if ($plexWatch['https'] == 'yes') {
 					$plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
 				}else if ($plexWatch['https'] == 'no') {

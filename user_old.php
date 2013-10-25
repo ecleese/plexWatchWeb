@@ -73,8 +73,7 @@
 
 	$user = $_GET['user'];
 
-	$db = new SQLite3($plexWatch['plexWatchDb']);
-	
+        $db = dbconnect();
 	if ($plexWatch['userHistoryGrouping'] == "yes") {
 		$plexWatchDbTable = "grouped";
 	}else if ($plexWatch['userHistoryGrouping'] == "no") {

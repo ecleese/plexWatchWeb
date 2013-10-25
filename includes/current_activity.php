@@ -82,11 +82,11 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 																	
 										if ($sessions->Player['state'] == "playing") {
 											echo "<div class='dashboard-activity-metadata-user'>";
-											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".FriendlyName($sessions->User['title'],$sessions->Player['title'])."</a>";
 											echo "</div>";
 										}elseif ($sessions->Player['state'] == "paused") {	 
 											echo "<div class='dashboard-activity-metadata-user'>";
-											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".FriendlyName($sessions->User['title'],$sessions->Player['title'])."</a>";
 											echo "</div>";
 										}
 									}
