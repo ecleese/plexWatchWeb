@@ -174,8 +174,7 @@
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 						
-							$db = new SQLite3($plexWatch['plexWatchDb']);
-							
+                                                        $db = dbconnect();
 							if ($plexWatch['globalHistoryGrouping'] == "yes") {
 								$plexWatchDbTable = "grouped";
 							}else if ($plexWatch['globalHistoryGrouping'] == "no") {
@@ -218,7 +217,7 @@
 								
 									echo "<tr>";
 										echo "<td align='center'>".date("m/d/Y",$row['time'])."</td>";
-										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".$row['user']."</td>";
+										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
 										echo "<td align='left'>".$row['platform']."</td>";
 
 										if (empty($row['ip_address'])) {
@@ -352,8 +351,7 @@
 						
 						echo "<div class='wellheader'>";
 
-							$db = new SQLite3($plexWatch['plexWatchDb']);
-							
+                                                        $db = dbconnect();
 							if ($plexWatch['globalHistoryGrouping'] == "yes") {
 								$plexWatchDbTable = "grouped";
 							}else if ($plexWatch['globalHistoryGrouping'] == "no") {
@@ -644,9 +642,8 @@
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 
-							
-							$db = new SQLite3($plexWatch['plexWatchDb']);
 
+                                                        $db = dbconnect();
 							if ($plexWatch['globalHistoryGrouping'] == "yes") {
 								$plexWatchDbTable = "grouped";
 							}else if ($plexWatch['globalHistoryGrouping'] == "no") {
@@ -690,7 +687,7 @@
 									
 									echo "<tr>";
 										echo "<td align='center'>".date("m/d/Y",$row['time'])."</td>";
-										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".$row['user']."</td>";
+										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
 										echo "<td align='left'>".$row['platform']."</td>";
 
 										if (empty($row['ip_address'])) {

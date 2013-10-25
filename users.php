@@ -88,7 +88,7 @@
 				
 			date_default_timezone_set(@date_default_timezone_get());
 
-			$db = new SQLite3($plexWatch['plexWatchDb']);
+                        $db = dbconnect();
 			
 			if ($plexWatch['chartsGrouping'] == "yes") {
 				$plexWatchDbTable = "grouped";
@@ -97,7 +97,7 @@
 			}
 			
 			$users = $db->query("SELECT user as users,xml FROM ".$plexWatchDbTable." GROUP BY user ORDER BY users") or die ("Failed to access plexWatch database. Please check your settings.");
-		
+
 			echo "<div class='span12'>";
 			echo "<div class='wellbg'>";
 				echo "<div class='wellheader'>";
@@ -120,7 +120,7 @@
 						echo "<div class='clearfix'></div>";
 						echo "<div class=dashboard-users-metacontainer>";
 						
-							echo $user['users'];
+						echo FriendlyName($user['users']);
 						
 						echo "</div>";
 						echo "</li>";

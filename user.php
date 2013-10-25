@@ -73,8 +73,7 @@
 
 	$user = $_GET['user'];
 
-	$db = new SQLite3($plexWatch['plexWatchDb']);
-	
+        $db = dbconnect();
 	if ($plexWatch['userHistoryGrouping'] == "yes") {
 		$plexWatchDbTable = "grouped";
 	}else if ($plexWatch['userHistoryGrouping'] == "no") {
@@ -181,7 +180,7 @@
 						}
 					}
 					
-					echo "<div class='user-info-username'>".$user."</div>";
+echo "<div class='user-info-username'>".FriendlyName($user)."</div>";
 					echo "<div class='user-info-nav'>";
 						echo "<ul class='user-info-nav'>";
 							echo "<li class='active'><a href='#profile' data-toggle='tab'>Profile</a></li>";

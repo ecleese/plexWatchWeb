@@ -89,7 +89,7 @@
 				}
 					
 				
-				$db = new SQLite3($plexWatch['plexWatchDb']);
+                                $db = dbconnect();
 				date_default_timezone_set(@date_default_timezone_get());
 
 				echo "<div class='span3'>";
