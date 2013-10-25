@@ -91,7 +91,6 @@
 						
 					}
 					
-					
                                         $db = dbconnect();
 					if ($plexWatch['globalHistoryGrouping'] == "yes") {
 						$plexWatchDbTable = "grouped";
@@ -155,11 +154,11 @@
 							$viewOffset = $xmlfield['viewOffset'];
 
 							if ($type=="movie") {
-								echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
+								echo "<td class='title' align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
 							}else if ($type=="episode") {
-								echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
+								echo "<td  class='title' align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
 							}else if (!array_key_exists('',$type)) {
-								echo "<td align='left'><a href='".$ratingKey."'>".$row['title']."</a></td>";
+								echo "<td  class='title' align='left'><a href='".$ratingKey."'>".$row['title']."</a></td>";
 							}else{
 
 							}

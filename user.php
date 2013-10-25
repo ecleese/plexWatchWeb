@@ -629,11 +629,11 @@ echo "<div class='user-info-username'>".FriendlyName($user)."</div>";
 											
 										
 										if ($type=="movie") {
-										echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
+										echo "<td class='title' align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
 										}else if ($type=="episode") {
-										echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
+										echo "<td class='title' align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
 										}else if (!array_key_exists('',$type)) {
-										echo "<td align='left'><a href='".$ratingKey."'>".$row['title']."</a></td>";
+										echo "<td class='title' align='left'><a href='".$ratingKey."'>".$row['title']."</a></td>";
 										}else{
 
 										}
