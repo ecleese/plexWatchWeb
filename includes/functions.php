@@ -27,10 +27,10 @@ function FriendlyName($user,$platform = NULL) {
   $config = loadPwConfig();
   $fn = $config->{'user_display'};
   if (is_object($fn)) {
-    if ($fn->{$user.'+'.$platform}) {
+    if (isset($fn->{$user.'+'.$platform})) {
       //print "user+platform match";
       return $fn->{$user.'+'.$platform};
-    } else if ($fn->{$user}) {
+    } else if (isset($fn->{$user})) {
       //print "user match";
       return $fn->{$user};
     }
