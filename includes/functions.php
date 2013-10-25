@@ -1,7 +1,6 @@
 <?php
 
-include_once("config.php");
-
+include_once dirname(dirname(__FILE__)) . '/config/config.php';
 
 /* either load or return the plexWatch config
  * we might want to time this at some point.
@@ -9,7 +8,7 @@ include_once("config.php");
  */
 function loadPwConfig() {
   session_start();
-  //unset($_SESSION['pwc']);
+  unset($_SESSION['pwc']);
   if (!isset($_SESSION['pwc'])) {
     global $plexWatch;
     $db = dbconnect();
@@ -26,16 +25,16 @@ function FriendlyName($user,$platform = NULL) {
   
   $config = loadPwConfig();
   $fn = $config->{'user_display'};
-  if ($fn->{$user.'+'.$platform}) {
-    //print "user+platform match";
-    return $fn->{$user.'+'.$platform};
-  } else if ($fn->{$user}) {
-    //print "user match";
-    return $fn->{$user};
-  } else {
-    //print "not match";
-    return $user;
+  if (is_object($fn)) {
+    if ($fn->{$user.'+'.$platform}) {
+      //print "user+platform match";
+      return $fn->{$user.'+'.$platform};
+    } else if ($fn->{$user}) {
+      //print "user match";
+      return $fn->{$user};
+    }
   }
+  return $user;
 }
 
 /* db connector */
