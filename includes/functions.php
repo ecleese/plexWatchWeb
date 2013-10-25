@@ -1,5 +1,5 @@
 <?php
-
+  if(!isset($_SESSION))  { session_start();  }
   // this is wrong
   //include_once dirname(dirname(__FILE__)) . '/config/config.php';
 
@@ -8,7 +8,7 @@
  * If a user doesn't close the browser, this will never update
  */
 function loadPwConfig() {
-  session_start();
+
   //unset($_SESSION['pwc']);
   if (!isset($_SESSION['pwc'])) {
     global $plexWatch;
