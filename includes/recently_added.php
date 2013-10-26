@@ -70,7 +70,6 @@ if (isset($_GET['width'])) {
 									$recentTime = $recentXml['addedAt'];
 									$timeNow = time();
 									$age = time() - strtotime($recentTime);
-									include_once('includes/timeago.php');
 									echo "<h4>Added ".TimeAgo($recentTime)."</h4>";
 									
 									echo "</div>";
