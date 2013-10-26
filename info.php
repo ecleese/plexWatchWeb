@@ -339,6 +339,7 @@
 							
 						echo "</div>";
 						
+
 		echo "<div class='container-fluid'>";
 			echo "<div class='row-fluid'>";	
 				echo "<div class='span12'>";
@@ -405,8 +406,121 @@
 				echo "</div>";	
 			echo "</div>";
 			
-		echo "</div>";
+
+			echo "<div class='row-fluid'>";
+				echo "<div class='span12'>";
+					echo "<div class='wellbg'>";
+						echo "<div class='wellheader'>";
 						
+                                                        $db = dbconnect();
+							if ($plexWatch['globalHistoryGrouping'] == "yes") {
+								$plexWatchDbTable = "grouped";
+							}else if ($plexWatch['globalHistoryGrouping'] == "no") {
+								$plexWatchDbTable = "processed";
+							}
+							
+							$title = $db->querySingle("SELECT orig_title FROM $plexWatchDbTable WHERE  xml like '%grandparentRatingKey=\"".$id."\"%' ");
+							
+							echo "<div class='dashboard-wellheader'>";
+									echo"<h3>Watching history for <strong>".$title."</strong></h3>";
+								echo"</div>";
+							echo"</div>";
+							
+							$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable  WHERE  xml like '%grandparentRatingKey=\"".$id."\"%' ");
+							$results = $db->query("SELECT * FROM $plexWatchDbTable WHERE  xml like '%grandparentRatingKey=\"".$id."\"%' ORDER BY time DESC");
+							
+							if ($numRows < 1) {
+
+							echo "No Results.";
+
+							} else {
+							
+							echo "<table id='globalHistory' class='display'>";
+								echo "<thead>";
+									echo "<tr>";
+										echo "<th align='center'><i class='icon-calendar icon-white'></i> Date</th>";
+										echo "<th align='left'><i class='icon-user icon-white'></i> User</th>";
+										echo "<th align='left'><i class='icon-hdd icon-white'></i> Platform</th>";
+										echo "<th align='left'><i class='icon-globe icon-white'></i> IP Address</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> Title</th>";
+										echo "<th align='center'><i class='icon-play icon-white'></i> Started</th>";
+										echo "<th align='center'><i class='icon-pause icon-white'></i> Paused</th>";
+										echo "<th align='center'><i class='icon-stop icon-white'></i> Stopped</th>";
+										echo "<th align='center'><i class='icon-time icon-white'></i> Duration</th>";
+										echo "<th align='center'>Completed</th>";
+									echo "</tr>";
+								echo "</thead>";
+								echo "<tbody>";
+								while ($row = $results->fetchArray()) {
+								
+									echo "<tr>";
+										echo "<td align='center'>".date("m/d/Y",$row['time'])."</td>";
+										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
+										echo "<td align='left'>".$row['platform']."</td>";
+
+										if (empty($row['ip_address'])) {
+											echo "<td align='left'>n/a</td>";
+
+										}else{
+
+											echo "<td align='left'>".$row['ip_address']."</td>";
+										}
+
+
+										$request_url = $row['xml'];
+										$xmlfield = simplexml_load_string($request_url) ; 
+										$ratingKey = $xmlfield['ratingKey'];
+										$type = $xmlfield['type'];
+										$duration = $xmlfield['duration'];
+										$viewOffset = $xmlfield['viewOffset'];
+
+										echo "<td  class='title' align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
+										echo "<td align='center'>".date("g:i a",$row['time'])."</td>";
+										
+										$paused_time = round(abs($row['paused_counter']) / 60,1);
+										echo "<td align='center'>".$paused_time." min</td>";
+										
+										$stopped_time = date("g:i a",$row['stopped']);
+										
+										if (empty($row['stopped'])) {								
+											echo "<td align='center'>n/a</td>";
+										}else{
+											echo "<td align='center'>".$stopped_time."</td>";
+										}
+
+										$to_time = strtotime(date("m/d/Y g:i a",$row['stopped']));
+										$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
+										
+										$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
+										$viewed_time_length = strlen($viewed_time);
+										
+										
+										
+										if ($viewed_time_length == 8) {
+											echo "<td align='center'>n/a</td>";
+										}else{
+											echo "<td align='center'>".$viewed_time. " min</td>";
+										}
+										
+										$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
+											if ($percentComplete >= 90) {	
+											  $percentComplete = 100;    
+											}
+
+										echo "<td align='center'><span class='badge badge-warning'>".$percentComplete."%</span></td>";
+									echo "</tr>";   
+								}
+							}
+								echo "</tbody>";
+							echo "</table>";
+						
+						echo "</div>";
+					echo "</div>";	
+				echo "</div>";
+			echo "</div>";	
+
+
+
 						
 						}else if ($xml->Directory['type'] == "season") {
 							
@@ -482,6 +596,8 @@
 				echo "</div>";
 			echo "</div>";
 			
+
+
 			echo "<div class='row-fluid'>";
 				echo "<div class='span12'>";
 					echo "<div class='wellbg'>";
@@ -524,12 +640,131 @@
 									}
 									echo "</ul>"; 
 								echo "</div>";
+
+
+
 								
 						 		
+
 					echo "</div>";
+
 				echo "</div>";	
-			echo "</div>";
+
+						
+
+			echo "<div class='row-fluid'>";
+				echo "<div class='span12'>";
+					echo "<div class='wellbg'>";
+						echo "<div class='wellheader'>";
+						
+                                                        $db = dbconnect();
+							if ($plexWatch['globalHistoryGrouping'] == "yes") {
+								$plexWatchDbTable = "grouped";
+							}else if ($plexWatch['globalHistoryGrouping'] == "no") {
+								$plexWatchDbTable = "processed";
+							}
+							
+							$title = $db->querySingle("SELECT orig_title FROM $plexWatchDbTable WHERE  xml like '%parentRatingKey=\"".$id."\"%' ");
+							
+							echo "<div class='dashboard-wellheader'>";
+									echo"<h3>Watching history for <strong>".$title."</strong></h3>";
+								echo"</div>";
+							echo"</div>";
+							
+							$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable  WHERE  xml like '%parentRatingKey=\"".$id."\"%' ");
+							$results = $db->query("SELECT * FROM $plexWatchDbTable WHERE  xml like '%parentRatingKey=\"".$id."\"%' ORDER BY time DESC");
+							
+							if ($numRows < 1) {
+
+							echo "No Results.";
+
+							} else {
+							
+							echo "<table id='globalHistory' class='display'>";
+								echo "<thead>";
+									echo "<tr>";
+										echo "<th align='center'><i class='icon-calendar icon-white'></i> Date</th>";
+										echo "<th align='left'><i class='icon-user icon-white'></i> User</th>";
+										echo "<th align='left'><i class='icon-hdd icon-white'></i> Platform</th>";
+										echo "<th align='left'><i class='icon-globe icon-white'></i> IP Address</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> Title</th>";
+										echo "<th align='center'><i class='icon-play icon-white'></i> Started</th>";
+										echo "<th align='center'><i class='icon-pause icon-white'></i> Paused</th>";
+										echo "<th align='center'><i class='icon-stop icon-white'></i> Stopped</th>";
+										echo "<th align='center'><i class='icon-time icon-white'></i> Duration</th>";
+										echo "<th align='center'>Completed</th>";
+									echo "</tr>";
+								echo "</thead>";
+								echo "<tbody>";
+								while ($row = $results->fetchArray()) {
 								
+									echo "<tr>";
+										echo "<td align='center'>".date("m/d/Y",$row['time'])."</td>";
+										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
+										echo "<td align='left'>".$row['platform']."</td>";
+
+										if (empty($row['ip_address'])) {
+											echo "<td align='left'>n/a</td>";
+
+										}else{
+
+											echo "<td align='left'>".$row['ip_address']."</td>";
+										}
+
+										$request_url = $row['xml'];
+										$xmlfield = simplexml_load_string($request_url) ; 
+										$ratingKey = $xmlfield['ratingKey'];
+										$type = $xmlfield['type'];
+										$duration = $xmlfield['duration'];
+										$viewOffset = $xmlfield['viewOffset'];
+
+										echo "<td  class='title' align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
+										echo "<td align='center'>".date("g:i a",$row['time'])."</td>";
+										
+										$paused_time = round(abs($row['paused_counter']) / 60,1);
+										echo "<td align='center'>".$paused_time." min</td>";
+										
+										$stopped_time = date("g:i a",$row['stopped']);
+										
+										if (empty($row['stopped'])) {								
+											echo "<td align='center'>n/a</td>";
+										}else{
+											echo "<td align='center'>".$stopped_time."</td>";
+										}
+
+										$to_time = strtotime(date("m/d/Y g:i a",$row['stopped']));
+										$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
+										
+										$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
+										$viewed_time_length = strlen($viewed_time);
+										
+										
+										
+										if ($viewed_time_length == 8) {
+											echo "<td align='center'>n/a</td>";
+										}else{
+											echo "<td align='center'>".$viewed_time. " min</td>";
+										}
+										
+										$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
+											if ($percentComplete >= 90) {	
+											  $percentComplete = 100;    
+											}
+
+										echo "<td align='center'><span class='badge badge-warning'>".$percentComplete."%</span></td>";
+									echo "</tr>";   
+								}
+							}
+								echo "</tbody>";
+							echo "</table>";
+						
+						echo "</div>";
+					echo "</div>";	
+				echo "</div>";
+
+			echo "</div>";
+
+
 						}else if ($xml->Video['type'] == "movie") {				
 							
 							if (!empty($plexWatch['myPlexAuthToken'])) {
@@ -674,7 +909,7 @@
 										echo "<th align='left'><i class='icon-user icon-white'></i> User</th>";
 										echo "<th align='left'><i class='icon-hdd icon-white'></i> Platform</th>";
 										echo "<th align='left'><i class='icon-globe icon-white'></i> IP Address</th>";
-										
+
 										echo "<th align='center'><i class='icon-play icon-white'></i> Started</th>";
 										echo "<th align='center'><i class='icon-pause icon-white'></i> Paused</th>";
 										echo "<th align='center'><i class='icon-stop icon-white'></i> Stopped</th>";

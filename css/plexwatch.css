@@ -6756,29 +6756,35 @@ position: relative;
 
 
 .dashboard-recent-media-row {
-
+ width: 100%
+ margin:0 auto;
+ padding-top: 5px;
+ text-align: center;
 }
 
 .dashboard-recent-media {
-padding-top: 5px;
-margin: -5px 0 0 0px;
-list-style: none;
+ width: 100%;
+ margin:0 auto;
+ padding-top: 5px;
+/* margin: -5px 0 0 0px; */
+ list-style: none;
 }
 
 .dashboard-recent-media-instance {
-
-float: left;
+  display: inline-block;  
+ /* float: left; */
 }
 
 .dashboard-recent-media li {
-margin-right: 30px;
+margin-right: 15px;
+margin-left: 15px;
 padding-bottom: 25px;
 position: relative;
 
 }
 
 .dashboard-recent-media-metacontainer{
-width: 150px; 
+width: 136px;  /* images are 136px wide */
 font-size: 13px;
 
 }
@@ -7753,4 +7759,9 @@ left: 3px;
 
 .currentlyWatching {
 color: #ff9d00;
+}
+
+#recentlyAdded {
+    max-height: 640px;  /* this works for 2 rows */
+    overflow:hidden;
 }
