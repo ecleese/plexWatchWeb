@@ -516,7 +516,7 @@
 						}else{
 							echo "<li><i class='icon icon-warning-sign'></i> PHP SQLite Support: <strong><span class='label label-important'>No information available</strong></span></li>";
 						}
-							
+						echo "<li><i class='icon icon-ok'></i> Your server's timezone: <strong><span class='label label-success'>".@date_default_timezone_get()."</strong></span></li>";	
 					?>	
 
 						<br>
