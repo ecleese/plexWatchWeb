@@ -156,16 +156,7 @@
 		
 	}
 	
-	if ($plexWatch['globalHistoryGrouping'] == "yes") {
-		
-		
-		$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM processed WHERE user = '$user' AND stopped IS NULL UNION ALL SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your settings.");
-
-	}else if ($plexWatch['globalHistoryGrouping'] == "no") {	
-		$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your settings.");
-	}
-	
-	
+	$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM ".$plexWatchDbTable." WHERE user = '$user' AND stopped IS NULL UNION ALL SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your settings.");
 
 	echo "<div class='container-fluid'>";
 		echo "<div class='row-fluid'>";
@@ -206,10 +197,10 @@
 						echo "<div class='wellbg'>";
 							echo "<div class='wellheader'>";
 								echo "<div class='dashboard-wellheader'>";
-									echo"<h3>User Stats</h3>";
+									echo"<h3>Global Stats</h3>";
 								echo"</div>";
 							echo"</div>";
-							
+
 							echo "<div class='user-overview-stats-wrapper'>";
 								echo"<ul>";
 								
@@ -377,6 +368,70 @@
 					
 				echo "</div>";		
 			echo "</div>";	
+			
+			echo "<div class='container-fluid'>";
+				echo "<div class='row-fluid'>";
+						echo "<div class='span12'>";
+							echo "<div class='wellbg'>";
+								echo "<div class='wellheader'>";
+									echo "<div class='dashboard-wellheader'>";
+										echo"<h3>Platform Stats</h3>";
+									echo"</div>";
+								echo"</div>";
+								
+								$platformResults = $db->query ("SELECT xml,platform, COUNT(platform) as platform_count FROM ".$plexWatchDbTable." WHERE user = '$user' GROUP BY platform ORDER BY platform ASC") or die ("Failed to access plexWatch database. Please check your settings.");
+								 
+								
+								$platformImage = 0;
+								while ($platformResultsRow = $platformResults->fetchArray()) {
+								
+								$platformXml = $platformResultsRow['xml'];
+								$platformXmlField = simplexml_load_string($platformXml);
+								
+									if(empty($platformXmlField->Player['platform'])) {
+										$platformImage = "images/platforms/platform-default.png";
+									}else if(strstr($platformXmlField->Player['platform'], 'Roku')) {
+										$platformImage = "images/platforms/platform-roku.png";
+									}else if(strstr($platformXmlField->Player['platform'], 'Apple TV')) {
+										$platformImage = "images/platforms/platform-appletv.png";
+									}else if(strstr($platformXmlField->Player['platform'], 'Firefox')) {
+										$platformImage = "images/platforms/platform-firefox.png";
+									}else if(strstr($platformXmlField->Player['platform'], 'Chrome')) {
+										$platformImage = "images/platforms/platform-chrome.png";
+									}else if(strstr($platformXmlField->Player['platform'], 'Android')) {
+										$platformImage = "images/platforms/platform-android.png";
+									}else if(strstr($platformXmlField->Player['platform'], 'Nexus')) {
+										$platformImage = "images/platforms/platform-android.png";
+									}else if(strstr($platformXmlField->Player['platform'], 'iPad')) {
+										$platformImage = "images/platforms/platform-ios.png";
+									}else if(strstr($platformXmlField->Player['platform'], 'iPhone')) {
+										$platformImage = "images/platforms/platform-ios.png";
+									}else if(strstr($platformXmlField->Player['platform'], 'iOS')) {
+										$platformImage = "images/platforms/platform-ios.png";
+									}else if(strstr($platformXmlField->Player['platform'], 'Plex Home Theater')) {
+										$platformImage = "images/platforms/platform-plex-ht.png";
+									}else if(strstr($platformXmlField->Player['platform'], 'Safari')) {
+										$platformImage = "images/platforms/platform-safari.png";
+									}else if(strstr($platformXmlField->Player['platform'], 'Windows-XBMC')) {
+										$platformImage = "images/platforms/platform-xbmc.png";
+									}else{
+										$platformImage = "images/platforms/platform-default.png";
+									}
+									
+									echo "<div class='user-platforms'>";
+										echo "<ul>";
+											echo "<div class='user-platforms-instance'>";
+												echo "<li><img class='user-platforms-instance-poster' src='".$platformImage."'></img> <div class='user-platforms-instance-name'>".$platformResultsRow['platform']."</div>";
+												echo "<div class='user-platforms-instance-playcount'><h3>".$platformResultsRow['platform_count']."</h3><p> plays</p></div>";
+												echo "</li>";
+											echo "</div>";
+										echo "</ul>";
+									echo "</div>";
+								}
+							echo "</div>";
+						echo "</div>";	
+				echo "</div>";		
+			echo "</div>";	
 	
 			echo "<div class='container-fluid'>";	
 				echo "<div class='row-fluid'>";
@@ -499,7 +554,7 @@
 			
 		echo "<div class='tab-pane' id='userHistory'>";
 		
-			$userIpAddressesQuery = $db->query("SELECT time,ip_address, COUNT(ip_address) as play_count FROM processed WHERE user = '$user' GROUP BY ip_address ORDER BY time DESC");
+			$userIpAddressesQuery = $db->query("SELECT time,ip_address,platform, COUNT(ip_address) as play_count FROM processed WHERE user = '$user' GROUP BY ip_address ORDER BY time DESC");
 
 			echo "<div class='container-fluid'>";	
 				echo "<div class='row-fluid'>";
@@ -520,6 +575,7 @@
 										echo "<th align='center'><i class='icon-sort icon-white'></i> Last seen</th>";
 										echo "<th align='center'><i class='icon-sort icon-white'></i> IP Address</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Play Count</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> Platform</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Location</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Internet Provider</th>";
 									echo "</tr>";
@@ -548,6 +604,7 @@
 													echo "<td align='center'>".date("m/d/Y",$userIpAddresses['time'])."</td>";
 													echo "<td align='center'>".$userIpAddresses['ip_address']."</td>";
 													echo "<td align='left'>".$userIpAddresses['play_count']."</td>";
+													echo "<td align='left'>".$userIpAddresses['platform']."</td>";
 													if (empty($userIpAddressesData['region'])) {
 														echo "<td align='left'>n/a</td>";
 													}else{

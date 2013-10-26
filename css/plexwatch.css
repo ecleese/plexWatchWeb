@@ -7870,3 +7870,65 @@ padding-bottom: 5px;
 #recentlyAdded {
 
 }
+
+.user-platforms {
+
+}
+
+.user-platforms ul {
+list-style: none;
+margin: 0;
+}
+
+.user-platforms-instance {
+float: left;
+width: 240px;
+margin-bottom: 25px;
+}
+
+.user-platforms-instance li {
+
+
+}
+
+.user-platforms-instance-poster {
+float: left;
+width: 75px;
+}
+
+.user-platforms-instance-name {
+float: left;
+padding-top: 15px;
+color: #fff;
+text-overflow: ellipsis;
+overflow: hidden;
+position: relative;
+font-size: 13px;
+line-height: 15px;
+font-weight: bold;
+width: 140px;
+white-space: nowrap;
+margin-left: 10px;
+}
+
+
+.user-platforms-instance-playcount  h3{
+font-size: 24px;
+font-weight: bold;
+color: #ff9d00;
+line-height: 24px;
+position: relative;
+top: 5px;
+margin-left: 10px;
+margin-right: 5px;
+float: left;
+}
+
+.user-platforms-instance-playcount  p {
+color: #aaa;
+font-size: 12px;
+float: left;
+position: relative;
+top: 15px;
+left: 0px;
+}
