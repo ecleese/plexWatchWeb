@@ -31,8 +31,6 @@
 
   <body>
 
-	
-  
 	<div class="container">
 		    			
 		<div class="navbar navbar-fixed-top">
@@ -88,19 +86,15 @@
 		$xml = simplexml_load_file($infoUrl) or die ("<div class='container-fluid'><div class='row-fluid'><div class='span12'><h3>This media is no longer available in the Plex Media Server database.</h3></div></div>");
 		
 			if ($xml->Video['type'] == "episode") {
-				
-				if (!empty($plexWatch['myPlexAuthToken'])) {				
-					$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['art']."&width=1920&height=1080&X-Plex-Token=".$myPlexAuthToken."";                                       
-					$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['parentThumb']."&width=256&height=352&X-Plex-Token=".$myPlexAuthToken."";         
-				}else{
+
 					$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['art']."&width=1920&height=1080";                                       
 					$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['parentThumb']."&width=256&height=352"; 
-				}	
+				
 							
 					echo "<div class='container-fluid'>";
 						
 							if($xml->Video['art']) {
-								echo "<div class='art-face' style='background-image:url(".$xmlArtUrl.")'>";
+								echo "<div class='art-face' style='background-image:url(includes/img.php?img=".urlencode($xmlArtUrl).")'>";
 							}else{
 								echo "<div class='art-face'>";
 							}
@@ -113,7 +107,7 @@
 												echo "<div class='summary-content-poster hidden-phone hidden-tablet'>";
 													
 													if($xml->Video['parentThumb']) {
-														echo "<img src='".$xmlThumbUrl."'></img>";
+														echo "<img src='includes/img.php?img=".urlencode($xmlThumbUrl)."'></img>";
 													}else{
 														echo "<img src='images/poster.png'></img>";
 													}
@@ -174,7 +168,7 @@
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 						
-							$db = new SQLite3($plexWatch['plexWatchDb']);
+							$db = dbconnect();
 							
 							if ($plexWatch['globalHistoryGrouping'] == "yes") {
 								$plexWatchDbTable = "grouped";
@@ -218,7 +212,7 @@
 								
 									echo "<tr>";
 										echo "<td align='center'>".date("m/d/Y",$row['time'])."</td>";
-										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".$row['user']."</td>";
+										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
 										echo "<td align='left'>".$row['platform']."</td>";
 
 										if (empty($row['ip_address'])) {
@@ -283,19 +277,15 @@
 
 			
 						}else if ($xml->Directory['type'] == "show") {
-							
-							if (!empty($plexWatch['myPlexAuthToken'])) {
-								$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['art']."&width=1920&height=1080&X-Plex-Token=".$myPlexAuthToken."";                                       
-								$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['thumb']."&width=256&height=352&X-Plex-Token=".$myPlexAuthToken."";  
-							}else{
+
 								$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['art']."&width=1920&height=1080";                                       
 								$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['thumb']."&width=256&height=352"; 
-							}
+							
 							
 						echo "<div class='container-fluid'>";
 								
 								if($xml->Directory['art']) {
-									echo "<div class='art-face' style='background-image:url(".$xmlArtUrl.")'>";
+									echo "<div class='art-face' style='background-image:url(includes/img.php?img=".urlencode($xmlArtUrl).")'>";
 								}else{
 									echo "<div class='art-face'>";
 								}
@@ -308,7 +298,7 @@
 											echo "<div class='summary-content-poster hidden-phone hidden-tablet'>";
 											
 												if($xml->Directory['thumb']) {
-													echo "<img src='".$xmlThumbUrl."'></img>";
+													echo "<img src='includes/img.php?img=".urlencode($xmlThumbUrl)."'></img>";
 												}else{
 													echo "<img src='images/poster.png'></img>";
 												}
@@ -352,7 +342,7 @@
 						
 						echo "<div class='wellheader'>";
 
-							$db = new SQLite3($plexWatch['plexWatchDb']);
+							$db = dbconnect();
 							
 							if ($plexWatch['globalHistoryGrouping'] == "yes") {
 								$plexWatchDbTable = "grouped";
@@ -375,19 +365,16 @@
 								
 									$topWatchedXmlUrl = $topWatchedResultsRow['xml'];
 									$topWatchedXmlfield = simplexml_load_string($topWatchedXmlUrl) ;					
-									
-									if (!empty($plexWatch['myPlexAuthToken'])) {
-										$topWatchedThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$topWatchedXmlfield['thumb']."&width=205&height=115&X-Plex-Token=".$myPlexAuthToken.""; 
-									}else{
+
 										$topWatchedThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$topWatchedXmlfield['thumb']."&width=205&height=115"; 
-									}
+									
 
 									$numRows++;
 
 										echo "<li>";
 											echo "<div class='info-top-watched-instance-position-circle'><h1>".$numRows."</h1></div>";
 											echo "<div class='info-top-watched-poster'>";
-												echo "<div class='info-top-watched-poster-face'><a href='info.php?id=" .$topWatchedXmlfield['ratingKey']. "'><img src='".$topWatchedThumbUrl."' class='info-top-watched-poster-face'></img></a></div>";
+												echo "<div class='info-top-watched-poster-face'><a href='info.php?id=" .$topWatchedXmlfield['ratingKey']. "'><img src='includes/img.php?img=".urlencode($topWatchedThumbUrl)."' class='info-top-watched-poster-face'></img></a></div>";
 												echo "<div class='info-top-watch-card-overlay'><div class='info-top-watched-season'>Season ".$topWatchedResultsRow['season'].", Episode ".$topWatchedResultsRow['episode']."</div><div class='info-top-watched-playcount'><strong>".$topWatchedResultsRow['play_count']."</strong> views</div></div>";
 											echo "</div>";
 											echo "<div class='info-top-watched-instance-text-wrapper'>";
@@ -418,19 +405,15 @@
 								$parentInfoUrl = "".$plexWatchPmsUrl."/library/metadata/".$xml->Directory['parentRatingKey']."";
 							}
 							$parentXml = simplexml_load_file($parentInfoUrl) or die ("Feed Not Found");
-							
-							if (!empty($plexWatch['myPlexAuthToken'])) {
-								$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['art']. "&width=1920&height=1080&X-Plex-Token=".$myPlexAuthToken."";                                       
-								$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['thumb']. "&width=256&height=352&X-Plex-Token=".$myPlexAuthToken."";     
-							}else{
+
 								$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['art']. "&width=1920&height=1080";                                       
 								$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['thumb']. "&width=256&height=352";  
-							}
+							
 							
 						echo "<div class='container-fluid'>";	
 							
 								if($xml->Directory['art']) {
-									echo "<div class='art-face' style='background-image:url(".$xmlArtUrl.")'>";
+									echo "<div class='art-face' style='background-image:url(includes/img.php?img=".urlencode($xmlArtUrl).")'>";
 								}else{
 									echo "<div class='art-face'>";
 								}
@@ -443,7 +426,7 @@
 											echo "<div class='summary-content-poster hidden-phone hidden-tablet'>";
 											
 												if($xml->Directory['thumb']) {
-													echo "<img src='".$xmlThumbUrl."'></img>";
+													echo "<img src='includes/img.php?img=".urlencode($xmlThumbUrl)."'></img>";
 												}else{
 													echo "<img src='images/poster.png'></img>";
 												}
@@ -504,12 +487,9 @@
 									echo "<ul class='season-episodes-instance'>";
 										
 									foreach ($seasonEpisodesXml->Video as $seasonEpisodes) {
-										
-										if (!empty($plexWatch['myPlexAuthToken'])) {
-											$seasonEpisodesThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$seasonEpisodes['thumb']."&width=205&height=115&X-Plex-Token=".$myPlexAuthToken."";                                       
-										}else{
+
 											$seasonEpisodesThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$seasonEpisodes['thumb']."&width=205&height=115";
-										}
+										
 										
 											echo "<li>";
 												
@@ -533,18 +513,14 @@
 			echo "</div>";
 								
 						}else if ($xml->Video['type'] == "movie") {				
-							
-							if (!empty($plexWatch['myPlexAuthToken'])) {
-								$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['art']."&width=1920&height=1080&X-Plex-Token=".$myPlexAuthToken."";                                        
-								$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['thumb']."&width=256&height=352&X-Plex-Token=".$myPlexAuthToken."";     
-							}else{
+
 								$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['art']."&width=1920&height=1080";                                        
 								$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['thumb']."&width=256&height=352"; 
-							}
+							
 							
 					echo "<div class='container-fluid'>";		
 						if($xml->Video['art']) {
-									echo "<div class='art-face' style='background-image:url(".$xmlArtUrl.")'>";
+									echo "<div class='art-face' style='background-image:url(includes/img.php?img=".urlencode($xmlArtUrl).")'>";
 								}else{
 									echo "<div class='art-face'>";
 								};
@@ -555,7 +531,7 @@
 										echo "<div class='span9'>";	
 											echo "<div class='summary-content-poster hidden-phone hidden-tablet'>";
 												if($xml->Video['thumb']) {
-													echo "<img src='".$xmlThumbUrl."'></img>";
+													echo "<img src='includes/img.php?img=".urlencode($xmlThumbUrl)."'></img>";
 												}else{
 													echo "<img src='images/poster.png'></img>";
 												}
@@ -645,7 +621,7 @@
 						echo "<div class='wellheader'>";
 
 							
-							$db = new SQLite3($plexWatch['plexWatchDb']);
+							$db = dbconnect();
 
 							if ($plexWatch['globalHistoryGrouping'] == "yes") {
 								$plexWatchDbTable = "grouped";
@@ -690,7 +666,7 @@
 									
 									echo "<tr>";
 										echo "<td align='center'>".date("m/d/Y",$row['time'])."</td>";
-										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".$row['user']."</td>";
+										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
 										echo "<td align='left'>".$row['platform']."</td>";
 
 										if (empty($row['ip_address'])) {

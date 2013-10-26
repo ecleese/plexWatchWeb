@@ -1746,13 +1746,7 @@ border-top: 1px solid rgba(255,255,255,0.1);;
 }
 
 .form-group-overlay  {
-background-color: rgba(0,0,0,0.25);
--webkit-box-shadow: inset 0 2px 5px rgba(0,0,0,0.25);
--moz-box-shadow: inset 0 2px 5px rgba(0,0,0,0.25);
-box-shadow: inset 0 2px 5px rgba(0,0,0,0.25);
--webkit-border-radius: 5px;
--moz-border-radius: 5px;
-border-radius: 5px;
+
 padding-top: 30px;
 padding-bottom: 15px;
 padding-left: 15px;
@@ -2513,15 +2507,16 @@ input[type="submit"].btn.btn-mini {
 .btn-link {
   border-color: transparent;
   cursor: pointer;
-  color: #af6c17;
+  color: #ff9d00;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
+  text-shadow: none;
 }
 .btn-link:hover,
 .btn-link:focus {
-  color: #ff9d00;
-  text-decoration: underline;
+  color: #fff;
+  text-decoration: none;
   background-color: transparent;
 }
 .btn-link[disabled]:hover,
@@ -3221,53 +3216,80 @@ input[type="submit"].btn.btn-mini {
 .nav > .pull-right {
   float: right;
 }
+
+.header-settings h2 {
+color: #fff;
+text-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
 .nav-header {
   display: block;
-  padding: 3px 15px;
-  font-size: 11px;
-  font-weight: bold;
-  line-height: 20px;
-  color: #fff;
-  
-  text-transform: uppercase;
+padding: 3px 10px;
+font-size: 11px;
+
+line-height: 20px;
+color: #fff;
+text-shadow: 0 0 10px rgba(255,255,255,0.85);
 }
 .nav li + .nav-header {
   margin-top: 9px;
 }
 .nav-list {
   
-  padding-right: 50px;
+  padding-right: 0px;
   margin-bottom: 0;
-  margin-right: 50px;
+  margin-right: 0px;
+  background-color: rgba(0,0,0,0.25);
+-webkit-box-shadow: inset 0 2px 5px rgba(0,0,0,0.25);
+-moz-box-shadow: inset 0 2px 5px rgba(0,0,0,0.25);
+box-shadow: inset 0 2px 5px rgba(0,0,0,0.25);
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+
+
 }
+
+.nav-list > li {
+line-height: 24px;
+font-size: 16px;
+}
+
+
 .nav-list > li > a,
 .nav-list .nav-header {
-  margin-left: -15px;
-  margin-right: -15px;
-  
+  margin-left: 0px;
+  margin-right: 0px;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
 }
 .nav-list > li > a {
-  padding: 3px 15px;
-  
+ color: #ff9d00;
+  padding: 3px 12px;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
 }
 
 .nav-list > li > a:hover {
- background-color: #af6c17;
- color: #fff;
+text-shadow: none;
+background-color: rgba(255,255,255,0.1);
+background-repeat: repeat-x;
+color: #ffc466;
 }
 
 .nav-list > .active > a,
 .nav-list > .active > a:hover,
 .nav-list > .active > a:focus {
-  color: #ffffff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
-  background-color: #111;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
+	color: #ffffff;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+	background-color: #f17800;
+	background-image: -moz-linear-gradient(top,#f58200,#eb6900);
+	background-image: -ms-linear-gradient(top,#f58200,#eb6900);
+	background-image: -webkit-gradient(linear,0 0,0 100%,from(#f58200),to(#eb6900));
+	background-image: -webkit-linear-gradient(top,#f58200,#eb6900);
+	background-image: -o-linear-gradient(top,#f58200,#eb6900);
+	background-image: linear-gradient(top,#f58200,#eb6900);
+	background-repeat: repeat-x;
+
 }
 .nav-list [class^="icon-"],
 .nav-list [class*=" icon-"] {
@@ -4330,16 +4352,23 @@ a.thumbnail:focus {
   padding: 8px 35px 8px 14px;
 margin-bottom: 20px;
 text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-background-color: #ff9d00;
-border: 1px solid #FFBE56;
+background-color: #f17800;
+background-image: -moz-linear-gradient(top,#f58200,#eb6900);
+background-image: -ms-linear-gradient(top,#f58200,#eb6900);
+background-image: -webkit-gradient(linear,0 0,0 100%,from(#f58200),to(#eb6900));
+background-image: -webkit-linear-gradient(top,#f58200,#eb6900);
+background-image: -o-linear-gradient(top,#f58200,#eb6900);
+background-image: linear-gradient(top,#f58200,#eb6900);
+background-repeat: repeat-x;
+border: 1px solid #f17800;
 -webkit-border-radius: 4px;
 -moz-border-radius: 4px;
 border-radius: 4px;
 }
 .alert,
 .alert h4 {
-  color: #222;
-text-shadow: none;
+color: #fff;
+text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
 font-weight: bold;
 }
 .alert h4 {
@@ -4944,7 +4973,7 @@ color: #41CA00;
 .modal-body img {
 float: right;
 padding-right: 25px;
-width: 220px;
+width: 225px;
 }
 
 .modal-form {
@@ -6521,6 +6550,7 @@ perspective: 1000;
 -o-backface-visibility: hidden;
 backface-visibility: hidden;
 height: 200px;
+width: 138px;
 }
 
 .poster-face img:hover {
@@ -6756,31 +6786,32 @@ position: relative;
 
 
 .dashboard-recent-media-row {
-
+width: 100%;
+margin:0 auto;
+text-align: center;
 }
 
 .dashboard-recent-media {
-padding-top: 5px;
-margin: -5px 0 0 0px;
+width: 100%;
+margin:0 auto;
 list-style: none;
 }
 
 .dashboard-recent-media-instance {
 
-float: left;
+
 }
 
 .dashboard-recent-media li {
-margin-right: 30px;
-padding-bottom: 25px;
+margin-right: 27px;
 position: relative;
-
+float: left;
 }
 
 .dashboard-recent-media-metacontainer{
-width: 150px; 
+width: 136px; /* images are 136px wide */
 font-size: 13px;
-
+margin-bottom: 20px;
 }
 
 .dashboard-recent-media-metacontainer h3 {
@@ -7753,4 +7784,89 @@ left: 3px;
 
 .currentlyWatching {
 color: #ff9d00;
+}
+
+
+
+body.dragging, body.dragging * {
+  cursor: move !important;
+}
+
+.dragged {
+  position: absolute;
+  opacity: 0.5;
+  z-index: 2000;
+}
+
+ol.test li.placeholder {
+  position: relative;
+ 
+}
+ol.test li.placeholder:before {
+  position: absolute;
+  
+}
+
+ol.test >li {
+list-style: none;
+}
+
+
+
+.history-charts-instance {
+float: left;
+margin-right: 20px;
+}
+
+
+.history-charts-instance figure {
+-webkit-margin-before: 1em;
+-webkit-margin-after: 1em;
+-webkit-margin-start: 0px;
+-webkit-margin-end: 0px;
+
+}
+
+.ex-tooltip{
+position: absolute;
+background: #111;
+-webkit-border-radius: 2px;
+-moz-border-radius: 2px;
+border-radius: 2px;
+-webkit-box-shadow: 0 0 10px rgba(0,0,0,0.85);
+-moz-box-shadow: 0 0 10px rgba(0,0,0,0.85);
+box-shadow: 0 0 10px rgba(0,0,0,0.85);
+border-radius: 3px;
+border-radius: 3px;
+padding: 5px;
+border-collapse: separate;
+display: none;
+color: #fff;
+text-shadow: none;
+}
+
+.ex-tooltip strong {
+color: #ff9d00;
+}
+
+.settings-general-info {
+
+}
+
+.settings-general-info strong {
+color: #ff9d00;
+}
+
+.settings-general-info ul {
+list-style: none;
+}
+
+.settings-general-info li {
+font-size: 16px;
+margin-left: -15px;
+padding-bottom: 5px;
+}
+
+#recentlyAdded {
+
 }

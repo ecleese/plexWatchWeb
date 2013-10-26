@@ -27,16 +27,14 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 				if (isset($sessions['librarySectionID'])) {
 					if ($sessions['type'] == "episode") {
                     
-					if (!empty($plexWatch['myPlexAuthToken'])) {
-						$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['thumb']."&width=300&height=169&X-Plex-Token=".$plexWatch['myPlexAuthToken']."";                                         
-					}else{
+					
 						$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['thumb']."&width=300&height=169";
-					}
+					
 					
 					echo "<div class='instance'>";
 						
 						echo "<div class='dashboard-activity-button-info'><button type='button' class='btn btn-warning' data-toggle='collapse' data-target='#infoDetails-".$sessions->Player['machineIdentifier']."'><i class='icon-info-sign icon-white'></i></button></div>";
-						echo "<div class='poster'><div class='dashboard-activity-poster-face'><a href='info.php?id=" .$sessions['ratingKey']. "'><img src='".$sessionsThumbUrl."'></img></a></div>";
+						echo "<div class='poster'><div class='dashboard-activity-poster-face'><a href='info.php?id=" .$sessions['ratingKey']. "'><img src='includes/img.php?img=".urlencode($sessionsThumbUrl)."'></img></a></div>";
 							
 									
 							
@@ -82,11 +80,11 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 																	
 										if ($sessions->Player['state'] == "playing") {
 											echo "<div class='dashboard-activity-metadata-user'>";
-											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".FriendlyName($sessions->User['title'],$sessions->Player['title'])."</a>";
 											echo "</div>";
 										}elseif ($sessions->Player['state'] == "paused") {	 
 											echo "<div class='dashboard-activity-metadata-user'>";
-											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".FriendlyName($sessions->User['title'],$sessions->Player['title'])."</a>";
 											echo "</div>";
 										}
 									}
@@ -159,7 +157,7 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 					echo "<div class='instance'>";
 						
 						echo "<div class='dashboard-activity-button-info'><button type='button' class='btn btn-warning' data-toggle='collapse' data-target='#infoDetails-".$sessions->Player['machineIdentifier']."'><i class='icon-info-sign icon-white'></i></button></div>";
-						echo "<div class='poster'><div class='dashboard-activity-poster-face'><a href='" .$sessions['url']. "'><img src='".$sessions['art']."'></img></a></div>";
+						echo "<div class='poster'><div class='dashboard-activity-poster-face'><a href='" .$sessions['url']. "'><img src='includes/img.php?img=".urlencode($sessions['art'])."'></img></a></div>";
 							
 									
 							
@@ -205,11 +203,11 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 																	
 										if ($sessions->Player['state'] == "playing") {
 											echo "<div class='dashboard-activity-metadata-user'>";
-											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".FriendlyName($sessions->User['title'],$sessions->Player['title'])."</a>";
 											echo "</div>";
 										}elseif ($sessions->Player['state'] == "paused") {	 
 											echo "<div class='dashboard-activity-metadata-user'>";
-											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".FriendlyName($sessions->User['title'],$sessions->Player['title'])."</a>";
 											echo "</div>";
 										}
 									}
@@ -281,16 +279,14 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 
 				if ($sessions['type'] == "movie") {
 					
-					if (!empty($plexWatch['myPlexAuthToken'])) {
-						$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['art']."&width=300&height=169&X-Plex-Token=".$plexWatch['myPlexAuthToken']."";                                         
-					}else{
+					
 						$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['art']."&width=300&height=169"; 
-					}
+					
 					
 					echo "<div class='instance'>";
 						
 						echo "<div class='dashboard-activity-button-info'><button type='button' class='btn btn-warning' data-toggle='collapse' data-target='#infoDetails-".$sessions->Player['machineIdentifier']."'><i class='icon-info-sign icon-white'></i></button></div>";
-						echo "<div class='poster'><div class='dashboard-activity-poster-face'><a href='info.php?id=" .$sessions['ratingKey']. "'><img src='".$sessionsThumbUrl."' ></img></a></div>";
+						echo "<div class='poster'><div class='dashboard-activity-poster-face'><a href='info.php?id=" .$sessions['ratingKey']. "'><img src='includes/img.php?img=".urlencode($sessionsThumbUrl)."'></img></a></div>";
 
 							echo "<div class='dashboard-activity-metadata-wrapper'>";
 
@@ -330,11 +326,11 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 																	
 										if ($sessions->Player['state'] == "playing") {
 											echo "<div class='dashboard-activity-metadata-user'>";
-											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".FriendlyName($sessions->User['title'],$sessions->Player['title'])."</a>";
 											echo "</div>";
 										}elseif ($sessions->Player['state'] == "paused") {	 
 											echo "<div class='dashboard-activity-metadata-user'>";
-											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".FriendlyName($sessions->User['title'],$sessions->Player['title'])."</a>";
 											echo "</div>";
 										}
 									}
@@ -406,7 +402,7 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 					echo "<div class='instance'>";
 						
 						echo "<div class='dashboard-activity-button-info'><button type='button' class='btn btn-warning' data-toggle='collapse' data-target='#infoDetails-".$sessions->Player['machineIdentifier']."'><i class='icon-info-sign icon-white'></i></button></div>";
-						echo "<div class='poster'><div class='dashboard-activity-poster-face'><a href='info.php?id=" .$sessions['ratingKey']. "'><img src='".$sessionsThumbUrl."' ></img></a></div>";
+						echo "<div class='poster'><div class='dashboard-activity-poster-face'><a href='info.php?id=" .$sessions['ratingKey']. "'><img src='includes/img.php?img=".urlencode($sessionsThumbUrl)."'></img></a></div>";
 
 							echo "<div class='dashboard-activity-metadata-wrapper'>";
 
@@ -446,11 +442,11 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 																	
 										if ($sessions->Player['state'] == "playing") {
 											echo "<div class='dashboard-activity-metadata-user'>";
-											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".FriendlyName($sessions->User['title'],$sessions->Player['title'])."</a>";
 											echo "</div>";
 										}elseif ($sessions->Player['state'] == "paused") {	 
 											echo "<div class='dashboard-activity-metadata-user'>";
-											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".FriendlyName($sessions->User['title'],$sessions->Player['title'])."</a>";
 											echo "</div>";
 										}
 									}

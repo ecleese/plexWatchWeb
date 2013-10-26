@@ -1,4 +1,4 @@
-plexWatch/Web - 0.0.4 dev
+plexWatch/Web - 1.0.4 dev
 =====================
 
 A web front-end for plexWatch.
@@ -12,6 +12,8 @@ A web front-end for plexWatch.
 * Responsive web design viewable on desktop, tablet and mobile web browsers 
 
 * Themed to complement Plex/Web 
+
+* Easy configuration setup via html form
 
 * Status activity of Plex Media Server's ports (online/offline)
 
@@ -27,6 +29,8 @@ A web front-end for plexWatch.
 	* audio type & channel count.
 	
 * Recently added media and how long ago it was added
+
+* Global watching history charts (hourly, daily, monthly)
 
 * Global watching history with search/filtering & dynamic column sorting
 	* date
@@ -64,7 +68,7 @@ A web front-end for plexWatch.
 ###Requirements
 ---------------
 * Plex Media Server (v0.9.8+) and a PlexPass membership
-* plexWatch (v0.1.0+)
+* plexWatch (v0.1.4+)
 * a web server that supports php (apache, nginx, XAMPP, WampServer, EasyPHP, lighttpd, etc)
 * php5
 * php5-sqlite

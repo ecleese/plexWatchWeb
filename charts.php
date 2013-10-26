@@ -88,8 +88,8 @@
 
 				}
 					
+				$db = dbconnect();
 				
-				$db = new SQLite3($plexWatch['plexWatchDb']);
 				date_default_timezone_set(@date_default_timezone_get());
 
 				echo "<div class='span3'>";
@@ -116,20 +116,17 @@
 								
 								$xml = simplexml_load_string($top10['xml']) ;  
 								
-								if (!empty($plexWatch['myPlexAuthToken'])) {
-									$xmlMovieThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$xml['thumb']."&width=100&height=149&X-Plex-Token=".$myPlexAuthToken."";                                        
-									$xmlEpisodeThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$xml['grandparentThumb']."&width=100&height=149&X-Plex-Token=".$myPlexAuthToken."";  
-								}else{
+								
 									$xmlMovieThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$xml['thumb']."&width=100&height=149";                                        
 									$xmlEpisodeThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$xml['grandparentThumb']."&width=100&height=149";  
-								}
+								
 						
 								if ($xml['type'] == "movie") {
 									echo "<div class='charts-instance-wrapper'>";
 											
 										echo "<div class='charts-instance-position-circle'><h1>".$num_rows."</h1></div>";	
 										echo "<div class='charts-instance-poster'>";
-											echo "<img src='".$xmlMovieThumbUrl."'></img>";
+											echo "<img src='includes/img.php?img=".urlencode($xmlMovieThumbUrl)."'></img>";
 										echo "</div>";
 										echo "<div class='charts-instance-position-title'>";
 											echo "<li><h3><a href='info.php?id=".$xml['ratingKey']."'>".$top10['title']." (".$xml['year'].")</a></h3><h5> (".$top10['play_count']." views)<h5></li>";
@@ -140,7 +137,7 @@
 											
 										echo "<div class='charts-instance-position-circle'><h1>".$num_rows."</h1></div>";	
 										echo "<div class='charts-instance-poster'>";
-											echo "<img src='".$xmlEpisodeThumbUrl."'></img>";
+											echo "<img src='includes/img.php?img=".urlencode($xmlEpisodeThumbUrl)."'></img>";
 										echo "</div>";
 										echo "<div class='charts-instance-position-title'>";
 											echo "<li><h3><a href='info.php?id=".$xml['ratingKey']."'>".$top10['orig_title']." - Season ".$top10['season'].", Episode".$top10['episode']."</a></h3><h5> (".$top10['play_count']." views)</h5></li>";
@@ -172,11 +169,9 @@
 
 								$top10MoviesXml = simplexml_load_string($top10Movies['xml']) ;  
 								
-								if (!empty($plexWatch['myPlexAuthToken'])) {
-									$top10MoviesXmlMovieThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$top10MoviesXml['thumb']."&width=100&height=149&X-Plex-Token=".$myPlexAuthToken."";                                        
-								}else{
+								
 									$top10MoviesXmlMovieThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$top10MoviesXml['thumb']."&width=100&height=149"; 
-								}
+								
 								
 								if ($top10MoviesXml['type'] == "movie") {
 									$top10Movies_Num_rows++;
@@ -187,7 +182,7 @@
 												
 											echo "<div class='charts-instance-position-circle'><h1>".$top10Movies_Num_rows."</h1></div>";	
 											echo "<div class='charts-instance-poster'>";
-												echo "<img src='".$top10MoviesXmlMovieThumbUrl."'></img>";
+												echo "<img src='includes/img.php?img=".urlencode($top10MoviesXmlMovieThumbUrl)."'></img>";
 											echo "</div>";
 											echo "<div class='charts-instance-position-title'>";
 												echo "<li><h3><a href='info.php?id=".$top10MoviesXml['ratingKey']."'>".$top10Movies['title']." (".$top10MoviesXml['year'].")</a></h3><h5> (".$top10Movies['play_count']." views)<h5></li>";
@@ -221,11 +216,9 @@
 
 								$top10ShowsXml = simplexml_load_string($top10Shows['xml']) ;  
 								
-								if (!empty($plexWatch['myPlexAuthToken'])) {
-									$top10ShowsXmlShowThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$top10ShowsXml['grandparentThumb']."&width=100&height=149&X-Plex-Token=".$myPlexAuthToken."";                                        
-								}else{
+								
 									$top10ShowsXmlShowThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$top10ShowsXml['grandparentThumb']."&width=100&height=149";  
-								}
+								
 								
 								if ($top10ShowsXml['type'] == "episode") {
 									$top10Shows_Num_rows++;
@@ -236,7 +229,7 @@
 												
 											echo "<div class='charts-instance-position-circle'><h1>".$top10Shows_Num_rows."</h1></div>";	
 											echo "<div class='charts-instance-poster'>";
-												echo "<img src='".$top10ShowsXmlShowThumbUrl."'></img>";
+												echo "<img src='includes/img.php?img=".urlencode($top10ShowsXmlShowThumbUrl)."'></img>";
 											echo "</div>";
 											echo "<div class='charts-instance-position-title'>";
 												echo "<li><h3><a href='info.php?id=".$top10ShowsXml['grandparentRatingKey']."'>".$top10Shows['orig_title']."</a></h3><h5> (".$top10Shows['play_count']." views)</h5></li>";
@@ -270,11 +263,9 @@
 
 								$top10EpisodesXml = simplexml_load_string($top10Episodes['xml']) ;  
 								
-								if (!empty($plexWatch['myPlexAuthToken'])) {
-									$top10EpisodesXmlEpisodeThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$top10EpisodesXml['parentThumb']."&width=100&height=149&X-Plex-Token=".$myPlexAuthToken."";                      
-								}else{
+								
 									$top10EpisodesXmlEpisodeThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$top10EpisodesXml['parentThumb']."&width=100&height=149";
-								}
+								
 								
 								if ($top10EpisodesXml['type'] == "episode") {
 									$top10Episodes_Num_rows++;
@@ -285,7 +276,7 @@
 												
 											echo "<div class='charts-instance-position-circle'><h1>".$top10Episodes_Num_rows."</h1></div>";	
 											echo "<div class='charts-instance-poster'>";
-												echo "<img src='".$top10EpisodesXmlEpisodeThumbUrl."'></img>";
+												echo "<img src='includes/img.php?img=".urlencode($top10EpisodesXmlEpisodeThumbUrl)."'></img>";
 											echo "</div>";
 											echo "<div class='charts-instance-position-title'>";
 												echo "<li><h3><a href='info.php?id=".$top10EpisodesXml['ratingKey']."'>".$top10Episodes['orig_title']." - Season ".$top10Episodes['season'].", Episode".$top10Episodes['episode']."</a></h3><h5> (".$top10Episodes['play_count']." views)</h5></li>";

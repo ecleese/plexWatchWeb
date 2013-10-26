@@ -88,7 +88,7 @@
 				
 			date_default_timezone_set(@date_default_timezone_get());
 
-			$db = new SQLite3($plexWatch['plexWatchDb']);
+			$db = dbconnect();
 			
 			if ($plexWatch['chartsGrouping'] == "yes") {
 				$plexWatchDbTable = "grouped";
@@ -120,7 +120,7 @@
 						echo "<div class='clearfix'></div>";
 						echo "<div class=dashboard-users-metacontainer>";
 						
-							echo $user['users'];
+							echo FriendlyName($user['users']);
 						
 						echo "</div>";
 						echo "</li>";

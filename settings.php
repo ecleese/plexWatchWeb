@@ -27,6 +27,8 @@
     <link rel="apple-touch-icon" sizes="72x72" href="images/icon_ipad.png">
     <link rel="apple-touch-icon" sizes="114x114" href="images/icon_iphone@2x.png">
 	<link rel="apple-touch-icon" sizes="144x144" href="images/icon_ipad@2x.png">
+	
+	
   </head>
 
   <body>
@@ -52,332 +54,432 @@
     </div>
 	
 	<div class="container-fluid">
+		
+		
+	</div>
+
+	<div class="container-fluid">
 		<div class='row-fluid'>
-			<div class='span6'>
-				<h2>Settings</h2>
-			</div>
-			
-		</div>
-		<div class='row-fluid'>
-			<div class='span6'>
-				
-			</div>
-			
-		</div>
+			<div class='span12'>
+			</div>	
+		</div>	
 	</div>
 	
 	<div class="container-fluid">
-		<div class='row-fluid'>
-			<div class='span6'>
-			<?php
-
-			$guisettingsFile = "config/config.php";
-			if (file_exists($guisettingsFile)) { 
-				require_once(dirname(__FILE__) . '/config/config.php');
-			
-				// check for a successful form post  
-				if (isset($_GET['s'])) {
-					echo "<div class=\"alert alert-warning alert-dismissable\">".$_GET['s']."";  
-					echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\"><i class=\"icon icon-remove-circle\"></i></button></div>";
-				// check for a form error  
-				}elseif (isset($_GET['e'])) {
-					echo "<div class=\"alert alert-warning alert-dismissable\">".$_GET['e']."";
-					echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\"><i class=\"icon icon-remove-circle\"></i></button></div>";
-				}
-			?>
-			
-
-			
-			
-			
-			<div class='wellbg'>
-				<div class='wellheader'>
-					<div class='dashboard-wellheader'>
-					<h3>General</h3>
-					</div>
-				</div>
-				<h4>plexWatch Version: <strong><?php echo $plexWatch['version'] ?></strong></h4><br>
-				<form action="includes/process_settings.php" method="POST">
-				<fieldset>
-				<div class="form-group-overlay">
-					<!-- Text input-->
-					<div class="control-group">
-					  <label class="control-label" for="pmsIp">PMS IP Address</label>
-					  <div class="controls">
-						<input id="pmsIp" name="pmsIp" type="text" placeholder="0.0.0.0" class="input-xlarge" required="" value="<?php echo $plexWatch['pmsIp'] ?>">
-						<p class="help-block">Plex Media Server IP address, hostname or domain name</p>
-					  </div>
-					</div>
-
-					<!-- Text input-->
-					<div class="control-group">
-					  <label class="control-label" for="pmsHttpPort">PMS Web Port</label>
-					  <div class="controls">
-						<input id="pmsHttpPort" name="pmsHttpPort" type="text" placeholder="32400" class="input-small" required="" value="<?php echo $plexWatch['pmsHttpPort'] ?>">
-						<p class="help-block">Plex Media Server's web port</p>
-					  </div>
-					</div>
-
-					<!-- Text input-->
-					<div class="control-group">
-					  <label class="control-label" for="pmsHttpsPort">PMS Secure Web Port</label>
-					  <div class="controls">
-						<input id="pmsHttpsPort" name="pmsHttpsPort" type="text" placeholder="32443" class="input-small" required="" value="<?php echo $plexWatch['pmsHttpsPort'] ?>">
-						<p class="help-block">Plex Media Server's secure web port</p>
-					  </div>
-					</div>
-					
-					
-					<?php 	
-					
-					if ($plexWatch['https'] == "no" ) {
-						$https = '';
-					}else if ($plexWatch['https'] == "yes" ) {
-						$https = "checked='yes'";
-					}
-					?>
-					
-					<!-- Multiple Checkboxes (inline) -->
-					<div class="control-group">
-					  <label class="control-label" for="https">Use HTTPS (optional)</label>
-					  <div class="controls">
-						<label class="checkbox inline" for="https-0">
-						  <input type="checkbox" name="https" id="https-0" value="yes" <?php echo $https ?>">
-						  <p class="help-block">Use Plex Media Server's secure web port</p>
-						</label>
-					  </div>
-					</div>
-
-					<!-- Text input-->
-					<div class="control-group">
-					  <label class="control-label" for="plexWatchDb">plexWatch Database</label>
-					  <div class="controls">
-						  <input id="plexWatchDb" name="plexWatchDb" type="text" placeholder="/opt/plexWatch/plexWatch.db" class="input-xlarge" required="" value="<?php echo $plexWatch['plexWatchDb'] ?>">
-						  <p class="help-block">File location of your plexWatch database.</p>
-					  </div>
-					</div>
-					
-					<!-- Text input-->
-					<div class="control-group">
-					  <label class="control-label" for="myPlexUser">myPlex Username (optional)</label>
-					  <div class="controls">
-						  <input id="myPlexUser" name="myPlexUser" type="text" placeholder="" class="input-xlarge" value="<?php echo $plexWatch['myPlexUser'] ?>">
-						  <p class="help-block">If you would like to access plexWatch/Web on other networks, a myPlex username and password are required.</p>
-					  </div>
-					</div>
-					
-					<!-- Text input-->
-					<div class="control-group">
-					  <label class="control-label" for="myPlexPass">myPlex Password (optional)</label>
-					  <div class="controls">
-						  <input id="myPlexPass" name="myPlexPass" type="text" placeholder="" class="input-xlarge" value="<?php echo $plexWatch['myPlexPass'] ?>">
-						  <p class="help-block">If you would like to access plexWatch/Web on other networks, a myPlex username and password are required.</p>
-					  </div>
-					</div>
-				</div>	
-			</div>	
-			<div class='wellbg'>	
+		<div class='row-fluid'>	
+			<div class='span2'>
 				
-					<div class='wellheader'>
-						<div class='dashboard-wellheader'>
-						<h3>Grouping</h3>
-						</div>
-					</div>
-				
-				<div class="form-group-overlay">					
-					
-					<?php 	
-					
-					
-					if ($plexWatch['globalHistoryGrouping'] == "no" ) {
-						$globalHistoryGrouping = '';
-					}else if ($plexWatch['globalHistoryGrouping'] == "yes" ) {
-						$globalHistoryGrouping = "checked='yes'";
-					}
-					
-					
-					if ($plexWatch['userHistoryGrouping'] == "no" ) {
-						$userHistoryGrouping = '';
-					}else if ($plexWatch['userHistoryGrouping'] == "yes" ) {
-						$userHistoryGrouping = "checked='yes'";
-					}
-					
-					
-					if ($plexWatch['chartsGrouping'] == "no" ) {
-						$chartsGrouping = '';
-					}else if ($plexWatch['chartsGrouping'] == "yes" ) {
-						$chartsGrouping = "checked='yes'";
-					}
-
-					?>
-						 
-					<!-- Multiple Checkboxes (inline) -->
-					<div class="control-group">
-					  <label class="control-label" for="globalHistoryGrouping">Global History (optional)</label>
-					  <div class="controls">
-						<label class="checkbox inline" for="globalHistoryGrouping">
-						  <input type="checkbox" name="globalHistoryGrouping" id="globalHistoryGrouping-0" value="yes" <?php echo $globalHistoryGrouping; ?>>
-						  <p class="help-block">Enable global history grouping</p>
-						</label>
-					<label class="control-label" for="userHistoryGrouping">User History (optional)</label>
-						<label class="checkbox inline" for="userHistoryGrouping">
-						  <input type="checkbox" name="userHistoryGrouping" id="userHistoryGrouping-0" value="yes" <?php echo $userHistoryGrouping; ?>">
-						  <p class="help-block">Enable user history grouping</p>
-						</label>
-					<label class="control-label" for="chartsGrouping">Charts (optional)</label>	
-						<label class="checkbox inline" for="chartsGrouping">
-						  <input type="checkbox" name="chartsGrouping" id="chartsGrouping-0" value="yes" <?php echo $chartsGrouping; ?>">
-						  <p class="help-block">Enable charts grouping</p>
-						</label>
-					</div>
-					
-					</div>
-				</div>	
 			</div>
-				
+			<div class='span8'>
 			
-				<div class="form-actions">
-				<!-- Button -->
-				<div class="control-group">
-				  <label class="control-label" for="submit"></label>
-				  <div class="controls">
-					<button id="submit" name="submit" class="btn btn-medium btn-primary"" value="Save Data">Save</button>
-					<a href="index.php"><button type="button" class="btn btn-medium btn-cancel">Cancel</button></a>
-				  </div>
-				</div>
-				</div>
-				</fieldset>
-				</form>
-			
-			<?php
-			}else{
-			?>
-			
-			<div class='wellbg'>
-				<div class='wellheader'>
-					<div class='dashboard-wellheader'>
-					<h3>General</h3>
-					</div>
-				</div>
+				<?php
+
+				$guisettingsFile = "config/config.php";
+				if (file_exists($guisettingsFile)) { 
+					require_once(dirname(__FILE__) . '/config/config.php');
 				
-				<form action="includes/process_settings.php" method="POST">
-				<fieldset>
-				<div class="form-group-overlay">
-					<!-- Text input-->
-					<div class="control-group">
-					  <label class="control-label" for="pmsIp">PMS IP Address</label>
-					  <div class="controls">
-						<input id="pmsIp" name="pmsIp" type="text" placeholder="0.0.0.0" class="input-xlarge" required="">
-						<p class="help-block">Plex Media Server IP address, hostname or domain name</p>
-					  </div>
-					</div>
+					// check for a successful form post  
+					if (isset($_GET['s'])) {
+						echo "<div class=\"alert alert-warning alert-dismissable\">".$_GET['s']."";  
+						echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\"><i class=\"icon icon-remove-circle\"></i></button></div>";
+					// check for a form error  
+					}elseif (isset($_GET['e'])) {
+						echo "<div class=\"alert alert-warning alert-dismissable\">".$_GET['e']."";
+						echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\"><i class=\"icon icon-remove-circle\"></i></button></div>";
+					}
+				?>
 
-					<!-- Text input-->
-					<div class="control-group">
-					  <label class="control-label" for="pmsHttpPort">PMS Web Port</label>
-					  <div class="controls">
-						<input id="pmsHttpPort" name="pmsHttpPort" type="text" placeholder="32400" class="input-small" required="">
-						<p class="help-block">Plex Media Server's web port</p>
-					  </div>
-					</div>
-
-					<!-- Text input-->
-					<div class="control-group">
-					  <label class="control-label" for="pmsHttpsPort">PMS Secure Web Port</label>
-					  <div class="controls">
-						<input id="pmsHttpsPort" name="pmsHttpsPort" type="text" placeholder="32443" class="input-small" required="">
-						<p class="help-block">Plex Media Server's secure web port</p>
-					  </div>
-					</div>
-
-					<!-- Multiple Checkboxes (inline) -->
-					<div class="control-group">
-					  <label class="control-label" for="https">Use HTTPS</label>
-					  <div class="controls">
-						<label class="checkbox inline" for="https-0">
-						  <input type="checkbox" name="https" id="https-0" value="Use Plex Media Server's secure web port">
-						  <p class="help-block">Use Plex Media Server's secure web port</p>
-						</label>
-					  </div>
-					</div>
-
-					<!-- Text input-->
-					<div class="control-group">
-					  <label class="control-label" for="plexWatchDb">plexWatch Database</label>
-					  <div class="controls">
-						  <input id="plexWatchDb" name="plexWatchDb" type="text" placeholder="/opt/plexWatch/plexWatch.db" class="input-xlarge" required="">
-						  <p class="help-block">File location of your plexWatch database.</p>
-					  </div>
+				<div class="wellbg">
+					<div class="row-fluid">
+						<div class="header-settings"><h2><i class="icon-large icon-wrench icon-white"></i> Settings</h2></div><br>
+					</div>	
+					<div class="row-fluid">
+					<div class='span3'>
+						<ul class="nav nav-list">
+							
+							<li class="active"><a href="#info">General</a></li>
+							<li><a href="#pms">PMS & Database</a></li>
+							<li ><a href="#myplex">myPlex</a></li>
+							<li ><a href="#grouping">Grouping</a></li>	
+						</ul>
 					</div>
 					
-					<!-- Text input-->
-					<div class="control-group">
-					  <label class="control-label" for="myPlexUser">myPlex Username (optional)</label>
-					  <div class="controls">
-						  <input id="myPlexUser" name="myPlexUser" type="text" placeholder="" class="input-xlarge" >
-						  <p class="help-block">In order to access plexWatch/Web on other networks, a myPlex username and password are required.</p>
-					  </div>
-					</div>
-					
-					<!-- Text input-->
-					<div class="control-group">
-					  <label class="control-label" for="myPlexPass">myPlex Password (optional)</label>
-					  <div class="controls">
-						  <input id="myPlexPass" name="myPlexPass" type="text" placeholder="" class="input-xlarge" >
-						  <p class="help-block">In order to access plexWatch/Web on other networks, a myPlex username and password are required.</p>
-					  </div>
-					</div>
-					
-					
-				</div>	
-			</div>	
-			<div class='wellbg'>	
-				
-					<div class='wellheader'>
-						<div class='dashboard-wellheader'>
-						<h3>Grouping</h3>
+					<div class="span9">
+						<div class="wellbg">
+							<div class="wellheader">
+								<div class="dashboard-wellheader">
+								<h3><a id="info">General Information</a></h3>
+								</div>
+							</div>
+							<div class="settings-general-info">
+								<ul>
+									<li>plexWatch/Web Version: <strong><?php echo $plexWatch['version'] ?></strong></li>	
+								
+									<?php
+									$db = new SQLite3($plexWatch['plexWatchDb']);
+									$plexWatchVersion = $db->querySingle("SELECT version FROM config ");
+									?>
+									
+									<li>plexWatch Version: <strong><?php echo $plexWatchVersion ?></strong></li>
+								</ul>
+							</div>
 						</div>
-					</div>
-				
-				<div class="form-group-overlay">					
+						<div class='wellbg'>
+							<div class='wellheader'>
+								<div class='dashboard-wellheader'>
+								<h3><a id="pms">Plex Media Server & Database Settings</a></h3>
+								</div>
+							</div>
+						
+						
+							<form action="includes/process_settings.php" method="POST">
+							
+							
+							
+							<fieldset>
+							<!-- Text input-->
+							<div class="control-group">
+							  <label class="control-label" for="pmsIp">PMS IP Address</label>
+							  <div class="controls">
+								<input id="pmsIp" name="pmsIp" type="text" placeholder="0.0.0.0" class="input-xlarge" required="" value="<?php echo $plexWatch['pmsIp'] ?>">
+								<p class="help-block">Plex Media Server IP address, hostname or domain name</p>
+							  </div>
+							</div>
 
-					<!-- Multiple Checkboxes (inline) -->
-					<div class="control-group">
-					  <label class="control-label" for="globalHistoryGrouping">Global History (optional)</label>
-					  <div class="controls">
-						<label class="checkbox inline" for="globalHistoryGrouping">
-						  <input type="checkbox" name="globalHistoryGrouping" id="globalHistoryGrouping-0" value="yes">
-						  <p class="help-block">Enable global history grouping</p>
-						</label>
-					<label class="control-label" for="userHistoryGrouping">User History (optional)</label>
-						<label class="checkbox inline" for="userHistoryGrouping">
-						  <input type="checkbox" name="userHistoryGrouping" id="userHistoryGrouping-0" value="yes">
-						  <p class="help-block">Enable user history grouping</p>
-						</label>
-					<label class="control-label" for="chartsGrouping">Charts (optional)</label>	
-						<label class="checkbox inline" for="chartsGrouping">
-						  <input type="checkbox" name="chartsGrouping" id="chartsGrouping-0" value="yes">
-						  <p class="help-block">Enable charts grouping</p>
-						</label>
+							<!-- Text input-->
+							<div class="control-group">
+							  <label class="control-label" for="pmsHttpPort">PMS Web Port</label>
+							  <div class="controls">
+								<input id="pmsHttpPort" name="pmsHttpPort" type="text" placeholder="32400" class="input-small" required="" value="<?php echo $plexWatch['pmsHttpPort'] ?>">
+								<p class="help-block">Plex Media Server's web port</p>
+							  </div>
+							</div>
+
+							<!-- Text input-->
+							<div class="control-group">
+							  <label class="control-label" for="pmsHttpsPort">PMS Secure Web Port</label>
+							  <div class="controls">
+								<input id="pmsHttpsPort" name="pmsHttpsPort" type="text" placeholder="32443" class="input-small" required="" value="<?php echo $plexWatch['pmsHttpsPort'] ?>">
+								<p class="help-block">Plex Media Server's secure web port</p>
+							  </div>
+							</div>
+							
+							
+							<?php 	
+							
+							if ($plexWatch['https'] == "no" ) {
+								$https = '';
+							}else if ($plexWatch['https'] == "yes" ) {
+								$https = "checked='yes'";
+							}
+							?>
+							
+							<!-- Multiple Checkboxes (inline) -->
+							<div class="control-group">
+							  <label class="control-label" for="https">Use HTTPS (optional)</label>
+							  <div class="controls">
+								<label class="checkbox inline" for="https-0">
+								  <input type="checkbox" name="https" id="https-0" value="yes" <?php echo $https ?>">
+								  <p class="help-block">Use Plex Media Server's secure web port</p>
+								</label>
+							  </div>
+							</div>
+
+							<!-- Text input-->
+							<div class="control-group">
+							  <label class="control-label" for="plexWatchDb">plexWatch Database</label>
+							  <div class="controls">
+								  <input id="plexWatchDb" name="plexWatchDb" type="text" placeholder="/opt/plexWatch/plexWatch.db" class="input-xlarge" required="" value="<?php echo $plexWatch['plexWatchDb'] ?>">
+								  <p class="help-block">File location of your plexWatch database.</p>
+							  </div>
+							</div>
+							
+						</div>	
+							
+						<div class='wellbg'>
+						<div class='wellheader'>
+							<div class='dashboard-wellheader'>
+							<h3><a id="myplex">myPlex Settings</a></h3>
+							</div>
+						</div>
+							<!-- Text input-->
+							<div class="control-group">
+							  <label class="control-label" for="myPlexUser">myPlex Username (optional)</label>
+							  <div class="controls">
+								  <input id="myPlexUser" name="myPlexUser" type="text" placeholder="" class="input-xlarge" value="<?php echo $plexWatch['myPlexUser'] ?>">
+								  <p class="help-block">If you would like to access plexWatch/Web on other networks, a myPlex username and password are required.</p>
+							  </div>
+							</div>
+							
+							<!-- Text input-->
+							<div class="control-group">
+							  <label class="control-label" for="myPlexPass">myPlex Password (optional)</label>
+							  <div class="controls">
+								  <input id="myPlexPass" name="myPlexPass" type="password" placeholder="" class="input-xlarge" value="<?php echo $plexWatch['myPlexPass'] ?>">
+								  <p class="help-block">If you would like to access plexWatch/Web on other networks, a myPlex username and password are required.</p>
+							  </div>
+							</div>
+						</div>
+
+						<div class='wellbg'>	
+					
+							<div class='wellheader'>
+								<div class='dashboard-wellheader'>
+								<h3><a id="grouping">Grouping Settings</a></h3>
+								</div>
+							</div>
+					
+											
+						
+							<?php 	
+							
+							
+							if ($plexWatch['globalHistoryGrouping'] == "no" ) {
+								$globalHistoryGrouping = '';
+							}else if ($plexWatch['globalHistoryGrouping'] == "yes" ) {
+								$globalHistoryGrouping = "checked='yes'";
+							}
+							
+							
+							if ($plexWatch['userHistoryGrouping'] == "no" ) {
+								$userHistoryGrouping = '';
+							}else if ($plexWatch['userHistoryGrouping'] == "yes" ) {
+								$userHistoryGrouping = "checked='yes'";
+							}
+							
+							
+							if ($plexWatch['chartsGrouping'] == "no" ) {
+								$chartsGrouping = '';
+							}else if ($plexWatch['chartsGrouping'] == "yes" ) {
+								$chartsGrouping = "checked='yes'";
+							}
+
+							?>
+							 
+							<!-- Multiple Checkboxes (inline) -->
+							<div class="control-group">
+							  <label class="control-label" for="globalHistoryGrouping">Global History (optional)</label>
+							  <div class="controls">
+								<label class="checkbox inline" for="globalHistoryGrouping">
+								  <input type="checkbox" name="globalHistoryGrouping" id="globalHistoryGrouping-0" value="yes" <?php echo $globalHistoryGrouping; ?>>
+								  <p class="help-block">Enable global history grouping</p>
+								</label>
+							<label class="control-label" for="userHistoryGrouping">User History (optional)</label>
+								<label class="checkbox inline" for="userHistoryGrouping">
+								  <input type="checkbox" name="userHistoryGrouping" id="userHistoryGrouping-0" value="yes" <?php echo $userHistoryGrouping; ?>>
+								  <p class="help-block">Enable user history grouping</p>
+								</label>
+							<label class="control-label" for="chartsGrouping">Charts (optional)</label>	
+								<label class="checkbox inline" for="chartsGrouping">
+								  <input type="checkbox" name="chartsGrouping" id="chartsGrouping-0" value="yes" <?php echo $chartsGrouping; ?>>
+								  <p class="help-block">Enable charts grouping</p>
+								</label>
+							</div>
+							
+						</div>
+						</div>
+						
+					
+					
+					
+					
+					<div class="form-actions">
+						<!-- Button -->
+						<div class="control-group">
+						  <label class="control-label" for="submit"></label>
+						  <div class="controls">
+							  <div id="friendlyName">
+								<button id="submit" name="submit" class="btn btn-medium btn-primary"" value="save">Save</button>
+								<a href="index.php"><button type="button" class="btn btn-medium btn-cancel">Cancel</button></a>
+								</div>
+						  </div>
+						</div>
+						
+					</div>
+					</fieldset>
+					</form>
+						
+				</div>
+					
+			</div>		
+			</div>
+			
+			<div class='span2'>
+				
+			</div>
+		</div>
+	</div>
+			
+			
+				
+				
+				<?php
+				}else{
+				?>
+			
+				<div class="wellbg">
+					<div class="row-fluid">
+						<div class="header-settings"><h2><i class="icon-large icon-wrench icon-white"></i> Settings</h2></div><br>
+					</div>	
+					<div class="row-fluid">
+					<div class='span3'>
+						<ul class="nav nav-list">
+							
+							
+							<li class="active"><a href="#pms">PMS & Database</a></li>
+							<li ><a href="#myplex">myPlex</a></li>
+							<li ><a href="#grouping">Grouping</a></li>	
+						</ul>
 					</div>
 					
+					<div class='span9'>
+						
+						<div class='wellbg'>
+							<div class='wellheader'>
+								<div class='dashboard-wellheader'>
+								<h3><a id="pms">Plex Media Server & Database Settings</a></h3>
+								</div>
+							</div>
+						
+						
+							<form action="includes/process_settings.php" method="POST">
+							
+							
+							
+							<fieldset>
+							<!-- Text input-->
+							<div class="control-group">
+							  <label class="control-label" for="pmsIp">PMS IP Address</label>
+							  <div class="controls">
+								<input id="pmsIp" name="pmsIp" type="text" placeholder="0.0.0.0" class="input-xlarge" required="" >
+								<p class="help-block">Plex Media Server IP address, hostname or domain name</p>
+							  </div>
+							</div>
+
+							<!-- Text input-->
+							<div class="control-group">
+							  <label class="control-label" for="pmsHttpPort">PMS Web Port</label>
+							  <div class="controls">
+								<input id="pmsHttpPort" name="pmsHttpPort" type="text" placeholder="32400" class="input-small" required="" >
+								<p class="help-block">Plex Media Server's web port</p>
+							  </div>
+							</div>
+
+							<!-- Text input-->
+							<div class="control-group">
+							  <label class="control-label" for="pmsHttpsPort">PMS Secure Web Port</label>
+							  <div class="controls">
+								<input id="pmsHttpsPort" name="pmsHttpsPort" type="text" placeholder="32443" class="input-small" required="" >
+								<p class="help-block">Plex Media Server's secure web port</p>
+							  </div>
+							</div>
+							
+							
+							
+							
+							<!-- Multiple Checkboxes (inline) -->
+							<div class="control-group">
+							  <label class="control-label" for="https">Use HTTPS (optional)</label>
+							  <div class="controls">
+								<label class="checkbox inline" for="https-0">
+								  <input type="checkbox" name="https" id="https-0" value="yes" >
+								  <p class="help-block">Use Plex Media Server's secure web port</p>
+								</label>
+							  </div>
+							</div>
+
+							<!-- Text input-->
+							<div class="control-group">
+							  <label class="control-label" for="plexWatchDb">plexWatch Database</label>
+							  <div class="controls">
+								  <input id="plexWatchDb" name="plexWatchDb" type="text" placeholder="/opt/plexWatch/plexWatch.db" class="input-xlarge" required="" >
+								  <p class="help-block">File location of your plexWatch database.</p>
+							  </div>
+							</div>
+							
+						</div>	
+							
+						<div class='wellbg'>
+						<div class='wellheader'>
+							<div class='dashboard-wellheader'>
+							<h3><a id="myplex">myPlex Settings</a></h3>
+							</div>
+						</div>
+							<!-- Text input-->
+							<div class="control-group">
+							  <label class="control-label" for="myPlexUser">myPlex Username (optional)</label>
+							  <div class="controls">
+								  <input id="myPlexUser" name="myPlexUser" type="text" placeholder="" class="input-xlarge" >
+								  <p class="help-block">If you would like to access plexWatch/Web on other networks, a myPlex username and password are required.</p>
+							  </div>
+							</div>
+							
+							<!-- Text input-->
+							<div class="control-group">
+							  <label class="control-label" for="myPlexPass">myPlex Password (optional)</label>
+							  <div class="controls">
+								  <input id="myPlexPass" name="myPlexPass" type="password" placeholder="" class="input-xlarge" >
+								  <p class="help-block">If you would like to access plexWatch/Web on other networks, a myPlex username and password are required.</p>
+							  </div>
+							</div>
+						</div>
+
+						<div class='wellbg'>	
+					
+							<div class='wellheader'>
+								<div class='dashboard-wellheader'>
+								<h3><a id="grouping">Grouping Settings</a></h3>
+								</div>
+							</div>
+					
+											
+						
+							
+							 
+							<!-- Multiple Checkboxes (inline) -->
+							<div class="control-group">
+							  <label class="control-label" for="globalHistoryGrouping">Global History (optional)</label>
+							  <div class="controls">
+								<label class="checkbox inline" for="globalHistoryGrouping">
+								  <input type="checkbox" name="globalHistoryGrouping" id="globalHistoryGrouping-0" value="yes" >
+								  <p class="help-block">Enable global history grouping</p>
+								</label>
+							<label class="control-label" for="userHistoryGrouping">User History (optional)</label>
+								<label class="checkbox inline" for="userHistoryGrouping">
+								  <input type="checkbox" name="userHistoryGrouping" id="userHistoryGrouping-0" value="yes" >
+								  <p class="help-block">Enable user history grouping</p>
+								</label>
+							<label class="control-label" for="chartsGrouping">Charts (optional)</label>	
+								<label class="checkbox inline" for="chartsGrouping">
+								  <input type="checkbox" name="chartsGrouping" id="chartsGrouping-0" value="yes" >
+								  <p class="help-block">Enable charts grouping</p>
+								</label>
+							</div>
+							
+						</div>
+						</div>
+						
+					
+					
+					
+					
+					<div class="form-actions">
+						<!-- Button -->
+						<div class="control-group">
+						  <label class="control-label" for="submit"></label>
+						  <div class="controls">
+							  <div id="friendlyName">
+								<button id="submit" name="submit" class="btn btn-medium btn-primary"" value="save">Save</button>
+								<a href="index.php"><button type="button" class="btn btn-medium btn-cancel">Cancel</button></a>
+								</div>
+						  </div>
+						</div>
+						
 					</div>
-				</div>	
-			</div>
-				
-			
-				<div class="form-actions">
-				<!-- Button -->
-				<div class="control-group">
-				  <label class="control-label" for="submit"></label>
-				  <div class="controls">
-					<button id="submit" name="submit" class="btn btn-medium btn-primary"" value="Save Data">Save</button>
-					<a href="index.php"><button type="button" class="btn btn-medium btn-cancel">Cancel</button></a>
-				  </div>
+					</fieldset>
+					</form>
+						
 				</div>
-				</div>
-				</fieldset>
-				</form>
 			<?php
 			}
 			
@@ -415,14 +517,10 @@
 							echo "<li><i class='icon icon-warning-sign'></i> PHP SQLite Support: <strong><span class='label label-important'>No information available</strong></span></li>";
 						}
 							
-						?>	
+					?>	
 
 						<br>
-						<p><h4>Linux and MAC users:</h4> Please ensure you have installed, configured and tested <a href="http://forums.plexapp.com/index.php/topic/72552-plexwatch-plex-notify-script-send-push-alerts-on-new-sessions-and-stopped/">plexWatch v0.1.1</a> or above before continuing.</p>
-						<br>
-						<p><h4>Windows users:</h4> Please ensure you have installed, configured and tested <a href="http://forums.plexapp.com/index.php/topic/79616-plexwatch-windows-branch/">plexWatch for Windows v0.1.1</a> or above before continuing.</p> 
-						<br>
-						<p>If all requirements have been met you can move forward by filling in a few key configuration options now.</p>
+						<p><h4>Note: </h4>Please ensure you have installed, configured and tested <a href="https://github.com/ljunkie/plexWatch">plexWatch v0.1.6</a> or above before continuing. If all requirements have been met you can move forward by filling in a few key configuration options now.</p>
 						<br>
 
 				  </div>
@@ -490,10 +588,8 @@
     $(".alert-warning").fadeTo(500, 0).slideUp(500, function(){
         $(this).remove(); 
     });
-	}, 4000);
+	}, 3000);
 	</script>
-	
-	
 	
 	
   </body>

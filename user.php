@@ -73,7 +73,7 @@
 
 	$user = $_GET['user'];
 
-	$db = new SQLite3($plexWatch['plexWatchDb']);
+	$db = dbconnect();
 	
 	if ($plexWatch['userHistoryGrouping'] == "yes") {
 		$plexWatchDbTable = "grouped";
@@ -181,7 +181,7 @@
 						}
 					}
 					
-					echo "<div class='user-info-username'>".$user."</div>";
+					echo "<div class='user-info-username'>".FriendlyName($user)."</div>";
 					echo "<div class='user-info-nav'>";
 						echo "<ul class='user-info-nav'>";
 							echo "<li class='active'><a href='#profile' data-toggle='tab'>Profile</a></li>";
@@ -408,22 +408,19 @@
 											$recentMetadata = "".$plexWatchPmsUrl."/library/metadata/".$recentXml['ratingKey']."";
 										}
 										
-										if ($recentThumbUrlRequest = @simplexml_load_file ($recentMetadata)) {   
-											if (!empty($plexWatch['myPlexAuthToken'])) {
-												$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['parentThumb']."&width=136&height=280&X-Plex-Token=".$myPlexAuthToken."";                                        
-											}else{
-												$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['parentThumb']."&width=136&height=280";                                        
-											}
+										if ($recentThumbUrlRequest = @simplexml_load_file ($recentMetadata)) { 
 											
+											$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['parentThumb']."&width=136&height=280";                                        
+
 											echo "<div class='dashboard-recent-media-instance'>";
 											echo "<li>";
-											
+												
 											if($recentThumbUrlRequest->Video['parentThumb']) {
-												echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='".$recentThumbUrl."' class='poster-face'></img></a></div></div>";
-											}else{
-												echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='images/poster.png' class='poster-face'></img></a></div></div>";
+													echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='includes/img.php?img=".urlencode($recentThumbUrl)."' class='poster-face'></img></a></div></div>";
+												}else{
+													echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='images/poster.png' class='poster-face'></img></a></div></div>";
 											}
-											
+												
 											echo "<div class=dashboard-recent-media-metacontainer>";
 												$parentIndexPadded = sprintf("%01s", $recentXml['parentIndex']);
 												$indexPadded = sprintf("%02s", $recentXml['index']);
@@ -431,7 +428,7 @@
 											echo "</div>";
 											echo "</li>";
 											echo "</div>";
-										}	
+										}
 									}else if ($recentXml['type'] == "movie") {	
 										if (!empty($plexWatch['myPlexAuthToken'])) {
 											$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
@@ -440,19 +437,16 @@
 											$myPlexAuthToken = '';
 											$recentMetadata = "".$plexWatchPmsUrl."/library/metadata/".$recentXml['ratingKey']."";
 										}
-										if ($recentThumbUrlRequest = @simplexml_load_file ($recentMetadata)) {          
-											if (!empty($plexWatch['myPlexAuthToken'])) {
-												$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['thumb']."&width=136&height=280&X-Plex-Token=".$myPlexAuthToken."";                                      
-											}else{
-												$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['thumb']."&width=136&height=280";                                        
-											}                                        
 										
+										if ($recentThumbUrlRequest = @simplexml_load_file ($recentMetadata)) {          
+
+											$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['thumb']."&width=136&height=280";                                        
+
 											echo "<div class='dashboard-recent-media-instance'>";
 											echo "<li>";
 											
-											
 											if($recentThumbUrlRequest->Video['thumb']) {
-												echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='".$recentThumbUrl."' class='poster-face'></img></a></div></div>";
+												echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='includes/img.php?img=".urlencode($recentThumbUrl)."' class='poster-face'></img></a></div></div>";
 											}else{
 												echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='images/poster.png' class='poster-face'></img></a></div></div>";
 											}
@@ -475,11 +469,8 @@
 											$recentMetadata = "".$plexWatchPmsUrl."/library/metadata/".$recentXml['ratingKey']."";
 										}
 										if ($recentThumbUrlRequest = @simplexml_load_file ($recentMetadata)) {          
-											if (!empty($plexWatch['myPlexAuthToken'])) {
-												$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['thumb']."&width=136&height=280&X-Plex-Token=".$myPlexAuthToken."";                                      
-											}else{
-												$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['thumb']."&width=136&height=280";                                        
-											}
+
+											$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['thumb']."&width=136&height=280";
 											
 											echo "<div class='dashboard-recent-media-instance'>";
 											echo "<li>";
@@ -529,38 +520,38 @@
 										echo "<th align='center'><i class='icon-sort icon-white'></i> Last seen</th>";
 										echo "<th align='center'><i class='icon-sort icon-white'></i> IP Address</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Location</th>";
-										
+										echo "<th align='left'><i class='icon-sort icon-white'></i> Internet Provider</th>";
 									echo "</tr>";
 								echo "</thead>";
 								echo "<tbody>";
 								
 								while ($userIpAddresses = $userIpAddressesQuery->fetchArray()) {
 
-									if (!empty($userIpAddresses['ip_address'])) {
+										if (!empty($userIpAddresses['ip_address'])) {
 													
-										if (strstr($userIpAddresses['ip_address'], '192.168' )) {
+											if (strstr($userIpAddresses['ip_address'], '192.168' )) {
 													
-										}else if (strstr($userIpAddresses['ip_address'], '10.' )) {
+											}else if (strstr($userIpAddresses['ip_address'], '10.' )) {
 													
-										}else if (strstr($userIpAddresses['ip_address'], '172.16' )) {
+											}else if (strstr($userIpAddresses['ip_address'], '172.16' )) {
 											
-										}else{ 
+											}else{ 
 													
-											$userIpAddressesUrl = "http://www.geoplugin.net/xml.gp?ip=".$userIpAddresses['ip_address']."";
-											$userIpAddressesData = simplexml_load_file($userIpAddressesUrl) or die ("<div class=\"alert alert-warning \">Cannot access http://www.geoplugin.net.</div>");
-											
+												$userIpAddressesGeoUrl = "http://ipinfo.io/".$userIpAddresses['ip_address']."/json";
+												$userIpAddressesGeoJson = file_get_contents($userIpAddressesGeoUrl);
+												$userIpAddressesData = json_decode($userIpAddressesGeoJson, true);
+													
 												echo "<tr>";
 													echo "<td align='center'>".date("m/d/Y",$userIpAddresses['time'])."</td>";
 													echo "<td align='center'>".$userIpAddresses['ip_address']."</td>";
-													echo "<td align='left'><a href='https://maps.google.com/maps?q=".$userIpAddressesData->geoplugin_city.", ".$userIpAddressesData->geoplugin_region."'><i class='icon-map-marker icon-white'></i> ".$userIpAddressesData->geoplugin_city.", ".$userIpAddressesData->geoplugin_region."</a></td>";
-														
+													echo "<td align='left'><a href='https://maps.google.com/maps?q=".$userIpAddressesData['city'].", ".$userIpAddressesData['region']."'><i class='icon-map-marker icon-white'></i> ".$userIpAddressesData['city'].", ".$userIpAddressesData['region']."</a></td>";
+													echo "<td align='left' >".$userIpAddressesData['org']."</td>";
 												echo "</tr>";
-											
-										}
+											}
 												
-									}
+										}
 										
-								}	
+									}	
 										
 								echo "</tbody>";
 							echo "</table>";
@@ -630,11 +621,11 @@
 											
 										
 										if ($type=="movie") {
-										echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
+										echo "<td class='title' align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
 										}else if ($type=="episode") {
-										echo "<td align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
+										echo "<td class='title' align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
 										}else if (!array_key_exists('',$type)) {
-										echo "<td align='left'><a href='".$ratingKey."'>".$row['title']."</a></td>";
+										echo "<td class='title' align='left'><a href='".$ratingKey."'>".$row['title']."</a></td>";
 										}else{
 
 										}

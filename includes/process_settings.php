@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	$plexWatchVer = "\$plexWatch['version'] = '0.0.4.2dev';";
+	$plexWatchVer = "\$plexWatch['version'] = '1.0.4.3dev';";
 	
     $pmsIp = "\$plexWatch['pmsIp'] = '".$_POST['pmsIp']."';";	
 	$pmsHttpPort = "\$plexWatch['pmsHttpPort'] = '".$_POST['pmsHttpPort']."';";
@@ -43,10 +43,12 @@
 	$data = "$plexWatchVer\r$pmsIp\r$pmsHttpPort\r$pmsHttpsPort\r$https\r$plexWatchDb\r$myPlexUser\r$myPlexPass\r$globalHistoryGrping\r$userHistoryGrping\r$chartsGrping";
 	
 	$file = "../config/config.php";
+	$func_file = dirname(dirname(__FILE__)) . '/includes/functions.php';
 	
 	//write data to config.php file
 	$fp = fopen($file, "w+") or die("Cannot open file $file.");
 	fwrite($fp, "<?php\r\r") or die("Cannot write to file $file.");
+	fwrite($fp, "\nrequire_once '$func_file';\n") or die("Cannot write to file $file.");
 	fwrite($fp, $data) or die("Cannot write to file $file.");
 	fwrite($fp, "\r\r?>") or die("Cannot write to file $file.");
 	fclose($fp);
@@ -63,6 +65,7 @@
 	//rewrite data to config.php
 	$fp = fopen($file, "w+") or die("Cannot open file $file.");
 	fwrite($fp, "<?php\r\r") or die("Cannot write to file $file.");
+	fwrite($fp, "\nrequire_once '$func_file';\n") or die("Cannot write to file $file.");
 	fwrite($fp, $data) or die("Cannot write to file $file.");
 	fwrite($fp, "\r\r?>") or die("Cannot write to file $file.");
 	fclose($fp);
