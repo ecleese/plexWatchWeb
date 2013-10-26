@@ -388,9 +388,8 @@
 								$platformXml = $platformResultsRow['xml'];
 								$platformXmlField = simplexml_load_string($platformXml);
 								
-									if(empty($platformXmlField->Player['platform'])) {
-										$platformImage = "images/platforms/platform-default.png";
-									}else if(strstr($platformXmlField->Player['platform'], 'Roku')) {
+									
+									if(strstr($platformXmlField->Player['platform'], 'Roku')) {
 										$platformImage = "images/platforms/platform-roku.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Apple TV')) {
 										$platformImage = "images/platforms/platform-appletv.png";
@@ -414,8 +413,12 @@
 										$platformImage = "images/platforms/platform-safari.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Windows-XBMC')) {
 										$platformImage = "images/platforms/platform-xbmc.png";
-									}else{
-										$platformImage = "images/platforms/platform-default.png";
+									}else if(empty($platformXmlField->Player['platform'])) {
+										if(strstr($platformResultsRow['platform'], 'Apple')) {
+											$platformImage = "images/platforms/platform-appletv.png";
+										}else{
+											$platformImage = "images/platforms/platform-default.png";
+										}
 									}
 									
 									echo "<div class='user-platforms'>";
@@ -577,7 +580,7 @@
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Play Count</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Platform</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Location</th>";
-										echo "<th align='left'><i class='icon-sort icon-white'></i> Internet Provider</th>";
+										
 									echo "</tr>";
 								echo "</thead>";
 								echo "<tbody>";
@@ -595,22 +598,22 @@
 											}else if (strpos($userIpAddresses['ip_address'], "172.".$range."16" ) === 0) {
 											
 											}else{ 
-													
-												$userIpAddressesGeoUrl = "http://ipinfo.io/".$userIpAddresses['ip_address']."/json";
-												$userIpAddressesGeoJson = file_get_contents($userIpAddressesGeoUrl);
-												$userIpAddressesData = json_decode($userIpAddressesGeoJson, true);
-													
+												
+												$userIpAddressesUrl = "http://www.geoplugin.net/xml.gp?ip=".$userIpAddresses['ip_address']."";
+												$userIpAddressesData = simplexml_load_file($userIpAddressesUrl) or die ("<div class=\"alert alert-warning \">Cannot access http://www.geoplugin.net.</div>");
+
 												echo "<tr>";
 													echo "<td align='center'>".date("m/d/Y",$userIpAddresses['time'])."</td>";
 													echo "<td align='center'>".$userIpAddresses['ip_address']."</td>";
 													echo "<td align='left'>".$userIpAddresses['play_count']."</td>";
 													echo "<td align='left'>".$userIpAddresses['platform']."</td>";
-													if (empty($userIpAddressesData['region'])) {
+													if (empty($userIpAddressesData->geoplugin_city)) {
 														echo "<td align='left'>n/a</td>";
 													}else{
-														echo "<td align='left'><a href='https://maps.google.com/maps?q=".$userIpAddressesData['city'].", ".$userIpAddressesData['region']."'><i class='icon-map-marker icon-white'></i> ".$userIpAddressesData['city'].", ".$userIpAddressesData['region']."</a></td>";
+														echo "<td align='left'><a href='https://maps.google.com/maps?q=".$userIpAddressesData->geoplugin_city.", ".$userIpAddressesData->geoplugin_region."'><i class='icon-map-marker icon-white'></i> ".$userIpAddressesData->geoplugin_city.", ".$userIpAddressesData->geoplugin_region."</a></td>";
+														
 													}
-													echo "<td align='left' >".$userIpAddressesData['org']."</td>";
+													
 												echo "</tr>";
 											}
 												

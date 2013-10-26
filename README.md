@@ -58,6 +58,7 @@ A web front-end for plexWatch.
 * individual user information
 	- username and gravatar (if available)
 	- daily, weekly, monthly, all time stats for play count and duration length
+	- individual platform stats for each user
 	- public ip address history with last seen date, geo tag location and isp information 
 	- recently watched content
 	- watching history

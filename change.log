@@ -1,4 +1,6 @@
-1.0.4.6dev
+1.0.4.7dev
+* Add:		user.php: included a few more platform checks from db platform if xml platform is empty (apple tv)
+* Change:	user.php: changed geo location providers since ipinfo.io seems unstable
 * Add:		user.php: initial platform play count stats
 * Add:		user.php platform column for user public ip address history 
 * Add:		user.php: check for region name result for public ips. display "n/a" and remove link if result is empty
