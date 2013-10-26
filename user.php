@@ -499,7 +499,7 @@
 			
 		echo "<div class='tab-pane' id='userHistory'>";
 		
-			$userIpAddressesQuery = $db->query("SELECT time,ip_address FROM processed WHERE user = '$user' GROUP BY ip_address ORDER BY time DESC");
+			$userIpAddressesQuery = $db->query("SELECT time,ip_address, COUNT(ip_address) as play_count FROM processed WHERE user = '$user' GROUP BY ip_address ORDER BY time DESC");
 
 			echo "<div class='container-fluid'>";	
 				echo "<div class='row-fluid'>";
@@ -519,6 +519,7 @@
 									echo "<tr>";
 										echo "<th align='center'><i class='icon-sort icon-white'></i> Last seen</th>";
 										echo "<th align='center'><i class='icon-sort icon-white'></i> IP Address</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> Play Count</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Location</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Internet Provider</th>";
 									echo "</tr>";
@@ -534,10 +535,8 @@
 											if (strpos($userIpAddresses['ip_address'], "192.168" ) === 0) {
 													
 											}else if (strpos($userIpAddresses['ip_address'], "10." ) === 0) {
-											
-												
-														
-											}else if (strpos($userIpAddresses['ip_address'], "172.".$range."16" ) === 0) {	//this needs to be enhanced to take care of 17-31
+		
+											}else if (strpos($userIpAddresses['ip_address'], "172.".$range."16" ) === 0) {
 											
 											}else{ 
 													
@@ -548,7 +547,12 @@
 												echo "<tr>";
 													echo "<td align='center'>".date("m/d/Y",$userIpAddresses['time'])."</td>";
 													echo "<td align='center'>".$userIpAddresses['ip_address']."</td>";
-													echo "<td align='left'><a href='https://maps.google.com/maps?q=".$userIpAddressesData['city'].", ".$userIpAddressesData['region']."'><i class='icon-map-marker icon-white'></i> ".$userIpAddressesData['city'].", ".$userIpAddressesData['region']."</a></td>";
+													echo "<td align='left'>".$userIpAddresses['play_count']."</td>";
+													if (empty($userIpAddressesData['region'])) {
+														echo "<td align='left'>n/a</td>";
+													}else{
+														echo "<td align='left'><a href='https://maps.google.com/maps?q=".$userIpAddressesData['city'].", ".$userIpAddressesData['region']."'><i class='icon-map-marker icon-white'></i> ".$userIpAddressesData['city'].", ".$userIpAddressesData['region']."</a></td>";
+													}
 													echo "<td align='left' >".$userIpAddressesData['org']."</td>";
 												echo "</tr>";
 											}

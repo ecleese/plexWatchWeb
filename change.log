@@ -1,4 +1,6 @@
-1.0.4.4dev
+1.0.4.5dev
+* Add:		user.php: check for region name result for public ips. display "n/a" and remove link if result is empty
+* Add:		user.php: play count for user public ip address history 
 * Fix:		user.php: ip addresses were being filter incorrectly
 * Change:	index.php: *BETA, NEEDS MORE TESTING* recently added items now display a dynamic amount based on row width. This used to be a fix amount (10). (ljunkie)
 * Add:		global: friendly name+platform support (ljunkie)
