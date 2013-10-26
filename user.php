@@ -409,6 +409,8 @@
 										$platformImage = "images/platforms/platform-ios.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Plex Home Theater')) {
 										$platformImage = "images/platforms/platform-plex-ht.png";
+									}else if(strstr($platformXmlField->Player['platform'], 'Linux/RPi-XBMC')) {
+										$platformImage = "images/platforms/platform-xbmc.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Safari')) {
 										$platformImage = "images/platforms/platform-safari.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Windows-XBMC')) {
