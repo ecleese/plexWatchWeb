@@ -525,15 +525,19 @@
 								echo "</thead>";
 								echo "<tbody>";
 								
+								$range = range(16, 31);
+								
 								while ($userIpAddresses = $userIpAddressesQuery->fetchArray()) {
-
+								
 										if (!empty($userIpAddresses['ip_address'])) {
 													
-											if (strstr($userIpAddresses['ip_address'], '192.168' )) {
+											if (strpos($userIpAddresses['ip_address'], "192.168" ) === 0) {
 													
-											}else if (strstr($userIpAddresses['ip_address'], '10.' )) {
-													
-											}else if (strstr($userIpAddresses['ip_address'], '172.16' )) {
+											}else if (strpos($userIpAddresses['ip_address'], "10." ) === 0) {
+											
+												
+														
+											}else if (strpos($userIpAddresses['ip_address'], "172.".$range."16" ) === 0) {	//this needs to be enhanced to take care of 17-31
 											
 											}else{ 
 													

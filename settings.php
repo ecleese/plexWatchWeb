@@ -113,14 +113,14 @@
 							</div>
 							<div class="settings-general-info">
 								<ul>
-									<li>plexWatch/Web Version: <strong><?php echo $plexWatch['version'] ?></strong></li>	
+									<li>plexWatch/Web Version: <strong>v<?php echo $plexWatch['version'] ?></strong></li>	
 								
 									<?php
 									$db = new SQLite3($plexWatch['plexWatchDb']);
 									$plexWatchVersion = $db->querySingle("SELECT version FROM config ");
 									?>
 									
-									<li>plexWatch Version: <strong><?php echo $plexWatchVersion ?></strong></li>
+									<li>plexWatch Version: <strong>v<?php echo $plexWatchVersion ?></strong></li>
 								</ul>
 							</div>
 						</div>

@@ -1,5 +1,7 @@
-plexWatch/Web - 1.0.4 dev
-=====================
+plexWatch/Web - v1.0.4 dev
+======================
+
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q3HXXBC6ZBENJ)
 
 A web front-end for plexWatch.
 
@@ -68,7 +70,7 @@ A web front-end for plexWatch.
 ###Requirements
 ---------------
 * Plex Media Server (v0.9.8+) and a PlexPass membership
-* plexWatch (v0.1.4+)
+* plexWatch (v0.1.6+)
 * a web server that supports php (apache, nginx, XAMPP, WampServer, EasyPHP, lighttpd, etc)
 * php5
 * php5-sqlite

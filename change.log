@@ -1,4 +1,5 @@
-1.0.4.3dev
+1.0.4.4dev
+* Fix:		user.php: ip addresses were being filter incorrectly
 * Change:	index.php: *BETA, NEEDS MORE TESTING* recently added items now display a dynamic amount based on row width. This used to be a fix amount (10). (ljunkie)
 * Add:		global: friendly name+platform support (ljunkie)
 * Change:	settings.php: now includes a navigation list
