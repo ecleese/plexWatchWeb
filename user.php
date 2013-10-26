@@ -589,8 +589,6 @@
 								echo "</thead>";
 								echo "<tbody>";
 								
-								$range = range(16, 31);
-								
 								while ($userIpAddresses = $userIpAddressesQuery->fetchArray()) {
 								
 										if (!empty($userIpAddresses['ip_address'])) {
@@ -599,7 +597,7 @@
 													
 											}else if (strpos($userIpAddresses['ip_address'], "10." ) === 0) {
 		
-											}else if (strpos($userIpAddresses['ip_address'], "172.".$range."16" ) === 0) {
+											}else if (strpos($userIpAddresses['ip_address'], "172.16" ) === 0) {	//need a solution to check for 17-31
 											
 											}else{ 
 												
