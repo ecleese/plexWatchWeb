@@ -413,6 +413,8 @@
 										$platformImage = "images/platforms/platform-xbmc.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Safari')) {
 										$platformImage = "images/platforms/platform-safari.png";
+									}else if(strstr($platformXmlField->Player['platform'], 'Internet Explorer')) {
+										$platformImage = "images/platforms/platform-ie.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Windows-XBMC')) {
 										$platformImage = "images/platforms/platform-xbmc.png";
 									}else if(empty($platformXmlField->Player['platform'])) {
