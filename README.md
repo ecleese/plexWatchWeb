@@ -1,4 +1,4 @@
-plexWatch/Web - v1.0.4 dev
+plexWatch/Web - v1.4.0 dev
 ======================
 
 A web front-end for plexWatch.
