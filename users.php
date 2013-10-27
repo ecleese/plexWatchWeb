@@ -112,7 +112,8 @@
 				$userXml = simplexml_load_string($user['xml']) ;                         
 						echo "<li>";
 						if (empty($userXml->User['thumb'])) {				
-					
+							echo "<div class='users-poster-face'><a href='user.php?user=".$user['users']."'><img src='images/gravatar-default-80x80.png'></></a></div>";
+						}else if ($userXml->User['thumb'] == "http://www.gravatar.com/avatar/b884f21cb4e38d47413dad9f0410a744?d=404") {
 							echo "<div class='users-poster-face'><a href='user.php?user=".$user['users']."'><img src='images/gravatar-default-80x80.png'></></a></div>";
 						}else{
 							echo "<div class='users-poster-face'><a href='user.php?user=".$user['users']."'><img src='".$userXml->User['thumb']."'></></a></div>";
