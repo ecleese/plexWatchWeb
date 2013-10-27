@@ -156,8 +156,12 @@
 		
 	}
 	
-	$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM ".$plexWatchDbTable." WHERE user = '$user' AND stopped IS NULL UNION ALL SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your settings.");
-
+	if ($plexWatch['userHistoryGrouping'] == "yes") {
+		$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM processed WHERE user = '$user' AND stopped IS NULL UNION ALL SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your settings.");
+	}else if ($plexWatch['userHistoryGrouping'] == "no") {
+		$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your settings.");
+	}
+	
 	echo "<div class='container-fluid'>";
 		echo "<div class='row-fluid'>";
 			echo "<div class='span12'>";
