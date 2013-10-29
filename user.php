@@ -171,7 +171,7 @@
 						$userInfoXmlField = simplexml_load_string($userInfoXml); 
 						if (empty($userInfoXmlField->User['thumb'])) {
 							echo "<div class='user-info-poster-face'><img src='images/gravatar-default-80x80.png'></></div>";
-						}else if ($userInfoXmlField->User['thumb'] == "http://www.gravatar.com/avatar/b884f21cb4e38d47413dad9f0410a744?d=404") {
+						}else if (strstr($userInfoXmlField->User['thumb'], "?d=404")) {
 							echo "<div class='user-info-poster-face'><img src='images/gravatar-default-80x80.png'></></div>";
 						}else{
 							echo "<div class='user-info-poster-face'><img src='".$userInfoXmlField->User['thumb']."'></></div>";
