@@ -1,6 +1,6 @@
-1.4.0.8 dev
-* Change:	version numbering scheme adjustment. It should now follow this scheme (major.minor.maintenance.development) (branch: master, dev, etc)
+1.4.0.9 dev
 * Fix:		global: gravatar image for a 404 response would display no image
+* Change:	version numbering scheme adjustment. It should now follow this scheme (major.minor.maintenance.development) (branch: master, dev, etc)
 * Add:		user.php: included a few more platform checks from db platform if xml platform is empty (apple tv)
 * Change:	user.php: changed geo location providers since ipinfo.io seems unstable
 * Add:		user.php: initial platform play count stats
