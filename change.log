@@ -1,6 +1,8 @@
 1.4.0 final
 * Change: 	merge with master branch
 
+1.4.0.11 dev
+* Add:		settings: curl error checking when trying to authenticate with myPlex 
 
 1.4.0.10 dev
 * Change:	info.php: icons for table heading

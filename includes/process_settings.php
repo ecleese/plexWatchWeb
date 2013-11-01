@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	$plexWatchVer = "\$plexWatch['version'] = '1.4.0';";
+	$plexWatchVer = "\$plexWatch['version'] = '1.0.4.7 dev';";
 	
     $pmsIp = "\$plexWatch['pmsIp'] = '".$_POST['pmsIp']."';";	
 	$pmsHttpPort = "\$plexWatch['pmsHttpPort'] = '".$_POST['pmsHttpPort']."';";
@@ -71,8 +71,8 @@
 	fclose($fp);
 
 	// check if an error was found - if there was, send the user back to the form  
-	if (!empty($httpCode401)) {  
-		header('Location: ../settings.php?e='.urlencode($httpCode401)); exit;  
+	if (!empty($errorCode)) {  
+		header('Location: ../settings.php?e='.urlencode($errorCode)); exit;  
 	} 
 
 	// send the user back to the form  
