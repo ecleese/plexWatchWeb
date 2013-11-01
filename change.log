@@ -1,3 +1,6 @@
+1.4.0 master
+* Change:	version bump to master
+
 1.4.0.11 dev
 * Add:		myplex.php: xml parse error checking when trying to authenticate with myPlex
 * Add:		settings.php: php-curl error checking when trying to authenticate with myPlex 
