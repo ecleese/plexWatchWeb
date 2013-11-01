@@ -51,7 +51,7 @@
 	text-align: center;
 	color: #999;
 	font-size: 14px;
-	background-color: white;
+	
 }
 
 .dataTables_length {
@@ -162,6 +162,7 @@ table.display {
 }
 
 table.display thead th {
+white-space:nowrap;
 padding: 0px 0px 5px 0px;
 border-bottom: 1px solid #343434;
 font-weight: bold;
@@ -186,6 +187,13 @@ table.display tr.heading2 td {
 
 table.display td {
 	padding: 5px;
+	white-space:nowrap;
+}
+
+table.display td.title {
+	padding: 5px;
+	white-space: normal;
+	min-width: 400px;
 }
 
 table.display td.center {
@@ -308,9 +316,7 @@ tr.even {
 }
 
 .top, .bottom {
-	padding: 15px;
-	background-color: #F5F5F5;
-	border: 1px solid #CCCCCC;
+
 }
 
 .top .dataTables_info {

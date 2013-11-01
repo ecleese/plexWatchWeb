@@ -10,6 +10,7 @@
     <!-- css styles -->
     <link href="css/plexwatch.css" rel="stylesheet">
 	<link href="css/plexwatch-tables.css" rel="stylesheet">
+	<link href="css/font-awesome.min.css" rel="stylesheet">
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -30,8 +31,6 @@
 
   <body>
 
-	
-  
 	<div class="container">
 		    			
 		<div class="navbar navbar-fixed-top">
@@ -40,10 +39,11 @@
 				<a href="index.php"><div class="logo"></div></a>
 				<ul class="nav">
 					
-					<li><a href="index.php"><i class="icon-home icon-white"></i> Home</a></li>
-					<li><a href="history.php"><i class="icon-calendar icon-white"></i> History</a></li>
-					<li><a href="users.php"><i class="icon-user icon-white"></i> Users</a></li>
-					<li><a href="charts.php"><i class="icon-list icon-white"></i> Charts</a></li>
+					<li><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
+					<li><a href="history.php"><i class="icon-2x icon-calendar icon-white" data-toggle="tooltip" data-placement="bottom" title="History" id="history"></i></a></li>
+					<li><a href="users.php"><i class="icon-2x icon-group icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
+					<li><a href="charts.php"><i class="icon-2x icon-bar-chart icon-white" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
+					<li><a href="settings.php"><i class="icon-2x icon-wrench icon-white" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
 					
 				</ul>
 			</div>
@@ -53,7 +53,14 @@
 
 	
 	<?php
-		require_once(dirname(__FILE__) . '/config.php');
+		$guisettingsFile = "config/config.php";
+				if (file_exists($guisettingsFile)) { 
+					require_once(dirname(__FILE__) . '/config/config.php');
+				}else{
+					header("Location: settings.php");
+				}
+				
+				
 		
 		if ($plexWatch['https'] == 'yes') {
 			$plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
@@ -61,22 +68,33 @@
 			$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
 		}
 		
+		if (!empty($plexWatch['myPlexAuthToken'])) {
+			$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
+			$id = $_GET['id'];
+			$infoUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."?query=c&X-Plex-Token=".$myPlexAuthToken."";
+		}else{
+			$myPlexAuthToken = '';		
+			$id = $_GET['id'];
+			$infoUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."";
+		}
+		
 		date_default_timezone_set(@date_default_timezone_get());
 		
-		$id = $_GET['id'];
+		
 					
-		$infoUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."";
+		
 		$xml = simplexml_load_file($infoUrl) or die ("<div class='container-fluid'><div class='row-fluid'><div class='span12'><h3>This media is no longer available in the Plex Media Server database.</h3></div></div>");
 		
 			if ($xml->Video['type'] == "episode") {
-							
-				$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['art']."&width=1920&height=1080";                                       
-				$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['parentThumb']."&width=256&height=352";                                        
+
+					$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['art']."&width=1920&height=1080";                                       
+					$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['parentThumb']."&width=256&height=352"; 
+				
 							
 					echo "<div class='container-fluid'>";
 						
 							if($xml->Video['art']) {
-								echo "<div class='art-face' style='background-image:url(".$xmlArtUrl.")'>";
+								echo "<div class='art-face' style='background-image:url(includes/img.php?img=".urlencode($xmlArtUrl).")'>";
 							}else{
 								echo "<div class='art-face'>";
 							}
@@ -89,7 +107,7 @@
 												echo "<div class='summary-content-poster hidden-phone hidden-tablet'>";
 													
 													if($xml->Video['parentThumb']) {
-														echo "<img src='".$xmlThumbUrl."'></img>";
+														echo "<img src='includes/img.php?img=".urlencode($xmlThumbUrl)."'></img>";
 													}else{
 														echo "<img src='images/poster.png'></img>";
 													}
@@ -117,7 +135,7 @@
 														if ($xml->Video->Writer['tag']) {
 														foreach($xml->Video->Writer as $xmlWriters) {
 															$writers[] = "" .$xmlWriters['tag']. "";
-															if (++$writerCount == 4) break;
+															if (++$writerCount == 5) break;
 														}
 														echo "<div class='summary-content-writers'><h6><strong>Written by</strong></h6><ul><li>";
 															echo implode('<li>', $writers);
@@ -150,16 +168,23 @@
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 						
-							$db = new SQLite3($plexWatch['plexWatchDb']);
-							$title = $db->querySingle("SELECT title FROM processed WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\'  ");
+							$db = dbconnect();
+							
+							if ($plexWatch['globalHistoryGrouping'] == "yes") {
+								$plexWatchDbTable = "grouped";
+							}else if ($plexWatch['globalHistoryGrouping'] == "no") {
+								$plexWatchDbTable = "processed";
+							}
+							
+							$title = $db->querySingle("SELECT title FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\'  ");
 							
 							echo "<div class='dashboard-wellheader'>";
 									echo"<h3>Watching history for <strong>".$title."</strong></h3>";
 								echo"</div>";
 							echo"</div>";
 							
-							$numRows = $db->querySingle("SELECT COUNT(*) as count FROM processed ");
-							$results = $db->query("SELECT * FROM processed WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
+							$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable ");
+							$results = $db->query("SELECT * FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
 							
 							if ($numRows < 1) {
 
@@ -167,19 +192,19 @@
 
 							} else {
 							
-							echo "<table id='history' class='display'>";
+							echo "<table id='globalHistory' class='display'>";
 								echo "<thead>";
 									echo "<tr>";
-										echo "<th align='center'><i class='icon-calendar icon-white'></i> Date</th>";
-										echo "<th align='left'><i class='icon-user icon-white'></i> User</th>";
-										echo "<th align='left'><i class='icon-hdd icon-white'></i> Platform</th>";
-										echo "<th align='left'><i class='icon-globe icon-white'></i> IP Address</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Date</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> User</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> Platform</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> IP Address</th>";
 										
-										echo "<th align='center'><i class='icon-play icon-white'></i> Started</th>";
-										echo "<th align='center'><i class='icon-pause icon-white'></i> Paused</th>";
-										echo "<th align='center'><i class='icon-stop icon-white'></i> Stopped</th>";
-										echo "<th align='center'><i class='icon-time icon-white'></i> Duration</th>";
-										echo "<th align='center'>Completed</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Started</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Paused</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Stopped</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Duration</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Completed</th>";
 									echo "</tr>";
 								echo "</thead>";
 								echo "<tbody>";
@@ -187,7 +212,7 @@
 								
 									echo "<tr>";
 										echo "<td align='center'>".date("m/d/Y",$row['time'])."</td>";
-										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".$row['user']."</td>";
+										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
 										echo "<td align='left'>".$row['platform']."</td>";
 
 										if (empty($row['ip_address'])) {
@@ -252,14 +277,15 @@
 
 			
 						}else if ($xml->Directory['type'] == "show") {
+
+								$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['art']."&width=1920&height=1080";                                       
+								$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['thumb']."&width=256&height=352"; 
 							
-							$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['art']."&width=1920&height=1080";                                       
-							$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['thumb']."&width=256&height=352";                                        
 							
 						echo "<div class='container-fluid'>";
 								
 								if($xml->Directory['art']) {
-									echo "<div class='art-face' style='background-image:url(".$xmlArtUrl.")'>";
+									echo "<div class='art-face' style='background-image:url(includes/img.php?img=".urlencode($xmlArtUrl).")'>";
 								}else{
 									echo "<div class='art-face'>";
 								}
@@ -272,7 +298,7 @@
 											echo "<div class='summary-content-poster hidden-phone hidden-tablet'>";
 											
 												if($xml->Directory['thumb']) {
-													echo "<img src='".$xmlThumbUrl."'></img>";
+													echo "<img src='includes/img.php?img=".urlencode($xmlThumbUrl)."'></img>";
 												}else{
 													echo "<img src='images/poster.png'></img>";
 												}
@@ -316,12 +342,19 @@
 						
 						echo "<div class='wellheader'>";
 
-							$db = new SQLite3($plexWatch['plexWatchDb']);
+							$db = dbconnect();
+							
+							if ($plexWatch['globalHistoryGrouping'] == "yes") {
+								$plexWatchDbTable = "grouped";
+							}else if ($plexWatch['globalHistoryGrouping'] == "no") {
+								$plexWatchDbTable = "processed";
+							}
+							
 							echo"<h3>The most watched episodes of <strong>".$xml->Directory['title']."</strong> are</h3>";	
 						
 						echo"</div>";
 																																			
-							$topWatchedResults = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(*) AS play_count FROM processed WHERE orig_title LIKE \"".$xml->Directory['title']."\" GROUP BY title HAVING play_count > 0 ORDER BY play_count DESC,time DESC LIMIT 7");
+							$topWatchedResults = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(*) AS play_count FROM $plexWatchDbTable WHERE orig_title LIKE \"".$xml->Directory['title']."\" GROUP BY title HAVING play_count > 0 ORDER BY play_count DESC,time DESC LIMIT 7");
 
 							echo "<div class='info-top-watched-wrapper'>";
 								echo "<ul class='info-top-watched-instance'>";
@@ -331,15 +364,17 @@
 								while ($topWatchedResultsRow = $topWatchedResults->fetchArray()) {
 								
 									$topWatchedXmlUrl = $topWatchedResultsRow['xml'];
-									$topWatchedXmlfield = simplexml_load_string($topWatchedXmlUrl) ;								   
-									$topWatchedThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$topWatchedXmlfield['thumb']."&width=205&height=115";                                        
+									$topWatchedXmlfield = simplexml_load_string($topWatchedXmlUrl) ;					
+
+										$topWatchedThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$topWatchedXmlfield['thumb']."&width=205&height=115"; 
+									
 
 									$numRows++;
 
 										echo "<li>";
 											echo "<div class='info-top-watched-instance-position-circle'><h1>".$numRows."</h1></div>";
 											echo "<div class='info-top-watched-poster'>";
-												echo "<div class='info-top-watched-poster-face'><a href='info.php?id=" .$topWatchedXmlfield['ratingKey']. "'><img src='".$topWatchedThumbUrl."' class='info-top-watched-poster-face'></img></a></div>";
+												echo "<div class='info-top-watched-poster-face'><a href='info.php?id=" .$topWatchedXmlfield['ratingKey']. "'><img src='includes/img.php?img=".urlencode($topWatchedThumbUrl)."' class='info-top-watched-poster-face'></img></a></div>";
 												echo "<div class='info-top-watch-card-overlay'><div class='info-top-watched-season'>Season ".$topWatchedResultsRow['season'].", Episode ".$topWatchedResultsRow['episode']."</div><div class='info-top-watched-playcount'><strong>".$topWatchedResultsRow['play_count']."</strong> views</div></div>";
 											echo "</div>";
 											echo "<div class='info-top-watched-instance-text-wrapper'>";
@@ -364,16 +399,21 @@
 						
 						}else if ($xml->Directory['type'] == "season") {
 							
-							$parentInfoUrl = "".$plexWatchPmsUrl."/library/metadata/".$xml->Directory['parentRatingKey']."";
+							if (!empty($plexWatch['myPlexAuthToken'])) {
+								$parentInfoUrl = "".$plexWatchPmsUrl."/library/metadata/".$xml->Directory['parentRatingKey']."?query=c&X-Plex-Token=".$myPlexAuthToken."";
+							}else{
+								$parentInfoUrl = "".$plexWatchPmsUrl."/library/metadata/".$xml->Directory['parentRatingKey']."";
+							}
 							$parentXml = simplexml_load_file($parentInfoUrl) or die ("Feed Not Found");
+
+								$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['art']. "&width=1920&height=1080";                                       
+								$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['thumb']. "&width=256&height=352";  
 							
-							$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['art']. "&width=1920&height=1080";                                       
-							$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['thumb']. "&width=256&height=352";                                        
 							
 						echo "<div class='container-fluid'>";	
 							
 								if($xml->Directory['art']) {
-									echo "<div class='art-face' style='background-image:url(".$xmlArtUrl.")'>";
+									echo "<div class='art-face' style='background-image:url(includes/img.php?img=".urlencode($xmlArtUrl).")'>";
 								}else{
 									echo "<div class='art-face'>";
 								}
@@ -386,7 +426,7 @@
 											echo "<div class='summary-content-poster hidden-phone hidden-tablet'>";
 											
 												if($xml->Directory['thumb']) {
-													echo "<img src='".$xmlThumbUrl."'></img>";
+													echo "<img src='includes/img.php?img=".urlencode($xmlThumbUrl)."'></img>";
 												}else{
 													echo "<img src='images/poster.png'></img>";
 												}
@@ -435,17 +475,22 @@
 								echo"<h3>Episodes</h3>";
 							echo "</div>"; 
 						echo "</div>"; 
-						
-								$seasonEpisodesUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."/children";
+								
+								if (!empty($plexWatch['myPlexAuthToken'])) {
+									$seasonEpisodesUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."/children?query=c&X-Plex-Token=".$myPlexAuthToken."";
+								}else{
+									$seasonEpisodesUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."/children";
+								}	
 								$seasonEpisodesXml = simplexml_load_file($seasonEpisodesUrl) or die ("Feed Not Found");
 
 								echo "<div class='season-episodes-wrapper'>";
 									echo "<ul class='season-episodes-instance'>";
 										
 									foreach ($seasonEpisodesXml->Video as $seasonEpisodes) {
-																		  
-										$seasonEpisodesThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$seasonEpisodes['thumb']. "&width=205&height=115";                                       
 
+											$seasonEpisodesThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$seasonEpisodes['thumb']."&width=205&height=115";
+										
+										
 											echo "<li>";
 												
 												echo "<div class='season-episodes-poster'>";
@@ -468,13 +513,14 @@
 			echo "</div>";
 								
 						}else if ($xml->Video['type'] == "movie") {				
+
+								$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['art']."&width=1920&height=1080";                                        
+								$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['thumb']."&width=256&height=352"; 
 							
-							$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['art']."&width=1920&height=1080";                                        
-							$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['thumb']."&width=256&height=352";                                        
 							
 					echo "<div class='container-fluid'>";		
 						if($xml->Video['art']) {
-									echo "<div class='art-face' style='background-image:url(".$xmlArtUrl.")'>";
+									echo "<div class='art-face' style='background-image:url(includes/img.php?img=".urlencode($xmlArtUrl).")'>";
 								}else{
 									echo "<div class='art-face'>";
 								};
@@ -485,7 +531,7 @@
 										echo "<div class='span9'>";	
 											echo "<div class='summary-content-poster hidden-phone hidden-tablet'>";
 												if($xml->Video['thumb']) {
-													echo "<img src='".$xmlThumbUrl."'></img>";
+													echo "<img src='includes/img.php?img=".urlencode($xmlThumbUrl)."'></img>";
 												}else{
 													echo "<img src='images/poster.png'></img>";
 												}
@@ -518,7 +564,7 @@
 													if ($xml->Video->Genre['tag']) {
 														foreach($xml->Video->Genre as $xmlGenres) {
 															$genres[] = "" .$xmlGenres['tag']. "";
-															if (++$genreCount == 4) break;
+															if (++$genreCount == 3) break;
 														}
 														echo "<div class='summary-content-actors'><h6><strong>Genres</strong></h6><ul><li>";
 															echo implode('<li>', $genres);
@@ -544,7 +590,7 @@
 													if ($xml->Video->Writer['tag']) {
 														foreach($xml->Video->Writer as $xmlWriters) {
 															$writers[] = "" .$xmlWriters['tag']. "";
-															if (++$writerCount == 4) break;
+															if (++$writerCount == 3) break;
 														}
 														echo "<div class='summary-content-writers'><h6><strong>Written by</strong></h6><ul><li>";
 															echo implode('<li>', $writers);
@@ -575,18 +621,23 @@
 						echo "<div class='wellheader'>";
 
 							
-							$db = new SQLite3($plexWatch['plexWatchDb']);
+							$db = dbconnect();
 
+							if ($plexWatch['globalHistoryGrouping'] == "yes") {
+								$plexWatchDbTable = "grouped";
+							}else if ($plexWatch['globalHistoryGrouping'] == "no") {
+								$plexWatchDbTable = "processed";
+							}
 							
-							$title = $db->querySingle("SELECT title FROM processed WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\'  ");
+							$title = $db->querySingle("SELECT title FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\'  ");
 							echo "<div class='dashboard-wellheader'>";
 									echo"<h3>Watching history for <strong>".$xml->Video['title']."</strong></h3>";
 								echo"</div>";
 							echo"</div>";
 							
-							$numRows = $db->querySingle("SELECT COUNT(*) as count FROM processed ");
+							$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable ");
 							
-							$results = $db->query("SELECT * FROM processed WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
+							$results = $db->query("SELECT * FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
 							
 							
 							if ($numRows < 1) {
@@ -595,19 +646,19 @@
 
 							} else {
 							
-							echo "<table id='history' class='display'>";
+							echo "<table id='globalHistory' class='display'>";
 								echo "<thead>";
 									echo "<tr>";
-										echo "<th align='center'><i class='icon-calendar icon-white'></i> Date</th>";
-										echo "<th align='left'><i class='icon-user icon-white'></i> User</th>";
-										echo "<th align='left'><i class='icon-hdd icon-white'></i> Platform</th>";
-										echo "<th align='left'><i class='icon-globe icon-white'></i> IP Address</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Date</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> User</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> Platform</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> IP Address</th>";
 										
-										echo "<th align='center'><i class='icon-play icon-white'></i> Started</th>";
-										echo "<th align='center'><i class='icon-pause icon-white'></i> Paused</th>";
-										echo "<th align='center'><i class='icon-stop icon-white'></i> Stopped</th>";
-										echo "<th align='center'><i class='icon-time icon-white'></i> Duration</th>";
-										echo "<th align='center'>Completed</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Started</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Paused</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Stopped</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Duration</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Completed</th>";
 									echo "</tr>";
 								echo "</thead>";
 								echo "<tbody>";
@@ -615,7 +666,7 @@
 									
 									echo "<tr>";
 										echo "<td align='center'>".date("m/d/Y",$row['time'])."</td>";
-										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".$row['user']."</td>";
+										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
 										echo "<td align='left'>".$row['platform']."</td>";
 
 										if (empty($row['ip_address'])) {
@@ -713,7 +764,7 @@
 	
 	<script>
 		$(document).ready(function() {
-			var oTable = $('#history').dataTable( {
+			var oTable = $('#globalHistory').dataTable( {
 				"bPaginate": false,
 				"bLengthChange": true,
 				"bFilter": false,
@@ -728,6 +779,23 @@
 		} );
 	</script>
 	
-
+	<script>
+	$(document).ready(function() {
+		$('#home').tooltip();
+	});
+	$(document).ready(function() {
+		$('#history').tooltip();
+	});
+	$(document).ready(function() {
+		$('#users').tooltip();
+	});
+	$(document).ready(function() {
+		$('#charts').tooltip();
+	});
+	$(document).ready(function() {
+		$('#settings').tooltip();
+	});
+	</script>
+	
   </body>
 </html>

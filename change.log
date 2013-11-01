@@ -1,5 +1,37 @@
-0.0.3
-* Fix:		user.php: user plays/time stats throws an error when counts are 0
+1.4.0 master
+* Change:	version bump to master
+
+1.4.0.11 dev
+* Add:		myplex.php: xml parse error checking when trying to authenticate with myPlex
+* Add:		settings.php: php-curl error checking when trying to authenticate with myPlex 
+
+1.4.0.10 dev
+* Change:	info.php: icons for table heading
+* Change:	global: main menu icon for users
+* Fix:		global: gravatar image for a 404 response would display no image
+* Change:	version numbering scheme adjustment. It should now follow this scheme (major.minor.maintenance.development) (branch: master, dev, etc)
+* Add:		user.php: included a few more platform checks from db platform if xml platform is empty (apple tv)
+* Change:	user.php: changed geo location providers since ipinfo.io seems unstable
+* Add:		user.php: initial platform play count stats
+* Add:		user.php platform column for user public ip address history 
+* Add:		user.php: check for region name result for public ips. display "n/a" and remove link if result is empty
+* Add:		user.php: play count column for user public ip address history 
+* Fix:		user.php: ip addresses were being filter incorrectly
+* Change:	index.php: *BETA, NEEDS MORE TESTING* recently added items now display a dynamic amount based on row width. This used to be a fix amount (10). (ljunkie)
+* Add:		global: friendly name+platform support (ljunkie)
+* Change:	settings.php: now includes a navigation list
+* Add:		history.php: hourly, daily and monthly play count charts
+* Change:	global: modified the way plexWatch/Web retrieves image from PMS to hide myPlex authentication token	(thanks to ljunkie, ryanc, dashbad & *=Matt=* for their ideas and examples)	
+* Add:		myPlex authentication support for accessing plexWatch/Web from remote networks
+* Add:		introduction welcome screen modal with requirements quick test and briefing
+* Change:	charts.php: minor css adjustments to help with alignment issues
+* Change:	main menu change from text and icons to just icons(font-awesome) with tooltip on hover (same as Plex/Web). This allows mobile header to maintain the standard height dimension
+* Add:		user.php: user ip address history with geo tag location, google maps link and isp information
+* Add:		grouping support which is user selectable for history, user history and charts
+* Add:		settings.php: new page with full support for configuring plexWatch/Web. config.php is written dynamically by settings.php and was relocated to /config/config.php. This file no longer needs to be edited by the user.
+
+
+1.3
 * Fix:		info.php: if content was deleted from PMS and watching history links to info.php with this information, an error to the connection was displayed. a message now lets the user know "This media is no longer available in the Plex Media Server database"
 * Add:		info.php: season episode list if displaying season information
 * Fix:		info.php: if "genres" variable is not available it throws an error
@@ -19,7 +51,8 @@
 * Add:		global: check if PMS server and plexWatch database are accessible. print error output to user if they are not  	
 * Add:		config.php: Plex Media Server port# variable added for users using non-standard PMS ports
 
-0.0.2:
+
+1.2
 * Fix:		index.php: first recently added result was getting cut off on left side, changed episode image to season thumb
 * Fix:		global: updated images in Plex/Web would not appear in plexWatchWeb
 * Change:	user.php: general usage stats changed from minutes to days, hours, minutes
@@ -32,5 +65,10 @@
 * Change:   timezones are now automatically checked and set to webserver's default timezone 
 * Wiki:		information for XAMPP users	about setting timezone and password protection
 
-0.0.1:
-* initial release
+
+1.1
+* initial public release
+
+
+1.0
+* initial internal version

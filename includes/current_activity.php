@@ -1,14 +1,22 @@
 <?php
 
-require_once(dirname(__FILE__) . '/../config.php');
+require_once(dirname(__FILE__) . '/../config/config.php');
 
 if ($plexWatch['https'] == 'yes') {
 	$plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
 }else if ($plexWatch['https'] == 'no') {
 	$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
 }
-			
-$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or die ('Failed to access Plex Media Server. Please check your server and config.php settings.');	
+
+if (!empty($plexWatch['myPlexAuthToken'])) {
+	$myPlexAuthToken = $plexWatch['myPlexAuthToken'];			
+	$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$plexWatch['myPlexAuthToken']."") or die ('<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>');	
+}else{
+	$myPlexAuthToken = '';			
+	$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or die ('<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>');	
+}
+
+
 	
 	if ($statusSessions['size'] == '0') {
 		echo "<h5><strong>Nothing is currently being watched.</strong></h5><br>";
@@ -18,13 +26,15 @@ $statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or
 				
 				if (isset($sessions['librarySectionID'])) {
 					if ($sessions['type'] == "episode") {
-                                     
-					$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['thumb']."&width=300&height=169";                                         
+                    
+					
+						$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['thumb']."&width=300&height=169";
+					
 					
 					echo "<div class='instance'>";
 						
 						echo "<div class='dashboard-activity-button-info'><button type='button' class='btn btn-warning' data-toggle='collapse' data-target='#infoDetails-".$sessions->Player['machineIdentifier']."'><i class='icon-info-sign icon-white'></i></button></div>";
-						echo "<div class='poster'><div class='dashboard-activity-poster-face'><a href='info.php?id=" .$sessions['ratingKey']. "'><img src='".$sessionsThumbUrl."'></img></a></div>";
+						echo "<div class='poster'><div class='dashboard-activity-poster-face'><a href='info.php?id=" .$sessions['ratingKey']. "'><img src='includes/img.php?img=".urlencode($sessionsThumbUrl)."'></img></a></div>";
 							
 									
 							
@@ -70,11 +80,11 @@ $statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or
 																	
 										if ($sessions->Player['state'] == "playing") {
 											echo "<div class='dashboard-activity-metadata-user'>";
-											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".FriendlyName($sessions->User['title'],$sessions->Player['title'])."</a>";
 											echo "</div>";
 										}elseif ($sessions->Player['state'] == "paused") {	 
 											echo "<div class='dashboard-activity-metadata-user'>";
-											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".FriendlyName($sessions->User['title'],$sessions->Player['title'])."</a>";
 											echo "</div>";
 										}
 									}
@@ -147,7 +157,7 @@ $statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or
 					echo "<div class='instance'>";
 						
 						echo "<div class='dashboard-activity-button-info'><button type='button' class='btn btn-warning' data-toggle='collapse' data-target='#infoDetails-".$sessions->Player['machineIdentifier']."'><i class='icon-info-sign icon-white'></i></button></div>";
-						echo "<div class='poster'><div class='dashboard-activity-poster-face'><a href='" .$sessions['url']. "'><img src='".$sessions['art']."'></img></a></div>";
+						echo "<div class='poster'><div class='dashboard-activity-poster-face'><a href='" .$sessions['url']. "'><img src='includes/img.php?img=".urlencode($sessions['art'])."'></img></a></div>";
 							
 									
 							
@@ -193,11 +203,11 @@ $statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or
 																	
 										if ($sessions->Player['state'] == "playing") {
 											echo "<div class='dashboard-activity-metadata-user'>";
-											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".FriendlyName($sessions->User['title'],$sessions->Player['title'])."</a>";
 											echo "</div>";
 										}elseif ($sessions->Player['state'] == "paused") {	 
 											echo "<div class='dashboard-activity-metadata-user'>";
-											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".FriendlyName($sessions->User['title'],$sessions->Player['title'])."</a>";
 											echo "</div>";
 										}
 									}
@@ -268,12 +278,15 @@ $statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or
 				}
 
 				if ($sessions['type'] == "movie") {
-						
-					$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['art']."&width=300&height=169";                                         
+					
+					
+						$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['art']."&width=300&height=169"; 
+					
+					
 					echo "<div class='instance'>";
 						
 						echo "<div class='dashboard-activity-button-info'><button type='button' class='btn btn-warning' data-toggle='collapse' data-target='#infoDetails-".$sessions->Player['machineIdentifier']."'><i class='icon-info-sign icon-white'></i></button></div>";
-						echo "<div class='poster'><div class='dashboard-activity-poster-face'><a href='info.php?id=" .$sessions['ratingKey']. "'><img src='".$sessionsThumbUrl."' ></img></a></div>";
+						echo "<div class='poster'><div class='dashboard-activity-poster-face'><a href='info.php?id=" .$sessions['ratingKey']. "'><img src='includes/img.php?img=".urlencode($sessionsThumbUrl)."'></img></a></div>";
 
 							echo "<div class='dashboard-activity-metadata-wrapper'>";
 
@@ -313,11 +326,11 @@ $statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or
 																	
 										if ($sessions->Player['state'] == "playing") {
 											echo "<div class='dashboard-activity-metadata-user'>";
-											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".FriendlyName($sessions->User['title'],$sessions->Player['title'])."</a>";
 											echo "</div>";
 										}elseif ($sessions->Player['state'] == "paused") {	 
 											echo "<div class='dashboard-activity-metadata-user'>";
-											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".FriendlyName($sessions->User['title'],$sessions->Player['title'])."</a>";
 											echo "</div>";
 										}
 									}
@@ -389,7 +402,7 @@ $statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or
 					echo "<div class='instance'>";
 						
 						echo "<div class='dashboard-activity-button-info'><button type='button' class='btn btn-warning' data-toggle='collapse' data-target='#infoDetails-".$sessions->Player['machineIdentifier']."'><i class='icon-info-sign icon-white'></i></button></div>";
-						echo "<div class='poster'><div class='dashboard-activity-poster-face'><a href='info.php?id=" .$sessions['ratingKey']. "'><img src='".$sessionsThumbUrl."' ></img></a></div>";
+						echo "<div class='poster'><div class='dashboard-activity-poster-face'><a href='info.php?id=" .$sessions['ratingKey']. "'><img src='includes/img.php?img=".urlencode($sessionsThumbUrl)."'></img></a></div>";
 
 							echo "<div class='dashboard-activity-metadata-wrapper'>";
 
@@ -429,11 +442,11 @@ $statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or
 																	
 										if ($sessions->Player['state'] == "playing") {
 											echo "<div class='dashboard-activity-metadata-user'>";
-											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".FriendlyName($sessions->User['title'],$sessions->Player['title'])."</a>";
 											echo "</div>";
 										}elseif ($sessions->Player['state'] == "paused") {	 
 											echo "<div class='dashboard-activity-metadata-user'>";
-											echo "<a href='user.php?user=".$sessions->User['title']."'>".$sessions->User['title']."</a>";
+											echo "<a href='user.php?user=".$sessions->User['title']."'>".FriendlyName($sessions->User['title'],$sessions->Player['title'])."</a>";
 											echo "</div>";
 										}
 									}
