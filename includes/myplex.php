@@ -8,7 +8,6 @@ if (file_exists($guisettingsFile)) {
 	require_once(dirname(__FILE__) . '/../config/config.php');
 				
 	if (empty($plexWatch['myPlexUser']) && empty($plexWatch['myPlexPass'])) {
-		//$myPlexAuthFail = echo "no myPlex username and password set.";
 		$myPlexAuthToken = '';
 	}else{	
 
@@ -31,6 +30,7 @@ if (file_exists($guisettingsFile)) {
 
 		$data = curl_exec($process);
 		
+		
 		//Check for 401 (authentication failure)
 		$authCode = curl_getinfo($process, CURLINFO_HTTP_CODE);
 		if($authCode == 401) {
@@ -40,18 +40,24 @@ if (file_exists($guisettingsFile)) {
 		
 		//Check for curl error
 		}else if(curl_errno($process)) {	
-			$myPlexAuthToken = '';
 			$curlError = curl_error($process);
 			echo $curlError;
 			$errorCode = "<i class=\"icon icon-exclamation-sign\"></i> ".$curlError."";
 			curl_close($process);
+			$myPlexAuthToken = '';
 			
 		}else{	
-			curl_close($process);
-			$errorCode = '';
 			$xml = simplexml_load_string($data);
 			$myPlexAuthToken = $xml['authenticationToken'];
-			echo $myPlexAuthToken;
+			
+			if (empty($myPlexAuthToken)) {
+				$errorCode = "<i class=\"icon icon-exclamation-sign\"></i> Error: Could parse myPlex XML to retrieve authentication code.";
+				curl_close($process);
+			}else{
+				$errorCode = '';
+				curl_close($process);
+				echo $myPlexAuthToken;
+			}	
 		}
 		
 		
