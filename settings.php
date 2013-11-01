@@ -516,7 +516,14 @@
 						}else{
 							echo "<li><i class='icon icon-warning-sign'></i> PHP SQLite Support: <strong><span class='label label-important'>No information available</strong></span></li>";
 						}
+						
+						$version = curl_version();
+						echo "<li><i class='icon icon-ok'></i> PHP Curl Support: <strong><span class='label label-success'>" .$version['version']. "</span></strong>  / SSL Support: <strong><span class='label label-success'>" .$version['ssl_version']."</strong></span></li>";	
+						
 						echo "<li><i class='icon icon-ok'></i> Your server's timezone: <strong><span class='label label-success'>".@date_default_timezone_get()."</strong></span></li>";	
+						
+						
+						
 					?>	
 
 						<br>
