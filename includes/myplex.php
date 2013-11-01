@@ -18,7 +18,7 @@ if (file_exists($guisettingsFile)) {
 
 		$process = curl_init($host);
 		curl_setopt($process, CURLOPT_HTTPHEADER, array('Content-Type: application/xml; charset=utf-8', 'Content-Length: 0', 'X-Plex-Client-Identifier: plexWatchWeb'));
-		curl_setopt($process, CURLOPT_HEADER, 1);
+		curl_setopt($process, CURLOPT_HEADER, 0);
 		curl_setopt($process, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 		curl_setopt($process, CURLOPT_USERPWD, $username . ":" . $password);
 		curl_setopt($process, CURLOPT_TIMEOUT, 30);
@@ -56,7 +56,7 @@ if (file_exists($guisettingsFile)) {
 			}else{
 				$errorCode = '';
 				curl_close($process);
-				echo $myPlexAuthToken;
+				
 			}	
 		}
 		
