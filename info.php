@@ -41,7 +41,7 @@
 					
 					<li><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
 					<li><a href="history.php"><i class="icon-2x icon-calendar icon-white" data-toggle="tooltip" data-placement="bottom" title="History" id="history"></i></a></li>
-					<li><a href="users.php"><i class="icon-2x icon-user icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
+					<li><a href="users.php"><i class="icon-2x icon-group icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
 					<li><a href="charts.php"><i class="icon-2x icon-bar-chart icon-white" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
 					<li><a href="settings.php"><i class="icon-2x icon-wrench icon-white" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
 					
@@ -195,16 +195,16 @@
 							echo "<table id='globalHistory' class='display'>";
 								echo "<thead>";
 									echo "<tr>";
-										echo "<th align='center'><i class='icon-calendar icon-white'></i> Date</th>";
-										echo "<th align='left'><i class='icon-user icon-white'></i> User</th>";
-										echo "<th align='left'><i class='icon-hdd icon-white'></i> Platform</th>";
-										echo "<th align='left'><i class='icon-globe icon-white'></i> IP Address</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Date</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> User</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> Platform</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> IP Address</th>";
 										
-										echo "<th align='center'><i class='icon-play icon-white'></i> Started</th>";
-										echo "<th align='center'><i class='icon-pause icon-white'></i> Paused</th>";
-										echo "<th align='center'><i class='icon-stop icon-white'></i> Stopped</th>";
-										echo "<th align='center'><i class='icon-time icon-white'></i> Duration</th>";
-										echo "<th align='center'>Completed</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Started</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Paused</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Stopped</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Duration</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Completed</th>";
 									echo "</tr>";
 								echo "</thead>";
 								echo "<tbody>";
@@ -649,16 +649,16 @@
 							echo "<table id='globalHistory' class='display'>";
 								echo "<thead>";
 									echo "<tr>";
-										echo "<th align='center'><i class='icon-calendar icon-white'></i> Date</th>";
-										echo "<th align='left'><i class='icon-user icon-white'></i> User</th>";
-										echo "<th align='left'><i class='icon-hdd icon-white'></i> Platform</th>";
-										echo "<th align='left'><i class='icon-globe icon-white'></i> IP Address</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Date</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> User</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> Platform</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> IP Address</th>";
 										
-										echo "<th align='center'><i class='icon-play icon-white'></i> Started</th>";
-										echo "<th align='center'><i class='icon-pause icon-white'></i> Paused</th>";
-										echo "<th align='center'><i class='icon-stop icon-white'></i> Stopped</th>";
-										echo "<th align='center'><i class='icon-time icon-white'></i> Duration</th>";
-										echo "<th align='center'>Completed</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Started</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Paused</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Stopped</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Duration</th>";
+										echo "<th align='center'><i class='icon-sort icon-white'></i> Completed</th>";
 									echo "</tr>";
 								echo "</thead>";
 								echo "<tbody>";

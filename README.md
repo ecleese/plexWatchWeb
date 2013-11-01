@@ -1,4 +1,4 @@
-plexWatch/Web - v1.4.0 dev
+plexWatch/Web - v1.4.0
 ======================
 
 A web front-end for plexWatch.
@@ -81,7 +81,8 @@ A web front-end for plexWatch.
 * plexWatch (v0.1.6+)
 * a web server that supports php (apache, nginx, XAMPP, WampServer, EasyPHP, lighttpd, etc)
 * php5
-* php5-sqlite
+* php-sqlite
+* php-curl
 
 
 ### Install 

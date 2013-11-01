@@ -1,5 +1,5 @@
 <?php
-  /* ini_set('display_errors', 1); // for debugging - we might want this set to 0 in production */
+  ini_set('display_errors', 1); // for debugging - we might want this set to 0 in production */
 
 if(!isset($_SESSION))  { session_start();  }
 

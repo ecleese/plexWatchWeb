@@ -1,4 +1,10 @@
-1.4.0.9 dev
+1.4.0 final
+* Change: 	merge with master branch
+
+
+1.4.0.10 dev
+* Change:	info.php: icons for table heading
+* Change:	global: main menu icon for users
 * Fix:		global: gravatar image for a 404 response would display no image
 * Change:	version numbering scheme adjustment. It should now follow this scheme (major.minor.maintenance.development) (branch: master, dev, etc)
 * Add:		user.php: included a few more platform checks from db platform if xml platform is empty (apple tv)
