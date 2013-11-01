@@ -51,7 +51,7 @@ if (file_exists($guisettingsFile)) {
 			$myPlexAuthToken = $xml['authenticationToken'];
 			
 			if (empty($myPlexAuthToken)) {
-				$errorCode = "<i class=\"icon icon-exclamation-sign\"></i> Error: Could parse myPlex XML to retrieve authentication code.";
+				$errorCode = "<i class=\"icon icon-exclamation-sign\"></i> Error: Could not parse myPlex XML to retrieve authentication code.";
 				curl_close($process);
 			}else{
 				$errorCode = '';
