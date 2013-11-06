@@ -7751,10 +7751,10 @@ left: 0px;
 }
 
 .user-overview-stats-instance h3 {
-font-size: 24px;
+font-size: 30px;
 font-weight: bold;
 color: #ff9d00;
-line-height: 24px;
+line-height: 22px;
 position: relative;
 top: 0px;
 margin-left: 5px;
@@ -7913,10 +7913,10 @@ margin-left: 10px;
 
 
 .user-platforms-instance-playcount  h3{
-font-size: 24px;
+font-size: 30px;
 font-weight: bold;
 color: #ff9d00;
-line-height: 24px;
+line-height: 22px;
 position: relative;
 top: 5px;
 margin-left: 10px;
@@ -7931,4 +7931,46 @@ float: left;
 position: relative;
 top: 15px;
 left: 0px;
+}
+
+.stats {
+
+}
+
+.stats ul {
+list-style: none;
+margin: 0 0 0 0;
+-webkit-padding-start: 0px;
+}
+
+
+.stats li {
+width: 138px;
+float: left;
+margin-right: 27px;
+position: relative;
+margin-top: -10px;
+margin-bottom: 20px;
+}
+
+
+.stats h1 {
+font-size: 36px;
+font-weight: bold;
+color: #ff9d00;
+line-height: 36px;
+text-align: center;
+margin: 0 0 0 0;
+}
+
+.stats h5 {
+font-size: 13px;
+line-height: 15px;
+color: #fff;
+font-weight: bold;
+position: relative;
+top: 5px;
+left: 0px;
+text-align: center;
+margin: 0 0 0 0;
 }

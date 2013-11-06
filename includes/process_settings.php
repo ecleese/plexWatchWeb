@@ -1,6 +1,6 @@
 <?php
     session_start();
-    $plexWatchVer = "\$plexWatch['version'] = '1.4.0';";
+    $plexWatchVer = "\$plexWatch['version'] = '1.5.0.1 dev';";
         
     $pmsIp = "\$plexWatch['pmsIp'] = '".$_POST['pmsIp']."';";        
         $pmsHttpPort = "\$plexWatch['pmsHttpPort'] = '".$_POST['pmsHttpPort']."';";

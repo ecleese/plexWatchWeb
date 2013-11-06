@@ -264,7 +264,7 @@
 								$top10EpisodesXml = simplexml_load_string($top10Episodes['xml']) ;  
 								
 								
-									$top10EpisodesXmlEpisodeThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$top10EpisodesXml['parentThumb']."&width=100&height=149";
+									$top10EpisodesXmlEpisodeThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$top10EpisodesXml['grandparentThumb']."&width=100&height=149";
 								
 								
 								if ($top10EpisodesXml['type'] == "episode") {

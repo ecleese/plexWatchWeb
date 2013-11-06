@@ -1,3 +1,9 @@
+1.5.0.1 dev
+* Remove:	index.php: Plex status which was really just a placeholder
+* Add:		index.php: Plex Media Server stat section counts (movies,tv shows, users) (more to come)
+* Change:	global: minor font size changes
+* Change:	charts.php: Top 10 episodes now use show poster rather than season poster
+
 1.4.0 master
 * Change:	version bump to master
 
