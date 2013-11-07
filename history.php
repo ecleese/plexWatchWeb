@@ -70,6 +70,7 @@
 					echo "<div class='history-charts-instance'><div class='wellbg'><strong>Hourly Plays</strong><br><figure style='width: 540px; height: 200px;' id='playChartHourly'></figure></div></div>";
 					echo "<div class='history-charts-instance'><div class='wellbg'><strong>Daily Plays</strong><br><figure style='width: 540px; height: 200px;' id='playChartDaily'></figure></div></div>";
 					echo "<div class='history-charts-instance'><div class='wellbg'><strong>Monthly Plays</strong><br><figure style='width: 540px; height: 200px;' id='playChartMonthly'></figure></div></div>";
+					echo "<div class='history-charts-instance'><div class='wellbg'><strong>Max Hourly Plays</strong><br><figure style='width: 540px; height: 200px;' id='playChartMaxHourly'></figure></div></div>";
 				
 				echo "</div>";
 		echo "</div>";
@@ -129,6 +130,17 @@
 						$hourlyPlayCount[$hourlyPlaysNum] = $hourlyPlay['count'];
 						$hourlyPlayTotal = "{ \"x\": \"".$hourlyPlayDate[$hourlyPlaysNum]."\", \"y\": ".$hourlyPlayCount[$hourlyPlaysNum]." }, ";
 						$hourlyPlayFinal .= $hourlyPlayTotal;
+					}
+
+					$maxhourlyPlays = $db->query("SELECT strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) as date, COUNT(title) as count FROM $plexWatchDbTable GROUP BY strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) ORDER BY count(*) desc limit 20;") or die ("Failed to access plexWatch database. Please check your settings.");
+					$maxhourlyPlaysNum = 0;
+					$maxhourlyPlayFinal = '';
+					while ($maxhourlyPlay = $maxhourlyPlays->fetchArray()) {
+						$maxhourlyPlaysNum++;
+						$maxhourlyPlayDate[$maxhourlyPlaysNum] = $maxhourlyPlay['date'];
+						$maxhourlyPlayCount[$maxhourlyPlaysNum] = $maxhourlyPlay['count'];
+						$maxhourlyPlayTotal = "{ \"x\": \"".$maxhourlyPlayDate[$maxhourlyPlaysNum]."\", \"y\": ".$maxhourlyPlayCount[$maxhourlyPlaysNum]." }, ";
+						$maxhourlyPlayFinal .= $maxhourlyPlayTotal;
 					}
 						
 							
@@ -351,6 +363,46 @@
 	  }
 	};
 	var myChart = new xChart('line-dotted', data, '#playChartHourly', opts);
+	</script>
+
+	<script>
+	var tt = document.createElement('div'),
+	  leftOffset = -(~~$('html').css('padding-left').replace('px', '') + ~~$('body').css('margin-left').replace('px', '')),
+	  topOffset = -35;
+	tt.className = 'ex-tooltip';
+	document.body.appendChild(tt);
+
+	var data = {
+	  "xScale": "ordinal",
+	  "yScale": "linear",
+	  
+	  "main": [
+		{
+		  "className": ".maxplayChartHourly",
+		  "data": [
+			<?php echo $maxhourlyPlayFinal ?>
+		  ]
+		}
+	  ]
+	};
+	var opts = {
+	  "dataFormatX": function (x) { return d3.time.format('%Y-%m-%d %H').parse(x); },
+	  "tickFormatX": function (x) { return d3.time.format('%b %e')(x); },
+	  "paddingLeft": ('25'),
+	  "paddingRight": ('35'),
+	  "paddingTop": ('10'),
+	  "tickHintY": ('5'),
+	  "mouseover": function (d, i) {
+		var pos = $(this).offset();
+		$(tt).text(d3.time.format('%-I:00 %p')(d.x) + ': ' + d.y + ' play(s)')
+		  .css({top: topOffset + pos.top, left: pos.left + leftOffset})
+		  .show();
+	  },
+	  "mouseout": function (x) {
+		$(tt).hide();
+	  }
+	};
+	var myChart = new xChart('line-dotted', data, '#playChartMaxHourly', opts);
 	</script>
 	
 	<script>
