@@ -9,6 +9,7 @@
 
     <!-- css -->
     <link href="css/plexwatch.css" rel="stylesheet">
+	<link href="css/plexwatch-tables.css" rel="stylesheet">
 	<link href="css/font-awesome.min.css" rel="stylesheet" >
     <style type="text/css">
       body {
@@ -63,71 +64,114 @@
 		<div class='row-fluid'>
 			<div class='span12'>
 			<?php
-			$guisettingsFile = "config/config.php";
-			
-			if (file_exists($guisettingsFile)) { 
-				require_once(dirname(__FILE__) . '/config/config.php');
-			}else{
-				header("Location: settings.php");
-			}
+				$guisettingsFile = "config/config.php";
 				
-			if ($plexWatch['https'] == 'yes') {
-				$plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
-			}else if ($plexWatch['https'] == 'no') {
-				$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
-			}	
-			
-			if (!empty($plexWatch['myPlexAuthToken'])) {
-					$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
-					
+				if (file_exists($guisettingsFile)) { 
+					require_once(dirname(__FILE__) . '/config/config.php');
 				}else{
-					$myPlexAuthToken = '';
+					header("Location: settings.php");
+				}
 					
-			}
-			
+				if ($plexWatch['https'] == 'yes') {
+					$plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
+				}else if ($plexWatch['https'] == 'no') {
+					$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
+				}	
 				
-			date_default_timezone_set(@date_default_timezone_get());
-
-			$db = dbconnect();
-			
-			if ($plexWatch['chartsGrouping'] == "yes") {
-				$plexWatchDbTable = "grouped";
-			}else if ($plexWatch['chartsGrouping'] == "no") {
-				$plexWatchDbTable = "processed";
-			}
-			
-			$users = $db->query("SELECT user as users,xml FROM ".$plexWatchDbTable." GROUP BY user ORDER BY users") or die ("Failed to access plexWatch database. Please check your settings.");
-		
-			echo "<div class='span12'>";
-			echo "<div class='wellbg'>";
-				echo "<div class='wellheader'>";
-					echo "<div class='dashboard-wellheader'>";
-					echo "<h3>Users</h3>";
-					echo "</div>";
-				echo "</div>";
-				echo "<ul class='dashboard-users'>";
-					// Run through each feed item
-				while ($user = $users->fetchArray()) {
-				
-				$userXml = simplexml_load_string($user['xml']) ;                         
-						echo "<li>";
-						if (empty($userXml->User['thumb'])) {				
-							echo "<div class='users-poster-face'><a href='user.php?user=".$user['users']."'><img src='images/gravatar-default-80x80.png'></></a></div>";
-						}else if (strstr($userXml->User['thumb'], "?d=404")) {
-							echo "<div class='users-poster-face'><a href='user.php?user=".$user['users']."'><img src='images/gravatar-default-80x80.png'></></a></div>";
-						}else{
-							echo "<div class='users-poster-face'><a href='user.php?user=".$user['users']."'><img src='".$userXml->User['thumb']."'></></a></div>";
-						}
-						echo "<div class='clearfix'></div>";
-						echo "<div class=dashboard-users-metacontainer>";
+				if (!empty($plexWatch['myPlexAuthToken'])) {
+						$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
 						
-							echo FriendlyName($user['users']);
-						
-						echo "</div>";
-						echo "</li>";
+					}else{
+						$myPlexAuthToken = '';
 						
 				}
-				?>
+				
+					
+				date_default_timezone_set(@date_default_timezone_get());
+
+				$db = dbconnect();
+				
+				if ($plexWatch['userHistoryGrouping'] == "yes") {
+					$plexWatchDbTable = "grouped";
+				}else if ($plexWatch['userHistoryGrouping'] == "no") {
+					$plexWatchDbTable = "processed";
+				}
+				
+				$users = $db->query("SELECT COUNT(title) as plays, user, time, SUM(time) as totaltime, SUM(stopped) as stopped, SUM(paused_counter) as paused_counter, platform, ip_address, xml FROM ".$plexWatchDbTable." GROUP BY user ORDER BY user ASC") or die ("Failed to access plexWatch database. Please check your settings.");
+			
+				echo "<div class='span12'>";
+				echo "<div class='wellbg'>";
+					echo "<div class='wellheader'>";
+						echo "<div class='dashboard-wellheader'>";
+						echo "<h3>User List</h3>";
+						echo "</div>";
+					echo "</div>";
+					
+					echo "<table id='usersTable' class='display'>";
+						echo "<thead>";
+							echo "<tr>";
+								echo "<th align='left'>User </th>";
+								echo "<th align='left'>Last Seen </th>";
+								echo "<th align='left'>Last Known IP </th>";
+								echo "<th align='left'>Total Plays</th>";
+								echo "<th align='left'>Total Watching Time</th>";
+							echo "</tr>";
+						echo "</thead>";
+						echo "<tbody>";
+					
+						// Run through each feed item
+						while ($user = $users->fetchArray()) {
+					
+							$userXml = simplexml_load_string($user['xml']) ;                         
+
+											echo "<tr>";
+												echo "<td>";
+													
+												
+													echo "<a href='user.php?user=".$user['user']."'> ".FriendlyName($user['user'],$user['platform'])."</a>";
+												echo "</td>";
+												
+												require_once(dirname(__FILE__) . '/includes/timeago.php');
+												$lastSeenTime = $user['time'];
+
+												echo "<td>".TimeAgo($lastSeenTime)."</td>";
+												
+												echo "<td>".$user['ip_address']."</td>";
+												
+												echo "<td>".$user['plays']." plays</td>";
+												
+												
+												
+												
+												$userStatsAlltimeTimeViewedTime = 0;
+												
+													$userStatsAlltimeTimeToTimeRow = strtotime(date("m/d/Y g:i a",$user['stopped']));
+													$userStatsAlltimeTimeFromTimeRow = strtotime(date("m/d/Y g:i a",$user['totaltime']));
+													$userStatsAlltimeTimePausedTimeRow = round(abs($user['paused_counter']) ,1);			
+													$userStatsAlltimeTimeViewedTimeRow = round(abs($userStatsAlltimeTimeToTimeRow - $userStatsAlltimeTimeFromTimeRow - $userStatsAlltimeTimePausedTimeRow) ,0);
+													$userStatsAlltimeTimeViewedTimeRowLength = strlen($userStatsAlltimeTimeViewedTimeRow);
+													
+													$userStatsAlltimeTimeViewedTime += $userStatsAlltimeTimeViewedTimeRow;
+													$userStatsAlltimeTimeViewedTimeDays = floor($userStatsAlltimeTimeViewedTime / 86400);
+													$userStatsAlltimeTimeViewedTimeHours = floor(($userStatsAlltimeTimeViewedTime % 86400 ) / 3600);
+													$userStatsAlltimeTimeViewedTimeMinutes = floor(($userStatsAlltimeTimeViewedTime % 3600 ) / 60);
+													
+												
+													echo "<td>".$userStatsAlltimeTimeViewedTimeDays."d ".$userStatsAlltimeTimeViewedTimeHours."h ".$userStatsAlltimeTimeViewedTimeMinutes."m </td>";
+												
+												
+											echo "</tr>";   
+
+										
+						}
+						
+						echo "</tbody>";
+						echo "</table>";
+					
+				
+			?>
+			
+			
 		</div><!--/.fluid-row-->			
 			
 			
@@ -143,6 +187,24 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery-2.0.3.js"></script>
 	<script src="js/bootstrap.js"></script>
+	<script src="js/jquery.dataTables.js"></script>
+	<script src="js/jquery.dataTables.plugin.bootstrap_pagination.js"></script>
+	<script>
+		$(document).ready(function() {
+			var oTable = $('#usersTable').dataTable( {
+				"bPaginate": true,
+				"bLengthChange": true,
+				"bFilter": true,
+				"bSort": true,
+				"bInfo": true,
+				"bAutoWidth": true,
+				"aaSorting": [[ 0, "asc" ]],
+				"bStateSave": false,
+				"bSortClasses": true,
+				"sPaginationType": "bootstrap"	
+			} );
+		} );
+	</script>
 	
 	<script>
 	$(document).ready(function() {

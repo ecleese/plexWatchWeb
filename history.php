@@ -67,11 +67,11 @@
 						echo "</div>";
 					echo "</div>";
 					
-					echo "<div class='history-charts-instance'><div class='wellbg'><strong>Hourly Plays</strong><br><figure style='width: 540px; height: 200px;' id='playChartHourly'></figure></div></div>";
-					echo "<div class='history-charts-instance'><div class='wellbg'><strong>Daily Plays</strong><br><figure style='width: 540px; height: 200px;' id='playChartDaily'></figure></div></div>";
-					echo "<div class='history-charts-instance'><div class='wellbg'><strong>Monthly Plays</strong><br><figure style='width: 540px; height: 200px;' id='playChartMonthly'></figure></div></div>";
-					echo "<div class='history-charts-instance'><div class='wellbg'><strong>Max Hourly Plays</strong><br><figure style='width: 540px; height: 200px;' id='playChartMaxHourly'></figure></div></div>";
-				
+					echo "<div class='history-charts-instance'><div class='wellbg'><strong>Hourly Plays </strong>(Last 24 Hours)<br><figure style='width: 380px; height: 150px;' id='playChartHourly'></figure></div></div>";
+					echo "<div class='history-charts-instance'><div class='wellbg'><strong>Max Hourly Plays</strong><br><figure style='width: 380px; height: 150px;' id='playChartMaxHourly'></figure></div></div>";
+					echo "<div class='history-charts-instance'><div class='wellbg'><strong>Daily Plays</strong><br><figure style='width: 380px; height: 150px;' id='playChartDaily'></figure></div></div>";
+					echo "<div class='history-charts-instance'><div class='wellbg'><strong>Monthly Plays</strong><br><figure style='width: 400px; height: 150px;' id='playChartMonthly'></figure></div></div>";
+					
 				echo "</div>";
 		echo "</div>";
 		echo "<div class='row-fluid'>";
@@ -178,7 +178,7 @@
 					echo "<table id='globalHistory' class='display'>";
 						echo "<thead>";
 							echo "<tr>";
-								echo "<th align='center'><i class='icon-sort icon-white'></i> Date</th>";
+								echo "<th align='left'><i class='icon-sort icon-white'></i> Date</th>";
 								echo "<th align='left'><i class='icon-sort icon-white'></i> User </th>";
 								echo "<th align='left'><i class='icon-sort icon-white'></i> Platform</th>";
 								echo "<th align='left'><i class='icon-sort icon-white'></i> IP Address</th>";
@@ -402,7 +402,7 @@
 		$(tt).hide();
 	  }
 	};
-	var myChart = new xChart('line-dotted', data, '#playChartMaxHourly', opts);
+	var myChart = new xChart('bar', data, '#playChartMaxHourly', opts);
 	</script>
 	
 	<script>
@@ -430,7 +430,7 @@
 	  "paddingLeft": ('25'),
 	  "paddingRight": ('35'),
 	  "paddingTop": ('10'),
-	  "tickHintY": ('10'),
+	  "tickHintY": ('5'),
 	  "mouseover": function (d, i) {
 		var pos = $(this).offset();
 		$(tt).text(d3.time.format('%b %e')(d.x) + ': ' + d.y + ' play(s)')
@@ -469,7 +469,7 @@
 	  "paddingLeft": ('25'),
 	  "paddingRight": ('35'),
 	  "paddingTop": ('10'),
-	  "tickHintY": ('10'),
+	  "tickHintY": ('5'),
 	  "mouseover": function (d, i) {
 		var pos = $(this).offset();
 		$(tt).text(d3.time.format('%b')(d.x) + ': ' + d.y + ' play(s)')

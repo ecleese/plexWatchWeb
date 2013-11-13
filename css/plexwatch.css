@@ -1191,6 +1191,9 @@ table th[class*="span"],
 .table-hover tbody tr.info:hover > td {
   background-color: #c4e3f3;
 }
+
+
+
 form {
  
 }
@@ -3237,7 +3240,7 @@ text-shadow: 0 0 10px rgba(255,255,255,0.85);
 .nav-list {
   
   padding-right: 0px;
-  margin-bottom: 0;
+  margin-bottom: 30px;
   margin-right: 0px;
   background-color: rgba(0,0,0,0.25);
 -webkit-box-shadow: inset 0 2px 5px rgba(0,0,0,0.25);
@@ -6588,12 +6591,20 @@ perspective: 1000;
 -ms-backface-visibility: hidden;
 -o-backface-visibility: hidden;
 backface-visibility: hidden;
+float: left;
 }
 
 .users-poster-face img:hover{
 webkit-box-shadow: 0 0 0 2px #ff9d00;
 -moz-box-shadow: 0 0 0 2px #ff9d00;
 box-shadow: 0 0 0 2px #ff9d00;
+}
+
+
+.users-name {
+position: relative;
+top: 5px;
+left: 10px;
 }
 
 .wellbg {
@@ -6861,8 +6872,12 @@ overflow: hidden;
 position: relative;
 white-space: nowrap;
 font-size: 12px;
-width: 80px;
-text-align: center;
+
+
+}
+
+.dashboard-users-metacontainer a:hover {
+text-decoration: none;
 }
 
 .dashboard-status-wrapper {
@@ -7950,7 +7965,7 @@ float: left;
 margin-right: 27px;
 position: relative;
 margin-top: -10px;
-margin-bottom: 20px;
+margin-bottom: 30px;
 }
 
 

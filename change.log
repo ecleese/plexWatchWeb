@@ -1,11 +1,20 @@
+1.5.0.2 dev
+* Add:		user.php: separated ip address information from user history by including a new tab
+* Change:	users.php: modified user list to use table view which includes more details about each user
+* Add:		history.php: max hourly plays (ljunkie)
+* Fix:		index.php: fix hardcoded library section (ljunkie)
+
+
 1.5.0.1 dev
 * Remove:	index.php: Plex status which was really just a placeholder
-* Add:		index.php: Plex Media Server stat section counts (movies,tv shows, users) (more to come)
+* Add:		index.php: Plex Media Server stat section counts (movies,tv shows, users)
 * Change:	global: minor font size changes
 * Change:	charts.php: Top 10 episodes now use show poster rather than season poster
 
+
 1.4.0 master
 * Change:	version bump to master
+
 
 1.4.0.11 dev
 * Add:		myplex.php: xml parse error checking when trying to authenticate with myPlex

@@ -182,6 +182,7 @@
 					echo "<div class='user-info-nav'>";
 						echo "<ul class='user-info-nav'>";
 							echo "<li class='active'><a href='#profile' data-toggle='tab'>Profile</a></li>";
+							echo "<li><a href='#userAddresses' data-toggle='tab'>IP Addresses</a></li>";
 							echo "<li><a href='#userHistory' data-toggle='tab'>History</a></li>";
 							
 						echo "</ul>";
@@ -565,7 +566,7 @@
 			
 		echo "</div>";
 			
-		echo "<div class='tab-pane' id='userHistory'>";
+		echo "<div class='tab-pane' id='userAddresses'>";
 		
 			$userIpAddressesQuery = $db->query("SELECT time,ip_address,platform, COUNT(ip_address) as play_count FROM processed WHERE user = '$user' GROUP BY ip_address ORDER BY time DESC");
 
@@ -577,7 +578,7 @@
 							echo "<div class='wellheader'>";
 							
 								echo "<div class='dashboard-wellheader'>";
-										echo"<h3>User Public IP Address History</h3>";
+										echo"<h3>Public IP Addresses for <strong>".$user."</strong></h3>";
 								echo"</div>";
 							
 							echo"</div>";
@@ -637,8 +638,9 @@
 					echo "</div>";
 				echo "</div>";
 			echo "</div>";
-			
-			
+		
+		echo "</div>";
+		echo "<div class='tab-pane' id='userHistory'>";	
 		
 			echo "<div class='container-fluid'>";	
 				echo "<div class='row-fluid'>";
