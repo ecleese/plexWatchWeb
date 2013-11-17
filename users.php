@@ -138,7 +138,7 @@
 												
 												echo "<td>".$user['ip_address']."</td>";
 												
-												echo "<td>".$user['plays']." plays</td>";
+												echo "<td>".$user['plays']."</td>";
 												
 												
 												

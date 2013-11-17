@@ -1,6 +1,5 @@
 <?php
     session_start();
-    $plexWatchVer = "\$plexWatch['version'] = '1.5.0.2 dev';";
         
     $pmsIp = "\$plexWatch['pmsIp'] = '".$_POST['pmsIp']."';";        
         $pmsHttpPort = "\$plexWatch['pmsHttpPort'] = '".$_POST['pmsHttpPort']."';";
@@ -40,7 +39,7 @@
         }
         
         //combine all data into one variable
-        $data = "$plexWatchVer\r$pmsIp\r$pmsHttpPort\r$pmsHttpsPort\r$https\r$plexWatchDb\r$myPlexUser\r$myPlexPass\r$globalHistoryGrping\r$userHistoryGrping\r$chartsGrping";
+        $data = "$pmsIp\r$pmsHttpPort\r$pmsHttpsPort\r$https\r$plexWatchDb\r$myPlexUser\r$myPlexPass\r$globalHistoryGrping\r$userHistoryGrping\r$chartsGrping";
         
         $file = "../config/config.php";
         $func_file = dirname(dirname(__FILE__)) . '/includes/functions.php';
@@ -60,7 +59,7 @@
         $myPlexToken = "\$plexWatch['myPlexAuthToken'] = '".$myPlexAuthToken."';";
         
         //include authentication code in saved data
-        $data = "$plexWatchVer\r$pmsIp\r$pmsHttpPort\r$pmsHttpsPort\r$https\r$plexWatchDb\r$myPlexUser\r$myPlexPass\r$myPlexToken\r$globalHistoryGrping\r$userHistoryGrping\r$chartsGrping";
+        $data = "$pmsIp\r$pmsHttpPort\r$pmsHttpsPort\r$https\r$plexWatchDb\r$myPlexUser\r$myPlexPass\r$myPlexToken\r$globalHistoryGrping\r$userHistoryGrping\r$chartsGrping";
         
         //rewrite data to config.php
         $fp = fopen($file, "w+") or die("Cannot open file $file.");

@@ -244,9 +244,6 @@
 		$('#settings').tooltip();
 	});
 	</script>
-	
-	
-
 
 
   </body>

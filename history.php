@@ -66,14 +66,14 @@
 							echo "<h3>Watching History Stats</h3>";
 						echo "</div>";
 					echo "</div>";
-					
-					echo "<div class='history-charts-instance'><div class='wellbg'><strong>Hourly Plays </strong>(Last 24 Hours)<br><figure style='width: 380px; height: 150px;' id='playChartHourly'></figure></div></div>";
-					echo "<div class='history-charts-instance'><div class='wellbg'><strong>Max Hourly Plays</strong><br><figure style='width: 380px; height: 150px;' id='playChartMaxHourly'></figure></div></div>";
-					echo "<div class='history-charts-instance'><div class='wellbg'><strong>Daily Plays</strong><br><figure style='width: 380px; height: 150px;' id='playChartDaily'></figure></div></div>";
-					echo "<div class='history-charts-instance'><div class='wellbg'><strong>Monthly Plays</strong><br><figure style='width: 400px; height: 150px;' id='playChartMonthly'></figure></div></div>";
-					
+					echo "<div class='row-fluid'>";
+						echo "<div class='span3'><div class='wellbg'><strong>Hourly Plays </strong>(Last 24 Hours)<br><div class='history-charts-instance-chart' id='playChartHourly'></div></div></div>";
+						echo "<div class='span3'><div class='wellbg'><strong>Max Hourly Plays</strong><br><div class='history-charts-instance-chart' id='playChartMaxHourly'></div></div></div>";
+						echo "<div class='span3'><div class='wellbg'><strong>Daily Plays</strong><br><div class='history-charts-instance-chart'  id='playChartDaily'></div></div></div>";
+						echo "<div class='span3'><div class='wellbg'><strong>Monthly Plays</strong><br><div class='history-charts-instance-chart' id='playChartMonthly'></div></div></div>";
+					echo "</div>";
 				echo "</div>";
-		echo "</div>";
+			echo "</div>";
 		echo "<div class='row-fluid'>";
 			echo "<div class='span12'>";
 				echo "<div class='wellbg'>";

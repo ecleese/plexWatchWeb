@@ -7827,20 +7827,15 @@ list-style: none;
 }
 
 
-
-.history-charts-instance {
-float: left;
-margin-right: 20px;
-}
-
-
-.history-charts-instance figure {
+.history-charts-instance-chart {
 -webkit-margin-before: 1em;
 -webkit-margin-after: 1em;
 -webkit-margin-start: 0px;
 -webkit-margin-end: 0px;
-
+width: 100%;
+height: 150px;
 }
+
 
 .ex-tooltip{
 position: absolute;

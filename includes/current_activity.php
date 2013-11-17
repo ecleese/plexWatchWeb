@@ -92,7 +92,7 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 											
 								
 								echo "</div>";
-										echo "<div id='infoDetails-".$sessions->Player['machineIdentifier']."' class='collapse out'>";
+										echo "<div id=\"infoDetails-".$sessions->Player['machineIdentifier']."\" class=\"collapse in\">";
 											
 											echo "<div class='dashboard-activity-info-details-overlay'>";
 												echo "<div class='dashboard-activity-info-details-content'>";
@@ -215,7 +215,7 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 											
 								
 								echo "</div>";
-										echo "<div id='infoDetails-".$sessions->Player['machineIdentifier']."' class='collapse out'>";
+										echo "<div id='infoDetails-".$sessions->Player['machineIdentifier']."' class='collapse in'>";
 											
 											echo "<div class='dashboard-activity-info-details-overlay'>";
 												echo "<div class='dashboard-activity-info-details-content'>";
@@ -335,7 +335,7 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 										}
 									}
 									echo "</div>";
-									echo "<div id='infoDetails-".$sessions->Player['machineIdentifier']."' class='collapse out'>";
+									echo "<div id='infoDetails-".$sessions->Player['machineIdentifier']."' class='collapse in'>";
 											
 											echo "<div class='dashboard-activity-info-details-overlay'>";
 												echo "<div class='dashboard-activity-info-details-content'>";
@@ -451,7 +451,7 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 										}
 									}
 									echo "</div>";
-									echo "<div id='infoDetails-".$sessions->Player['machineIdentifier']."' class='collapse out'>";
+									echo "<div id='infoDetails-".$sessions->Player['machineIdentifier']."' class='collapse in'>";
 											
 											echo "<div class='dashboard-activity-info-details-overlay'>";
 												echo "<div class='dashboard-activity-info-details-content'>";

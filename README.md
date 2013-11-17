@@ -1,4 +1,4 @@
-plexWatch/Web - v1.5.0.2 dev
+plexWatch/Web - v1.5.0.3 dev
 ======================
 
 A web front-end for plexWatch.
@@ -83,6 +83,7 @@ A web front-end for plexWatch.
 * php5
 * php-sqlite
 * php-curl
+* php-json
 
 
 ### Install 

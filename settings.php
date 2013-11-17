@@ -113,7 +113,7 @@
 							</div>
 							<div class="settings-general-info">
 								<ul>
-									<li>plexWatch/Web Version: <strong>v<?php echo $plexWatch['version'] ?></strong></li>	
+									<li>plexWatch/Web Version: <strong>v1.5.0.3 dev</strong></li>	
 								
 									<?php
 									$db = new SQLite3($plexWatch['plexWatchDb']);
@@ -510,17 +510,50 @@
 						}else{
 							echo "<li><i class='icon icon-warning-sign'></i> PHP Version: <strong><span class='label label-important'>No information available</strong></span></li>";
 						}
-						$sqliteVer = SQLite3::version();
-						if (!empty($sqliteVer)) {
-							echo "<li><i class='icon icon-ok'></i> PHP SQLite Support: <strong><span class='label label-success'>v".$sqliteVer['versionString']."</strong></span></li>";
+						$sqliteVersion = SQLite3::version();
+						if (!empty($sqliteVersion)) {
+							echo "<li><i class='icon icon-ok'></i> PHP SQLite Support: <strong><span class='label label-success'>v".$sqliteVersion['versionString']."</strong></span></li>";
 						}else{
 							echo "<li><i class='icon icon-warning-sign'></i> PHP SQLite Support: <strong><span class='label label-important'>No information available</strong></span></li>";
 						}
 						
-						$version = curl_version();
-						echo "<li><i class='icon icon-ok'></i> PHP Curl Support: <strong><span class='label label-success'>" .$version['version']. "</span></strong>  / SSL Support: <strong><span class='label label-success'>" .$version['ssl_version']."</strong></span></li>";	
+						$curlVersion = curl_version();
+						echo "<li><i class='icon icon-ok'></i> PHP Curl Support: <strong><span class='label label-success'>" .$curlVersion['version']. "</span></strong>  / SSL Support: <strong><span class='label label-success'>" .$curlVersion['ssl_version']."</strong></span></li>";	
 						
-						echo "<li><i class='icon icon-ok'></i> Your server's timezone: <strong><span class='label label-success'>".@date_default_timezone_get()."</strong></span></li>";	
+						
+						$json[] = '{"Yes":""}';
+						foreach ($json as $string) {
+							
+							json_decode($string);
+
+							switch (json_last_error()) {
+								case JSON_ERROR_NONE:
+									echo "<li><i class='icon icon-ok'></i> PHP JSON Support: <strong><span class='label label-success'>Yes</span></strong></li>";	
+									break;
+								case JSON_ERROR_DEPTH:
+									echo "<li><i class='icon icon-ok'></i> PHP JSON Support: <strong><span class='label label-important'>Maximum stack depth exceeded</span></strong></li>";
+									break;
+								case JSON_ERROR_STATE_MISMATCH:
+									echo "<li><i class='icon icon-ok'></i> PHP JSON Support: <strong><span class='label label-important'>Underflow or the modes mismatch</span></strong></li>";
+									break;
+								case JSON_ERROR_CTRL_CHAR:
+									echo "<li><i class='icon icon-ok'></i> PHP JSON Support: <strong><span class='label label-important'>Unexpected control character found</span></strong></li>";
+									break;
+								case JSON_ERROR_SYNTAX:
+									echo "<li><i class='icon icon-ok'></i> PHP JSON Support: <strong><span class='label label-important'>Syntax error, malformed JSON</span></strong></li>";
+									break;
+								case JSON_ERROR_UTF8:
+									echo "<li><i class='icon icon-ok'></i> PHP JSON Support: <strong><span class='label label-important'>Malformed UTF-8 characters, possibly incorrectly encoded</span></strong></li>";
+									break;
+								default:
+									echo "<li><i class='icon icon-ok'></i> PHP JSON Support: <strong><span class='label label-important'>No (Unknown Error)</span></strong></li>";
+									break;
+							}
+						}
+						
+						
+						
+						echo "<li><i class='icon icon-ok'></i> Your server's timezone: <strong><span class='label label-warning'>".@date_default_timezone_get()."</strong></span></li>";	
 						
 						
 						
