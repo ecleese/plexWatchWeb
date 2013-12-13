@@ -81,8 +81,8 @@ A web front-end for plexWatch.
 * plexWatch (v0.1.6+)
 * a web server that supports php (apache, nginx, XAMPP, WampServer, EasyPHP, lighttpd, etc)
 * php5
-* php-sqlite
-* php-curl
+* php5-sqlite
+* php5-curl
 
 
 ### Install 
