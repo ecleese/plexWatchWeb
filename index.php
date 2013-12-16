@@ -74,14 +74,18 @@
 				}else if ($plexWatch['https'] == 'no') {
 					$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
 				}
-				
+
 				if (!empty($plexWatch['myPlexAuthToken'])) {
 					$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
-					$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$myPlexAuthToken."") or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
+               if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$myPlexAuthToken."")) {
+				      $statusSessions = simplexml_load_string($fileContents) or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
+                }
 
 				}else{
 					$myPlexAuthToken = '';
-					$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
+               if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/status/sessions")) {
+					   $statusSessions = simplexml_load_string($fileContents) or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
+               }
 
 				}	
 				
