@@ -1,3 +1,6 @@
+1.4.1 master
+* Fix:    global: attempt to correct error related to simplexml_load_file (billimek / sunnyd71)
+
 1.4.0 master
 * Change:	version bump to master
 
