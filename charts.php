@@ -80,11 +80,15 @@
 				
 				if (!empty($plexWatch['myPlexAuthToken'])) {
 					$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
-					$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$myPlexAuthToken."") or die ("Failed to access Plex Media Server. Please check your settings.");
+               if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$myPlexAuthToken."")) {
+                  $statusSessions = simplexml_load_string($fileContents) or die ("Failed to access Plex Media Server. Please check your settings.");
+               }
 
 				}else{
 					$myPlexAuthToken = '';
-					$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or die ("Failed to access Plex Media Server. Please check your settings.");
+               if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/status/sessions")) {
+                  $statusSessions = simplexml_load_string($fileContents) or die ("Failed to access Plex Media Server. Please check your settings.");
+               }
 
 				}
 					

@@ -83,7 +83,7 @@
 		
 					
 		
-		$xml = simplexml_load_file($infoUrl) or die ("<div class='container-fluid'><div class='row-fluid'><div class='span12'><h3>This media is no longer available in the Plex Media Server database.</h3></div></div>");
+		$xml = simplexml_load_string(file_get_contents($infoUrl)) or die ("<div class='container-fluid'><div class='row-fluid'><div class='span12'><h3>This media is no longer available in the Plex Media Server database.</h3></div></div>");
 		
 			if ($xml->Video['type'] == "episode") {
 
@@ -404,7 +404,7 @@
 							}else{
 								$parentInfoUrl = "".$plexWatchPmsUrl."/library/metadata/".$xml->Directory['parentRatingKey']."";
 							}
-							$parentXml = simplexml_load_file($parentInfoUrl) or die ("Feed Not Found");
+							$parentXml = simplexml_load_string(file_get_contents($parentInfoUrl)) or die ("Feed Not Found");
 
 								$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['art']. "&width=1920&height=1080";                                       
 								$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['thumb']. "&width=256&height=352";  
@@ -481,7 +481,7 @@
 								}else{
 									$seasonEpisodesUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."/children";
 								}	
-								$seasonEpisodesXml = simplexml_load_file($seasonEpisodesUrl) or die ("Feed Not Found");
+								$seasonEpisodesXml = simplexml_load_string(file_get_contents($seasonEpisodesUrl)) or die ("Feed Not Found");
 
 								echo "<div class='season-episodes-wrapper'>";
 									echo "<ul class='season-episodes-instance'>";
