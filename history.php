@@ -310,20 +310,16 @@
 	<script src="js/jquery.dataTables.plugin.bootstrap_pagination.js"></script>
 	<script src="js/d3.v3.js"></script> 
 	<script src="js/xcharts.min.js"></script> 
-	
-	<script>
+	<script type="text/javascript">
 		$(document).ready(function() {
 			var oTable = $('#globalHistory').dataTable( {
-				"aoColumnDefs": [
-      				{ "sType": "date", "aTargets": [ 0 ] }
-    			]
 				"bPaginate": true,
 				"bLengthChange": true,
 				"bFilter": true,
 				"bSort": true,
 				"bInfo": true,
-				"bAutoWidth": true,
-				"aaSorting": [[ 0, "desc" ]],
+				"bAutoWidth": true,	
+				"aaSorting": [[ 0, "desc" ]],			
 				"bStateSave": true,
 				"bSortClasses": false,
 				"sPaginationType": "bootstrap"	

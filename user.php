@@ -774,9 +774,6 @@
 	<script>
 		$(document).ready(function() {
 			var oTable = $('#tableUserHistory').dataTable( {
-				"aoColumnDefs": [
-      				{ "sType": "date", "aTargets": [ 0 ] }
-    			]
 				"bPaginate": true,
 				"bLengthChange": true,
 				"bFilter": true,
@@ -793,9 +790,6 @@
 	<script>
 		$(document).ready(function() {
 			var oTable = $('#tableUserIpAddresses').dataTable( {
-				"aoColumnDefs": [
-      				{ "sType": "date", "aTargets": [ 0 ] }
-    			]
 				"bPaginate": false,
 				"bLengthChange": true,
 				"bFilter": false,

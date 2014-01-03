@@ -772,9 +772,6 @@
 	<script>
 		$(document).ready(function() {
 			var oTable = $('#globalHistory').dataTable( {
-				"aoColumnDefs": [
-      				{ "sType": "date", "aTargets": [ 0 ] }
-    			]
 				"bPaginate": false,
 				"bLengthChange": true,
 				"bFilter": false,

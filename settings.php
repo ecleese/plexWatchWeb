@@ -110,7 +110,7 @@
 							<div class="settings-general-info">
 								
 								<ul>
-									<li>plexWatch/Web Version: <strong>v1.5.0.4 dev</strong></li>	
+									<li>plexWatch/Web Version: <strong>v1.5.0.5 dev</strong></li>	
 								
 									<?php
 									$db = new SQLite3($plexWatch['plexWatchDb']);
@@ -132,7 +132,7 @@
 							<div class="control-group">
 							  <label class="control-label" for="dateFormat">Date Format</label>
 							  <div class="controls">
-								<input id="dateFormat" name="dateFormat" type="text" placeholder="m/d/Y" class="input-mini" required="" value="<?php echo $plexWatch['dateFormat'] ?>">
+								<input id="dateFormat" name="dateFormat" type="text" placeholder="Y-m-d" class="input-mini" required="" value="<?php echo $plexWatch['dateFormat'] ?>">
 								<p class="help-block">The date display format plexWatch/Web should use. <a href="http://php.net/manual/en/function.date.php">Date/Time formatting documentation.</a></p>
 							  </div>
 							</div>
@@ -368,7 +368,7 @@
 							<div class="control-group">
 							  <label class="control-label" for="dateFormat">Date Format</label>
 							  <div class="controls">
-								<input id="dateFormat" name="dateFormat" type="text" placeholder="m/d/Y" class="input-mini" required="" value="m/d/Y">
+								<input id="dateFormat" name="dateFormat" type="text" placeholder="Y-m-d" class="input-mini" required="" value="m/d/Y">
 								<p class="help-block">plexWatch Date Format</p>
 							  </div>
 							</div>
