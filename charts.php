@@ -62,7 +62,20 @@
 	
 	<div class="container-fluid">
 		<div class='row-fluid'>
-			<div class='span12'>
+			<div class="span12">
+				<div class='wellheader'>
+					<div class='dashboard-wellheader-no-chevron'>
+						<h2><i class="icon-large icon-bar-chart icon-white"></i> Charts</h2>
+					</div>
+				</div>	
+			</div>
+		</div>
+			
+		<div class='row-fluid'>	
+			<div class="span12">
+
+
+
 			<?php
 				
 				$guisettingsFile = "config/config.php";
@@ -80,11 +93,15 @@
 				
 				if (!empty($plexWatch['myPlexAuthToken'])) {
 					$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
-					$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$myPlexAuthToken."") or die ("Failed to access Plex Media Server. Please check your settings.");
+               if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$myPlexAuthToken."")) {
+                  $statusSessions = simplexml_load_string($fileContents) or die ("Failed to access Plex Media Server. Please check your settings.");
+               }
 
 				}else{
 					$myPlexAuthToken = '';
-					$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or die ("Failed to access Plex Media Server. Please check your settings.");
+               if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/status/sessions")) {
+                  $statusSessions = simplexml_load_string($fileContents) or die ("Failed to access Plex Media Server. Please check your settings.");
+               }
 
 				}
 					
@@ -96,7 +113,7 @@
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 							echo "<div class='dashboard-wellheader'>";
-								echo "<h3>Top 10 (All Time)</h3>";
+								echo "<h4>Top 10 (All Time)</h4>";
 							echo "</div>";
 						echo "</div>";
 						echo "<div class='charts-wrapper'>";
@@ -155,7 +172,7 @@
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 							echo "<div class='dashboard-wellheader'>";
-								echo "<h3>Top 10 Films (All Time)</h3>";
+								echo "<h4>Top 10 Films (All Time)</h4>";
 							echo "</div>";
 						echo "</div>";
 						echo "<div class='charts-wrapper'>";
@@ -202,7 +219,7 @@
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 							echo "<div class='dashboard-wellheader'>";
-								echo "<h3>Top 10 TV Shows (All Time)</h3>";
+								echo "<h4>Top 10 TV Shows (All Time)</h4>";
 							echo "</div>";
 						echo "</div>";
 						echo "<div class='charts-wrapper'>";
@@ -249,7 +266,7 @@
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 							echo "<div class='dashboard-wellheader'>";
-								echo "<h3>Top 10 TV Episodes (All Time)</h3>";
+								echo "<h4>Top 10 TV Episodes (All Time)</h4>";
 							echo "</div>";
 						echo "</div>";
 						echo "<div class='charts-wrapper'>";
@@ -264,7 +281,7 @@
 								$top10EpisodesXml = simplexml_load_string($top10Episodes['xml']) ;  
 								
 								
-									$top10EpisodesXmlEpisodeThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$top10EpisodesXml['grandparentThumb']."&width=100&height=149";
+									$top10EpisodesXmlEpisodeThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$top10EpisodesXml['parentThumb']."&width=100&height=149";
 								
 								
 								if ($top10EpisodesXml['type'] == "episode") {

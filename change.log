@@ -1,3 +1,14 @@
+1.5.0.4 dev
+* Fix:		global: table sorting by newest date would not sort properly when the year was different
+* Change:	settings.php: "myPlex" has been renamed "Plex Authentication" to maintain consistency with Plex.tv's removal of the myPlex name
+* Fix:		history.php: monthly plays chart would not display next month in a new year properly
+* Change:	current_activity.php: design and css adjustments
+* Change:	global: css and image changes to maintain consistency with upcoming Plex/Web v2.0
+* Fix:		history.php: left chart padding was cutting off display values above 999
+* Add:		gloabl: user definable date & time formats from settings.php
+* Change:	global: minor layout changes / added page headers
+* Remove:	info.php: movie details - commented out writers list to help maintain a more consistent height
+
 1.5.0.3 dev
 * Add:		php5-json to readme requirements. Check for json support in settings welcome modal
 * Change:	hard coded plexWatch/Web version number into settings.php so users don't have to re-save their config after every update in order to see the proper version number
@@ -17,9 +28,12 @@
 * Change:	charts.php: Top 10 episodes now use show poster rather than season poster
 
 
+
+1.4.1 master
+* Fix:		global: attempt to correct error related to simplexml_load_file (billimek / sunnyd71)
+
 1.4.0 master
 * Change:	version bump to master
-
 
 1.4.0.11 dev
 * Add:		myplex.php: xml parse error checking when trying to authenticate with myPlex
@@ -51,7 +65,8 @@
 * Add:		settings.php: new page with full support for configuring plexWatch/Web. config.php is written dynamically by settings.php and was relocated to /config/config.php. This file no longer needs to be edited by the user.
 
 
-1.3
+
+1.3.0
 * Fix:		info.php: if content was deleted from PMS and watching history links to info.php with this information, an error to the connection was displayed. a message now lets the user know "This media is no longer available in the Plex Media Server database"
 * Add:		info.php: season episode list if displaying season information
 * Fix:		info.php: if "genres" variable is not available it throws an error
@@ -72,7 +87,8 @@
 * Add:		config.php: Plex Media Server port# variable added for users using non-standard PMS ports
 
 
-1.2
+
+1.2.0
 * Fix:		index.php: first recently added result was getting cut off on left side, changed episode image to season thumb
 * Fix:		global: updated images in Plex/Web would not appear in plexWatchWeb
 * Change:	user.php: general usage stats changed from minutes to days, hours, minutes
@@ -86,9 +102,11 @@
 * Wiki:		information for XAMPP users	about setting timezone and password protection
 
 
-1.1
+
+1.1.0
 * initial public release
 
 
-1.0
+
+1.0.0
 * initial internal version

@@ -53,24 +53,17 @@
 		</div>
     </div>
 	
-	<div class="container-fluid">
-		
-		
-	</div>
-
-	<div class="container-fluid">
-		<div class='row-fluid'>
-			<div class='span12'>
-			</div>	
-		</div>	
-	</div>
+	<div class="clear"></div>
 	
-	<div class="container-fluid">
-		<div class='row-fluid'>	
-			<div class='span2'>
+	<div class="container">
+		<div class='row'>	
+			<div class='span12'>
+				<div class='wellheader'>
+					<div class='dashboard-wellheader-no-chevron'>
+						<h2><i class="icon-large icon-wrench icon-white"></i> Settings</h2>
+					</div>
+				</div>	
 				
-			</div>
-			<div class='span8'>
 			
 				<?php
 
@@ -89,9 +82,9 @@
 					}
 				?>
 
-				<div class="wellbg">
+				
 					<div class="row-fluid">
-						<div class="header-settings"><h2><i class="icon-large icon-wrench icon-white"></i> Settings</h2></div><br>
+						
 					</div>	
 					<div class="row-fluid">
 					<div class='span3'>
@@ -99,21 +92,25 @@
 							
 							<li class="active"><a href="#info">General</a></li>
 							<li><a href="#pms">PMS & Database</a></li>
-							<li ><a href="#myplex">myPlex</a></li>
+							<li ><a href="#myplex">Plex Authentication</a></li>
 							<li ><a href="#grouping">Grouping</a></li>	
 						</ul>
 					</div>
 					
 					<div class="span9">
+					<form action="includes/process_settings.php" method="POST">
+						<fieldset>
 						<div class="wellbg">
 							<div class="wellheader">
 								<div class="dashboard-wellheader">
-								<h3><a id="info">General Information</a></h3>
+									<h3><a id="info">Version Information</a></h3>
 								</div>
 							</div>
+
 							<div class="settings-general-info">
+								
 								<ul>
-									<li>plexWatch/Web Version: <strong>v1.5.0.3 dev</strong></li>	
+									<li>plexWatch/Web Version: <strong>v1.5.0.4 dev</strong></li>	
 								
 									<?php
 									$db = new SQLite3($plexWatch['plexWatchDb']);
@@ -124,6 +121,36 @@
 								</ul>
 							</div>
 						</div>
+						<div class="wellbg">
+							<div class="wellheader">
+								<div class="dashboard-wellheader">
+									<h3><a id="info">General</a></h3>
+								</div>
+							</div>
+
+							<!-- Text input-->
+							<div class="control-group">
+							  <label class="control-label" for="dateFormat">Date Format</label>
+							  <div class="controls">
+								<input id="dateFormat" name="dateFormat" type="text" placeholder="m/d/Y" class="input-mini" required="" value="<?php echo $plexWatch['dateFormat'] ?>">
+								<p class="help-block">The date display format plexWatch/Web should use. <a href="http://php.net/manual/en/function.date.php">Date/Time formatting documentation.</a></p>
+							  </div>
+							</div>
+
+							<!-- Text input-->
+							<div class="control-group">
+							  <label class="control-label" for="timeFormat">Time Format</label>
+							  <div class="controls">
+								<input id="timeFormat" name="timeFormat" type="text" placeholder="g:i a" class="input-mini" required="" value="<?php echo $plexWatch['timeFormat'] ?>">
+								<p class="help-block">The time display format plexWatch/Web should use. <a href="http://php.net/manual/en/function.date.php">Date/Time formatting documentation.</a></p>
+							  </div>
+							</div>
+
+						</div>
+
+
+
+
 						<div class='wellbg'>
 							<div class='wellheader'>
 								<div class='dashboard-wellheader'>
@@ -131,12 +158,8 @@
 								</div>
 							</div>
 						
-						
-							<form action="includes/process_settings.php" method="POST">
+
 							
-							
-							
-							<fieldset>
 							<!-- Text input-->
 							<div class="control-group">
 							  <label class="control-label" for="pmsIp">PMS IP Address</label>
@@ -199,24 +222,24 @@
 						<div class='wellbg'>
 						<div class='wellheader'>
 							<div class='dashboard-wellheader'>
-							<h3><a id="myplex">myPlex Settings</a></h3>
+							<h3><a id="myplex">Plex Authentication</a></h3>
 							</div>
 						</div>
 							<!-- Text input-->
 							<div class="control-group">
-							  <label class="control-label" for="myPlexUser">myPlex Username (optional)</label>
+							  <label class="control-label" for="myPlexUser">Username (optional)</label>
 							  <div class="controls">
 								  <input id="myPlexUser" name="myPlexUser" type="text" placeholder="" class="input-xlarge" value="<?php echo $plexWatch['myPlexUser'] ?>">
-								  <p class="help-block">If you would like to access plexWatch/Web on other networks, a myPlex username and password are required.</p>
+								  <p class="help-block">If you would like to access plexWatch/Web on other networks, a <a href="https://plex.tv/users/sign_in">Plex.tv</a> username and password are required.</p>
 							  </div>
 							</div>
 							
 							<!-- Text input-->
 							<div class="control-group">
-							  <label class="control-label" for="myPlexPass">myPlex Password (optional)</label>
+							  <label class="control-label" for="myPlexPass">Password (optional)</label>
 							  <div class="controls">
 								  <input id="myPlexPass" name="myPlexPass" type="password" placeholder="" class="input-xlarge" value="<?php echo $plexWatch['myPlexPass'] ?>">
-								  <p class="help-block">If you would like to access plexWatch/Web on other networks, a myPlex username and password are required.</p>
+								  <p class="help-block">If you would like to access plexWatch/Web on other networks, a <a href="https://plex.tv/users/sign_in">Plex.tv</a> username and password are required.</p>
 							  </div>
 							</div>
 						</div>
@@ -299,14 +322,12 @@
 					</fieldset>
 					</form>
 						
-				</div>
+				
 					
-			</div>		
+					
 			</div>
 			
-			<div class='span2'>
-				
-			</div>
+			
 		</div>
 	</div>
 			
@@ -319,20 +340,49 @@
 			
 				<div class="wellbg">
 					<div class="row-fluid">
-						<div class="header-settings"><h2><i class="icon-large icon-wrench icon-white"></i> Settings</h2></div><br>
+						
 					</div>	
 					<div class="row-fluid">
 					<div class='span3'>
 						<ul class="nav nav-list">
 							
-							
-							<li class="active"><a href="#pms">PMS & Database</a></li>
-							<li ><a href="#myplex">myPlex</a></li>
+							<li class="active"><a href="#info">General</a></li>
+							<li><a href="#pms">PMS & Database</a></li>
+							<li ><a href="#myplex">Plex Authentication</a></li>
 							<li ><a href="#grouping">Grouping</a></li>	
 						</ul>
 					</div>
 					
-					<div class='span9'>
+					<div class="span9">
+					<form action="includes/process_settings.php" method="POST">
+						<fieldset>
+						
+						<div class="wellbg">
+							<div class="wellheader">
+								<div class="dashboard-wellheader">
+									<h3><a id="info">General</a></h3>
+								</div>
+							</div>
+
+							<!-- Text input-->
+							<div class="control-group">
+							  <label class="control-label" for="dateFormat">Date Format</label>
+							  <div class="controls">
+								<input id="dateFormat" name="dateFormat" type="text" placeholder="m/d/Y" class="input-mini" required="" value="m/d/Y">
+								<p class="help-block">plexWatch Date Format</p>
+							  </div>
+							</div>
+
+							<!-- Text input-->
+							<div class="control-group">
+							  <label class="control-label" for="timeFormat">Time Format</label>
+							  <div class="controls">
+								<input id="timeFormat" name="timeFormat" type="text" placeholder="g:i a" class="input-mini" required="" value="g:i a">
+								<p class="help-block">plexWatch Time Format</p>
+							  </div>
+							</div>
+
+						</div>
 						
 						<div class='wellbg'>
 							<div class='wellheader'>
@@ -402,24 +452,24 @@
 						<div class='wellbg'>
 						<div class='wellheader'>
 							<div class='dashboard-wellheader'>
-							<h3><a id="myplex">myPlex Settings</a></h3>
+							<h3><a id="myplex">Plex Authentication</a></h3>
 							</div>
 						</div>
 							<!-- Text input-->
 							<div class="control-group">
-							  <label class="control-label" for="myPlexUser">myPlex Username (optional)</label>
+							  <label class="control-label" for="myPlexUser">Username (optional)</label>
 							  <div class="controls">
 								  <input id="myPlexUser" name="myPlexUser" type="text" placeholder="" class="input-xlarge" >
-								  <p class="help-block">If you would like to access plexWatch/Web on other networks, a myPlex username and password are required.</p>
+								  <p class="help-block">If you would like to access plexWatch/Web on other networks, a <a href="https://plex.tv/users/sign_in">Plex.tv</a> username and password are required.</p>
 							  </div>
 							</div>
 							
 							<!-- Text input-->
 							<div class="control-group">
-							  <label class="control-label" for="myPlexPass">myPlex Password (optional)</label>
+							  <label class="control-label" for="myPlexPass">Password (optional)</label>
 							  <div class="controls">
 								  <input id="myPlexPass" name="myPlexPass" type="password" placeholder="" class="input-xlarge" >
-								  <p class="help-block">If you would like to access plexWatch/Web on other networks, a myPlex username and password are required.</p>
+								  <p class="help-block">If you would like to access plexWatch/Web on other networks, a <a href="https://plex.tv/users/sign_in">Plex.tv</a> username and password are required.</p>
 							  </div>
 							</div>
 						</div>
@@ -611,6 +661,10 @@
 	
 	<script>
 	$('#welcomeModal').modal('show')
+	</script>
+
+	<script>
+	$('#dateTimeModal').modal('show')
 	</script>
 	
 	<script>

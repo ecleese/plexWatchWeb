@@ -77,11 +77,15 @@
 				
 				if (!empty($plexWatch['myPlexAuthToken'])) {
 					$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
-					$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$myPlexAuthToken."") or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
+					if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$myPlexAuthToken."")) {
+ 	             		$statusSessions = simplexml_load_string($fileContents) or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
+                 	}
 					$sections = simplexml_load_file("".$plexWatchPmsUrl."/library/sections?query=c&X-Plex-Token=".$myPlexAuthToken."") or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
 				}else{
 					$myPlexAuthToken = '';
-					$statusSessions = simplexml_load_file("".$plexWatchPmsUrl."/status/sessions") or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
+					if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$myPlexAuthToken."")) {
+ 	             		$statusSessions = simplexml_load_string($fileContents) or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
+                 	}
 					$sections = simplexml_load_file("".$plexWatchPmsUrl."/library/sections") or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");	
 				}	
 				
@@ -202,7 +206,7 @@
 		function currentActivityHeader() {
 			$('#currentActivityHeader').load('includes/current_activity_header.php');
 		}
-		setInterval('currentActivityHeader()', 15000);
+		setInterval('currentActivityHeader()', 95000);
 	
 	</script>
 	<script>
@@ -210,7 +214,7 @@
 		function currentActivity() {
 			$('#currentActivity').load('includes/current_activity.php');
 		}
-		setInterval('currentActivity()', 15000);
+		setInterval('currentActivity()', 95000);
 
 	</script>
 	<script>

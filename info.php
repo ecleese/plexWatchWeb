@@ -50,7 +50,7 @@
 		</div>
     </div>
 	
-
+    <div class="clear"></div>
 	
 	<?php
 		$guisettingsFile = "config/config.php";
@@ -83,7 +83,7 @@
 		
 					
 		
-		$xml = simplexml_load_file($infoUrl) or die ("<div class='container-fluid'><div class='row-fluid'><div class='span12'><h3>This media is no longer available in the Plex Media Server database.</h3></div></div>");
+		$xml = simplexml_load_string(file_get_contents($infoUrl)) or die ("<div class='container-fluid'><div class='row-fluid'><div class='span10 offset1'><h3>This media is no longer available in the Plex Media Server database.</h3></div></div>");
 		
 			if ($xml->Video['type'] == "episode") {
 
@@ -92,7 +92,9 @@
 				
 							
 					echo "<div class='container-fluid'>";
-						
+						echo "<div class='row-fluid'>";
+							echo "<div class='span12'>";
+							
 							if($xml->Video['art']) {
 								echo "<div class='art-face' style='background-image:url(includes/img.php?img=".urlencode($xmlArtUrl).")'>";
 							}else{
@@ -155,14 +157,14 @@
 								
 							echo "</div>";
 							
-						
+							echo "</div>";	
+						echo "</div>";	
 					echo "</div>";	
 						
 		echo "<div class='container-fluid'>";
-			echo "<div class='row-fluid'>";	
-				echo "<div class='span12'>";
-				echo "</div>";
-			echo "</div>";
+			
+			echo "<div class='clear'></div>";
+
 			echo "<div class='row-fluid'>";
 				echo "<div class='span12'>";
 					echo "<div class='wellbg'>";
@@ -177,15 +179,14 @@
 							}
 							
 							$title = $db->querySingle("SELECT title FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\'  ");
-							
-							echo "<div class='dashboard-wellheader'>";
-									echo"<h3>Watching history for <strong>".$title."</strong></h3>";
-								echo"</div>";
-							echo"</div>";
-							
-							$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable ");
+							$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
 							$results = $db->query("SELECT * FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
 							
+							echo "<div class='dashboard-wellheader'>";
+									echo"<h3>Watching history for <strong>".$xml->Video['title']."</strong> (".$numRows." Views)</h3>";
+								echo"</div>";
+							echo"</div>";
+
 							if ($numRows < 1) {
 
 							echo "No Results.";
@@ -211,7 +212,7 @@
 								while ($row = $results->fetchArray()) {
 								
 									echo "<tr>";
-										echo "<td align='center'>".date("m/d/Y",$row['time'])."</td>";
+										echo "<td align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
 										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
 										echo "<td align='left'>".$row['platform']."</td>";
 
@@ -231,12 +232,12 @@
 
 										
 														
-										echo "<td align='center'>".date("g:i a",$row['time'])."</td>";
+										echo "<td align='center'>".date($plexWatch['timeFormat'],$row['time'])."</td>";
 										
 										$paused_time = round(abs($row['paused_counter']) / 60,1);
 										echo "<td align='center'>".$paused_time." min</td>";
 										
-										$stopped_time = date("g:i a",$row['stopped']);
+										$stopped_time = date($plexWatch['timeFormat'],$row['stopped']);
 										
 										if (empty($row['stopped'])) {								
 											echo "<td align='center'>n/a</td>";
@@ -244,8 +245,9 @@
 											echo "<td align='center'>".$stopped_time."</td>";
 										}
 
-										$to_time = strtotime(date("m/d/Y g:i a",$row['stopped']));
-										$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
+
+										$to_time = strtotime(date("\"".$plexWatch['dateFormat']."".$plexWatch['timeFormat']."\"",$row['stopped']));
+										$from_time = strtotime(date("\"".$plexWatch['dateFormat']."".$plexWatch['timeFormat']."\"",$row['time']));
 										
 										$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
 										$viewed_time_length = strlen($viewed_time);
@@ -286,7 +288,6 @@
 								
 								if($xml->Directory['art']) {
 									echo "<div class='art-face' style='background-image:url(includes/img.php?img=".urlencode($xmlArtUrl).")'>";
-								}else{
 									echo "<div class='art-face'>";
 								}
 								
@@ -331,10 +332,7 @@
 						echo "</div>";
 						
 		echo "<div class='container-fluid'>";
-			echo "<div class='row-fluid'>";	
-				echo "<div class='span12'>";
-				echo "</div>";
-			echo "</div>";
+			echo "<div class='clear'></div>";
 			
 			echo "<div class='row-fluid'>";
 				echo "<div class='span12'>";
@@ -404,7 +402,7 @@
 							}else{
 								$parentInfoUrl = "".$plexWatchPmsUrl."/library/metadata/".$xml->Directory['parentRatingKey']."";
 							}
-							$parentXml = simplexml_load_file($parentInfoUrl) or die ("Feed Not Found");
+							$parentXml = simplexml_load_string(file_get_contents($parentInfoUrl)) or die ("Feed Not Found");
 
 								$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['art']. "&width=1920&height=1080";                                       
 								$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['thumb']. "&width=256&height=352";  
@@ -413,6 +411,7 @@
 						echo "<div class='container-fluid'>";	
 							
 								if($xml->Directory['art']) {
+										
 									echo "<div class='art-face' style='background-image:url(includes/img.php?img=".urlencode($xmlArtUrl).")'>";
 								}else{
 									echo "<div class='art-face'>";
@@ -462,10 +461,8 @@
 						echo "</div>";	
 						
 						echo "<div class='container-fluid'>";
-			echo "<div class='row-fluid'>";	
-				echo "<div class='span12'>";
-				echo "</div>";
-			echo "</div>";
+				
+						echo "<div class='clear'></div>";
 			
 			echo "<div class='row-fluid'>";
 				echo "<div class='span12'>";
@@ -481,7 +478,7 @@
 								}else{
 									$seasonEpisodesUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."/children";
 								}	
-								$seasonEpisodesXml = simplexml_load_file($seasonEpisodesUrl) or die ("Feed Not Found");
+								$seasonEpisodesXml = simplexml_load_string(file_get_contents($seasonEpisodesUrl)) or die ("Feed Not Found");
 
 								echo "<div class='season-episodes-wrapper'>";
 									echo "<ul class='season-episodes-instance'>";
@@ -518,103 +515,111 @@
 								$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['thumb']."&width=256&height=352"; 
 							
 							
-					echo "<div class='container-fluid'>";		
-						if($xml->Video['art']) {
-									echo "<div class='art-face' style='background-image:url(includes/img.php?img=".urlencode($xmlArtUrl).")'>";
-								}else{
-									echo "<div class='art-face'>";
-								};
-								
-							echo "<div class='summary-wrapper'>";
-								echo "<div class='summary-overlay'>";
-									echo "<div class='row-fluid'>";
-										echo "<div class='span9'>";	
-											echo "<div class='summary-content-poster hidden-phone hidden-tablet'>";
-												if($xml->Video['thumb']) {
-													echo "<img src='includes/img.php?img=".urlencode($xmlThumbUrl)."'></img>";
-												}else{
-													echo "<img src='images/poster.png'></img>";
-												}
-											echo "</div>";	
-												echo "<div class='summary-content'>";
-													echo "<div class='summary-content-title'><h1>".$xml->Video['title']." (".$xml->Video['year'].")</h1></div>";
-													
-													$starRating = ceil ($xml->Video['rating'] / 2);
-													
-													echo "<div class='rateit hidden-phone hidden-tablet'  data-rateit-value='".$starRating."' data-rateit-ispreset='true' data-rateit-readonly='true'></div>";
-													echo "<div class='summary-content-details-wrapper'>";
-														echo "<div class='summary-content-director'>Directed by <strong>".$xml->Video->Director['tag']."</strong></div>";
-														
-														echo "<div class='summary-content-content-rating'>Rated <strong>".$xml->Video['contentRating']."</strong></div>";
-														
-														$duration = $xml->Video['duration'];
-														$durationMinutes = $duration / 1000 / 60;
-														$durationRounded = floor($durationMinutes);
-														
-														echo "<div class='summary-content-duration'>Runtime <strong>".$durationRounded." mins</strong></div>";
-														
-													echo "</div>";
-													echo "<div class='summary-content-summary'><p>".$xml->Video['summary']."</p></div>";
-												echo "</div>";
-											echo "</div>";
-											
-											echo "<div class='span3'>";
-												echo "<div class='summary-content-people-wrapper hidden-phone hidden-tablet'>";
-													$genreCount = 0;
-													if ($xml->Video->Genre['tag']) {
-														foreach($xml->Video->Genre as $xmlGenres) {
-															$genres[] = "" .$xmlGenres['tag']. "";
-															if (++$genreCount == 3) break;
+					echo "<div class='container-fluid'>";	
+						echo "<div class='row-fluid'>";
+							echo "<div class='span12'>";
+
+								if($xml->Video['art']) {
+
+											echo "<div class='art-face' style='background-image:url(includes/img.php?img=".urlencode($xmlArtUrl).")'>";
+										}else{
+											echo "<div class='art-face'>";
+										};
+										
+									echo "<div class='summary-wrapper'>";
+										echo "<div class='summary-overlay'>";
+											echo "<div class='row-fluid'>";
+												echo "<div class='span9'>";	
+													echo "<div class='summary-content-poster hidden-phone hidden-tablet'>";
+														if($xml->Video['thumb']) {
+															echo "<img src='includes/img.php?img=".urlencode($xmlThumbUrl)."'></img>";
+														}else{
+															echo "<img src='images/poster.png'></img>";
 														}
-														echo "<div class='summary-content-actors'><h6><strong>Genres</strong></h6><ul><li>";
-															echo implode('<li>', $genres);
-													}else{
-														echo "<div class='summary-content-actors'><h6><strong>Genres</strong></h6><ul><li>";
-														echo "<li>n/a";
-													}
-													echo "</li></div></ul>";
-													$roleCount = 0;
-													if ($xml->Video->Role['tag']) {
-														foreach($xml->Video->Role as $Roles) {
-															$actors[] = "" .$Roles['tag']. "";
-															if (++$roleCount == 4) break;
-														}
-														echo "<div class='summary-content-actors'><h6><strong>Starring</strong></h6><ul><li>";
-															echo implode('<li>', $actors);
-													}else{
-														echo "<div class='summary-content-actors'><h6><strong>Starring</strong></h6><ul>";
-														echo "<li>n/a";
-													}			
-													echo "</li></div></ul>";
-													$writerCount = 0;
-													if ($xml->Video->Writer['tag']) {
-														foreach($xml->Video->Writer as $xmlWriters) {
-															$writers[] = "" .$xmlWriters['tag']. "";
-															if (++$writerCount == 3) break;
-														}
-														echo "<div class='summary-content-writers'><h6><strong>Written by</strong></h6><ul><li>";
-															echo implode('<li>', $writers);
+													echo "</div>";	
+														echo "<div class='summary-content'>";
+															echo "<div class='summary-content-title'><h1>".$xml->Video['title']." (".$xml->Video['year'].")</h1></div>";
 															
-													}else{
-														echo "<div class='summary-content-writers'><h6><strong>Written by</strong></h6><ul>";
-														echo "<li>n/a";
-													}
-													echo "</li></div></ul>";
+															$starRating = ceil ($xml->Video['rating'] / 2);
+															
+															echo "<div class='rateit hidden-phone hidden-tablet'  data-rateit-value='".$starRating."' data-rateit-ispreset='true' data-rateit-readonly='true'></div>";
+															echo "<div class='summary-content-details-wrapper'>";
+																
+																echo "<div class='summary-content-director'>Directed by <strong>".$xml->Video->Director['tag']."</strong></div>";
+																
+																echo "<div class='summary-content-content-rating'>Rated <strong>".$xml->Video['contentRating']."</strong></div>";
+																
+																$duration = $xml->Video['duration'];
+																$durationMinutes = $duration / 1000 / 60;
+																$durationRounded = floor($durationMinutes);
+																
+																echo "<div class='summary-content-duration'>Runtime <strong>".$durationRounded." mins</strong></div>";
+																
+															echo "</div>";
+															echo "<div class='summary-content-summary'><p>".$xml->Video['summary']."</p></div>";
+														echo "</div>";
+													echo "</div>";
+													
+													echo "<div class='span3'>";
+														echo "<div class='summary-content-people-wrapper hidden-phone hidden-tablet'>";
+															$genreCount = 0;
+															if ($xml->Video->Genre['tag']) {
+																foreach($xml->Video->Genre as $xmlGenres) {
+																	$genres[] = "" .$xmlGenres['tag']. "";
+																	if (++$genreCount == 5) break;
+																}
+																echo "<div class='summary-content-actors'><h6><strong>Genres</strong></h6><ul><li>";
+																	echo implode('<li>', $genres);
+															}else{
+																echo "<div class='summary-content-actors'><h6><strong>Genres</strong></h6><ul><li>";
+																echo "<li>n/a";
+															}
+															echo "</li></div></ul>";
+															$roleCount = 0;
+															if ($xml->Video->Role['tag']) {
+																foreach($xml->Video->Role as $Roles) {
+																	$actors[] = "" .$Roles['tag']. "";
+																	if (++$roleCount == 5) break;
+																}
+																echo "<div class='summary-content-actors'><h6><strong>Starring</strong></h6><ul><li>";
+																	echo implode('<li>', $actors);
+															}else{
+																echo "<div class='summary-content-actors'><h6><strong>Starring</strong></h6><ul>";
+																echo "<li>n/a";
+															}			
+															echo "</li></div></ul>";
+															/*$writerCount = 0;
+															if ($xml->Video->Writer['tag']) {
+																foreach($xml->Video->Writer as $xmlWriters) {
+																	$writers[] = "" .$xmlWriters['tag']. "";
+																	if (++$writerCount == 3) break;
+																}
+																echo "<div class='summary-content-writers'><h6><strong>Written by</strong></h6><ul><li>";
+																	echo implode('<li>', $writers);
+																	
+															}else{
+																echo "<div class='summary-content-writers'><h6><strong>Written by</strong></h6><ul>";
+																echo "<li>n/a";
+															}
+															echo "</li></div></ul>";
+															*/
+														echo "</div>";
+													echo "</div>";
+													
 												echo "</div>";
 											echo "</div>";
-											
 										echo "</div>";
 									echo "</div>";
-								echo "</div>";
-							echo "</div>";
-						echo "</div>";	
+								echo "</div>";	
+
+							echo "</div>";		
+						echo "</div>";
 					echo "</div>";	
 						
 		echo "<div class='container-fluid'>";
-			echo "<div class='row-fluid'>";	
-				echo "<div class='span12'>";
-				echo "</div>";
-			echo "</div>";
+
+			echo "<div class='clear'></div>";
+			
 			echo "<div class='row-fluid'>";
 				echo "<div class='span12'>";
 					echo "<div class='wellbg'>";
@@ -630,15 +635,15 @@
 							}
 							
 							$title = $db->querySingle("SELECT title FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\'  ");
-							echo "<div class='dashboard-wellheader'>";
-									echo"<h3>Watching history for <strong>".$xml->Video['title']."</strong></h3>";
-								echo"</div>";
-							echo"</div>";
-							
-							$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable ");
+
+							$numRows = $db->querySingle("SELECT COUNT(*) as views FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
 							
 							$results = $db->query("SELECT * FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
 							
+							echo "<div class='dashboard-wellheader'>";
+									echo"<h3>Watching history for <strong>".$xml->Video['title']."</strong> (".$numRows." Views)</h3>";
+								echo"</div>";
+							echo"</div>";
 							
 							if ($numRows < 1) {
 
@@ -646,6 +651,8 @@
 
 							} else {
 							
+							
+
 							echo "<table id='globalHistory' class='display'>";
 								echo "<thead>";
 									echo "<tr>";
@@ -665,7 +672,7 @@
 									while ($row = $results->fetchArray()) {
 									
 									echo "<tr>";
-										echo "<td align='center'>".date("m/d/Y",$row['time'])."</td>";
+										echo "<td align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
 										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
 										echo "<td align='left'>".$row['platform']."</td>";
 
@@ -685,12 +692,12 @@
 
 										
 														
-										echo "<td align='center'>".date("g:i a",$row['time'])."</td>";
+										echo "<td align='center'>".date($plexWatch['timeFormat'],$row['time'])."</td>";
 										
 										$paused_time = round(abs($row['paused_counter']) / 60,1);
 										echo "<td align='center'>".$paused_time." min</td>";
 										
-										$stopped_time = date("g:i a",$row['stopped']);
+										$stopped_time = date($plexWatch['timeFormat'],$row['stopped']);
 										
 										if (empty($row['stopped'])) {								
 											echo "<td align='center'>n/a</td>";
@@ -698,8 +705,8 @@
 											echo "<td align='center'>".$stopped_time."</td>";
 										}
 
-										$to_time = strtotime(date("m/d/Y g:i a",$row['stopped']));
-										$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
+										$to_time = strtotime(date("\"".$plexWatch['dateFormat']."".$plexWatch['timeFormat']."\"",$row['stopped']));
+										$from_time = strtotime(date("\"".$plexWatch['dateFormat']."".$plexWatch['timeFormat']."\"",$row['time']));
 										
 										$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
 										$viewed_time_length = strlen($viewed_time);
@@ -765,6 +772,9 @@
 	<script>
 		$(document).ready(function() {
 			var oTable = $('#globalHistory').dataTable( {
+				"aoColumnDefs": [
+      				{ "sType": "date", "aTargets": [ 0 ] }
+    			]
 				"bPaginate": false,
 				"bLengthChange": true,
 				"bFilter": false,
@@ -772,7 +782,7 @@
 				"bInfo": true,
 				"bAutoWidth": true,
 				"aaSorting": [[ 0, "desc" ]],
-				"bStateSave": true,
+				"bStateSave": false,
 				"bSortClasses": false,
 				"sPaginationType": "bootstrap"	
 			} );

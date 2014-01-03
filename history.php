@@ -51,6 +51,24 @@
 			</div>
 		</div>
     </div>
+
+
+    <div class="clear"></div>
+
+    <div class="container-fluid">
+		<div class="row-fluid">
+    		<div class="span12">
+				
+				<div class='wellheader'>
+					<div class="dashboard-wellheader-no-chevron">
+						<h2><i class="icon-large icon-calendar icon-white"></i> History</h2>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
 	<?php
 	
 	date_default_timezone_set(@date_default_timezone_get());
@@ -63,14 +81,16 @@
 				echo "<div class='wellbg'>";
 					echo "<div class='wellheader'>";
 						echo "<div class='dashboard-wellheader'>";
-							echo "<h3>Watching History Stats</h3>";
+							echo "<h3>Stats</h3>";
 						echo "</div>";
 					echo "</div>";
 					echo "<div class='row-fluid'>";
-						echo "<div class='span3'><div class='wellbg'><strong>Hourly Plays </strong>(Last 24 Hours)<br><div class='history-charts-instance-chart' id='playChartHourly'></div></div></div>";
-						echo "<div class='span3'><div class='wellbg'><strong>Max Hourly Plays</strong><br><div class='history-charts-instance-chart' id='playChartMaxHourly'></div></div></div>";
-						echo "<div class='span3'><div class='wellbg'><strong>Daily Plays</strong><br><div class='history-charts-instance-chart'  id='playChartDaily'></div></div></div>";
-						echo "<div class='span3'><div class='wellbg'><strong>Monthly Plays</strong><br><div class='history-charts-instance-chart' id='playChartMonthly'></div></div></div>";
+						echo "<div class='span6'><div class='wellbg'><div class='history-charts-header'><strong>Hourly Plays </strong>(Last 24 Hours)<br></div><div class='history-charts-instance-chart' id='playChartHourly'></div></div></div>";
+						echo "<div class='span6'><div class='wellbg'><div class='history-charts-header'><strong>Max Hourly Plays</strong><br></div><div class='history-charts-instance-chart' id='playChartMaxHourly'></div></div></div>";
+					echo "</div>";
+					echo "<div class='row-fluid'>";	
+						echo "<div class='span6'><div class='wellbg'><div class='history-charts-header'><strong>Daily Plays</strong><br></div><div class='history-charts-instance-chart'  id='playChartDaily'></div></div></div>";
+						echo "<div class='span6'><div class='wellbg'><div class='history-charts-header'><strong>Monthly Plays</strong><br></div><div class='history-charts-instance-chart' id='playChartMonthly'></div></div></div>";
 					echo "</div>";
 				echo "</div>";
 			echo "</div>";
@@ -79,7 +99,7 @@
 				echo "<div class='wellbg'>";
 					echo "<div class='wellheader'>";
 						echo "<div class='dashboard-wellheader'>";
-							echo "<h3>Watching History</h3>";
+							echo "<h3>Logs</h3>";
 						echo "</div>";
 					echo "</div>";
 					
@@ -132,7 +152,7 @@
 						$hourlyPlayFinal .= $hourlyPlayTotal;
 					}
 
-					$maxhourlyPlays = $db->query("SELECT strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) as date, COUNT(title) as count FROM $plexWatchDbTable GROUP BY strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) ORDER BY count(*) desc limit 20;") or die ("Failed to access plexWatch database. Please check your settings.");
+					$maxhourlyPlays = $db->query("SELECT strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) as date, COUNT(title) as count FROM $plexWatchDbTable GROUP BY strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) ORDER BY count(*) desc limit 25;") or die ("Failed to access plexWatch database. Please check your settings.");
 					$maxhourlyPlaysNum = 0;
 					$maxhourlyPlayFinal = '';
 					while ($maxhourlyPlay = $maxhourlyPlays->fetchArray()) {
@@ -156,7 +176,7 @@
 						$dailyPlayFinal .= $dailyPlayTotal;
 					}
 						
-					$monthlyPlays = $db->query("SELECT strftime('%m', datetime(time, 'unixepoch', 'localtime')) as date, COUNT(title) as count FROM $plexWatchDbTable WHERE datetime(time, 'unixepoch', 'localtime') >= datetime('now', '-12 months', 'localtime') GROUP BY strftime('%m', datetime(time, 'unixepoch', 'localtime'))  ORDER BY date DESC LIMIT 6;") or die ("Failed to access plexWatch database. Please check your settings.");
+					$monthlyPlays = $db->query("SELECT strftime('%Y-%m', datetime(time, 'unixepoch', 'localtime')) as date, COUNT(title) as count FROM $plexWatchDbTable WHERE datetime(time, 'unixepoch', 'localtime') >= datetime('now', '-12 months', 'localtime') GROUP BY strftime('%Y-%m', datetime(time, 'unixepoch', 'localtime'))  ORDER BY date DESC LIMIT 6;") or die ("Failed to access plexWatch database. Please check your settings.");
 					$monthlyPlaysNum = 0;
 					$monthlyPlayFinal = '';
 					while ($monthlyPlay = $monthlyPlays->fetchArray()) {
@@ -197,7 +217,7 @@
 							if (empty($row['stopped'])) {
 											echo "<td class='currentlyWatching' align='center'>Currently watching...</td>";
 										}else{
-											echo "<td align='center'>".date("m/d/Y",$row['time'])."</td>";
+											echo "<td align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
 							}
 							
 							echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
@@ -227,12 +247,12 @@
 
 							}
 							
-							echo "<td align='center'>".date("g:i a",$row['time'])."</td>";
+							echo "<td align='center'>".date($plexWatch['timeFormat'],$row['time'])."</td>";
 							
-							$paused_time = round(abs($row['paused_counter']) / 60,1);
-							echo "<td align='center'>".$paused_time." min</td>";
+							$paused_duration = round(abs($row['paused_counter']) / 60,1);
+							echo "<td align='center'>".$paused_duration." min</td>";
 							
-							$stopped_time = date("g:i a",$row['stopped']);
+							$stopped_time = date($plexWatch['timeFormat'],$row['stopped']);
 							
 							if (empty($row['stopped'])) {								
 								echo "<td align='center'>n/a</td>";
@@ -242,6 +262,7 @@
 
 							$to_time = strtotime(date("m/d/Y g:i a",$row['stopped']));
 							$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
+							$paused_time = strtotime(date("m/d/Y g:i a",$row['paused_counter']));
 							
 							$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
 							$viewed_time_length = strlen($viewed_time);
@@ -293,6 +314,9 @@
 	<script>
 		$(document).ready(function() {
 			var oTable = $('#globalHistory').dataTable( {
+				"aoColumnDefs": [
+      				{ "sType": "date", "aTargets": [ 0 ] }
+    			]
 				"bPaginate": true,
 				"bLengthChange": true,
 				"bFilter": true,
@@ -348,7 +372,7 @@
 	var opts = {
 	  "dataFormatX": function (x) { return d3.time.format('%Y-%m-%d %H').parse(x); },
 	  "tickFormatX": function (x) { return d3.time.format('%-I:00 %p')(x); },
-	  "paddingLeft": ('25'),
+	  "paddingLeft": ('35'),
 	  "paddingRight": ('35'),
 	  "paddingTop": ('10'),
 	  "tickHintY": ('5'),
@@ -388,7 +412,7 @@
 	var opts = {
 	  "dataFormatX": function (x) { return d3.time.format('%Y-%m-%d %H').parse(x); },
 	  "tickFormatX": function (x) { return d3.time.format('%b %e')(x); },
-	  "paddingLeft": ('25'),
+	  "paddingLeft": ('35'),
 	  "paddingRight": ('35'),
 	  "paddingTop": ('10'),
 	  "tickHintY": ('5'),
@@ -427,7 +451,7 @@
 	var opts = {
 	  "dataFormatX": function (x) { return d3.time.format('%Y-%m-%d').parse(x); },
 	  "tickFormatX": function (x) { return d3.time.format('%b %e')(x); },
-	  "paddingLeft": ('25'),
+	  "paddingLeft": ('35'),
 	  "paddingRight": ('35'),
 	  "paddingTop": ('10'),
 	  "tickHintY": ('5'),
@@ -464,9 +488,9 @@
 	  ]
 	};
 	var opts = {
-	  "dataFormatX": function (x) { return d3.time.format('%m').parse(x); },
+	  "dataFormatX": function (x) { return d3.time.format('%Y-%m').parse(x); },
 	  "tickFormatX": function (x) { return d3.time.format('%b')(x); },
-	  "paddingLeft": ('25'),
+	  "paddingLeft": ('35'),
 	  "paddingRight": ('35'),
 	  "paddingTop": ('10'),
 	  "tickHintY": ('5'),

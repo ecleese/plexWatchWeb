@@ -397,38 +397,38 @@
 								
 									
 									if(strstr($platformXmlField->Player['platform'], 'Roku')) {
-										$platformImage = "images/platforms/platform-roku.png";
+										$platformImage = "images/platforms/roku.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Apple TV')) {
-										$platformImage = "images/platforms/platform-appletv.png";
+										$platformImage = "images/platforms/appletv.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Firefox')) {
-										$platformImage = "images/platforms/platform-firefox.png";
+										$platformImage = "images/platforms/firefox.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Chrome')) {
-										$platformImage = "images/platforms/platform-chrome.png";
+										$platformImage = "images/platforms/chrome.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Android')) {
-										$platformImage = "images/platforms/platform-android.png";
+										$platformImage = "images/platforms/android.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Nexus')) {
-										$platformImage = "images/platforms/platform-android.png";
+										$platformImage = "images/platforms/android.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'iPad')) {
-										$platformImage = "images/platforms/platform-ios.png";
+										$platformImage = "images/platforms/ios.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'iPhone')) {
-										$platformImage = "images/platforms/platform-ios.png";
+										$platformImage = "images/platforms/ios.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'iOS')) {
-										$platformImage = "images/platforms/platform-ios.png";
+										$platformImage = "images/platforms/ios.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Plex Home Theater')) {
-										$platformImage = "images/platforms/platform-plex-ht.png";
+										$platformImage = "images/platforms/pht.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Linux/RPi-XBMC')) {
-										$platformImage = "images/platforms/platform-xbmc.png";
+										$platformImage = "images/platforms/xbmc.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Safari')) {
-										$platformImage = "images/platforms/platform-safari.png";
+										$platformImage = "images/platforms/safari.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Internet Explorer')) {
-										$platformImage = "images/platforms/platform-ie.png";
+										$platformImage = "images/platforms/ie.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Windows-XBMC')) {
-										$platformImage = "images/platforms/platform-xbmc.png";
+										$platformImage = "images/platforms/xbmc.png";
 									}else if(empty($platformXmlField->Player['platform'])) {
 										if(strstr($platformResultsRow['platform'], 'Apple')) {
-											$platformImage = "images/platforms/platform-appletv.png";
+											$platformImage = "images/platforms/atv.png";
 										}else{
-											$platformImage = "images/platforms/platform-default.png";
+											$platformImage = "images/platforms/default.png";
 										}
 									}
 									
@@ -612,7 +612,7 @@
 												$userIpAddressesData = simplexml_load_file($userIpAddressesUrl) or die ("<div class=\"alert alert-warning \">Cannot access http://www.geoplugin.net.</div>");
 
 												echo "<tr>";
-													echo "<td align='center'>".date("m/d/Y",$userIpAddresses['time'])."</td>";
+													echo "<td align='center'>".date($plexWatch['dateFormat'],$userIpAddresses['time'])."</td>";
 													echo "<td align='center'>".$userIpAddresses['ip_address']."</td>";
 													echo "<td align='left'>".$userIpAddresses['play_count']."</td>";
 													echo "<td align='left'>".$userIpAddresses['platform']."</td>";
@@ -680,7 +680,7 @@
 										if (empty($row['stopped'])) {
 											echo "<td class='currentlyWatching' align='center'>Currently watching...</td>";
 										}else{
-											echo "<td align='center'>".date("m/d/Y",$row['time'])."</td>";
+											echo "<td align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
 										}
 										echo "<td align='left'>".$row['platform']."</td>";
 										if (empty($row['ip_address'])) {
@@ -708,12 +708,12 @@
 
 										}
 														
-										echo "<td align='center'>".date("g:i a",$row['time'])."</td>";
+										echo "<td align='center'>".date($plexWatch['timeFormat'],$row['time'])."</td>";
 										
 										$paused_time = round(abs($row['paused_counter']) / 60,1);
 										echo "<td align='center'>".$paused_time." min</td>";
 										
-										$stopped_time = date("g:i a",$row['stopped']);
+										$stopped_time = date($plexWatch['timeFormat'],$row['stopped']);
 										
 										if (empty($row['stopped'])) {								
 											echo "<td align='center'>n/a</td>";
@@ -774,6 +774,9 @@
 	<script>
 		$(document).ready(function() {
 			var oTable = $('#tableUserHistory').dataTable( {
+				"aoColumnDefs": [
+      				{ "sType": "date", "aTargets": [ 0 ] }
+    			]
 				"bPaginate": true,
 				"bLengthChange": true,
 				"bFilter": true,
@@ -790,6 +793,9 @@
 	<script>
 		$(document).ready(function() {
 			var oTable = $('#tableUserIpAddresses').dataTable( {
+				"aoColumnDefs": [
+      				{ "sType": "date", "aTargets": [ 0 ] }
+    			]
 				"bPaginate": false,
 				"bLengthChange": true,
 				"bFilter": false,
@@ -797,7 +803,7 @@
 				"bInfo": false,
 				"bAutoWidth": true,
 				"aaSorting": [[ 0, "desc" ]],
-				"bStateSave": true,
+				"bStateSave": false,
 				"bSortClasses": false,
 				"sPaginationType": "bootstrap"	
 			} );

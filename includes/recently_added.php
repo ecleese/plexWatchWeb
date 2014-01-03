@@ -24,10 +24,14 @@ if (isset($_GET['width'])) {
 
 			if (!empty($plexWatch['myPlexAuthToken'])) {
 				$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
-				$recentRequest = simplexml_load_file("".$plexWatchPmsUrl."/library/recentlyAdded?query=c&X-Plex-Container-Start=0&X-Plex-Container-Size=".$containerSize."&X-Plex-Token=".$myPlexAuthToken."") or die ("<div class='alert alert-warning'>Failed to access Plex Media Server. Please check your settings.</div>");
+            if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/library/recentlyAdded?query=c&X-Plex-Container-Start=0&X-Plex-Container-Size=".$containerSize."&X-Plex-Token=".$myPlexAuthToken."")) {
+               $recentRequest = simplexml_load_string($fileContents) or die ("<div class='alert alert-warning'>Failed to access Plex Media Server. Please check your settings.</div>");
+            }
 			}else{
 				$myPlexAuthToken = '';
-				$recentRequest = simplexml_load_file("".$plexWatchPmsUrl."/library/recentlyAdded?query=c&X-Plex-Container-Start=0&X-Plex-Container-Size=".$containerSize) or die ("<div class='alert alert-warning'>Failed to access Plex Media Server. Please check your settings.</div>");
+				if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/library/recentlyAdded?query=c&X-Plex-Container-Start=0&X-Plex-Container-Size=".$containerSize)) {
+               $recentRequest = simplexml_load_string($fileContents) or die ("<div class='alert alert-warning'>Failed to access Plex Media Server. Please check your settings.</div>");
+            }
 
 			}
 			
@@ -40,7 +44,7 @@ if (isset($_GET['width'])) {
 							if ($recentXml['type'] == "season") {
 								
 									$recentArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['art']."&width=320&height=160";                                        
-									$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['thumb']."&width=136&height=280";  
+									$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['thumb']."&width=153&height=225";  
 								
 								
 									echo "<div class='dashboard-recent-media-instance'>";
@@ -72,7 +76,7 @@ if (isset($_GET['width'])) {
 							}else if ($recentXml['type'] == "movie") {				
 							
 								$recentArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['art']."&width=320&height=160";                                        
-								$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['thumb']."&width=136&height=280";  
+								$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['thumb']."&width=153&height=225";  
 								
 								
 								echo "<div class='dashboard-recent-media-instance'>";

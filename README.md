@@ -1,4 +1,4 @@
-plexWatch/Web - v1.5.0.3 dev
+plexWatch/Web - v1.5.0.4 dev
 ======================
 
 A web front-end for plexWatch.
@@ -53,13 +53,13 @@ A web front-end for plexWatch.
 	* duration length
 	* percentage completed
 	
-* full user list with gravatar
+* full user list with general information and comparison stats
 
 * individual user information
 	- username and gravatar (if available)
 	- daily, weekly, monthly, all time stats for play count and duration length
 	- individual platform stats for each user
-	- public ip address history with last seen date, geo tag location and isp information 
+	- public ip address history with last seen date and geo tag location 
 	- recently watched content
 	- watching history
 * charts
@@ -81,9 +81,9 @@ A web front-end for plexWatch.
 * plexWatch (v0.1.6+)
 * a web server that supports php (apache, nginx, XAMPP, WampServer, EasyPHP, lighttpd, etc)
 * php5
-* php-sqlite
-* php-curl
-* php-json
+* php5-sqlite
+* php5-curl
+* php5-json
 
 
 ### Install 
