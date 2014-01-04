@@ -386,7 +386,7 @@
 									echo"</div>";
 								echo"</div>";
 								
-								$platformResults = $db->query ("SELECT xml,platform, COUNT(platform) as platform_count FROM ".$plexWatchDbTable." WHERE user = '$user' GROUP BY platform ORDER BY platform ASC") or die ("Failed to access plexWatch database. Please check your settings.");
+								$platformResults = $db->query ("SELECT xml,platform, COUNT(platform) as platform_count FROM processed WHERE user = '$user' GROUP BY platform ORDER BY platform ASC") or die ("Failed to access plexWatch database. Please check your settings.");
 								 
 								
 								$platformImage = 0;
@@ -402,6 +402,8 @@
 										$platformImage = "images/platforms/appletv.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Firefox')) {
 										$platformImage = "images/platforms/firefox.png";
+									}else if(strstr($platformXmlField->Player['platform'], 'Chromecast')) {
+										$platformImage = "images/platforms/chromecast.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Chrome')) {
 										$platformImage = "images/platforms/chrome.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Android')) {
@@ -577,7 +579,7 @@
 			
 		echo "<div class='tab-pane' id='userAddresses'>";
 		
-			$userIpAddressesQuery = $db->query("SELECT time,ip_address,platform, COUNT(ip_address) as play_count FROM processed WHERE user = '$user' GROUP BY ip_address ORDER BY time DESC");
+			$userIpAddressesQuery = $db->query("SELECT time,ip_address,platform,xml, COUNT(ip_address) as play_count FROM processed WHERE user = '$user' GROUP BY ip_address ORDER BY time DESC");
 
 			echo "<div class='container-fluid'>";	
 				echo "<div class='row-fluid'>";
@@ -598,7 +600,7 @@
 										echo "<th align='center'><i class='icon-sort icon-white'></i> Last seen</th>";
 										echo "<th align='center'><i class='icon-sort icon-white'></i> IP Address</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Play Count</th>";
-										echo "<th align='left'><i class='icon-sort icon-white'></i> Platform</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> Platform (Last Seen)</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Location</th>";
 										
 									echo "</tr>";
@@ -624,7 +626,16 @@
 													echo "<td align='center'>".date($plexWatch['dateFormat'],$userIpAddresses['time'])."</td>";
 													echo "<td align='center'>".$userIpAddresses['ip_address']."</td>";
 													echo "<td align='left'>".$userIpAddresses['play_count']."</td>";
-													echo "<td align='left'>".$userIpAddresses['platform']."</td>";
+
+													$userIpAddressesXml = simplexml_load_string($userIpAddresses['xml']); 
+													
+													if ($userIpAddressesXml->Player['platform'] == "Chromecast") {
+														echo "<td align='left'>".$userIpAddressesXml->Player['platform']."</td>";
+													}else{
+														echo "<td align='left'>".$userIpAddresses['platform']."</td>";
+													}
+
+													
 													if (empty($userIpAddressesData->geoplugin_city)) {
 														echo "<td align='left'>n/a</td>";
 													}else{
