@@ -8,6 +8,8 @@ if ($plexWatch['https'] == 'yes') {
         $plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
 }
 
+$fileContents = '';
+
 if (!empty($plexWatch['myPlexAuthToken'])) {
         $myPlexAuthToken = $plexWatch['myPlexAuthToken'];                        
         if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$plexWatch['myPlexAuthToken']."")) {

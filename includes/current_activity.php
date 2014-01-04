@@ -8,6 +8,8 @@ if ($plexWatch['https'] == 'yes') {
 	$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
 }
 
+$fileContents = '';
+
 if (!empty($plexWatch['myPlexAuthToken'])) {
 	$myPlexAuthToken = $plexWatch['myPlexAuthToken'];			
 	if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$plexWatch['myPlexAuthToken']."")) {
@@ -34,6 +36,8 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 					$platformImage = "images/platforms/appletv.png";
 				}else if(strstr($sessions->Player['platform'], 'Firefox')) {
 					$platformImage = "images/platforms/firefox.png";
+				}else if(strstr($sessions->Player['platform'], 'Chromecast')) {
+					$platformImage = "images/platforms/chromecast.png";
 				}else if(strstr($sessions->Player['platform'], 'Chrome')) {
 					$platformImage = "images/platforms/chrome.png";
 				}else if(strstr($sessions->Player['platform'], 'Android')) {

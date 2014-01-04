@@ -6753,7 +6753,7 @@ width: 250px;
 text-overflow: ellipsis;
 overflow: hidden;
 white-space: nowrap;
-width: 80%;
+width: 78%;
 margin-left: 5px;
 margin-right: 5px;
 }
@@ -6771,7 +6771,7 @@ text-overflow: ellipsis;
 overflow: hidden;
 white-space: nowrap;
 font-size: 14px;
-width: 80%;
+width: 78%;
 margin-left: 5px;
 margin-right: 5px;
 }
@@ -8119,7 +8119,7 @@ border-radius: 3px;
 
 .user-platforms-instance-name {
 float: left;
-padding-top: 15px;
+padding-top: 14px;
 color: #fff;
 text-overflow: ellipsis;
 overflow: hidden;
@@ -8128,7 +8128,7 @@ font-size: 13px;
 line-height: 15px;
 font-weight: bold;
 width: 140px;
-white-space: nowrap;
+
 margin-left: 10px;
 }
 

@@ -214,7 +214,14 @@
 									echo "<tr>";
 										echo "<td align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
 										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
-										echo "<td align='left'>".$row['platform']."</td>";
+										
+										$rowXml = simplexml_load_string($row['xml']); 
+										$platform = $rowXml->Player['platform'];
+										if ($platform == "Chromecast") {
+											echo "<td align='left'>".$platform."</td>";
+										}else{
+											echo "<td align='left'>".$row['platform']."</td>";
+										}
 
 										if (empty($row['ip_address'])) {
 											echo "<td align='left'>n/a</td>";
@@ -674,7 +681,14 @@
 									echo "<tr>";
 										echo "<td align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
 										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
-										echo "<td align='left'>".$row['platform']."</td>";
+										
+										$rowXml = simplexml_load_string($row['xml']); 
+										$platform = $rowXml->Player['platform'];
+										if ($platform == "Chromecast") {
+											echo "<td align='left'>".$platform."</td>";
+										}else{
+											echo "<td align='left'>".$row['platform']."</td>";
+										}
 
 										if (empty($row['ip_address'])) {
 											echo "<td align='left'>n/a</td>";

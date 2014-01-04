@@ -435,7 +435,16 @@
 									echo "<div class='user-platforms'>";
 										echo "<ul>";
 											echo "<div class='user-platforms-instance'>";
-												echo "<li><img class='user-platforms-instance-poster' src='".$platformImage."'></img> <div class='user-platforms-instance-name'>".$platformResultsRow['platform']."</div>";
+												echo "<li>";
+												echo "<img class='user-platforms-instance-poster' src='".$platformImage."'></img>";
+
+												if ($platformXmlField->Player['platform'] == "Chromecast") {
+													echo "<div class='user-platforms-instance-name'>Plex/Web (Chrome) & Chromecast</div>";
+												}else{
+													echo "<div class='user-platforms-instance-name'>".$platformResultsRow['platform']."</div>";
+												}
+
+												
 												echo "<div class='user-platforms-instance-playcount'><h3>".$platformResultsRow['platform_count']."</h3><p> plays</p></div>";
 												echo "</li>";
 											echo "</div>";
@@ -676,73 +685,82 @@
 									echo "<tbody>";
 									while ($row = $results->fetchArray()) {
 									
-									echo "<tr>";
-										if (empty($row['stopped'])) {
-											echo "<td class='currentlyWatching' align='center'>Currently watching...</td>";
-										}else{
-											echo "<td align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
-										}
-										echo "<td align='left'>".$row['platform']."</td>";
-										if (empty($row['ip_address'])) {
-											echo "<td align='left'>n/a</td>";
-
-										}else{
-
-											echo "<td align='left'>".$row['ip_address']."</td>";
-										}
 										$request_url = $row['xml'];
 										$xmlfield = simplexml_load_string($request_url) ; 
 										$ratingKey = $xmlfield['ratingKey'];
 										$type = $xmlfield['type'];
 										$duration = $xmlfield['duration'];
 										$viewOffset = $xmlfield['viewOffset'];
+										$platform = $xmlfield->Player['platform'];
+
+										echo "<tr>";
+											if (empty($row['stopped'])) {
+												echo "<td class='currentlyWatching' align='center'>Currently watching...</td>";
+											}else{
+												echo "<td align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
+											}
 											
-										
-										if ($type=="movie") {
-										echo "<td class='title' align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
-										}else if ($type=="episode") {
-										echo "<td class='title' align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
-										}else if (!array_key_exists('',$type)) {
-										echo "<td class='title' align='left'><a href='".$ratingKey."'>".$row['title']."</a></td>";
-										}else{
-
-										}
-														
-										echo "<td align='center'>".date($plexWatch['timeFormat'],$row['time'])."</td>";
-										
-										$paused_time = round(abs($row['paused_counter']) / 60,1);
-										echo "<td align='center'>".$paused_time." min</td>";
-										
-										$stopped_time = date($plexWatch['timeFormat'],$row['stopped']);
-										
-										if (empty($row['stopped'])) {								
-											echo "<td align='center'>n/a</td>";
-										}else{
-											echo "<td align='center'>".$stopped_time."</td>";
-										}
-
-										$to_time = strtotime(date("m/d/Y g:i a",$row['stopped']));
-										$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
-										
-										$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
-										$viewed_time_length = strlen($viewed_time);
-										
-										
-										
-										if ($viewed_time_length == 8) {
-											echo "<td align='center'>n/a</td>";
-										}else{
-											echo "<td align='center'>".$viewed_time. " min</td>";
-										}
-										
-										$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
-											if ($percentComplete >= 90) {	
-											  $percentComplete = 100;    
+											if ($platform == "Chromecast") {
+												echo "<td align='left'>".$platform."</td>";
+											}else{
+												echo "<td align='left'>".$row['platform']."</td>";
 											}
 
-										echo "<td align='center'><span class='badge badge-warning'>".$percentComplete."%</span></td>";
-									echo "</tr>";   
-								}
+											if (empty($row['ip_address'])) {
+												echo "<td align='left'>n/a</td>";
+
+											}else{
+
+												echo "<td align='left'>".$row['ip_address']."</td>";
+											}
+											
+											
+											
+											if ($type=="movie") {
+											echo "<td class='title' align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
+											}else if ($type=="episode") {
+											echo "<td class='title' align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
+											}else if (!array_key_exists('',$type)) {
+											echo "<td class='title' align='left'><a href='".$ratingKey."'>".$row['title']."</a></td>";
+											}else{
+
+											}
+															
+											echo "<td align='center'>".date($plexWatch['timeFormat'],$row['time'])."</td>";
+											
+											$paused_time = round(abs($row['paused_counter']) / 60,1);
+											echo "<td align='center'>".$paused_time." min</td>";
+											
+											$stopped_time = date($plexWatch['timeFormat'],$row['stopped']);
+											
+											if (empty($row['stopped'])) {								
+												echo "<td align='center'>n/a</td>";
+											}else{
+												echo "<td align='center'>".$stopped_time."</td>";
+											}
+
+											$to_time = strtotime(date("m/d/Y g:i a",$row['stopped']));
+											$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
+											
+											$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
+											$viewed_time_length = strlen($viewed_time);
+											
+											
+											
+											if ($viewed_time_length == 8) {
+												echo "<td align='center'>n/a</td>";
+											}else{
+												echo "<td align='center'>".$viewed_time. " min</td>";
+											}
+											
+											$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
+												if ($percentComplete >= 90) {	
+												  $percentComplete = 100;    
+												}
+
+											echo "<td align='center'><span class='badge badge-warning'>".$percentComplete."%</span></td>";
+										echo "</tr>";   
+									}
 								}
 									echo "</tbody>";
 								echo "</table>";

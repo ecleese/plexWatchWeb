@@ -5,7 +5,7 @@ require_once(dirname(__FILE__) . '/timeago.php');
 
 if (isset($_GET['width'])) {
   $containerSize = 1; // min size?
-  $tmp = $_GET['width']/160;
+  $tmp = $_GET['width']/180;
   if ($tmp > 0) { 
     $containerSize = $tmp; 
     if (!isset($singlerow)) {  $containerSize = $containerSize*1;    }   

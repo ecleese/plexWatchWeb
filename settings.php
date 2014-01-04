@@ -110,7 +110,7 @@
 							<div class="settings-general-info">
 								
 								<ul>
-									<li>plexWatch/Web Version: <strong>v1.5.0.5 dev</strong></li>	
+									<li>plexWatch/Web Version: <strong>v1.5.0.6 dev</strong></li>	
 								
 									<?php
 									$db = new SQLite3($plexWatch['plexWatchDb']);
@@ -682,7 +682,7 @@
     $(".alert-warning").fadeTo(500, 0).slideUp(500, function(){
         $(this).remove(); 
     });
-	}, 10000);
+	}, 5000);
 	</script>
 	
 	
