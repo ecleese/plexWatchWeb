@@ -770,6 +770,7 @@
     <script src="js/jquery-2.0.3.js"></script>
 	<script src="js/bootstrap.js"></script>
 	<script src="js/jquery.dataTables.js"></script>
+	<script src="js/jquery.dataTables.plugin.date_sorting.js"></script>
 	<script src="js/jquery.dataTables.plugin.bootstrap_pagination.js"></script>
 	<script src="js/jquery.rateit.js"></script>
 	
@@ -786,16 +787,19 @@
 	<script>
 		$(document).ready(function() {
 			var oTable = $('#globalHistory').dataTable( {
-				"bPaginate": false,
+				"bPaginate": true,
 				"bLengthChange": true,
-				"bFilter": false,
-				"bSort": false,
+				"bFilter": true,
+				"bSort": true,
 				"bInfo": true,
-				"bAutoWidth": true,
-				"aaSorting": [[ 0, "desc" ]],
+				"bAutoWidth": true,	
+				"aaSorting": [[ 0, "desc" ]],			
 				"bStateSave": false,
 				"bSortClasses": false,
-				"sPaginationType": "bootstrap"	
+				"sPaginationType": "bootstrap",
+				"aoColumnDefs": [
+			      { "sType": "us_date", "aTargets": [ 0 ] }
+			    ]
 			} );
 		} );
 	</script>

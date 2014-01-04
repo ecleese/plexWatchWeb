@@ -316,11 +316,12 @@
 	<script src="js/bootstrap.js"></script>
 	<script src="js/jquery.dataTables.js"></script>
 	<script src="js/jquery.dataTables.plugin.bootstrap_pagination.js"></script>
+	<script src="js/jquery.dataTables.plugin.date_sorting.js"></script>
 	<script src="js/d3.v3.js"></script> 
 	<script src="js/xcharts.min.js"></script> 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			var oTable = $('#globalHistory').dataTable( {
+			$('#globalHistory').dataTable( {
 				"bPaginate": true,
 				"bLengthChange": true,
 				"bFilter": true,
@@ -328,9 +329,12 @@
 				"bInfo": true,
 				"bAutoWidth": true,	
 				"aaSorting": [[ 0, "desc" ]],			
-				"bStateSave": true,
+				"bStateSave": false,
 				"bSortClasses": false,
-				"sPaginationType": "bootstrap"	
+				"sPaginationType": "bootstrap",
+				"aoColumnDefs": [
+			      { "sType": "us_date", "aTargets": [ 0 ] }
+			    ]	
 			} );
 		} );
 	</script>

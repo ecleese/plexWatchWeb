@@ -1,3 +1,6 @@
+1.5.0.8 dev
+* Fix:		global: table date sorting by newest date would not sort properly when the year was different (This fix has a current limitation that requires "/" as the delimiter between day, month and year)
+
 1.5.0.7 dev
 * Fix:		user.php: incorrect platform image could appear when user grouping was enabled
 * Change:	user.php: public IP address platform to "Platform (Last Seen)" and include Chromecast as possible platform
@@ -7,10 +10,10 @@
 * Fix:		global: undefined fileContents variable on initial use
 
 1.5.0.5 dev
-* Fix:		global: table sorting fix from 1.5.0.4 did not work. Defaulting formatting with year first for now until there is a better fix
+* Fix:		global: table date column sorting fix from 1.5.0.4 did not work. Defaulting formatting with year first for now until there is a better fix
 
 1.5.0.4 dev
-* Fix:		global: table sorting by newest date would not sort properly when the year was different
+* Fix:		global: table date column sorting by newest date would not sort properly when the year was different
 * Change:	settings.php: "myPlex" has been renamed "Plex Authentication" to maintain consistency with Plex.tv's removal of the myPlex name
 * Fix:		history.php: monthly plays chart would not display next month in a new year properly
 * Change:	current_activity.php: design and css adjustments

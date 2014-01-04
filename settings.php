@@ -110,7 +110,7 @@
 							<div class="settings-general-info">
 								
 								<ul>
-									<li>plexWatch/Web Version: <strong>v1.5.0.7 dev</strong></li>	
+									<li>plexWatch/Web Version: <strong>v1.5.0.8 dev</strong></li>	
 								
 									<?php
 									$db = new SQLite3($plexWatch['plexWatchDb']);
@@ -133,7 +133,7 @@
 							  <label class="control-label" for="dateFormat">Date Format</label>
 							  <div class="controls">
 								<input id="dateFormat" name="dateFormat" type="text" placeholder="Y-m-d" class="input-mini" required="" value="<?php echo $plexWatch['dateFormat'] ?>">
-								<p class="help-block">The date display format plexWatch/Web should use. <a href="http://php.net/manual/en/function.date.php">Date/Time formatting documentation.</a></p>
+								<p class="help-block">The date display format plexWatch/Web should use. Current limitations require " <strong>/</strong> " as a delimiter. <a href="http://php.net/manual/en/function.date.php">Date/Time formatting documentation.</a></p>
 							  </div>
 							</div>
 
@@ -369,7 +369,7 @@
 							  <label class="control-label" for="dateFormat">Date Format</label>
 							  <div class="controls">
 								<input id="dateFormat" name="dateFormat" type="text" placeholder="Y-m-d" class="input-mini" required="" value="m/d/Y">
-								<p class="help-block">plexWatch Date Format</p>
+								<p class="help-block">The date display format plexWatch/Web should use. Current limitations require " <strong>/</strong> " as a delimiter. <a href="http://php.net/manual/en/function.date.php">Date/Time formatting documentation.</a></p>
 							  </div>
 							</div>
 
@@ -378,7 +378,7 @@
 							  <label class="control-label" for="timeFormat">Time Format</label>
 							  <div class="controls">
 								<input id="timeFormat" name="timeFormat" type="text" placeholder="g:i a" class="input-mini" required="" value="g:i a">
-								<p class="help-block">plexWatch Time Format</p>
+								<p class="help-block">The time display format plexWatch/Web should use. <a href="http://php.net/manual/en/function.date.php">Date/Time formatting documentation.</a></p>
 							  </div>
 							</div>
 
