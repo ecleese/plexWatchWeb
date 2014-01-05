@@ -427,7 +427,7 @@
 									}else if(strstr($platformXmlField->Player['platform'], 'Windows-XBMC')) {
 										$platformImage = "images/platforms/xbmc.png";
 									}else if(empty($platformXmlField->Player['platform'])) {
-										if(strstr($platformResultsRow['platform'], 'Apple')) {
+										if(strstr($platformXmlField->Player['title'], 'Apple')) {
 											$platformImage = "images/platforms/atv.png";
 										}else{
 											$platformImage = "images/platforms/default.png";
@@ -739,8 +739,8 @@
 															
 											echo "<td align='center'>".date($plexWatch['timeFormat'],$row['time'])."</td>";
 											
-											$paused_time = round(abs($row['paused_counter']) / 60,1);
-											echo "<td align='center'>".$paused_time." min</td>";
+											$paused_duration = round(abs($row['paused_counter']) / 60,1);
+											echo "<td align='center'>".$paused_duration." min</td>";
 											
 											$stopped_time = date($plexWatch['timeFormat'],$row['stopped']);
 											
@@ -752,6 +752,7 @@
 
 											$to_time = strtotime(date("m/d/Y g:i a",$row['stopped']));
 											$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
+											$paused_time = strtotime(date("m/d/Y g:i a",$row['paused_counter']));
 											
 											$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
 											$viewed_time_length = strlen($viewed_time);

@@ -241,8 +241,8 @@
 														
 										echo "<td align='center'>".date($plexWatch['timeFormat'],$row['time'])."</td>";
 										
-										$paused_time = round(abs($row['paused_counter']) / 60,1);
-										echo "<td align='center'>".$paused_time." min</td>";
+										$paused_duration = round(abs($row['paused_counter']) / 60,1);
+										echo "<td align='center'>".$paused_duration." min</td>";
 										
 										$stopped_time = date($plexWatch['timeFormat'],$row['stopped']);
 										
@@ -252,14 +252,12 @@
 											echo "<td align='center'>".$stopped_time."</td>";
 										}
 
-
-										$to_time = strtotime(date("\"".$plexWatch['dateFormat']."".$plexWatch['timeFormat']."\"",$row['stopped']));
-										$from_time = strtotime(date("\"".$plexWatch['dateFormat']."".$plexWatch['timeFormat']."\"",$row['time']));
+										$to_time = strtotime(date("m/d/Y g:i a",$row['stopped']));
+										$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
+										$paused_time = strtotime(date("m/d/Y g:i a",$row['paused_counter']));
 										
 										$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
 										$viewed_time_length = strlen($viewed_time);
-										
-										
 										
 										if ($viewed_time_length == 8) {
 											echo "<td align='center'>n/a</td>";
@@ -708,8 +706,8 @@
 														
 										echo "<td align='center'>".date($plexWatch['timeFormat'],$row['time'])."</td>";
 										
-										$paused_time = round(abs($row['paused_counter']) / 60,1);
-										echo "<td align='center'>".$paused_time." min</td>";
+										$paused_duration = round(abs($row['paused_counter']) / 60,1);
+										echo "<td align='center'>".$paused_duration." min</td>";
 										
 										$stopped_time = date($plexWatch['timeFormat'],$row['stopped']);
 										
@@ -719,9 +717,10 @@
 											echo "<td align='center'>".$stopped_time."</td>";
 										}
 
-										$to_time = strtotime(date("\"".$plexWatch['dateFormat']."".$plexWatch['timeFormat']."\"",$row['stopped']));
-										$from_time = strtotime(date("\"".$plexWatch['dateFormat']."".$plexWatch['timeFormat']."\"",$row['time']));
-										
+										$to_time = strtotime(date("m/d/Y g:i a",$row['stopped']));
+										$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
+										$paused_time = strtotime(date("m/d/Y g:i a",$row['paused_counter']));
+
 										$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
 										$viewed_time_length = strlen($viewed_time);
 										
