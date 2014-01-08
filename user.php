@@ -426,6 +426,8 @@
 										$platformImage = "images/platforms/ie.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Windows-XBMC')) {
 										$platformImage = "images/platforms/xbmc.png";
+									}else if(strstr($platformXmlField->Player['platform'], 'Samsung')) {
+										$platformImage = "images/platforms/samsung.png";
 									}else if(empty($platformXmlField->Player['platform'])) {
 										if(strstr($platformXmlField->Player['title'], 'Apple')) {
 											$platformImage = "images/platforms/atv.png";

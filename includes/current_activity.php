@@ -60,6 +60,8 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 					$platformImage = "images/platforms/ie.png";
 				}else if(strstr($sessions->Player['platform'], 'Windows-XBMC')) {
 					$platformImage = "images/platforms/xbmc.png";
+				}else if(strstr($platformXmlField->Player['platform'], 'Samsung')) {
+					$platformImage = "images/platforms/samsung.png";
 				}else if(empty($sessions->Player['platform'])) {
 					if(strstr($sessions->Player['title'], 'Apple')) {
 						$platformImage = "images/platforms/atv.png";

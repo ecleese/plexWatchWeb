@@ -1,3 +1,6 @@
+1.5.0.11 dev
+* Add:		global: Samsung platform icon support
+
 1.5.0.10 dev
 * Remove:	users.php: table column sorting is locked to alphebetically by user until a fix is available for "last seen" column
 * Change:	user.php: minor css tweaks to stats
