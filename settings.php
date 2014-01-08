@@ -110,7 +110,7 @@
 							<div class="settings-general-info">
 								
 								<ul>
-									<li>plexWatch/Web Version: <strong>v1.5.0.11.1 dev</strong></li>	
+									<li>plexWatch/Web Version: <strong>v1.5.0.11.2 dev</strong></li>	
 								
 									<?php
 									$db = new SQLite3($plexWatch['plexWatchDb']);

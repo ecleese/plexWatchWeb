@@ -430,7 +430,7 @@
 										if(strstr($platformXmlField->Player['title'], 'Apple')) {
 											$platformImage = "images/platforms/atv.png";
 										//Code below matches Samsung naming standard: [Display Technology: 2 Letters][Size: 2 digits][Generation: 1 letter][Model: 4 digits]
-										}else if(preg_match("/TV [a-z][a-z]\d\d[a-z]\d\d\d\d/i",$sessions->Player['title'])) {
+										}else if(preg_match("/TV [a-z][a-z]\d\d[a-z]/i",$platformXmlField->Player['title'])) {
 											$platformImage = "images/platforms/samsung.png";	
 										}else{
 											$platformImage = "images/platforms/default.png";
