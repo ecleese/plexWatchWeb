@@ -98,7 +98,7 @@
 							$plexWatchDbTable = "processed";
 						}
 						
-						$users = $db->query("SELECT COUNT(title) as plays, user, time, SUM(time) as timeTotal, SUM(stopped) as stoppedTotal, SUM(paused_counter) as paused_counterTotal, platform, ip_address, xml FROM ".$plexWatchDbTable." GROUP BY user") or die ("Failed to access plexWatch database. Please check your settings.");
+						$users = $db->query("SELECT COUNT(title) as plays, user, time, SUM(time) as timeTotal, SUM(stopped) as stoppedTotal, SUM(paused_counter) as paused_counterTotal, platform, ip_address, xml FROM ".$plexWatchDbTable." GROUP BY user ORDER BY user COLLATE NOCASE") or die ("Failed to access plexWatch database. Please check your settings.");
 					
 							
 							echo "<div class='wellbg'>";
@@ -180,7 +180,7 @@
 				"bPaginate": false,
 				"bLengthChange": true,
 				"bFilter": false,
-				"bSort": true,
+				"bSort": false,
 				"bInfo": true,
 				"bAutoWidth": true,
 				"aaSorting": [[ 0, "asc" ]],

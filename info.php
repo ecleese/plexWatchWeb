@@ -474,7 +474,7 @@
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 							echo "<div class='dashboard-wellheader'>";
-								echo"<h3>Episodes</h3>";
+								echo"<h3>".$xml->Directory['title']."</h3>";
 							echo "</div>"; 
 						echo "</div>"; 
 								

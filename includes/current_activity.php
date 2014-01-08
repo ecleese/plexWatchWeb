@@ -60,10 +60,12 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 					$platformImage = "images/platforms/ie.png";
 				}else if(strstr($sessions->Player['platform'], 'Windows-XBMC')) {
 					$platformImage = "images/platforms/xbmc.png";
-				}else if(strstr($platformResultsRow['platform'], 'Apple')) {
-					$platformImage = "images/platforms/atv.png";
 				}else if(empty($sessions->Player['platform'])) {
-					$platformImage = "images/platforms/default.png";
+					if(strstr($sessions->Player['title'], 'Apple')) {
+						$platformImage = "images/platforms/atv.png";
+					}else{
+						$platformImage = "images/platforms/default.png";
+					}
 				}
 
 				
@@ -181,7 +183,13 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 												}else if ($sessions->TranscodeSession['audioDecision'] == "transcode") {
 													echo "Audio: <strong>Transcode (".$sessions->TranscodeSession['audioCodec'].") (".$sessions->TranscodeSession['audioChannels']."ch)</strong>";
 												}else if ($sessions->TranscodeSession['audioDecision'] == "copy") {
-													echo "Audio: <strong>Direct Stream (".$sessions->TranscodeSession['audioCodec'].") (".$sessions->TranscodeSession['audioChannels']."ch)</strong>";
+													if ($sessions->TranscodeSession['audioCodec'] == "dca") {
+														echo "Audio: <strong>Direct Stream (DTS) (".$sessions->TranscodeSession['audioChannels']."ch)</strong>";
+													}else if ($sessions->Media['audioCodec'] == "ac3") {
+														echo "Audio: <strong>Direct Stream (AC3) (".$sessions->TranscodeSession['audioChannels']."ch)</strong>";
+													}else{
+														echo "Audio: <strong>Direct Stream (".$sessions->TranscodeSession['audioCodec'].") (".$sessions->TranscodeSession['audioChannels']."ch)</strong>";
+													}
 												}else{
 													
 												}
@@ -306,7 +314,13 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 												}else if ($sessions->TranscodeSession['audioDecision'] == "transcode") {
 													echo "Audio: <strong>Transcode (".$sessions->TranscodeSession['audioCodec'].") (".$sessions->TranscodeSession['audioChannels']."ch)</strong>";
 												}else if ($sessions->TranscodeSession['audioDecision'] == "copy") {
-													echo "Audio: <strong>Direct Stream (".$sessions->TranscodeSession['audioCodec'].") (".$sessions->TranscodeSession['audioChannels']."ch)</strong>";
+													if ($sessions->TranscodeSession['audioCodec'] == "dca") {
+														echo "Audio: <strong>Direct Stream (DTS) (".$sessions->TranscodeSession['audioChannels']."ch)</strong>";
+													}else if ($sessions->Media['audioCodec'] == "ac3") {
+														echo "Audio: <strong>Direct Stream (AC3) (".$sessions->TranscodeSession['audioChannels']."ch)</strong>";
+													}else{
+														echo "Audio: <strong>Direct Stream (".$sessions->TranscodeSession['audioCodec'].") (".$sessions->TranscodeSession['audioChannels']."ch)</strong>";
+													}
 												}else{
 													
 												}
@@ -432,7 +446,13 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 												}else if ($sessions->TranscodeSession['audioDecision'] == "transcode") {
 													echo "Audio: <strong>Transcode (".$sessions->TranscodeSession['audioCodec'].") (".$sessions->TranscodeSession['audioChannels']."ch)</strong>";
 												}else if ($sessions->TranscodeSession['audioDecision'] == "copy") {
-													echo "Audio: <strong>Direct Stream (".$sessions->TranscodeSession['audioCodec'].") (".$sessions->TranscodeSession['audioChannels']."ch)</strong>";
+													if ($sessions->TranscodeSession['audioCodec'] == "dca") {
+														echo "Audio: <strong>Direct Stream (DTS) (".$sessions->TranscodeSession['audioChannels']."ch)</strong>";
+													}else if ($sessions->Media['audioCodec'] == "ac3") {
+														echo "Audio: <strong>Direct Stream (AC3) (".$sessions->TranscodeSession['audioChannels']."ch)</strong>";
+													}else{
+														echo "Audio: <strong>Direct Stream (".$sessions->TranscodeSession['audioCodec'].") (".$sessions->TranscodeSession['audioChannels']."ch)</strong>";
+													}
 												}else{
 													
 												}
@@ -550,7 +570,13 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 												}else if ($sessions->TranscodeSession['audioDecision'] == "transcode") {
 													echo "Audio: <strong>Transcode (".$sessions->TranscodeSession['audioCodec'].") (".$sessions->TranscodeSession['audioChannels']."ch)</strong>";
 												}else if ($sessions->TranscodeSession['audioDecision'] == "copy") {
-													echo "Audio: <strong>Direct Stream (".$sessions->TranscodeSession['audioCodec'].") (".$sessions->TranscodeSession['audioChannels']."ch)</strong>";
+													if ($sessions->TranscodeSession['audioCodec'] == "dca") {
+														echo "Audio: <strong>Direct Stream (DTS) (".$sessions->TranscodeSession['audioChannels']."ch)</strong>";
+													}else if ($sessions->Media['audioCodec'] == "ac3") {
+														echo "Audio: <strong>Direct Stream (AC3) (".$sessions->TranscodeSession['audioChannels']."ch)</strong>";
+													}else{
+														echo "Audio: <strong>Direct Stream (".$sessions->TranscodeSession['audioCodec'].") (".$sessions->TranscodeSession['audioChannels']."ch)</strong>";
+													}
 												}else{
 													
 												}

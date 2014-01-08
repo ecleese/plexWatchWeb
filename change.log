@@ -1,3 +1,9 @@
+1.5.0.10 dev
+* Remove:	users.php: table column sorting is locked to alphebetically by user until a fix is available for "last seen" column
+* Change:	user.php: minor css tweaks to stats
+* Change:	current_activity.php: minor tweaks to direct stream audio codec names
+* Fix:		global: AppleTV platform icon did not appear when client device was PlexConnect
+
 1.5.0.9 dev
 * Fix:		global: duration times were incorrect for user and media history tables
 
