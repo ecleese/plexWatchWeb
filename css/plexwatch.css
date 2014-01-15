@@ -6866,6 +6866,7 @@ float: left;
 width: 153px;
 font-size: 13px;
 margin-bottom: 20px;
+clear: both;
 }
 
 .dashboard-recent-media-metacontainer h3 {
@@ -7922,7 +7923,7 @@ margin-right: 10px;
 
 
 .user-overview-stats-wrapper {
-height: 100px;
+
 
 }
 
@@ -7936,6 +7937,7 @@ margin: 0px 0px 0px 0px;
 
 .user-overview-stats-instance {
 line-height: 11px;
+
 }
 
 .user-overview-stats-instance-device_icon {
@@ -7952,7 +7954,7 @@ padding-right: 15px;
 float: left;
 list-style: none;
 width: 340px;
-height: 100px;
+height: 90px;
 }
 
 
@@ -7975,7 +7977,7 @@ left: 0px;
 font-size: 30px;
 font-weight: bold;
 color: #F9AA03;
-line-height: 22px;
+line-height: 30px;
 position: relative;
 top: 0px;
 margin-left: 5px;
@@ -8044,6 +8046,7 @@ color:  #fff;
 -webkit-margin-end: 0px;
 width: 100%;
 height: 150px;
+overflow: hidden;
 }
 
 
@@ -8103,6 +8106,7 @@ margin: 0;
 .user-platforms-instance {
 float: left;
 width: 240px;
+height: 90px;
 margin-bottom: 25px;
 }
 
