@@ -293,6 +293,7 @@
 								
 								if($xml->Directory['art']) {
 									echo "<div class='art-face' style='background-image:url(includes/img.php?img=".urlencode($xmlArtUrl).")'>";
+								}else{
 									echo "<div class='art-face'>";
 								}
 								
@@ -495,8 +496,8 @@
 										
 											echo "<li>";
 												
-												echo "<div class='season-episodes-poster'>";
-													echo "<div class='season-episodes-poster-face'><a href='info.php?id=" .$seasonEpisodes['ratingKey']. "'><img src='".$seasonEpisodesThumbUrl."' class='season-episodes-poster-face'></img></a></div>";
+												echo "<div class='season-episodes-poster'>";																
+													echo "<div class='season-episodes-poster-face'><a href='info.php?id=" .$seasonEpisodes['ratingKey']. "'><img src='includes/img.php?img=".urlencode($seasonEpisodesThumbUrl)."' class='season-episodes-poster-face'></img></a></div>";
 													echo "<div class='season-episodes-card-overlay'><div class='season-episodes-season'>Episode ".$seasonEpisodes['index']."</div></div>";
 												echo "</div>";
 												echo "<div class='season-episodes-instance-text-wrapper'>";

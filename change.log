@@ -1,3 +1,6 @@
+1.5.0.13 dev
+*Fix:		info.php: season episode thumbs and top watched episode thumbs would not appear if using internal LAN IP address for PMS and Plex authentication was disabled.
+
 1.5.0.12 dev
 *Fix:		global: Minor CSS adjustments for IE
 
