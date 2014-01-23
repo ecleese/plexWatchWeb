@@ -38,11 +38,12 @@
 		<div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
 				
-				<a href="index.php"><div class="logo"></div></a>
+				<a href="index.php"><div class="logo hidden-phone"></div></a>
 				<ul class="nav">
 					
 					<li><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
 					<li><a href="history.php"><i class="icon-2x icon-calendar icon-white" data-toggle="tooltip" data-placement="bottom" title="History" id="history"></i></a></li>
+					<li><a href="stats.php"><i class="icon-2x icon-tasks icon-white" data-toggle="tooltip" data-placement="bottom" title="Stats" id="stats"></i></a></li>
 					<li><a href="users.php"><i class="icon-2x icon-group icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
 					<li><a href="charts.php"><i class="icon-2x icon-bar-chart icon-white" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
 					<li><a href="settings.php"><i class="icon-2x icon-wrench icon-white" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
@@ -689,6 +690,7 @@
 											echo "<th align='left'><i class='icon-sort icon-white'></i> Platform</th>";
 											echo "<th align='left'><i class='icon-sort icon-white'></i> IP Address</th>";
 											echo "<th align='left'><i class='icon-sort icon-white'></i> Title</th>";
+											echo "<th align='center'><i class='icon-sort icon-white'></i> Stream Info</th>";
 											echo "<th align='center'><i class='icon-sort icon-white'></i> Started</th>";
 											echo "<th align='center'><i class='icon-sort icon-white'></i> Paused</th>";
 											echo "<th align='center'><i class='icon-sort icon-white'></i> Stopped</th>";
@@ -697,8 +699,9 @@
 										echo "</tr>";
 									echo "</thead>";
 									echo "<tbody>";
+									$rowCount = 0;
 									while ($row = $results->fetchArray()) {
-									
+										$rowCount++;
 										$request_url = $row['xml'];
 										$xmlfield = simplexml_load_string($request_url) ; 
 										$ratingKey = $xmlfield['ratingKey'];
@@ -739,6 +742,137 @@
 											}else{
 
 											}
+
+
+											echo "<td align='center'><a href='#streamDetailsModal".$rowCount."' data-toggle='modal'><span class='badge badge-inverse'><i class='icon-info icon-white'></i></span></a></td>";
+							
+							
+
+							echo "<div id='streamDetailsModal".$rowCount."' class='modal hide fade' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>";
+							?>
+								<div class="modal-header">	
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="icon icon-remove"></i></button>		
+									<h3 id="myModalLabel"><i class="icon-info-sign icon-white"></i> Stream Info: <strong><?php echo $row['title']; ?></strong></h3>
+								</div>
+								
+								<div class="modal-body">
+									<?php
+									
+									if (array_key_exists('TranscodeSession',$xmlfield)) {
+
+									?>
+										<div class="span4">
+											<h4>Stream Details</h4>
+											<ul>
+											<h5>Video</h5>
+											<li>Stream Type: <strong><?php echo $xmlfield->TranscodeSession['videoDecision']; ?></strong></li>
+											<li>Video Resolution: <strong><?php echo $xmlfield->TranscodeSession['height']; ?>p</strong></li>
+											<li>Video Codec: <strong><?php echo $xmlfield->TranscodeSession['videoCodec']; ?></strong></li>
+											<li>Video Width: <strong><?php echo $xmlfield->TranscodeSession['width']; ?></strong></li>
+											<li>Video Height: <strong><?php echo $xmlfield->TranscodeSession['height']; ?></strong></li>
+											</ul>
+											<ul>
+											<h5>Audio</h5>
+											<li>Stream Type: <strong><?php echo $xmlfield->TranscodeSession['audioDecision']; ?></strong></li>
+											<?php if ($xmlfield->TranscodeSession['audioCodec'] == "dca") { ?>
+												<li>Audio Codec: <strong>dts</strong></li>
+											<?php }else{ ?>
+												<li>Audio Codec: <strong><?php echo $xmlfield->TranscodeSession['audioCodec']; ?></strong></li>
+											<?php } ?>
+											<li>Audio Channels: <strong><?php echo $xmlfield->TranscodeSession['audioChannels']; ?></strong></li>
+											</ul>
+										</div>
+										<div class="span4">
+											<h4>Media Source Details</h4>
+											<li>Container: <strong><?php echo $xmlfield->Media['container']; ?></strong></li>
+											<li>Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
+											<li>Bitrate: <strong><?php echo $xmlfield->Media['bitrate']; ?> kbps</strong></li>
+										</div>
+										<div class="span4">	
+											<h4>Video Source Details</h4>
+											<ul>
+												<li>Width: <strong><?php echo $xmlfield->Media['width']; ?></strong></li>
+												<li>Height: <strong><?php echo $xmlfield->Media['height']; ?></strong></li>
+												<li>Aspect Ratio: <strong><?php echo $xmlfield->Media['aspectRatio']; ?></strong></li>											
+												<li>Video Frame Rate: <strong><?php echo $xmlfield->Media['videoFrameRate']; ?></strong></li>
+												<li>Video Codec: <strong><?php echo $xmlfield->Media['videoCodec']; ?></strong></li>
+											</ul>
+											<ul> </ul>
+											<h4>Audio Source Details</h4>
+											<ul>
+												<?php if ($xmlfield->Media['audioCodec'] == "dca") { ?>
+													<li>Audio Codec: <strong>dts</strong></li>
+												<?php }else{ ?>
+													<li>Audio Codec: <strong><?php echo $xmlfield->Media['audioCodec']; ?></strong></li>
+												<?php } ?>
+												<li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
+											</ul>
+										</div>
+										
+										
+									
+									<?php }else{ ?>
+
+										<div class="span4">
+											<h4>Stream Details</strong></h4>
+											<ul>
+												<h5>Video</h5>
+												<li>Stream Type: <strong>Direct Play</strong></li>
+												<li>Video Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
+												<li>Video Codec: <strong><?php echo $xmlfield->Media['videoCodec']; ?></strong></li>
+											</ul>
+											<ul>
+												<h5>Audio</h5>
+												<li>Stream Type: <strong>Direct Play</strong></li>
+												<li>Video Width: <strong><?php echo $xmlfield->Media['width']; ?></strong></li>
+												<li>Video Height: <strong><?php echo $xmlfield->Media['height']; ?>p</strong></li>
+												<?php if ($xmlfield->Media['audioCodec'] == "dca") { ?>
+														<li>Audio Codec: <strong>dts</strong></li>
+													<?php }else{ ?>
+														<li>Audio Codec: <strong><?php echo $xmlfield->Media['audioCodec']; ?></strong></li>
+													<?php } ?>
+												<li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
+											</ul>
+										</div>
+										<div class="span4">
+											<h4>Media Source Details</h4>
+											<li>Container: <strong><?php echo $xmlfield->Media['container']; ?></strong></li>
+											<li>Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
+											<li>Bitrate: <strong><?php echo $xmlfield->Media['bitrate']; ?> kbps</strong></li>
+										</div>
+										<div class="span4">	
+											<h4>Video Source Details</h4>
+											<ul>
+												<li>Width: <strong><?php echo $xmlfield->Media['width']; ?></strong></li>
+												<li>Height: <strong><?php echo $xmlfield->Media['height']; ?></strong></li>
+												<li>Aspect Ratio: <strong><?php echo $xmlfield->Media['aspectRatio']; ?></strong></li>											
+												<li>Video Frame Rate: <strong><?php echo $xmlfield->Media['videoFrameRate']; ?></strong></li>
+												<li>Video Codec: <strong><?php echo $xmlfield->Media['videoCodec']; ?></strong></li>
+											</ul>
+											<ul> </ul>
+											<h4>Audio Source Details</h4>
+											<ul>
+												<?php if ($xmlfield->Media['audioCodec'] == "dca") { ?>
+													<li>Audio Codec: <strong>dts</strong></li>
+												<?php }else{ ?>
+													<li>Audio Codec: <strong><?php echo $xmlfield->Media['audioCodec']; ?></strong></li>
+												<?php } ?>
+												<li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
+											</ul>
+										</div>
+									<?php } ?>
+									
+										
+										
+										
+								</div>
+										  
+								<div class="modal-footer">
+								</div>
+
+							</div>
+							<?php
+
 															
 											echo "<td align='center'>".date($plexWatch['timeFormat'],$row['time'])."</td>";
 											
@@ -859,6 +993,9 @@
 	});
 	$(document).ready(function() {
 		$('#settings').tooltip();
+	});
+	$(document).ready(function() {
+		$('#stats').tooltip();
 	});
 	</script>
 	

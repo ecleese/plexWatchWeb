@@ -38,11 +38,12 @@
 		    			
 		<div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
-				<a href="index.php"><div class="logo"></div></a>
+				<a href="index.php"><div class="logo hidden-phone"></div></a>
 				<ul class="nav">
 					
 					<li><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
 					<li class="active"><a href="history.php"><i class="icon-2x icon-calendar icon-white" data-toggle="tooltip" data-placement="bottom" title="History" id="history"></i></a></li>
+					<li><a href="stats.php"><i class="icon-2x icon-tasks icon-white" data-toggle="tooltip" data-placement="bottom" title="Stats" id="stats"></i></a></li>
 					<li><a href="users.php"><i class="icon-2x icon-group icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
 					<li><a href="charts.php"><i class="icon-2x icon-bar-chart icon-white" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
 					<li><a href="settings.php"><i class="icon-2x icon-wrench icon-white" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
@@ -76,33 +77,10 @@
 	
 	
 	echo "<div class='container-fluid'>";
+		
 		echo "<div class='row-fluid'>";
 			echo "<div class='span12'>";
-				echo "<div class='wellbg'>";
-					echo "<div class='wellheader'>";
-						echo "<div class='dashboard-wellheader'>";
-							echo "<h3>Stats</h3>";
-						echo "</div>";
-					echo "</div>";
-					echo "<div class='row-fluid'>";
-						echo "<div class='span6'><div class='wellbg'><div class='history-charts-header'><strong>Hourly Plays </strong>(Last 24 Hours)<br></div><div class='history-charts-instance-chart' id='playChartHourly'></div></div></div>";
-						echo "<div class='span6'><div class='wellbg'><div class='history-charts-header'><strong>Max Hourly Plays</strong><br></div><div class='history-charts-instance-chart' id='playChartMaxHourly'></div></div></div>";
-					echo "</div>";
-					echo "<div class='row-fluid'>";	
-						echo "<div class='span6'><div class='wellbg'><div class='history-charts-header'><strong>Daily Plays</strong><br></div><div class='history-charts-instance-chart'  id='playChartDaily'></div></div></div>";
-						echo "<div class='span6'><div class='wellbg'><div class='history-charts-header'><strong>Monthly Plays</strong><br></div><div class='history-charts-instance-chart' id='playChartMonthly'></div></div></div>";
-					echo "</div>";
-				echo "</div>";
-			echo "</div>";
-		echo "<div class='row-fluid'>";
-			echo "<div class='span12'>";
-				echo "<div class='wellbg'>";
-					echo "<div class='wellheader'>";
-						echo "<div class='dashboard-wellheader'>";
-							echo "<h3>Logs</h3>";
-						echo "</div>";
-					echo "</div>";
-					
+				echo "<div class='wellbg'>";		
 					
 					$guisettingsFile = "config/config.php";
 					if (file_exists($guisettingsFile)) { 
@@ -141,51 +119,7 @@
 						$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM $plexWatchDbTable ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check settings.");
 					}	
 						
-					$hourlyPlays = $db->query("SELECT strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) as date, COUNT(title) as count FROM $plexWatchDbTable WHERE datetime(time, 'unixepoch', 'localtime') >= datetime('now', '-24 hours', 'localtime') GROUP BY strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) ORDER BY date ASC;") or die ("Failed to access plexWatch database. Please check your settings.");
-					$hourlyPlaysNum = 0;
-					$hourlyPlayFinal = '';
-					while ($hourlyPlay = $hourlyPlays->fetchArray()) {
-						$hourlyPlaysNum++;
-						$hourlyPlayDate[$hourlyPlaysNum] = $hourlyPlay['date'];
-						$hourlyPlayCount[$hourlyPlaysNum] = $hourlyPlay['count'];
-						$hourlyPlayTotal = "{ \"x\": \"".$hourlyPlayDate[$hourlyPlaysNum]."\", \"y\": ".$hourlyPlayCount[$hourlyPlaysNum]." }, ";
-						$hourlyPlayFinal .= $hourlyPlayTotal;
-					}
-
-					$maxhourlyPlays = $db->query("SELECT strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) as date, COUNT(title) as count FROM $plexWatchDbTable GROUP BY strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) ORDER BY count(*) desc limit 25;") or die ("Failed to access plexWatch database. Please check your settings.");
-					$maxhourlyPlaysNum = 0;
-					$maxhourlyPlayFinal = '';
-					while ($maxhourlyPlay = $maxhourlyPlays->fetchArray()) {
-						$maxhourlyPlaysNum++;
-						$maxhourlyPlayDate[$maxhourlyPlaysNum] = $maxhourlyPlay['date'];
-						$maxhourlyPlayCount[$maxhourlyPlaysNum] = $maxhourlyPlay['count'];
-						$maxhourlyPlayTotal = "{ \"x\": \"".$maxhourlyPlayDate[$maxhourlyPlaysNum]."\", \"y\": ".$maxhourlyPlayCount[$maxhourlyPlaysNum]." }, ";
-						$maxhourlyPlayFinal .= $maxhourlyPlayTotal;
-					}
-						
-							
-						
-					$dailyPlays = $db->query("SELECT date(time, 'unixepoch','localtime') as date, count(title) as count FROM $plexWatchDbTable GROUP BY date ORDER BY time DESC LIMIT 30") or die ("Failed to access plexWatch database. Please check your settings.");
-					$dailyPlaysNum = 0;
-					$dailyPlayFinal = '';
-					while ($dailyPlay = $dailyPlays->fetchArray()) {
-						$dailyPlaysNum++;
-						$dailyPlayDate[$dailyPlaysNum] = $dailyPlay['date'];
-						$dailyPlayCount[$dailyPlaysNum] = $dailyPlay['count'];
-						$dailyPlayTotal = "{ \"x\": \"".$dailyPlayDate[$dailyPlaysNum]."\", \"y\": ".$dailyPlayCount[$dailyPlaysNum]." }, ";
-						$dailyPlayFinal .= $dailyPlayTotal;
-					}
-						
-					$monthlyPlays = $db->query("SELECT strftime('%Y-%m', datetime(time, 'unixepoch', 'localtime')) as date, COUNT(title) as count FROM $plexWatchDbTable WHERE datetime(time, 'unixepoch', 'localtime') >= datetime('now', '-12 months', 'localtime') GROUP BY strftime('%Y-%m', datetime(time, 'unixepoch', 'localtime'))  ORDER BY date DESC LIMIT 6;") or die ("Failed to access plexWatch database. Please check your settings.");
-					$monthlyPlaysNum = 0;
-					$monthlyPlayFinal = '';
-					while ($monthlyPlay = $monthlyPlays->fetchArray()) {
-						$monthlyPlaysNum++;
-						$monthlyPlayDate[$monthlyPlaysNum] = $monthlyPlay['date'];
-						$monthlyPlayCount[$monthlyPlaysNum] = $monthlyPlay['count'];
-						$monthlyPlayTotal = "{ \"x\": \"".$monthlyPlayDate[$monthlyPlaysNum]."\", \"y\": ".$monthlyPlayCount[$monthlyPlaysNum]." }, ";
-						$monthlyPlayFinal .= $monthlyPlayTotal;
-					}	
+					
 					
 					
 					
@@ -203,6 +137,7 @@
 								echo "<th align='left'><i class='icon-sort icon-white'></i> Platform</th>";
 								echo "<th align='left'><i class='icon-sort icon-white'></i> IP Address</th>";
 								echo "<th align='left'><i class='icon-sort icon-white'></i> Title</th>";
+								echo "<th align='center'><i class='icon-sort icon-white'></i> Stream Info</th>";
 								echo "<th align='center'><i class='icon-sort icon-white'></i> Started</th>";
 								echo "<th align='center'><i class='icon-sort icon-white'></i> Paused</th>";
 								echo "<th align='center'><i class='icon-sort icon-white'></i> Stopped</th>";
@@ -211,8 +146,11 @@
 							echo "</tr>";
 						echo "</thead>";
 						echo "<tbody>";
+
+						$rowCount = 0;
 						while ($row = $results->fetchArray()) {
 						
+						$rowCount++;
 						echo "<tr>";
 							if (empty($row['stopped'])) {
 											echo "<td class='currentlyWatching' align='center'>Currently watching...</td>";
@@ -244,6 +182,7 @@
 							$type = $xmlfield['type'];
 							$duration = $xmlfield['duration'];
 							$viewOffset = $xmlfield['viewOffset'];
+							
 
 							if ($type=="movie") {
 								echo "<td class='title' align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
@@ -254,7 +193,136 @@
 							}else{
 
 							}
+
+							echo "<td align='center'><a href='#streamDetailsModal".$rowCount."' data-toggle='modal'><span class='badge badge-inverse'><i class='icon-info icon-white'></i></span></a></td>";
 							
+							
+
+							echo "<div id='streamDetailsModal".$rowCount."' class='modal hide fade' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>";
+							?>
+								<div class="modal-header">	
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="icon icon-remove"></i></button>		
+									<h3 id="myModalLabel"><i class="icon-info-sign icon-white"></i> Stream Info: <strong><?php echo $row['title']; ?> (<?php echo FriendlyName($row['user'],$row['platform']); ?>)</strong></h3>
+								</div>
+								
+								<div class="modal-body">
+									<?php
+									
+									if (array_key_exists('TranscodeSession',$xmlfield)) {
+
+									?>
+										<div class="span4">
+											<h4>Stream Details</h4>
+											<ul>
+											<h5>Video</h5>
+											<li>Stream Type: <strong><?php echo $xmlfield->TranscodeSession['videoDecision']; ?></strong></li>
+											<li>Video Resolution: <strong><?php echo $xmlfield->TranscodeSession['height']; ?>p</strong></li>
+											<li>Video Codec: <strong><?php echo $xmlfield->TranscodeSession['videoCodec']; ?></strong></li>
+											<li>Video Width: <strong><?php echo $xmlfield->TranscodeSession['width']; ?></strong></li>
+											<li>Video Height: <strong><?php echo $xmlfield->TranscodeSession['height']; ?></strong></li>
+											</ul>
+											<ul>
+											<h5>Audio</h5>
+											<li>Stream Type: <strong><?php echo $xmlfield->TranscodeSession['audioDecision']; ?></strong></li>
+											<?php if ($xmlfield->TranscodeSession['audioCodec'] == "dca") { ?>
+												<li>Audio Codec: <strong>dts</strong></li>
+											<?php }else{ ?>
+												<li>Audio Codec: <strong><?php echo $xmlfield->TranscodeSession['audioCodec']; ?></strong></li>
+											<?php } ?>
+											<li>Audio Channels: <strong><?php echo $xmlfield->TranscodeSession['audioChannels']; ?></strong></li>
+											</ul>
+										</div>
+										<div class="span4">
+											<h4>Media Source Details</h4>
+											<li>Container: <strong><?php echo $xmlfield->Media['container']; ?></strong></li>
+											<li>Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
+											<li>Bitrate: <strong><?php echo $xmlfield->Media['bitrate']; ?> kbps</strong></li>
+										</div>
+										<div class="span4">	
+											<h4>Video Source Details</h4>
+											<ul>
+												<li>Width: <strong><?php echo $xmlfield->Media['width']; ?></strong></li>
+												<li>Height: <strong><?php echo $xmlfield->Media['height']; ?></strong></li>
+												<li>Aspect Ratio: <strong><?php echo $xmlfield->Media['aspectRatio']; ?></strong></li>											
+												<li>Video Frame Rate: <strong><?php echo $xmlfield->Media['videoFrameRate']; ?></strong></li>
+												<li>Video Codec: <strong><?php echo $xmlfield->Media['videoCodec']; ?></strong></li>
+											</ul>
+											<ul> </ul>
+											<h4>Audio Source Details</h4>
+											<ul>
+												<?php if ($xmlfield->Media['audioCodec'] == "dca") { ?>
+													<li>Audio Codec: <strong>dts</strong></li>
+												<?php }else{ ?>
+													<li>Audio Codec: <strong><?php echo $xmlfield->Media['audioCodec']; ?></strong></li>
+												<?php } ?>
+												<li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
+											</ul>
+										</div>
+										
+										
+									
+									<?php }else{ ?>
+
+										<div class="span4">
+											<h4>Stream Details</strong></h4>
+											<ul>
+												<h5>Video</h5>
+												<li>Stream Type: <strong>Direct Play</strong></li>
+												<li>Video Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
+												<li>Video Codec: <strong><?php echo $xmlfield->Media['videoCodec']; ?></strong></li>
+											</ul>
+											<ul>
+												<h5>Audio</h5>
+												<li>Stream Type: <strong>Direct Play</strong></li>
+												<li>Video Width: <strong><?php echo $xmlfield->Media['width']; ?></strong></li>
+												<li>Video Height: <strong><?php echo $xmlfield->Media['height']; ?>p</strong></li>
+												<?php if ($xmlfield->Media['audioCodec'] == "dca") { ?>
+														<li>Audio Codec: <strong>dts</strong></li>
+													<?php }else{ ?>
+														<li>Audio Codec: <strong><?php echo $xmlfield->Media['audioCodec']; ?></strong></li>
+													<?php } ?>
+												<li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
+											</ul>
+										</div>
+										<div class="span4">
+											<h4>Media Source Details</h4>
+											<li>Container: <strong><?php echo $xmlfield->Media['container']; ?></strong></li>
+											<li>Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
+											<li>Bitrate: <strong><?php echo $xmlfield->Media['bitrate']; ?> kbps</strong></li>
+										</div>
+										<div class="span4">	
+											<h4>Video Source Details</h4>
+											<ul>
+												<li>Width: <strong><?php echo $xmlfield->Media['width']; ?></strong></li>
+												<li>Height: <strong><?php echo $xmlfield->Media['height']; ?></strong></li>
+												<li>Aspect Ratio: <strong><?php echo $xmlfield->Media['aspectRatio']; ?></strong></li>											
+												<li>Video Frame Rate: <strong><?php echo $xmlfield->Media['videoFrameRate']; ?></strong></li>
+												<li>Video Codec: <strong><?php echo $xmlfield->Media['videoCodec']; ?></strong></li>
+											</ul>
+											<ul> </ul>
+											<h4>Audio Source Details</h4>
+											<ul>
+												<?php if ($xmlfield->Media['audioCodec'] == "dca") { ?>
+													<li>Audio Codec: <strong>dts</strong></li>
+												<?php }else{ ?>
+													<li>Audio Codec: <strong><?php echo $xmlfield->Media['audioCodec']; ?></strong></li>
+												<?php } ?>
+												<li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
+											</ul>
+										</div>
+									<?php } ?>
+									
+										
+										
+										
+								</div>
+										  
+								<div class="modal-footer">
+								</div>
+
+							</div>
+
+							<?php
 							echo "<td align='center'>".date($plexWatch['timeFormat'],$row['time'])."</td>";
 							
 							$paused_duration = round(abs($row['paused_counter']) / 60,1);
@@ -289,19 +357,24 @@
 								}
 
 							echo "<td align='center'><span class='badge badge-warning'>".$percentComplete."%</span></td>";
-						echo "</tr>";   
-					}
+						echo "</tr>";  
+
+						}
 					}
 						echo "</tbody>";
 					echo "</table>";
 
 					?>
 						
+					
+
 				</div>
 			</div>
 			
 		</div>
-	</div>			
+	</div>	
+
+			
 
 		<footer>
 		
@@ -318,12 +391,13 @@
 	<script src="js/jquery.dataTables.plugin.bootstrap_pagination.js"></script>
 	<script src="js/jquery.dataTables.plugin.date_sorting.js"></script>
 	<script src="js/d3.v3.js"></script> 
-	<script src="js/xcharts.min.js"></script> 
+	
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#globalHistory').dataTable( {
 				"bPaginate": true,
 				"bLengthChange": true,
+				"iDisplayLength": 25,
 				"bFilter": true,
 				"bSort": true,
 				"bInfo": true,
@@ -355,166 +429,12 @@
 	$(document).ready(function() {
 		$('#settings').tooltip();
 	});
+	$(document).ready(function() {
+		$('#stats').tooltip();
+	});
 	</script>
 
-	<script>
-	var tt = document.createElement('div'),
-	  leftOffset = -(~~$('html').css('padding-left').replace('px', '') + ~~$('body').css('margin-left').replace('px', '')),
-	  topOffset = -35;
-	tt.className = 'ex-tooltip';
-	document.body.appendChild(tt);
-
-	var data = {
-	  "xScale": "ordinal",
-	  "yScale": "linear",
-	  
-	  "main": [
-		{
-		  "className": ".playChartHourly",
-		  "data": [
-			<?php echo $hourlyPlayFinal ?>
-		  ]
-		}
-	  ]
-	};
-	var opts = {
-	  "dataFormatX": function (x) { return d3.time.format('%Y-%m-%d %H').parse(x); },
-	  "tickFormatX": function (x) { return d3.time.format('%-I:00 %p')(x); },
-	  "paddingLeft": ('35'),
-	  "paddingRight": ('35'),
-	  "paddingTop": ('10'),
-	  "tickHintY": ('5'),
-	  "mouseover": function (d, i) {
-		var pos = $(this).offset();
-		$(tt).text(d3.time.format('%-I:00 %p')(d.x) + ': ' + d.y + ' play(s)')
-		  .css({top: topOffset + pos.top, left: pos.left + leftOffset})
-		  .show();
-	  },
-	  "mouseout": function (x) {
-		$(tt).hide();
-	  }
-	};
-	var myChart = new xChart('line-dotted', data, '#playChartHourly', opts);
-	</script>
-
-	<script>
-	var tt = document.createElement('div'),
-	  leftOffset = -(~~$('html').css('padding-left').replace('px', '') + ~~$('body').css('margin-left').replace('px', '')),
-	  topOffset = -35;
-	tt.className = 'ex-tooltip';
-	document.body.appendChild(tt);
-
-	var data = {
-	  "xScale": "ordinal",
-	  "yScale": "linear",
-	  
-	  "main": [
-		{
-		  "className": ".maxplayChartHourly",
-		  "data": [
-			<?php echo $maxhourlyPlayFinal ?>
-		  ]
-		}
-	  ]
-	};
-	var opts = {
-	  "dataFormatX": function (x) { return d3.time.format('%Y-%m-%d %H').parse(x); },
-	  "tickFormatX": function (x) { return d3.time.format('%b %e')(x); },
-	  "paddingLeft": ('35'),
-	  "paddingRight": ('35'),
-	  "paddingTop": ('10'),
-	  "tickHintY": ('5'),
-	  "mouseover": function (d, i) {
-		var pos = $(this).offset();
-		$(tt).text(d3.time.format('%-I:00 %p')(d.x) + ': ' + d.y + ' play(s)')
-		  .css({top: topOffset + pos.top, left: pos.left + leftOffset})
-		  .show();
-	  },
-	  "mouseout": function (x) {
-		$(tt).hide();
-	  }
-	};
-	var myChart = new xChart('bar', data, '#playChartMaxHourly', opts);
-	</script>
 	
-	<script>
-	var tt = document.createElement('div'),
-	  leftOffset = -(~~$('html').css('padding-left').replace('px', '') + ~~$('body').css('margin-left').replace('px', '')),
-	  topOffset = -35;
-	tt.className = 'ex-tooltip';
-	document.body.appendChild(tt);
 
-	var data = {
-	  "xScale": "ordinal",
-	  "yScale": "linear",
-	  "main": [
-		{
-		  "className": ".playcount",
-		  "data": [
-			<?php echo $dailyPlayFinal ?>
-		  ]
-		}
-	  ]
-	};
-	var opts = {
-	  "dataFormatX": function (x) { return d3.time.format('%Y-%m-%d').parse(x); },
-	  "tickFormatX": function (x) { return d3.time.format('%b %e')(x); },
-	  "paddingLeft": ('35'),
-	  "paddingRight": ('35'),
-	  "paddingTop": ('10'),
-	  "tickHintY": ('5'),
-	  "mouseover": function (d, i) {
-		var pos = $(this).offset();
-		$(tt).text(d3.time.format('%b %e')(d.x) + ': ' + d.y + ' play(s)')
-		  .css({top: topOffset + pos.top, left: pos.left + leftOffset})
-		  .show();
-	  },
-	  "mouseout": function (x) {
-		$(tt).hide();
-	  }
-	};
-	var myChart = new xChart('bar', data, '#playChartDaily', opts);
-	</script>
-
-	<script>
-	var tt = document.createElement('div'),
-	  leftOffset = -(~~$('html').css('padding-left').replace('px', '') + ~~$('body').css('margin-left').replace('px', '')),
-	  topOffset = -35;
-	tt.className = 'ex-tooltip';
-	document.body.appendChild(tt);
-
-	var data = {
-	  "xScale": "ordinal",
-	  "yScale": "linear",
-	  "main": [
-		{
-		  "className": ".playcount",
-		  "data": [
-			<?php echo $monthlyPlayFinal ?>
-		  ]
-		}
-	  ]
-	};
-	var opts = {
-	  "dataFormatX": function (x) { return d3.time.format('%Y-%m').parse(x); },
-	  "tickFormatX": function (x) { return d3.time.format('%b')(x); },
-	  "paddingLeft": ('35'),
-	  "paddingRight": ('35'),
-	  "paddingTop": ('10'),
-	  "tickHintY": ('5'),
-	  "mouseover": function (d, i) {
-		var pos = $(this).offset();
-		$(tt).text(d3.time.format('%b')(d.x) + ': ' + d.y + ' play(s)')
-		  .css({top: topOffset + pos.top, left: pos.left + leftOffset})
-		  .show();
-	  },
-	  "mouseout": function (x) {
-		$(tt).hide();
-	  }
-	};
-	var myChart = new xChart('line-dotted', data, '#playChartMonthly', opts);
-	</script>
-	
-	
   </body>
 </html>

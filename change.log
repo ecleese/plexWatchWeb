@@ -1,14 +1,19 @@
+1.5.0.14 dev
+* Change:	global: separated stats from history logs and created a new page for them
+* Add:		global: stream info column in history tables which links to a modal containing stream and source details
+* Fix:		index.php: Recently added items would sometimes wrap to a second row depending on width of browser
+
 1.5.0.13 dev
-*Fix:		info.php: season episode thumbs and top watched episode thumbs would not appear if using internal LAN IP address for PMS and Plex authentication was disabled.
+* Fix:		info.php: season episode thumbs and top watched episode thumbs would not appear if using internal LAN IP address for PMS and Plex authentication was disabled.
 
 1.5.0.12 dev
-*Fix:		global: Minor CSS adjustments for IE
+* Fix:		global: Minor CSS adjustments for IE
 
 1.5.0.11.2 dev
-*Fix:		global: Additional Samsung platform icon support issues
+* Fix:		global: Additional Samsung platform icon support issues
 
 1.5.0.11.1 dev
-*Fix:		global: Samsung platform icon support (rcork)
+* Fix:		global: Samsung platform icon support (rcork)
 
 1.5.0.11 dev
 * Add:		global: Samsung platform icon support
