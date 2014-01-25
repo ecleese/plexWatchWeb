@@ -1,3 +1,6 @@
+1.5.0.15 dev
+* Add:		users.php: bar charts for plays per user - 24 hr, 7 days, 30 days
+
 1.5.0.14 dev
 * Change:	global: separated stats from history logs and created a new page for them
 * Add:		global: stream info column in history tables which links to a modal containing stream and source details

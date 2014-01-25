@@ -11,6 +11,7 @@
     <link href="css/plexwatch.css" rel="stylesheet">
 	<link href="css/plexwatch-tables.css" rel="stylesheet">
 	<link href="css/font-awesome.min.css" rel="stylesheet" >
+	<link href="css/xcharts.css" rel="stylesheet" >
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -101,6 +102,40 @@
 						
 						$users = $db->query("SELECT COUNT(title) as plays, user, time, SUM(time) as timeTotal, SUM(stopped) as stoppedTotal, SUM(paused_counter) as paused_counterTotal, platform, ip_address, xml FROM ".$plexWatchDbTable." GROUP BY user ORDER BY user COLLATE NOCASE") or die ("Failed to access plexWatch database. Please check your settings.");
 					
+$dailyPlays = $db->query("SELECT user, time,stopped,paused_counter, count(title) as count FROM $plexWatchDbTable WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now', '-24 hours', 'localtime') GROUP BY user ORDER BY count DESC LIMIT 30") or die ("Failed to access plexWatch database. Please check your settings.");
+					$dailyPlaysNum = 0;
+					$dailyPlayFinal = '';
+					while ($dailyPlay = $dailyPlays->fetchArray()) {
+						$dailyPlaysNum++;
+						$dailyPlayUser[$dailyPlaysNum] = $dailyPlay['user'];
+						$dailyPlayCount[$dailyPlaysNum] = $dailyPlay['count'];
+						$dailyPlayTotal = "{ \"x\": \"".$dailyPlayUser[$dailyPlaysNum]."\", \"y\": ".$dailyPlayCount[$dailyPlaysNum]." }, ";
+						$dailyPlayFinal .= $dailyPlayTotal;
+					}
+					
+	
+					$weeklyPlays = $db->query("SELECT user, count(title) as count FROM $plexWatchDbTable WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-7 days', 'localtime') GROUP BY user ORDER BY count DESC LIMIT 30") or die ("Failed to access plexWatch database. Please check your settings.");
+					$weeklyPlaysNum = 0;
+					$weeklyPlayFinal = '';
+					while ($weeklyPlay = $weeklyPlays->fetchArray()) {
+						$weeklyPlaysNum++;
+						$weeklyPlayUser[$weeklyPlaysNum] = $weeklyPlay['user'];
+						$weeklyPlayCount[$weeklyPlaysNum] = $weeklyPlay['count'];
+						$weeklyPlayTotal = "{ \"x\": \"".$weeklyPlayUser[$weeklyPlaysNum]."\", \"y\": ".		$weeklyPlayCount[$weeklyPlaysNum]." }, ";
+						$weeklyPlayFinal .= $weeklyPlayTotal;
+					}
+							
+
+					$monthlyPlays = $db->query("SELECT user, count(title) as count FROM $plexWatchDbTable WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-30 days', 'localtime') GROUP BY user ORDER BY count DESC LIMIT 30") or die ("Failed to access plexWatch database. Please check your settings.");
+					$monthlyPlaysNum = 0;
+					$monthlyPlayFinal = '';
+					while ($monthlyPlay = $monthlyPlays->fetchArray()) {
+						$monthlyPlaysNum++;
+						$monthlyPlayUser[$monthlyPlaysNum] = $monthlyPlay['user'];
+						$monthlyPlayCount[$monthlyPlaysNum] = $monthlyPlay['count'];
+						$monthlyPlayTotal = "{ \"x\": \"".$monthlyPlayUser[$monthlyPlaysNum]."\", \"y\": ".		$monthlyPlayCount[$monthlyPlaysNum]." }, ";
+						$monthlyPlayFinal .= $monthlyPlayTotal;
+					}
 							
 							echo "<div class='wellbg'>";
 							
@@ -160,6 +195,11 @@
 			</div>
 		</div><!--/.fluid-row-->			
 			
+	<div class='wellbg'><strong>Plays per User (Last 24 Hours)</strong><br><figure style='width: 98%; height: 200px;' id='playChartDaily'></figure></div>
+
+	<div class='wellbg'><strong>Plays per User (Last 7 Days)</strong><br><figure style='width: 98%; height: 200px;' id='playChartWeekly'></figure></div>
+
+	<div class='wellbg'><strong>Plays per User (Last 30 Days)</strong><br><figure style='width: 98%; height: 200px;' id='playChartMonthly'></figure></div>
 			
 
 		<footer>
@@ -175,6 +215,8 @@
 	<script src="js/bootstrap.js"></script>
 	<script src="js/jquery.dataTables.js"></script>
 	<script src="js/jquery.dataTables.plugin.bootstrap_pagination.js"></script>
+	<script src="js/d3.v3.js"></script> 
+	<script src="js/xcharts.min.js"></script> 
 	<script>
 		$(document).ready(function() {
 			var oTable = $('#usersTable').dataTable( {
@@ -211,6 +253,120 @@
 	$(document).ready(function() {
 		$('#stats').tooltip();
 	});
+	</script>
+
+	<script>
+	var tt = document.createElement('div'),
+	  leftOffset = -(~~$('html').css('padding-left').replace('px', '') + ~~$('body').css('margin-left').replace('px', '')),
+	  topOffset = -35;
+	tt.className = 'ex-tooltip';
+	document.body.appendChild(tt);
+
+	var data = {
+	  "xScale": "ordinal",
+	  "yScale": "linear",
+	  "main": [
+		{
+		  "className": ".playcount",
+		  "data": [
+			<?php echo $dailyPlayFinal ?>
+		  ]
+		}
+	  ]
+	};
+	var opts = {
+	  "paddingLeft": ('25'),
+	  "paddingRight": ('35'),
+	  "paddingTop": ('10'),
+	  "tickHintY": ('10'),
+	  "mouseover": function (d, i) {
+		var pos = $(this).offset();
+		//$(tt).text(d3.time.format('%b %e')(d.x) + ': ' + d.y + ' play(s)')
+		$(tt).text(+ d.y + ' play(s)')
+		  .css({top: topOffset + pos.top, left: pos.left + leftOffset})
+		  .show();
+	  },
+	  "mouseout": function (x) {
+		$(tt).hide();
+	  }
+	};
+	var myChart = new xChart('bar', data, '#playChartDaily', opts);
+	</script>
+
+	<script>
+	var tt = document.createElement('div'),
+	  leftOffset = -(~~$('html').css('padding-left').replace('px', '') + ~~$('body').css('margin-left').replace('px', '')),
+	  topOffset = -35;
+	tt.className = 'ex-tooltip';
+	document.body.appendChild(tt);
+
+	var data = {
+	  "xScale": "ordinal",
+	  "yScale": "linear",
+	  "main": [
+		{
+		  "className": ".playcount",
+		  "data": [
+			<?php echo $weeklyPlayFinal ?>
+		  ]
+		}
+	  ]
+	};
+	var opts = {
+	  "paddingLeft": ('25'),
+	  "paddingRight": ('35'),
+	  "paddingTop": ('10'),
+	  "tickHintY": ('10'),
+	  "mouseover": function (d, i) {
+		var pos = $(this).offset();
+		//$(tt).text(d3.time.format('%b %e')(d.x) + ': ' + d.y + ' play(s)')
+		$(tt).text(+ d.y + ' play(s)')
+		  .css({top: topOffset + pos.top, left: pos.left + leftOffset})
+		  .show();
+	  },
+	  "mouseout": function (x) {
+		$(tt).hide();
+	  }
+	};
+	var myChart = new xChart('bar', data, '#playChartWeekly', opts);
+	</script>
+
+	<script>
+	var tt = document.createElement('div'),
+	  leftOffset = -(~~$('html').css('padding-left').replace('px', '') + ~~$('body').css('margin-left').replace('px', '')),
+	  topOffset = -35;
+	tt.className = 'ex-tooltip';
+	document.body.appendChild(tt);
+
+	var data = {
+	  "xScale": "ordinal",
+	  "yScale": "linear",
+	  "main": [
+		{
+		  "className": ".playcount",
+		  "data": [
+			<?php echo $monthlyPlayFinal ?>
+		  ]
+		}
+	  ]
+	};
+	var opts = {
+	  "paddingLeft": ('25'),
+	  "paddingRight": ('35'),
+	  "paddingTop": ('10'),
+	  "tickHintY": ('10'),
+	  "mouseover": function (d, i) {
+		var pos = $(this).offset();
+		//$(tt).text(d3.time.format('%b %e')(d.x) + ': ' + d.y + ' play(s)')
+		$(tt).text(+ d.y + ' play(s)')
+		  .css({top: topOffset + pos.top, left: pos.left + leftOffset})
+		  .show();
+	  },
+	  "mouseout": function (x) {
+		$(tt).hide();
+	  }
+	};
+	var myChart = new xChart('bar', data, '#playChartMonthly', opts);
 	</script>
 
   </body>
