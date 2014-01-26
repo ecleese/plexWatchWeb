@@ -387,7 +387,7 @@
 									echo"</div>";
 								echo"</div>";
 								
-								$platformResults = $db->query ("SELECT xml,platform, COUNT(platform) as platform_count FROM processed WHERE user = '$user' GROUP BY platform ORDER BY platform ASC") or die ("Failed to access plexWatch database. Please check your settings.");
+								$platformResults = $db->query ("SELECT xml,platform, COUNT(platform) as platform_count FROM ".$plexWatchDbTable." WHERE user = '$user' GROUP BY platform ORDER BY platform ASC") or die ("Failed to access plexWatch database. Please check your settings.");
 								 
 								
 								$platformImage = 0;

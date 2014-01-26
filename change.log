@@ -1,3 +1,6 @@
+1.5.0.14.1 dev
+* Fix:		user.php: platform stat total plays were not matching all time total plays when grouping was enabled
+
 1.5.0.14 dev
 * Change:	global: separated stats from history logs and created a new page for them
 * Add:		global: stream info column in history tables which links to a modal containing stream and source details

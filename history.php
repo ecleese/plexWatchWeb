@@ -211,6 +211,8 @@
 									if (array_key_exists('TranscodeSession',$xmlfield)) {
 
 									?>
+										
+										
 										<div class="span4">
 											<h4>Stream Details</h4>
 											<ul>
@@ -258,7 +260,6 @@
 												<li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
 											</ul>
 										</div>
-										
 										
 									
 									<?php }else{ ?>
@@ -310,6 +311,8 @@
 												<li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
 											</ul>
 										</div>
+										
+										
 									<?php } ?>
 									
 										
