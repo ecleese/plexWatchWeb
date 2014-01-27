@@ -121,7 +121,14 @@
 						
 					
 					
-					
+	function formatBytes($bytes, $precision = 2) { 
+		$units = array('B', 'KB', 'MB', 'GB', 'TB'); 
+		$bytes = max($bytes, 0); 
+		$pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
+		$pow = min($pow, count($units) - 1); 
+		$bytes /= (1 << (10 * $pow)); 
+		return round($bytes, $precision) . ' ' . $units[$pow]; 
+	} 							
 					
 					if ($numRows < 1) {
 
@@ -133,16 +140,18 @@
 						echo "<thead>";
 							echo "<tr>";
 								echo "<th align='left'><i class='icon-sort icon-white'></i> Date</th>";
+								echo "<th align='center'><i class='icon-sort icon-white'></i> Started</th>";
 								echo "<th align='left'><i class='icon-sort icon-white'></i> User </th>";
 								echo "<th align='left'><i class='icon-sort icon-white'></i> Platform</th>";
 								echo "<th align='left'><i class='icon-sort icon-white'></i> IP Address</th>";
 								echo "<th align='left'><i class='icon-sort icon-white'></i> Title</th>";
 								echo "<th align='center'><i class='icon-sort icon-white'></i> Stream Info</th>";
-								echo "<th align='center'><i class='icon-sort icon-white'></i> Started</th>";
-								echo "<th align='center'><i class='icon-sort icon-white'></i> Paused</th>";
-								echo "<th align='center'><i class='icon-sort icon-white'></i> Stopped</th>";
-								echo "<th align='center'><i class='icon-sort icon-white'></i> Duration</th>";
+					//			echo "<th align='center'><i class='icon-sort icon-white'></i> Paused</th>";
+					//			echo "<th align='center'><i class='icon-sort icon-white'></i> Stopped</th>";
+					//			echo "<th align='center'><i class='icon-sort icon-white'></i> Duration</th>";
+								echo "<th align='center'><i class='icon-sort icon-white'></i> Data</th>";
 								echo "<th align='center'><i class='icon-sort icon-white'></i> Completed</th>";
+								
 							echo "</tr>";
 						echo "</thead>";
 						echo "<tbody>";
@@ -156,7 +165,12 @@
 											echo "<td class='currentlyWatching' align='center'>Currently watching...</td>";
 										}else{
 											echo "<td align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
+		
+		
+		
 							}
+							
+							echo "<td align='center'>".date($plexWatch['timeFormat'],$row['time'])."</td>";
 							
 							echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
 
@@ -182,6 +196,30 @@
 							$type = $xmlfield['type'];
 							$duration = $xmlfield['duration'];
 							$viewOffset = $xmlfield['viewOffset'];
+
+
+							$paused_duration = round(abs($row['paused_counter']) / 60,1);
+							$stopped_time = date($plexWatch['timeFormat'],$row['stopped']);
+							$to_time = strtotime(date("m/d/Y g:i a",$row['stopped']));
+							$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
+							$paused_time = strtotime(date("m/d/Y g:i a",$row['paused_counter']));
+							
+							$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
+							$viewed_time_length = strlen($viewed_time);
+							
+							if ($viewed_time_length == 8) {
+								$viewed_time_length = 'Not Finished';
+							}else{
+								$viewed_time_length = $viewed_time_length.' min';
+							}
+							
+							$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
+								if ($percentComplete >= 90) {	
+								  $percentComplete = 100;    
+								}
+
+							$size = $xmlfield->Media->Part['size'];		
+							$dataTransferred = ($percentComplete / 100 * ($size));		
 							
 
 							if ($type=="movie") {
@@ -237,6 +275,13 @@
 											<li>Container: <strong><?php echo $xmlfield->Media['container']; ?></strong></li>
 											<li>Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
 											<li>Bitrate: <strong><?php echo $xmlfield->Media['bitrate']; ?> kbps</strong></li>
+											<br/><h4>Time Information</h4>
+											<ul>
+											<li>Start Time: <strong><?php echo date($plexWatch['timeFormat'],$row['time']); ?></strong></li>
+											<li>Stop Time: <strong><?php echo $stopped_time; ?></strong></li>
+											<li>Minutes Paused: <strong><?php echo $paused_duration.' min'; ?></strong></li>
+											<li>Duration: <strong><?php echo $viewed_time_length; ?></strong></li>
+											</ul>
 										</div>
 										<div class="span4">	
 											<h4>Video Source Details</h4>
@@ -258,8 +303,13 @@
 												<li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
 											</ul>
 										</div>
-										
-										
+										<div class="span4">	
+											<h4>Duration</h4>
+											<ul>
+												<li>Width: <strong><?php echo $xmlfield->Media['width']; ?></strong></li>
+												<li>Height: <strong><?php echo $xmlfield->Media['height']; ?></strong></li>
+											</ul>
+										</div>										
 									
 									<?php }else{ ?>
 
@@ -289,6 +339,13 @@
 											<li>Container: <strong><?php echo $xmlfield->Media['container']; ?></strong></li>
 											<li>Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
 											<li>Bitrate: <strong><?php echo $xmlfield->Media['bitrate']; ?> kbps</strong></li>
+											<br/><h4>Time Information</h4>
+											<ul>
+											<li>Start Time: <strong><?php echo date($plexWatch['timeFormat'],$row['time']); ?></strong></li>
+											<li>Stop Time: <strong><?php echo $stopped_time; ?></strong></li>
+											<li>Minutes Paused: <strong><?php echo $paused_duration.' min'; ?></strong></li>
+											<li>Duration: <strong><?php echo $viewed_time_length; ?></strong></li>
+											</ul>
 										</div>
 										<div class="span4">	
 											<h4>Video Source Details</h4>
@@ -310,6 +367,7 @@
 												<li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
 											</ul>
 										</div>
+						
 									<?php } ?>
 									
 										
@@ -323,40 +381,31 @@
 							</div>
 
 							<?php
-							echo "<td align='center'>".date($plexWatch['timeFormat'],$row['time'])."</td>";
+				//			echo "<td align='center'>".date($plexWatch['timeFormat'],$row['time'])."</td>";
 							
-							$paused_duration = round(abs($row['paused_counter']) / 60,1);
-							echo "<td align='center'>".$paused_duration." min</td>";
 							
-							$stopped_time = date($plexWatch['timeFormat'],$row['stopped']);
+				//			echo "<td align='center'>".$paused_duration." min</td>";
+						
 							
-							if (empty($row['stopped'])) {								
-								echo "<td align='center'>n/a</td>";
-							}else{
-								echo "<td align='center'>".$stopped_time."</td>";
-							}
+														
+				//			if (empty($row['stopped'])) {								
+				//				echo "<td align='center'>n/a</td>";
+				//			}else{
+				//				echo "<td align='center'>".$stopped_time."</td>";
+				//			}
+	
+							
+				//			if ($viewed_time_length == 8) {
+				//				echo "<td align='center'>n/a</td>";
+				//			}else{
+				//				echo "<td align='center'>".$viewed_time. " min</td>";
+				//			}
+							
+							
 
-							$to_time = strtotime(date("m/d/Y g:i a",$row['stopped']));
-							$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
-							$paused_time = strtotime(date("m/d/Y g:i a",$row['paused_counter']));
-							
-							$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
-							$viewed_time_length = strlen($viewed_time);
-							
-							
-							
-							if ($viewed_time_length == 8) {
-								echo "<td align='center'>n/a</td>";
-							}else{
-								echo "<td align='center'>".$viewed_time. " min</td>";
-							}
-							
-							$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
-								if ($percentComplete >= 90) {	
-								  $percentComplete = 100;    
-								}
-
+							echo "<td align='center'>".formatBytes($dataTransferred)."</td>";			
 							echo "<td align='center'><span class='badge badge-warning'>".$percentComplete."%</span></td>";
+							
 						echo "</tr>";  
 
 						}

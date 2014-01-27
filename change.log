@@ -1,3 +1,11 @@
+1.5.0.16 dev
+* Add:		user.php: bar chart of historical plays for user (history tab)
+		user.php: added “total data transferred” in user statistics (size * percent complete)
+		user.php: created “data” column in user history table
+* Add:		history.php: moved start/stop/paused information to “stream info”, rearranged columns
+		history.php: created “data” column in user history table
+* Fix:		global: change plexwatch-tables.css table width
+
 1.5.0.15 dev
 * Add:		users.php: bar charts for plays per user - 24 hr, 7 days, 30 days
 

@@ -195,7 +195,7 @@ table.display td {
 table.display td.title {
 	padding: 5px;
 	white-space: normal;
-	min-width: 400px;
+	min-width: 100%;
 }
 
 table.display td.center {

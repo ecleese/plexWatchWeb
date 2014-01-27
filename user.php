@@ -11,6 +11,7 @@
     <link href="css/plexwatch.css" rel="stylesheet">
 	<link href="css/plexwatch-tables.css" rel="stylesheet">
 	<link href="css/font-awesome.min.css" rel="stylesheet" >
+	<link href="css/xcharts.css" rel="stylesheet" >
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -27,6 +28,9 @@
     <link rel="apple-touch-icon" sizes="72x72" href="images/icon_ipad.png">
     <link rel="apple-touch-icon" sizes="114x114" href="images/icon_iphone@2x.png">
 	<link rel="apple-touch-icon" sizes="144x144" href="images/icon_ipad@2x.png">
+	
+
+	
   </head>
 
   <body>
@@ -72,6 +76,15 @@
 	}else{
 	}
 
+	function formatBytes($bytes, $precision = 2) { 
+		$units = array('B', 'KB', 'MB', 'GB', 'TB'); 
+		$bytes = max($bytes, 0); 
+		$pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
+		$pow = min($pow, count($units) - 1); 
+		$bytes /= (1 << (10 * $pow)); 
+		return round($bytes, $precision) . ' ' . $units[$pow]; 
+	} 		
+
 	$user = $_GET['user'];
 
 	$db = dbconnect();
@@ -86,6 +99,27 @@
 	$userInfo = $db->query("SELECT user,xml FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC LIMIT 1") or die ("Failed to access plexWatch database. Please check your settings.");
 	
 	$userStatsDailyCount = $db->querySingle("SELECT COUNT(*) FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now', 'localtime') AND user='$user' ");
+	
+	
+
+			        
+	$userPlays = $db->query("SELECT strftime('%Y-%m-%d', datetime(time, 'unixepoch', 'localtime')) as date, COUNT(title) as count FROM $plexWatchDbTable WHERE user = '$user' GROUP BY date ORDER BY date ASC;") or die ("Failed to access plexWatch database. Please check your settings.");
+					$userPlaysNum = 0;
+					$userPlayFinal = '';
+					while ($userPlay = $userPlays->fetchArray()) {
+						$userPlaysNum++;
+						$userPlayDate[$userPlaysNum] = $userPlay['date'];
+						$userPlayCount[$userPlaysNum] = $userPlay['count'];
+						$userPlayTotal = "{ \"x\": \"".$userPlayDate[$userPlaysNum]."\", \"y\": ".$userPlayCount[$userPlaysNum]." }, ";
+						$userPlayFinal .= $userPlayTotal;
+						//echo $userPlayFinal;
+					}		        
+	
+	
+	
+
+	
+			        
 	
 	$userStatsDailyTimeFetch = $db->query("SELECT time,stopped,paused_counter FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now', 'localtime') AND user='$user' ");
 	$userStatsDailyTimeViewedTime = 0;
@@ -119,7 +153,7 @@
 		$userStatsWeeklyTimeViewedTimeHours = floor(($userStatsWeeklyTimeViewedTime % 86400 ) / 3600);
 		$userStatsWeeklyTimeViewedTimeMinutes = floor(($userStatsWeeklyTimeViewedTime % 3600 ) / 60);
 	}
-	
+
 	
 	$userStatsMonthlyCount = $db->querySingle("SELECT COUNT(*) FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-30 days', 'localtime') AND user='$user' ");
 	
@@ -141,7 +175,7 @@
 	
 	$userStatsAlltimeCount = $db->querySingle("SELECT COUNT(*) FROM ".$plexWatchDbTable." WHERE user='$user' ");
 	
-	$userStatsAlltimeTimeFetch = $db->query("SELECT time,stopped,paused_counter FROM ".$plexWatchDbTable." WHERE user='$user' ");
+	$userStatsAlltimeTimeFetch = $db->query("SELECT time,stopped,paused_counter,xml FROM ".$plexWatchDbTable." WHERE user='$user' ");
 	$userStatsAlltimeTimeViewedTime = 0;
 	while ($userStatsAlltimeTimeRow = $userStatsAlltimeTimeFetch->fetchArray()) {
 		$userStatsAlltimeTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsAlltimeTimeRow['stopped']));
@@ -156,6 +190,24 @@
 		$userStatsAlltimeTimeViewedTimeMinutes = floor(($userStatsAlltimeTimeViewedTime % 3600 ) / 60);
 		
 	}
+	
+	
+		$rowCountData = 0;
+	while ($row = $userStatsAlltimeTimeFetch->fetchArray()) {
+	$rowCountData++;
+	$request_url = $row['xml'];
+	$xmlfield = simplexml_load_string($request_url); 
+	$duration = $xmlfield['duration'];
+	$viewOffset = $xmlfield['viewOffset'];
+	$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
+	if ($percentComplete >= 90) {	
+	$percentComplete = 100;
+	}
+	$size = $xmlfield->Media->Part['size'];		
+	$dataTransferred = ($percentComplete / 100 * ($size));
+	$totalDataTransferred += $dataTransferred;	    
+	}
+	
 	
 	if ($plexWatch['userHistoryGrouping'] == "yes") {
 		$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM processed WHERE user = '$user' AND stopped IS NULL UNION ALL SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your settings.");
@@ -364,7 +416,11 @@
 											}else{
 												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeDays."</h3> <p>days </p><h3>".$userStatsAlltimeTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>mins</p>";
 											}
-										echo"</div>";	
+										echo "<li>";
+										echo "<div class='user-overview-stats-instance-text'>";
+										echo "<h4>Total Data Transferred</h4>";
+										echo "<h3>".formatBytes($totalDataTransferred)."</h3>";
+										echo"</div>";
 										echo "</li>";
 									echo"</div>";
 								echo"</ul>";
@@ -695,6 +751,7 @@
 											echo "<th align='center'><i class='icon-sort icon-white'></i> Paused</th>";
 											echo "<th align='center'><i class='icon-sort icon-white'></i> Stopped</th>";
 											echo "<th align='center'><i class='icon-sort icon-white'></i> Duration</th>";
+											echo "<th align='center'><i class='icon-sort icon-white'></i> Data</th>";
 											echo "<th align='center'><i class='icon-sort icon-white'></i> Completed</th>";
 										echo "</tr>";
 									echo "</thead>";
@@ -906,7 +963,11 @@
 												if ($percentComplete >= 90) {	
 												  $percentComplete = 100;    
 												}
-
+											$size = $xmlfield->Media->Part['size'];		
+											$dataTransferred = ($percentComplete / 100 * ($size));
+											$totalDataTransferred += $dataTransferred;	
+											
+											echo "<td align='center'>".formatBytes($dataTransferred)."</td>";
 											echo "<td align='center'><span class='badge badge-warning'>".$percentComplete."%</span></td>";
 										echo "</tr>";   
 									}
@@ -916,15 +977,27 @@
 							
 						echo "</div>";
 					echo "</div>";
+
+?>
+<!-- had to use a fixed width because percentage didn't work until window was resized -->
+<div class='wellbg'><strong>History</strong><br><figure style='width: 900px; height: 200px;' id='userChartFinal'></figure></div>
+<?
 				echo "</div>";
 			echo "</div>";			
 		echo "</div>";
 		
-		
+
+
 	echo "</div>";
+
+
 		
 	?>
+
+	
+	
 		<footer>
+		
 		
 		</footer>
 		
@@ -938,7 +1011,8 @@
 	<script src="js/jquery.dataTables.js"></script>
 	<script src="js/jquery.dataTables.plugin.date_sorting.js"></script>
 	<script src="js/jquery.dataTables.plugin.bootstrap_pagination.js"></script>
-	
+	<script src="js/d3.v3.js"></script> 
+	<script src="js/xcharts.min.js"></script> 	
 	<script>
 		$(document).ready(function() {
 			var oTable = $('#tableUserHistory').dataTable( {
@@ -977,6 +1051,49 @@
 			} );
 		} );
 	</script>
+	
+
+
+		<script>
+	var tt = document.createElement('div'),
+	  leftOffset = -(~~$('html').css('padding-left').replace('px', '') + ~~$('body').css('margin-left').replace('px', '')),
+	  topOffset = -35;
+	tt.className = 'ex-tooltip';
+	document.body.appendChild(tt);
+
+	var data = {
+	  "xScale": "ordinal",
+	  "yScale": "linear",
+	  "main": [
+		{
+		  "className": ".playcount",
+		  "data": [
+			<?php echo $userPlayFinal ?>
+		  ]
+		}
+	  ]
+	};
+	var opts = {
+	  "dataFormatX": function (x) { return d3.time.format('%Y-%m-%d').parse(x); },
+	  "tickFormatX": function (x) { return d3.time.format('%b %e')(x); },
+	  "paddingLeft": ('35'),
+	  "paddingRight": ('35'),
+	  "paddingTop": ('10'),
+	  "tickHintY": ('5'),
+	  "mouseover": function (d, i) {
+		var pos = $(this).offset();
+		$(tt).text(+ d.y + ' play(s)')
+		  .css({top: topOffset + pos.top, left: pos.left + leftOffset})
+		  .show();
+	  },
+	  "mouseout": function (x) {
+		$(tt).hide();
+	  }
+	};
+	var myChart = new xChart('bar', data, '#userChartFinal', opts);
+	</script>
+
+	
 	
 	<script>
 	$(document).ready(function() {
