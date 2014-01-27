@@ -204,13 +204,20 @@
 							$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
 							$paused_time = strtotime(date("m/d/Y g:i a",$row['paused_counter']));
 							
+							
+							if (empty($row['stopped'])) {								
+								$stopped_time = '<span class="currentlyWatching " align="center">Currently watching...</span>';
+							}else{
+								$stopped_time = $stopped_time;
+							}
+							
 							$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
 							$viewed_time_length = strlen($viewed_time);
 							
 							if ($viewed_time_length == 8) {
-								$viewed_time_length = 'Not Finished';
+								$viewed_time_length = '<span class="currentlyWatching " align="center">Currently watching...</span>';
 							}else{
-								$viewed_time_length = $viewed_time_length.' min';
+								$viewed_time_length = $viewed_time.' min';
 							}
 							
 							$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
@@ -280,7 +287,7 @@
 											<li>Start Time: <strong><?php echo date($plexWatch['timeFormat'],$row['time']); ?></strong></li>
 											<li>Stop Time: <strong><?php echo $stopped_time; ?></strong></li>
 											<li>Minutes Paused: <strong><?php echo $paused_duration.' min'; ?></strong></li>
-											<li>Duration: <strong><?php echo $viewed_time_length; ?></strong></li>
+											<li>Minutes Watched: <strong><?php echo $viewed_time_length; ?></strong></li>
 											</ul>
 										</div>
 										<div class="span4">	
@@ -344,7 +351,7 @@
 											<li>Start Time: <strong><?php echo date($plexWatch['timeFormat'],$row['time']); ?></strong></li>
 											<li>Stop Time: <strong><?php echo $stopped_time; ?></strong></li>
 											<li>Minutes Paused: <strong><?php echo $paused_duration.' min'; ?></strong></li>
-											<li>Duration: <strong><?php echo $viewed_time_length; ?></strong></li>
+											<li>Minutes Watched: <strong><?php echo $viewed_time_length; ?></strong></li>
 											</ul>
 										</div>
 										<div class="span4">	
