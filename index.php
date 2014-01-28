@@ -151,6 +151,46 @@
 							echo "<li>";
 									echo "<h1>".$users."</h1><h5>Users</h5>";
 							echo "</li>";
+
+							$plays = $db->querySingle("SELECT count(*) FROM processed") or die ("Failed to access plexWatch database. Please check your settings.");
+							echo "<li>";
+									echo "<h1>".$plays."</h1><h5>Total Plays</h5>";
+							echo "</li>";
+						
+							
+							function formatBytes($bytes, $precision = 2) { 
+							$units = array('B', 'KB', 'MB', 'GB', 'TB'); 
+							$bytes = max($bytes, 0); 
+							$pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
+							$pow = min($pow, count($units) - 1); 
+							$bytes /= (1 << (10 * $pow)); 
+							return round($bytes, $precision) . ' ' . $units[$pow]; 
+							} 		
+
+							$data = $db->query("SELECT xml FROM processed");
+							$dataNum = 0;
+							$dataFinal = '';
+							while ($totalData = $data->fetchArray()) {
+							$dataNum++;
+							$request_url = $totalData['xml'];
+							$xmlfield = simplexml_load_string($request_url) ; 
+							$duration = $xmlfield['duration'];
+							$viewOffset = $xmlfield['viewOffset'];
+							$percentComplete = 0;
+							$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
+								if ($percentComplete >= 90) {	
+									$percentComplete = 100;    
+								}
+							$size = $xmlfield->Media->Part['size'];		
+							
+							$dataTransferred = ($percentComplete / 100 * ($size));
+							$totalDataTransferred += $dataTransferred;
+							$dataTransferredFinal = formatBytes($totalDataTransferred);
+							}
+
+							echo "<li>";
+									echo "<h1>".$dataTransferredFinal."</h1><h5>Total Data Transferred</h5>";
+							echo "</li>";
 								
 							
 						echo "</ul>";		

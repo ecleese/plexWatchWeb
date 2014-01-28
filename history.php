@@ -227,7 +227,7 @@
 
 							$size = $xmlfield->Media->Part['size'];		
 							$dataTransferred = ($percentComplete / 100 * ($size));		
-							
+							$size_total = (1 * $size);
 
 							if ($type=="movie") {
 								echo "<td class='title' align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
@@ -282,6 +282,7 @@
 											<li>Container: <strong><?php echo $xmlfield->Media['container']; ?></strong></li>
 											<li>Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
 											<li>Bitrate: <strong><?php echo $xmlfield->Media['bitrate']; ?> kbps</strong></li>
+											<li>Size: <strong><?php echo formatBytes($size_total); ?></strong></li>
 											<br/><h4>Time Information</h4>
 											<ul>
 											<li>Start Time: <strong><?php echo date($plexWatch['timeFormat'],$row['time']); ?></strong></li>
@@ -346,6 +347,7 @@
 											<li>Container: <strong><?php echo $xmlfield->Media['container']; ?></strong></li>
 											<li>Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
 											<li>Bitrate: <strong><?php echo $xmlfield->Media['bitrate']; ?> kbps</strong></li>
+											<li>Size: <strong><?php echo formatBytes($size_total); ?></strong></li>
 											<br/><h4>Time Information</h4>
 											<ul>
 											<li>Start Time: <strong><?php echo date($plexWatch['timeFormat'],$row['time']); ?></strong></li>

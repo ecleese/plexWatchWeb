@@ -1,3 +1,9 @@
+1.5.0.17 dev
+* Add:	history.php: added media size info
+* Add:	user.php: added media size info
+* Add:	index.php: added total views and total data transferred to main page
+* Fix:	global: change CSS to fit new data items
+
 1.5.0.16 dev
 * Add:		user.php: bar chart of historical plays for user (history tab)
 		user.php: added “total data transferred” in user statistics (size * percent complete)

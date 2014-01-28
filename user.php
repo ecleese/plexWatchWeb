@@ -192,7 +192,7 @@
 	}
 	
 	
-		$rowCountData = 0;
+	$rowCountData = 0;
 	while ($row = $userStatsAlltimeTimeFetch->fetchArray()) {
 	$rowCountData++;
 	$request_url = $row['xml'];
@@ -203,7 +203,7 @@
 	if ($percentComplete >= 90) {	
 	$percentComplete = 100;
 	}
-	$size = $xmlfield->Media->Part['size'];		
+	$size = $xmlfield->Media->Part['size'];
 	$dataTransferred = ($percentComplete / 100 * ($size));
 	$totalDataTransferred += $dataTransferred;	    
 	}
@@ -766,7 +766,9 @@
 										$duration = $xmlfield['duration'];
 										$viewOffset = $xmlfield['viewOffset'];
 										$platform = $xmlfield->Player['platform'];
-
+										$size = $xmlfield->Media->Part['size'];
+										$size_total = (1 * $size);
+										
 										echo "<tr>";
 											if (empty($row['stopped'])) {
 												echo "<td class='currentlyWatching' align='center'>Currently watching...</td>";
@@ -844,6 +846,7 @@
 											<li>Container: <strong><?php echo $xmlfield->Media['container']; ?></strong></li>
 											<li>Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
 											<li>Bitrate: <strong><?php echo $xmlfield->Media['bitrate']; ?> kbps</strong></li>
+											<li>Size: <strong><?php echo formatBytes($size_total); ?></strong></li>
 										</div>
 										<div class="span4">	
 											<h4>Video Source Details</h4>
@@ -896,6 +899,7 @@
 											<li>Container: <strong><?php echo $xmlfield->Media['container']; ?></strong></li>
 											<li>Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
 											<li>Bitrate: <strong><?php echo $xmlfield->Media['bitrate']; ?> kbps</strong></li>
+											<li>Size: <strong><?php echo formatBytes($size_total); ?></strong></li>
 										</div>
 										<div class="span4">	
 											<h4>Video Source Details</h4>
@@ -963,9 +967,8 @@
 												if ($percentComplete >= 90) {	
 												  $percentComplete = 100;    
 												}
-											$size = $xmlfield->Media->Part['size'];		
+											$size = $xmlfield->Media->Part['size'];	
 											$dataTransferred = ($percentComplete / 100 * ($size));
-											$totalDataTransferred += $dataTransferred;	
 											
 											echo "<td align='center'>".formatBytes($dataTransferred)."</td>";
 											echo "<td align='center'><span class='badge badge-warning'>".$percentComplete."%</span></td>";
