@@ -83,6 +83,7 @@ A web front-end for plexWatch.
 * php5
 * php5-sqlite
 * php5-curl
+* php5-json
 
 
 ### Install 
