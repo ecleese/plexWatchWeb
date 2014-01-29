@@ -1,3 +1,7 @@
+1.5.0.14.2 dev
+* Fix:		global: stream video details width and height were being displayed under audio column when stream was direct play type
+* Change:	global: updated logo to match new Plex logo.
+
 1.5.0.14.1 dev
 * Fix:		user.php: platform stat total plays were not matching all time total plays when grouping was enabled
 

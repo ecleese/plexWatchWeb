@@ -1,4 +1,4 @@
-plexWatch/Web - v1.5.0.14.1 dev
+plexWatch/Web - v1.5.0.14.2 dev
 ==============================
 
 A web front-end for plexWatch.
@@ -47,6 +47,7 @@ A web front-end for plexWatch.
 	* platform
 	* ip address (if enabled in plexWatch)
 	* title
+	* stream information details
 	* start time
 	* paused duration length
 	* stop time

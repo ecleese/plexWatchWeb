@@ -271,12 +271,13 @@
 												<li>Stream Type: <strong>Direct Play</strong></li>
 												<li>Video Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
 												<li>Video Codec: <strong><?php echo $xmlfield->Media['videoCodec']; ?></strong></li>
+												<li>Video Width: <strong><?php echo $xmlfield->Media['width']; ?></strong></li>
+												<li>Video Height: <strong><?php echo $xmlfield->Media['height']; ?></strong></li>
 											</ul>
 											<ul>
 												<h5>Audio</h5>
 												<li>Stream Type: <strong>Direct Play</strong></li>
-												<li>Video Width: <strong><?php echo $xmlfield->Media['width']; ?></strong></li>
-												<li>Video Height: <strong><?php echo $xmlfield->Media['height']; ?>p</strong></li>
+												
 												<?php if ($xmlfield->Media['audioCodec'] == "dca") { ?>
 														<li>Audio Codec: <strong>dts</strong></li>
 													<?php }else{ ?>
