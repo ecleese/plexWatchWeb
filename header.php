@@ -67,7 +67,7 @@
 		<div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
 				<a href="index.php"><div class="logo hidden-phone"></div></a>
-				<? echo $plexWatchhDBheader; ?>
+				<?php echo $plexWatchhDBheader; ?>
 				<ul class="nav">
 					
 					<li><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
