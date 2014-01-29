@@ -37,25 +37,8 @@
 
 	
   
-	<div class="container">
-		    			
-		<div class="navbar navbar-fixed-top">
-			<div class="navbar-inner">
-				
-				<a href="index.php"><div class="logo hidden-phone"></div></a>
-				<ul class="nav">
-					
-					<li><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
-					<li><a href="history.php"><i class="icon-2x icon-calendar icon-white" data-toggle="tooltip" data-placement="bottom" title="History" id="history"></i></a></li>
-					<li><a href="stats.php"><i class="icon-2x icon-tasks icon-white" data-toggle="tooltip" data-placement="bottom" title="Stats" id="stats"></i></a></li>
-					<li><a href="users.php"><i class="icon-2x icon-group icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
-					<li><a href="charts.php"><i class="icon-2x icon-bar-chart icon-white" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
-					<li><a href="settings.php"><i class="icon-2x icon-wrench icon-white" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
-					
-				</ul>
-			</div>
-		</div>
-    </div>
+  <? include ("header.php"); ?>
+  
 	<?php
 	
 	date_default_timezone_set(@date_default_timezone_get());
@@ -540,7 +523,7 @@
 									$recentXml = simplexml_load_string($request_url) ;                      
 					
 									if ($recentXml['type'] == "episode") {
-										if (!empty($plexWatch['myPlexAuthToken'])) {
+										if ($plexWatch['myPlexAuthToken'] != '') {
 											$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
 											$recentMetadata = "".$plexWatchPmsUrl."/library/metadata/".$recentXml['ratingKey']."?query=c&X-Plex-Token=".$myPlexAuthToken."";
 										}else{
@@ -570,7 +553,7 @@
 											echo "</div>";
 										}
 									}else if ($recentXml['type'] == "movie") {	
-										if (!empty($plexWatch['myPlexAuthToken'])) {
+										if ($plexWatch['myPlexAuthToken'] != '') {
 											$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
 											$recentMetadata = "".$plexWatchPmsUrl."/library/metadata/".$recentXml['ratingKey']."?query=c&X-Plex-Token=".$myPlexAuthToken."";
 										}else{
@@ -601,7 +584,7 @@
 											echo "</div>";
 										}	
 									}else if ($recentXml['type'] == "clip") {	
-										if (!empty($plexWatch['myPlexAuthToken'])) {
+										if ($plexWatch['myPlexAuthToken'] != '') {
 											$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
 											$recentMetadata = "".$plexWatchPmsUrl."/library/metadata/".$recentXml['ratingKey']."?query=c&X-Plex-Token=".$myPlexAuthToken."";
 										}else{

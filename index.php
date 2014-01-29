@@ -31,28 +31,7 @@
 
   <body>
 
-  
-  
-	<div class="container">
-		<div class="navbar navbar-fixed-top">
-			<div class="navbar-inner">
-				<a href="index.php"><div class="logo hidden-phone"></div></a>
-				<ul class="nav">
-					
-					<li class="active"><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
-					<li><a href="history.php"><i class="icon-2x icon-calendar icon-white" data-toggle="tooltip" data-placement="bottom" title="History" id="history"></i></a></li>
-					<li><a href="stats.php"><i class="icon-2x icon-tasks icon-white" data-toggle="tooltip" data-placement="bottom" title="Stats" id="stats"></i></a></li>
-					<li><a href="users.php"><i class="icon-2x icon-group icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
-					<li><a href="charts.php"><i class="icon-2x icon-bar-chart icon-white" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
-					<li><a href="settings.php"><i class="icon-2x icon-wrench icon-white" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
-					
-				</ul>
-				
-			</div>
-		</div>
-    </div>
-
-	
+  <? include ("header.php"); ?>
 	
 	<div class="container-fluid">
 		<div class='row-fluid'>
@@ -76,7 +55,8 @@
 					$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
 				}
 				
-				if (!empty($plexWatch['myPlexAuthToken'])) {
+				
+				if ($plexWatch['myPlexAuthToken'] != '') {
 					$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
 					$fileContents = '';
 					if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$myPlexAuthToken."")) {
@@ -105,7 +85,7 @@
 					
 							foreach ($sections->children() as $section) {
 							
-								if (!empty($plexWatch['myPlexAuthToken'])) {
+								if ($plexWatch['myPlexAuthToken'] != '') {
 									if ($section['type'] == "movie") {
 										$sectionDetails = simplexml_load_file("".$plexWatchPmsUrl."/library/sections/".$section['key']."/all?type=1&sort=addedAt:desc&X-Plex-Container-Start=0&X-Plex-Container-Size=1&X-Plex-Token=".$myPlexAuthToken."") or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
 										
@@ -146,13 +126,14 @@
 							
 							date_default_timezone_set(@date_default_timezone_get());
 							$db = dbconnect();
+							
 							$users = $db->querySingle("SELECT count(DISTINCT user) as users FROM processed") or die ("Failed to access plexWatch database. Please check your settings.");
 							
 							echo "<li>";
 									echo "<h1>".$users."</h1><h5>Users</h5>";
 							echo "</li>";
 
-							$plays = $db->querySingle("SELECT count(*) FROM processed") or die ("Failed to access plexWatch database. Please check your settings.");
+							$plays = $db->querySingle("SELECT count(*) FROM grouped") or die ("Failed to access plexWatch database. Please check your settings.");
 							echo "<li>";
 									echo "<h1>".$plays."</h1><h5>Total Plays</h5>";
 							echo "</li>";
@@ -167,7 +148,7 @@
 							return round($bytes, $precision) . ' ' . $units[$pow]; 
 							} 		
 
-							$data = $db->query("SELECT xml FROM processed");
+							$data = $db->query("SELECT xml FROM grouped");
 							$dataNum = 0;
 							$dataFinal = '';
 							while ($totalData = $data->fetchArray()) {

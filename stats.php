@@ -33,25 +33,7 @@
   <body>
 
 	
-  
-	<div class="container">
-		    			
-		<div class="navbar navbar-fixed-top">
-			<div class="navbar-inner">
-				<a href="index.php"><div class="logo hidden-phone"></div></a>
-				<ul class="nav">
-					
-					<li><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
-					<li><a href="history.php"><i class="icon-2x icon-calendar icon-white" data-toggle="tooltip" data-placement="bottom" title="History" id="history"></i></a></li>
-					<li class="active"><a href="stats.php"><i class="icon-2x icon-tasks icon-white" data-toggle="tooltip" data-placement="bottom" title="Stats" id="stats"></i></a></li>
-					<li><a href="users.php"><i class="icon-2x icon-group icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
-					<li><a href="charts.php"><i class="icon-2x icon-bar-chart icon-white" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
-					<li><a href="settings.php"><i class="icon-2x icon-wrench icon-white" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
-					
-				</ul>
-			</div>
-		</div>
-    </div>
+  <? include ("header.php"); ?>
 
 
     <div class="clear"></div>
@@ -89,7 +71,15 @@
 						echo "<div class='span6'><div class='wellbg'><div class='history-charts-header'><strong>Daily Plays</strong><br></div><div class='history-charts-instance-chart'  id='playChartDaily'></div></div></div>";
 						echo "<div class='span6'><div class='wellbg'><div class='history-charts-header'><strong>Monthly Plays</strong><br></div><div class='history-charts-instance-chart' id='playChartMonthly'></div></div></div>";
 					echo "</div>";
-				
+
+
+					echo "<div class='row-fluid'>";	
+						echo "<div class='span6'><div class='wellbg'><div class='history-charts-header'><strong>Daily Data Transferred</strong><br></div><div class='history-charts-instance-chart' id='dataChartDaily'></div></div></div>";
+						echo "<div class='span6'><div class='wellbg'><div class='history-charts-header'><strong>Weekly Data Transferred</strong><br></div><div class='history-charts-instance-chart' id='dataChartWeekly'></div></div></div>";
+					echo "</div>";
+					echo "<div class='row-fluid'>";	
+					echo "<div class='span6'><div class='wellbg'><div class='history-charts-header'><strong>Monthly Data Transferred</strong><br></div><div class='history-charts-instance-chart' id='dataChartMonthly'></div></div></div>";	
+					echo "</div>";
 			echo "</div>";
 		
 					
@@ -108,7 +98,7 @@
 						$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
 					}
 					
-					if (!empty($plexWatch['myPlexAuthToken'])) {
+					if ($plexWatch['myPlexAuthToken'] != '') {
 						$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
 						
 					}else{
@@ -166,6 +156,8 @@
 						$dailyPlayFinal .= $dailyPlayTotal;
 					}
 						
+					
+											
 					$monthlyPlays = $db->query("SELECT strftime('%Y-%m', datetime(time, 'unixepoch', 'localtime')) as date, COUNT(title) as count FROM $plexWatchDbTable WHERE datetime(time, 'unixepoch', 'localtime') >= datetime('now', '-12 months', 'localtime') GROUP BY strftime('%Y-%m', datetime(time, 'unixepoch', 'localtime'))  ORDER BY date DESC LIMIT 6;") or die ("Failed to access plexWatch database. Please check your settings.");
 					$monthlyPlaysNum = 0;
 					$monthlyPlayFinal = '';
@@ -179,9 +171,150 @@
 					
 					
 					
-					?>
-						
+						function formatBytes($bytes, $precision = 2) { 
+							$units = array('B', 'KB', 'MB', 'GB', 'TB'); 
+							$bytes = max($bytes, 0); 
+							$pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
+							$pow = min($pow, count($units) - 1); 
+							$bytes /= (1 << (10 * $pow)); 
+							return round($bytes, $precision) . ' ' . $units[$pow]; 
+							} 		
+
+					$dlyData = $db->query("SELECT strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) as date, xml FROM grouped WHERE datetime(time, 'unixepoch', 'localtime') >= datetime('now', '-24 hours', 'localtime') ORDER by date DESC");
+					$dailyDataNum = 0;
+					$dailyDataFinal = '';
+					while ($dailyData = $dlyData->fetchArray()) {
+							$dailyDataNum++;
+							$request_url = $dailyData['xml'];
+							$xmlfield = simplexml_load_string($request_url) ; 
+							$duration = $xmlfield['duration'];
+							$viewOffset = $xmlfield['viewOffset'];
+							$percentComplete = 0;
+							$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
+								if ($percentComplete >= 90) {	
+									$percentComplete = 100;    
+								}
+							$size = $xmlfield->Media->Part['size'];
+							//calculate data transferred based on percentage viewed		
+							$dataTransferred = (($percentComplete / 100) * $size);
+							$dailyDataTransferredFinal[$dailyDataNum] = $dataTransferred;
+							$dailyDataDate[$dailyDataNum] = $dailyData['date'];
+							}
+
+																					
+							//create empty array to go through the existing array							
+							$dailyDataOutput = array(); 
+
+							// count the dates (+1 or else it doesn't get the last value)
+							for ($i = 0; $i < count($dailyDataDate)+1; $i++) { 
+								// Check the output array to see if the date key has already been added
+								if (array_key_exists($dailyDataDate[$i], $dailyDataOutput)) {
+									// If it has, add on the data transferred value from the current position
+									$dailyDataOutput[$dailyDataDate[$i]] += $dailyDataTransferredFinal[$i];
+								} else {
+									// If it hasn't, create it with the data transferred value from the current position
+									$dailyDataOutput[$dailyDataDate[$i]] = $dailyDataTransferredFinal[$i];
+								}   
+							}		
+
+							//go into the new array (ignoring first empty value) and build data for chart
+							foreach (array_slice($dailyDataOutput,1) as $combineddailyDataDate => $combineddailyDataValue) {
+								$dailyDataTotal = "{ \"x\": \"".$combineddailyDataDate."\", \"y\": ".$combineddailyDataValue." }, ";
+								$dailyDataFinal .= $dailyDataTotal;
+							}
+
+
 					
+					$wklyData = $db->query("SELECT date(time, 'unixepoch','localtime') as date, xml FROM grouped WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-7 days', 'localtime') ORDER by date DESC");
+					$weeklyDataNum = 0;
+					$weeklyDataFinal = '';
+					while ($weeklyData = $wklyData->fetchArray()) {
+							$weeklyDataNum++;
+							$request_url = $weeklyData['xml'];
+							$xmlfield = simplexml_load_string($request_url) ; 
+							$duration = $xmlfield['duration'];
+							$viewOffset = $xmlfield['viewOffset'];
+							$percentComplete = 0;
+							$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
+								if ($percentComplete >= 90) {	
+									$percentComplete = 100;    
+								}
+							$size = $xmlfield->Media->Part['size'];
+							//calculate data transferred based on percentage viewed		
+							$dataTransferred = (($percentComplete / 100) * $size);
+							$weeklyDataTransferredFinal[$weeklyDataNum] = $dataTransferred;
+							$weeklyDataDate[$weeklyDataNum] = $weeklyData['date'];
+							}
+
+																					
+							//create empty array to go through the existing array							
+							$weeklyDataOutput = array(); 
+
+							// count the dates (+1 or else it doesn't get the last value)
+							for ($i = 0; $i < count($weeklyDataDate)+1; $i++) { 
+								// Check the output array to see if the date key has already been added
+								if (array_key_exists($weeklyDataDate[$i], $weeklyDataOutput)) {
+									// If it has, add on the data transferred value from the current position
+									$weeklyDataOutput[$weeklyDataDate[$i]] += $weeklyDataTransferredFinal[$i];
+								} else {
+									// If it hasn't, create it with the data transferred value from the current position
+									$weeklyDataOutput[$weeklyDataDate[$i]] = $weeklyDataTransferredFinal[$i];
+								}   
+							}		
+
+							//go into the new array (ignoring first empty value) and build data for chart
+							foreach (array_slice($weeklyDataOutput,1) as $combinedWeeklyDataDate => $combinedWeeklyDataValue) {
+								$weeklyDataTotal = "{ \"x\": \"".$combinedWeeklyDataDate."\", \"y\": ".$combinedWeeklyDataValue." }, ";
+								$weeklyDataFinal .= $weeklyDataTotal;
+							}
+
+
+
+					$mnthlyData = $db->query("SELECT strftime('%Y-%m') as date, xml FROM grouped");
+					$monthlyDataNum = 0;
+					$monthlyDataFinal = '';
+					while ($monthlyData = $mnthlyData->fetchArray()) {
+							$monthlyDataNum++;
+							$request_url = $monthlyData['xml'];
+							$xmlfield = simplexml_load_string($request_url) ; 
+							$duration = $xmlfield['duration'];
+							$viewOffset = $xmlfield['viewOffset'];
+							$percentComplete = 0;
+							$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
+								if ($percentComplete >= 90) {	
+									$percentComplete = 100;    
+								}
+							$size = $xmlfield->Media->Part['size'];
+							//calculate data transferred based on percentage viewed		
+							$dataTransferred = (($percentComplete / 100) * $size);
+							$monthlyDataTransferredFinal[$monthlyDataNum] = $dataTransferred;
+							$monthlyDataDate[$monthlyDataNum] = $monthlyData['date'];
+							}
+
+																					
+							//create empty array to go through the existing array							
+							$monthlyDataOutput = array(); 
+
+							// count the dates (+1 or else it doesn't get the last value)
+							for ($i = 0; $i < count($monthlyDataDate)+1; $i++) { 
+								// Check the output array to see if the date key has already been added
+								if (array_key_exists($monthlyDataDate[$i], $monthlyDataOutput)) {
+									// If it has, add on the data transferred value from the current position
+									$monthlyDataOutput[$monthlyDataDate[$i]] += $monthlyDataTransferredFinal[$i];
+								} else {
+									// If it hasn't, create it with the data transferred value from the current position
+									$monthlyDataOutput[$monthlyDataDate[$i]] = $monthlyDataTransferredFinal[$i];
+								}   
+							}		
+
+							//go into the new array (ignoring first empty value) and build data for chart
+							foreach (array_slice($monthlyDataOutput,1) as $combinedmonthlyDataDate => $combinedmonthlyDataValue) {
+								$monthlyDataTotal = "{ \"x\": \"".$combinedmonthlyDataDate."\", \"y\": ".$combinedmonthlyDataValue." }, ";
+								$monthlyDataFinal .= $monthlyDataTotal;
+							}
+
+					?>
+	
 
 				</div>
 			</div>
@@ -229,6 +362,15 @@
 		$('#stats').tooltip();
 	});
 	</script>
+
+	<script>
+	function bytesToSize(bytes) {
+    var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    if (bytes == 0) return '0 Bytes';
+    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+    return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+    };
+    </script>
 
 	<script>
 	var tt = document.createElement('div'),
@@ -387,6 +529,135 @@
 	};
 	var myChart = new xChart('line-dotted', data, '#playChartMonthly', opts);
 	</script>
+
+
+<script>
+	var tt = document.createElement('div'),
+	  leftOffset = -(~~$('html').css('padding-left').replace('px', '') + ~~$('body').css('margin-left').replace('px', '')),
+	  topOffset = -35;
+	tt.className = 'ex-tooltip';
+	document.body.appendChild(tt);
+
+	var data = {
+	  "xScale": "ordinal",
+	  "yScale": "linear",
+	  
+	  "main": [
+		{
+		  "className": ".dailyDataFinal",
+		  "data": [
+			<?php echo $dailyDataFinal; ?>
+		  ]
+		}
+	  ]
+	};
+	var opts = {
+	  "dataFormatX": function (x) { return d3.time.format('%Y-%m-%d %H').parse(x); },
+	  "tickFormatX": function (x) { return d3.time.format('%-I:00 %p')(x); },
+	  "tickFormatY": function (y) { return bytesToSize(y); },
+	  "paddingLeft": ('80'),
+	  "paddingRight": ('35'),
+	  "paddingTop": ('10'),
+	  "tickHintY": ('5'),
+	  "mouseover": function (d, i) {
+		var pos = $(this).offset();
+		$(tt).text(d3.time.format('%-I:00 %p')(d.x) + ": " + bytesToSize(d.y))
+		  .css({top: topOffset + pos.top, left: pos.left + leftOffset})
+		  .show();
+	  },
+	  "mouseout": function (x) {
+		$(tt).hide();
+	  }
+	};
+	var myChart = new xChart('line-dotted', data, '#dataChartDaily', opts);
+	</script>
+
+
+<script>
+	var tt = document.createElement('div'),
+	  leftOffset = -(~~$('html').css('padding-left').replace('px', '') + ~~$('body').css('margin-left').replace('px', '')),
+	  topOffset = -35;
+	tt.className = 'ex-tooltip';
+	document.body.appendChild(tt);
+
+	var data = {
+	  "xScale": "ordinal",
+	  "yScale": "linear",
+	  
+	  "main": [
+		{
+		  "className": ".weeklyDataFinal",
+		  "data": [
+			<?php echo $weeklyDataFinal; ?>
+		  ]
+		}
+	  ]
+	};
+	var opts = {
+	  "dataFormatX": function (x) { return d3.time.format('%Y-%m-%d').parse(x); },
+	  "tickFormatX": function (x) { return d3.time.format('%b %e')(x); },
+	  "tickFormatY": function (y) { return bytesToSize(y); },
+	  "paddingLeft": ('80'),
+	  "paddingRight": ('35'),
+	  "paddingTop": ('10'),
+	  "tickHintY": ('5'),
+	  "mouseover": function (d, i) {
+		var pos = $(this).offset();
+		$(tt).text(d3.time.format('%b %e')(d.x) + ": " + bytesToSize(d.y))
+		  .css({top: topOffset + pos.top, left: pos.left + leftOffset})
+		  .show();
+	  },
+	  "mouseout": function (x) {
+		$(tt).hide();
+	  }
+	};
+	var myChart = new xChart('line-dotted', data, '#dataChartWeekly', opts);
+	</script>
+	
+
+
+
+	<script>
+	var tt = document.createElement('div'),
+	  leftOffset = -(~~$('html').css('padding-left').replace('px', '') + ~~$('body').css('margin-left').replace('px', '')),
+	  topOffset = -35;
+	tt.className = 'ex-tooltip';
+	document.body.appendChild(tt);
+
+	var data = {
+	  "xScale": "ordinal",
+	  "yScale": "linear",
+	  "main": [
+		{
+		  "className": ".monthlyDataFinal",
+		  "data": [
+			<?php echo $monthlyDataFinal ?>
+		  ]
+		}
+	  ]
+	};
+	var opts = {
+	  "dataFormatX": function (x) { return d3.time.format('%Y-%m').parse(x); },
+	  "tickFormatX": function (x) { return d3.time.format('%b')(x); },
+	  "tickFormatY": function (y) { return bytesToSize(y); },
+	  "paddingLeft": ('80'),
+	  "paddingRight": ('35'),
+	  "paddingTop": ('10'),
+	  "tickHintY": ('5'),
+	  "mouseover": function (d, i) {
+		var pos = $(this).offset();
+		   $(tt).text(bytesToSize(d.y))
+		  .css({top: topOffset + pos.top, left: pos.left + leftOffset})
+		  .show();
+	  },
+	  "mouseout": function (x) {
+		$(tt).hide();
+	  }
+	};
+	var myChart = new xChart('line-dotted', data, '#dataChartMonthly', opts);
+	</script>
+
+
 
   </body>
 </html>
