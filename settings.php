@@ -221,7 +221,7 @@
 							  <label class="control-label" for="dbHeaderInfo">Show database info in header (optional)</label>
 							  <div class="controls">
 								<label class="checkbox inline" for="dbHeaderInfo">
-								  <input type="checkbox" name="dbHeaderInfo" id="dbHeaderInfo-0" value="yes" <?php echo $dbHeaderInfo ?>">
+								  <input type="checkbox" name="dbHeaderInfo" id="dbHeaderInfo" value="yes" <?php echo $dbHeaderInfo ?>">
 								  <p class="help-block">If selected, database information will be shown in the header.</p>
 								  </label>
 							  </div>
