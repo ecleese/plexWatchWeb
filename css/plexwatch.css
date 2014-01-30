@@ -4884,7 +4884,7 @@ font-weight: bold;
   filter: alpha(opacity=80);
 }
 .modal {
-  position: fixed;
+position: fixed;
 top: 10%;
 left: 50%;
 z-index: 1050;
@@ -6970,22 +6970,23 @@ color: #fff;
 
 .logo {
 background: url(../images/logo-plexwatch.png);
-background-size: 100px 61px;
-min-height: 61px;
-min-width: 100px;
+background-size: 120px 50px;
+min-height: 50px;
+min-width: 120px;
 float: left;
+margin-top: 4px;
 
 }
 
 @media only screen and (-webkit-min-device-pixel-ratio: 2) {
-     .logo {
-			background: url(../images/logo-plexwatch@2x.png);
-			background-size: 100px 61px;
-			min-height: 61px;
-			min-width: 100px;
-			float: left;
-     }
-
+    .logo {
+      background: url(../images/logo-plexwatch@2x.png);
+      background-size: 120px 50px;
+      min-height: 50px;
+      min-width: 120px;
+      float: left;
+      margin-top: 4px;   
+    }
 }
 
 
@@ -8474,3 +8475,4 @@ width: 230px;
 .charts-slider-title-views {
 float: right;
 }
+
