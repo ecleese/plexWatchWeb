@@ -1,3 +1,6 @@
+1.5.0.19 dev
+* Fix:		global: fixed PHP shortags throughout
+
 1.5.0.18 dev
 * Add:  	global: created header.php for all pages to use
 * Add:		global: added database stats in header (configurable)

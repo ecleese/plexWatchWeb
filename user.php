@@ -37,7 +37,7 @@
 
 	
   
-  <? include ("header.php"); ?>
+  <?php include ("header.php"); ?>
   
 	<?php
 	
@@ -967,7 +967,7 @@
 ?>
 <!-- had to use a fixed width because percentage didn't work until window was resized -->
 <div class='wellbg'><strong>History</strong><br><figure style='width: 900px; height: 200px;' id='userChartFinal'></figure></div>
-<?
+<?php
 				echo "</div>";
 			echo "</div>";			
 		echo "</div>";
