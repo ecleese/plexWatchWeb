@@ -14,16 +14,8 @@
         }else if ($_POST['https'] == "yes") {
                 $https = "\$plexWatch['https'] = '".$_POST['https']."';";
         }
-
-        if (!isset($_POST['dbHeaderInfo'])) {
-                $dbHeaderInfo = "\$plexWatch['dbHeaderInfo'] = 'no';";
-        }else if ($_POST['dbHeaderInfo'] == "yes") {
-                $dbHeaderInfo = "\$plexWatch['dbHeaderInfo'] = '".$_POST['dbHeaderInfo']."';";
-        }
         
         $plexWatchDb = "\$plexWatch['plexWatchDb'] = '".$_POST['plexWatchDb']."';";
-        $plexWatchDbMin = "\$plexWatch['plexWatchDbMin'] = '".$_POST['plexWatchDbMin']."';";
-        
         
         $myPlexUser = "\$plexWatch['myPlexUser'] = '".$_POST['myPlexUser']."';";        
         $myPlexPass = "\$plexWatch['myPlexPass'] = '".$_POST['myPlexPass']."';"; 
@@ -50,7 +42,7 @@
         }
         
         //combine all data into one variable
-        $data = "$dateFormat\r$timeFormat\r$pmsIp\r$pmsHttpPort\r$pmsHttpsPort\r$https\r$plexWatchDb\r$plexWatchDbMin\r$dbHeaderInfo\r$myPlexUser\r$myPlexPass\r$globalHistoryGrping\r$userHistoryGrping\r$chartsGrping";
+        $data = "$dateFormat\r$timeFormat\r$pmsIp\r$pmsHttpPort\r$pmsHttpsPort\r$https\r$plexWatchDb\r$myPlexUser\r$myPlexPass\r$globalHistoryGrping\r$userHistoryGrping\r$chartsGrping";
         
         $file = "../config/config.php";
         $func_file = dirname(dirname(__FILE__)) . '/includes/functions.php';
@@ -70,7 +62,7 @@
         $myPlexToken = "\$plexWatch['myPlexAuthToken'] = '".$myPlexAuthToken."';";
         
         //include authentication code in saved data
-        $data = "$dateFormat\r$timeFormat\r$pmsIp\r$pmsHttpPort\r$pmsHttpsPort\r$https\r$plexWatchDb\r$plexWatchDbMin\r$dbHeaderInfo\r$myPlexUser\r$myPlexPass\r$myPlexToken\r$globalHistoryGrping\r$userHistoryGrping\r$chartsGrping";
+        $data = "$dateFormat\r$timeFormat\r$pmsIp\r$pmsHttpPort\r$pmsHttpsPort\r$https\r$plexWatchDb\r$myPlexUser\r$myPlexPass\r$myPlexToken\r$globalHistoryGrping\r$userHistoryGrping\r$chartsGrping";
         
         //rewrite data to config.php
         $fp = fopen($file, "w+") or die("Cannot open file $file.");

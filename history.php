@@ -34,7 +34,7 @@
 
 	
   
-  <?php include ("header.php"); ?>
+  <? include ("header.php"); ?>
 
 
     <div class="clear"></div>

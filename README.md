@@ -3,71 +3,21 @@ plexWatch/Web - v1.5.0.18 dev
 
 A web front-end for plexWatch.
 
-* Original plexWatch: <https://github.com/ljunkie/plexWatch>
-* plexWatch Plex forum thread: <http://forums.plexapp.com/index.php/topic/72552-plexwatch-plex-notify-script-send-push-alerts-on-new-sessions-and-stopped>
-* plexWatch (Windows branch) Plex forum thread: <http://forums.plexapp.com/index.php/topic/79616-plexwatch-windows-branch>
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q3HXXBC6ZBENJ)
+
+* plexWatch: https://github.com/ljunkie/plexWatch
+* plexWatch Plex forum thread: http://forums.plexapp.com/index.php/topic/72552-plexwatch-plex-notify-script-send-push-alerts-on-new-sessions-and-stopped/
+* plexWatch (Windows branch) Plex forum thread: http://forums.plexapp.com/index.php/topic/79616-plexwatch-windows-branch/
 
 
 ###Support
 -----------
-* plexWatch/Web Wiki: <https://github.com/ecleese/plexWatchWeb/wiki>
-* plexWatch/Web Plex forum thread: <https://forums.plex.tv/index.php/topic/82819-plexwatchweb-a-web-front-end-for-plexwatch/?p=566929>
+* plexWatch/Web Wiki: https://github.com/ecleese/plexWatchWeb/wiki
+* plexWatch/Web Plex forum thread: http://forums.plexapp.com/index.php/topic/82819-plexwatchweb-a-web-front-end-for-plexwatch/
 
 
 ###Features
 -----------
-
-All of the features of plexWatch/Web (detailed below), plus these features:
-
-**Main Page**
-
-* Total Plays and Total Data Transferred in statistics (grouped only)<br> 
-![ScreenShot](https://forums.plex.tv/uploads/monthly_01_2014/post-141806-0-81343500-1391024428.png)
-	
-**History Page**
-
-* Data transferred column added to chart (media size * percentage watched)
-* Start/Stop time info added to stream info
-* Media size added to stream info<br>
-![ScreenShot](https://forums.plex.tv/uploads/monthly_01_2014/post-141806-0-53204400-1391024553_thumb.png)<br>
-![ScreenShot](https://forums.plex.tv/uploads/monthly_01_2014/post-141806-0-69240800-1391024554_thumb.png)
-
-**Stats Page**
-
-* Daily, Weekly, and Monthly bandwidth charts (grouped only)<br>
-![ScreenShot](https://forums.plex.tv/uploads/monthly_01_2014/post-141806-0-72732400-1391024858_thumb.png)
-
-**Users Page**
-
-* Plays per User charts (24 hr, 7 day, 30 day)<br>
-![ScreenShot](https://forums.plex.tv/uploads/monthly_01_2014/post-141806-0-13521300-1391024863_thumb.png)<br>
-![ScreenShot](https://forums.plex.tv/uploads/monthly_01_2014/post-141806-0-83910500-1391024865_thumb.png)
-
-**User Page**
-
-* Total Data Transferred added to user global stats
-* Data column added to user history chart (same as history page)
-* Media size added to stream info (same as history page)
-* User plays chart added to user history tab<br>
-![ScreenShot](https://forums.plex.tv/uploads/monthly_01_2014/post-141806-0-27737000-1391025121_thumb.png)<br>
-![ScreenShot](https://forums.plex.tv/uploads/monthly_01_2014/post-141806-0-06434800-1391025123_thumb.png)
-
-**Global - header.php**
-
-* Created header.php with navigation code
-* Added database statistics to header - shows the status of your database<br>
-![ScreenShot](https://forums.plex.tv/uploads/monthly_01_2014/post-141806-0-31275200-1391025306.png)<br>![ScreenShot](https://forums.plex.tv/uploads/monthly_01_2014/post-141806-0-95592800-1391025306.png)
-
-**Settings Page**
-
-* Added options to show/hide DB statistics in header
-* Added option to specify how often your plexWatch DB is updated (to calculate status)<br>
-![ScreenShot](https://forums.plex.tv/uploads/monthly_01_2014/post-141806-0-79077100-1391025307_thumb.png)
-
-
------------
-
-
 * Responsive web design viewable on desktop, tablet and mobile web browsers 
 
 * Themed to complement Plex/Web 
@@ -148,3 +98,4 @@ All of the features of plexWatch/Web (detailed below), plus these features:
 ------
 
 Navigate to: http://ip-of-web-server/plexWatch
+
