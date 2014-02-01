@@ -7,10 +7,11 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <!-- css -->
+    <!-- css styles -->
     <link href="css/plexwatch.css" rel="stylesheet">
+	<link href="css/plexwatch-tables.css" rel="stylesheet">
 	<link href="css/font-awesome.min.css" rel="stylesheet" >
-	
+	<link href="css/xcharts.css" rel="stylesheet" >
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -20,7 +21,6 @@
         padding: 9px 0;
       }
     </style>
-    
 
     <!-- touch icons -->
     <link rel="shortcut icon" href="images/favicon.ico">
@@ -28,12 +28,13 @@
     <link rel="apple-touch-icon" sizes="72x72" href="images/icon_ipad.png">
     <link rel="apple-touch-icon" sizes="114x114" href="images/icon_iphone@2x.png">
 	<link rel="apple-touch-icon" sizes="144x144" href="images/icon_ipad@2x.png">
+
   </head>
 
   <body>
+  
+  <?php include ("header.php"); ?>
 
-    <?php include ("header.php"); ?>
-	
 	<div class="container-fluid">
 		<div class='row-fluid'>
 			<div class='span12'>
