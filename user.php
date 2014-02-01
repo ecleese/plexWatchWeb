@@ -38,11 +38,12 @@
 		<div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
 				
-				<a href="index.php"><div class="logo"></div></a>
+				<a href="index.php"><div class="logo hidden-phone"></div></a>
 				<ul class="nav">
 					
 					<li><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
 					<li><a href="history.php"><i class="icon-2x icon-calendar icon-white" data-toggle="tooltip" data-placement="bottom" title="History" id="history"></i></a></li>
+					<li><a href="stats.php"><i class="icon-2x icon-tasks icon-white" data-toggle="tooltip" data-placement="bottom" title="Stats" id="stats"></i></a></li>
 					<li><a href="users.php"><i class="icon-2x icon-group icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
 					<li><a href="charts.php"><i class="icon-2x icon-bar-chart icon-white" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
 					<li><a href="settings.php"><i class="icon-2x icon-wrench icon-white" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
@@ -182,6 +183,7 @@
 					echo "<div class='user-info-nav'>";
 						echo "<ul class='user-info-nav'>";
 							echo "<li class='active'><a href='#profile' data-toggle='tab'>Profile</a></li>";
+							echo "<li><a href='#userAddresses' data-toggle='tab'>IP Addresses</a></li>";
 							echo "<li><a href='#userHistory' data-toggle='tab'>History</a></li>";
 							
 						echo "</ul>";
@@ -396,45 +398,59 @@
 								
 									
 									if(strstr($platformXmlField->Player['platform'], 'Roku')) {
-										$platformImage = "images/platforms/platform-roku.png";
+										$platformImage = "images/platforms/roku.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Apple TV')) {
-										$platformImage = "images/platforms/platform-appletv.png";
+										$platformImage = "images/platforms/appletv.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Firefox')) {
-										$platformImage = "images/platforms/platform-firefox.png";
+										$platformImage = "images/platforms/firefox.png";
+									}else if(strstr($platformXmlField->Player['platform'], 'Chromecast')) {
+										$platformImage = "images/platforms/chromecast.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Chrome')) {
-										$platformImage = "images/platforms/platform-chrome.png";
+										$platformImage = "images/platforms/chrome.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Android')) {
-										$platformImage = "images/platforms/platform-android.png";
+										$platformImage = "images/platforms/android.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Nexus')) {
-										$platformImage = "images/platforms/platform-android.png";
+										$platformImage = "images/platforms/android.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'iPad')) {
-										$platformImage = "images/platforms/platform-ios.png";
+										$platformImage = "images/platforms/ios.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'iPhone')) {
-										$platformImage = "images/platforms/platform-ios.png";
+										$platformImage = "images/platforms/ios.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'iOS')) {
-										$platformImage = "images/platforms/platform-ios.png";
+										$platformImage = "images/platforms/ios.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Plex Home Theater')) {
-										$platformImage = "images/platforms/platform-plex-ht.png";
+										$platformImage = "images/platforms/pht.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Linux/RPi-XBMC')) {
-										$platformImage = "images/platforms/platform-xbmc.png";
+										$platformImage = "images/platforms/xbmc.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Safari')) {
-										$platformImage = "images/platforms/platform-safari.png";
+										$platformImage = "images/platforms/safari.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Internet Explorer')) {
-										$platformImage = "images/platforms/platform-ie.png";
+										$platformImage = "images/platforms/ie.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Windows-XBMC')) {
-										$platformImage = "images/platforms/platform-xbmc.png";
+										$platformImage = "images/platforms/xbmc.png";
 									}else if(empty($platformXmlField->Player['platform'])) {
-										if(strstr($platformResultsRow['platform'], 'Apple')) {
-											$platformImage = "images/platforms/platform-appletv.png";
+										if(strstr($platformXmlField->Player['title'], 'Apple')) {
+											$platformImage = "images/platforms/atv.png";
+										//Code below matches Samsung naming standard: [Display Technology: 2 Letters][Size: 2 digits][Generation: 1 letter][Model: 4 digits]
+										}else if(preg_match("/TV [a-z][a-z]\d\d[a-z]/i",$platformXmlField->Player['title'])) {
+											$platformImage = "images/platforms/samsung.png";	
 										}else{
-											$platformImage = "images/platforms/platform-default.png";
+											$platformImage = "images/platforms/default.png";
 										}
 									}
 									
 									echo "<div class='user-platforms'>";
 										echo "<ul>";
 											echo "<div class='user-platforms-instance'>";
-												echo "<li><img class='user-platforms-instance-poster' src='".$platformImage."'></img> <div class='user-platforms-instance-name'>".$platformResultsRow['platform']."</div>";
+												echo "<li>";
+												echo "<img class='user-platforms-instance-poster' src='".$platformImage."'></img>";
+
+												if ($platformXmlField->Player['platform'] == "Chromecast") {
+													echo "<div class='user-platforms-instance-name'>Plex/Web (Chrome) & Chromecast</div>";
+												}else{
+													echo "<div class='user-platforms-instance-name'>".$platformResultsRow['platform']."</div>";
+												}
+
+												
 												echo "<div class='user-platforms-instance-playcount'><h3>".$platformResultsRow['platform_count']."</h3><p> plays</p></div>";
 												echo "</li>";
 											echo "</div>";
@@ -565,9 +581,9 @@
 			
 		echo "</div>";
 			
-		echo "<div class='tab-pane' id='userHistory'>";
+		echo "<div class='tab-pane' id='userAddresses'>";
 		
-			$userIpAddressesQuery = $db->query("SELECT time,ip_address,platform, COUNT(ip_address) as play_count FROM processed WHERE user = '$user' GROUP BY ip_address ORDER BY time DESC");
+			$userIpAddressesQuery = $db->query("SELECT time,ip_address,platform,xml, COUNT(ip_address) as play_count FROM processed WHERE user = '$user' GROUP BY ip_address ORDER BY time DESC");
 
 			echo "<div class='container-fluid'>";	
 				echo "<div class='row-fluid'>";
@@ -577,7 +593,7 @@
 							echo "<div class='wellheader'>";
 							
 								echo "<div class='dashboard-wellheader'>";
-										echo"<h3>User Public IP Address History</h3>";
+										echo"<h3>Public IP Addresses for <strong>".$user."</strong></h3>";
 								echo"</div>";
 							
 							echo"</div>";
@@ -588,7 +604,7 @@
 										echo "<th align='center'><i class='icon-sort icon-white'></i> Last seen</th>";
 										echo "<th align='center'><i class='icon-sort icon-white'></i> IP Address</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Play Count</th>";
-										echo "<th align='left'><i class='icon-sort icon-white'></i> Platform</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> Platform (Last Seen)</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Location</th>";
 										
 									echo "</tr>";
@@ -611,10 +627,19 @@
 												$userIpAddressesData = simplexml_load_file($userIpAddressesUrl) or die ("<div class=\"alert alert-warning \">Cannot access http://www.geoplugin.net.</div>");
 
 												echo "<tr>";
-													echo "<td align='center'>".date("m/d/Y",$userIpAddresses['time'])."</td>";
+													echo "<td align='center'>".date($plexWatch['dateFormat'],$userIpAddresses['time'])."</td>";
 													echo "<td align='center'>".$userIpAddresses['ip_address']."</td>";
 													echo "<td align='left'>".$userIpAddresses['play_count']."</td>";
-													echo "<td align='left'>".$userIpAddresses['platform']."</td>";
+
+													$userIpAddressesXml = simplexml_load_string($userIpAddresses['xml']); 
+													
+													if ($userIpAddressesXml->Player['platform'] == "Chromecast") {
+														echo "<td align='left'>".$userIpAddressesXml->Player['platform']."</td>";
+													}else{
+														echo "<td align='left'>".$userIpAddresses['platform']."</td>";
+													}
+
+													
 													if (empty($userIpAddressesData->geoplugin_city)) {
 														echo "<td align='left'>n/a</td>";
 													}else{
@@ -637,8 +662,9 @@
 					echo "</div>";
 				echo "</div>";
 			echo "</div>";
-			
-			
+		
+		echo "</div>";
+		echo "<div class='tab-pane' id='userHistory'>";	
 		
 			echo "<div class='container-fluid'>";	
 				echo "<div class='row-fluid'>";
@@ -664,6 +690,7 @@
 											echo "<th align='left'><i class='icon-sort icon-white'></i> Platform</th>";
 											echo "<th align='left'><i class='icon-sort icon-white'></i> IP Address</th>";
 											echo "<th align='left'><i class='icon-sort icon-white'></i> Title</th>";
+											echo "<th align='center'><i class='icon-sort icon-white'></i> Stream Info</th>";
 											echo "<th align='center'><i class='icon-sort icon-white'></i> Started</th>";
 											echo "<th align='center'><i class='icon-sort icon-white'></i> Paused</th>";
 											echo "<th align='center'><i class='icon-sort icon-white'></i> Stopped</th>";
@@ -672,75 +699,218 @@
 										echo "</tr>";
 									echo "</thead>";
 									echo "<tbody>";
+									$rowCount = 0;
 									while ($row = $results->fetchArray()) {
-									
-									echo "<tr>";
-										if (empty($row['stopped'])) {
-											echo "<td class='currentlyWatching' align='center'>Currently watching...</td>";
-										}else{
-											echo "<td align='center'>".date("m/d/Y",$row['time'])."</td>";
-										}
-										echo "<td align='left'>".$row['platform']."</td>";
-										if (empty($row['ip_address'])) {
-											echo "<td align='left'>n/a</td>";
-
-										}else{
-
-											echo "<td align='left'>".$row['ip_address']."</td>";
-										}
+										$rowCount++;
 										$request_url = $row['xml'];
 										$xmlfield = simplexml_load_string($request_url) ; 
 										$ratingKey = $xmlfield['ratingKey'];
 										$type = $xmlfield['type'];
 										$duration = $xmlfield['duration'];
 										$viewOffset = $xmlfield['viewOffset'];
+										$platform = $xmlfield->Player['platform'];
+
+										echo "<tr>";
+											if (empty($row['stopped'])) {
+												echo "<td class='currentlyWatching' align='center'>Currently watching...</td>";
+											}else{
+												echo "<td align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
+											}
 											
-										
-										if ($type=="movie") {
-										echo "<td class='title' align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
-										}else if ($type=="episode") {
-										echo "<td class='title' align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
-										}else if (!array_key_exists('',$type)) {
-										echo "<td class='title' align='left'><a href='".$ratingKey."'>".$row['title']."</a></td>";
-										}else{
-
-										}
-														
-										echo "<td align='center'>".date("g:i a",$row['time'])."</td>";
-										
-										$paused_time = round(abs($row['paused_counter']) / 60,1);
-										echo "<td align='center'>".$paused_time." min</td>";
-										
-										$stopped_time = date("g:i a",$row['stopped']);
-										
-										if (empty($row['stopped'])) {								
-											echo "<td align='center'>n/a</td>";
-										}else{
-											echo "<td align='center'>".$stopped_time."</td>";
-										}
-
-										$to_time = strtotime(date("m/d/Y g:i a",$row['stopped']));
-										$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
-										
-										$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
-										$viewed_time_length = strlen($viewed_time);
-										
-										
-										
-										if ($viewed_time_length == 8) {
-											echo "<td align='center'>n/a</td>";
-										}else{
-											echo "<td align='center'>".$viewed_time. " min</td>";
-										}
-										
-										$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
-											if ($percentComplete >= 90) {	
-											  $percentComplete = 100;    
+											if ($platform == "Chromecast") {
+												echo "<td align='left'>".$platform."</td>";
+											}else{
+												echo "<td align='left'>".$row['platform']."</td>";
 											}
 
-										echo "<td align='center'><span class='badge badge-warning'>".$percentComplete."%</span></td>";
-									echo "</tr>";   
-								}
+											if (empty($row['ip_address'])) {
+												echo "<td align='left'>n/a</td>";
+
+											}else{
+
+												echo "<td align='left'>".$row['ip_address']."</td>";
+											}
+											
+											
+											
+											if ($type=="movie") {
+											echo "<td class='title' align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
+											}else if ($type=="episode") {
+											echo "<td class='title' align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
+											}else if (!array_key_exists('',$type)) {
+											echo "<td class='title' align='left'><a href='".$ratingKey."'>".$row['title']."</a></td>";
+											}else{
+
+											}
+
+
+											echo "<td align='center'><a href='#streamDetailsModal".$rowCount."' data-toggle='modal'><span class='badge badge-inverse'><i class='icon-info icon-white'></i></span></a></td>";
+							
+							
+
+							echo "<div id='streamDetailsModal".$rowCount."' class='modal hide fade' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>";
+							?>
+								<div class="modal-header">	
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="icon icon-remove"></i></button>		
+									<h3 id="myModalLabel"><i class="icon-info-sign icon-white"></i> Stream Info: <strong><?php echo $row['title']; ?></strong></h3>
+								</div>
+								
+								<div class="modal-body">
+									<?php
+									
+									if (array_key_exists('TranscodeSession',$xmlfield)) {
+
+									?>
+										<div class="span4">
+											<h4>Stream Details</h4>
+											<ul>
+											<h5>Video</h5>
+											<li>Stream Type: <strong><?php echo $xmlfield->TranscodeSession['videoDecision']; ?></strong></li>
+											<li>Video Resolution: <strong><?php echo $xmlfield->TranscodeSession['height']; ?>p</strong></li>
+											<li>Video Codec: <strong><?php echo $xmlfield->TranscodeSession['videoCodec']; ?></strong></li>
+											<li>Video Width: <strong><?php echo $xmlfield->TranscodeSession['width']; ?></strong></li>
+											<li>Video Height: <strong><?php echo $xmlfield->TranscodeSession['height']; ?></strong></li>
+											</ul>
+											<ul>
+											<h5>Audio</h5>
+											<li>Stream Type: <strong><?php echo $xmlfield->TranscodeSession['audioDecision']; ?></strong></li>
+											<?php if ($xmlfield->TranscodeSession['audioCodec'] == "dca") { ?>
+												<li>Audio Codec: <strong>dts</strong></li>
+											<?php }else{ ?>
+												<li>Audio Codec: <strong><?php echo $xmlfield->TranscodeSession['audioCodec']; ?></strong></li>
+											<?php } ?>
+											<li>Audio Channels: <strong><?php echo $xmlfield->TranscodeSession['audioChannels']; ?></strong></li>
+											</ul>
+										</div>
+										<div class="span4">
+											<h4>Media Source Details</h4>
+											<li>Container: <strong><?php echo $xmlfield->Media['container']; ?></strong></li>
+											<li>Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
+											<li>Bitrate: <strong><?php echo $xmlfield->Media['bitrate']; ?> kbps</strong></li>
+										</div>
+										<div class="span4">	
+											<h4>Video Source Details</h4>
+											<ul>
+												<li>Width: <strong><?php echo $xmlfield->Media['width']; ?></strong></li>
+												<li>Height: <strong><?php echo $xmlfield->Media['height']; ?></strong></li>
+												<li>Aspect Ratio: <strong><?php echo $xmlfield->Media['aspectRatio']; ?></strong></li>											
+												<li>Video Frame Rate: <strong><?php echo $xmlfield->Media['videoFrameRate']; ?></strong></li>
+												<li>Video Codec: <strong><?php echo $xmlfield->Media['videoCodec']; ?></strong></li>
+											</ul>
+											<ul> </ul>
+											<h4>Audio Source Details</h4>
+											<ul>
+												<?php if ($xmlfield->Media['audioCodec'] == "dca") { ?>
+													<li>Audio Codec: <strong>dts</strong></li>
+												<?php }else{ ?>
+													<li>Audio Codec: <strong><?php echo $xmlfield->Media['audioCodec']; ?></strong></li>
+												<?php } ?>
+												<li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
+											</ul>
+										</div>
+										
+										
+									
+									<?php }else{ ?>
+
+										<div class="span4">
+											<h4>Stream Details</strong></h4>
+											<ul>
+												<h5>Video</h5>
+												<li>Stream Type: <strong>Direct Play</strong></li>
+												<li>Video Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
+												<li>Video Codec: <strong><?php echo $xmlfield->Media['videoCodec']; ?></strong></li>
+												<li>Video Width: <strong><?php echo $xmlfield->Media['width']; ?></strong></li>
+												<li>Video Height: <strong><?php echo $xmlfield->Media['height']; ?></strong></li>
+											</ul>
+											<ul>
+												<h5>Audio</h5>
+												<li>Stream Type: <strong>Direct Play</strong></li>
+												
+												<?php if ($xmlfield->Media['audioCodec'] == "dca") { ?>
+														<li>Audio Codec: <strong>dts</strong></li>
+													<?php }else{ ?>
+														<li>Audio Codec: <strong><?php echo $xmlfield->Media['audioCodec']; ?></strong></li>
+													<?php } ?>
+												<li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
+											</ul>
+										</div>
+										<div class="span4">
+											<h4>Media Source Details</h4>
+											<li>Container: <strong><?php echo $xmlfield->Media['container']; ?></strong></li>
+											<li>Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
+											<li>Bitrate: <strong><?php echo $xmlfield->Media['bitrate']; ?> kbps</strong></li>
+										</div>
+										<div class="span4">	
+											<h4>Video Source Details</h4>
+											<ul>
+												<li>Width: <strong><?php echo $xmlfield->Media['width']; ?></strong></li>
+												<li>Height: <strong><?php echo $xmlfield->Media['height']; ?></strong></li>
+												<li>Aspect Ratio: <strong><?php echo $xmlfield->Media['aspectRatio']; ?></strong></li>											
+												<li>Video Frame Rate: <strong><?php echo $xmlfield->Media['videoFrameRate']; ?></strong></li>
+												<li>Video Codec: <strong><?php echo $xmlfield->Media['videoCodec']; ?></strong></li>
+											</ul>
+											<ul> </ul>
+											<h4>Audio Source Details</h4>
+											<ul>
+												<?php if ($xmlfield->Media['audioCodec'] == "dca") { ?>
+													<li>Audio Codec: <strong>dts</strong></li>
+												<?php }else{ ?>
+													<li>Audio Codec: <strong><?php echo $xmlfield->Media['audioCodec']; ?></strong></li>
+												<?php } ?>
+												<li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
+											</ul>
+										</div>
+									<?php } ?>
+									
+										
+										
+										
+								</div>
+										  
+								<div class="modal-footer">
+								</div>
+
+							</div>
+							<?php
+
+															
+											echo "<td align='center'>".date($plexWatch['timeFormat'],$row['time'])."</td>";
+											
+											$paused_duration = round(abs($row['paused_counter']) / 60,1);
+											echo "<td align='center'>".$paused_duration." min</td>";
+											
+											$stopped_time = date($plexWatch['timeFormat'],$row['stopped']);
+											
+											if (empty($row['stopped'])) {								
+												echo "<td align='center'>n/a</td>";
+											}else{
+												echo "<td align='center'>".$stopped_time."</td>";
+											}
+
+											$to_time = strtotime(date("m/d/Y g:i a",$row['stopped']));
+											$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
+											$paused_time = strtotime(date("m/d/Y g:i a",$row['paused_counter']));
+											
+											$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
+											$viewed_time_length = strlen($viewed_time);
+											
+											
+											
+											if ($viewed_time_length == 8) {
+												echo "<td align='center'>n/a</td>";
+											}else{
+												echo "<td align='center'>".$viewed_time. " min</td>";
+											}
+											
+											$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
+												if ($percentComplete >= 90) {	
+												  $percentComplete = 100;    
+												}
+
+											echo "<td align='center'><span class='badge badge-warning'>".$percentComplete."%</span></td>";
+										echo "</tr>";   
+									}
 								}
 									echo "</tbody>";
 								echo "</table>";
@@ -767,6 +937,7 @@
     <script src="js/jquery-2.0.3.js"></script>
 	<script src="js/bootstrap.js"></script>
 	<script src="js/jquery.dataTables.js"></script>
+	<script src="js/jquery.dataTables.plugin.date_sorting.js"></script>
 	<script src="js/jquery.dataTables.plugin.bootstrap_pagination.js"></script>
 	
 	<script>
@@ -777,27 +948,33 @@
 				"bFilter": true,
 				"bSort": true,
 				"bInfo": true,
-				"bAutoWidth": true,
-				"aaSorting": [[ 0, "desc" ]],
-				"bStateSave": true,
+				"bAutoWidth": true,	
+				"aaSorting": [[ 0, "desc" ]],			
+				"bStateSave": false,
 				"bSortClasses": false,
-				"sPaginationType": "bootstrap"	
+				"sPaginationType": "bootstrap",
+				"aoColumnDefs": [
+			      { "sType": "us_date", "aTargets": [ 0 ] }
+			    ]	
 			} );
 		} );
 	</script>
 	<script>
 		$(document).ready(function() {
 			var oTable = $('#tableUserIpAddresses').dataTable( {
-				"bPaginate": false,
+				"bPaginate": true,
 				"bLengthChange": true,
-				"bFilter": false,
+				"bFilter": true,
 				"bSort": true,
-				"bInfo": false,
-				"bAutoWidth": true,
-				"aaSorting": [[ 0, "desc" ]],
-				"bStateSave": true,
+				"bInfo": true,
+				"bAutoWidth": true,	
+				"aaSorting": [[ 0, "desc" ]],			
+				"bStateSave": false,
 				"bSortClasses": false,
-				"sPaginationType": "bootstrap"	
+				"sPaginationType": "bootstrap",
+				"aoColumnDefs": [
+			      { "sType": "us_date", "aTargets": [ 0 ] }
+			    ]		
 			} );
 		} );
 	</script>
@@ -817,6 +994,9 @@
 	});
 	$(document).ready(function() {
 		$('#settings').tooltip();
+	});
+	$(document).ready(function() {
+		$('#stats').tooltip();
 	});
 	</script>
 	

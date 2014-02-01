@@ -38,12 +38,13 @@
 	<div class="container">
 		<div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
-				<a href="index.php"><div class="logo"></div></a>
+				<a href="index.php"><div class="logo hidden-phone"></div></a>
 				<ul class="nav">
 					
 					<li><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
 					<li><a href="history.php"><i class="icon-2x icon-calendar icon-white" data-toggle="tooltip" data-placement="bottom" title="History" id="history"></i></a></li>
-					<li><a href="users.php"><i class="icon-2x icon-user icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
+					<li><a href="stats.php"><i class="icon-2x icon-tasks icon-white" data-toggle="tooltip" data-placement="bottom" title="Stats" id="stats"></i></a></li>
+					<li><a href="users.php"><i class="icon-2x icon-group icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
 					<li><a href="charts.php"><i class="icon-2x icon-bar-chart icon-white" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
 					<li class="active"><a href="settings.php"><i class="icon-2x icon-wrench icon-white" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
 					
@@ -53,24 +54,17 @@
 		</div>
     </div>
 	
-	<div class="container-fluid">
-		
-		
-	</div>
-
-	<div class="container-fluid">
-		<div class='row-fluid'>
-			<div class='span12'>
-			</div>	
-		</div>	
-	</div>
+	<div class="clear"></div>
 	
-	<div class="container-fluid">
-		<div class='row-fluid'>	
-			<div class='span2'>
+	<div class="container">
+		<div class='row'>	
+			<div class='span12'>
+				<div class='wellheader'>
+					<div class='dashboard-wellheader-no-chevron'>
+						<h2><i class="icon-large icon-wrench icon-white"></i> Settings</h2>
+					</div>
+				</div>	
 				
-			</div>
-			<div class='span8'>
 			
 				<?php
 
@@ -89,9 +83,9 @@
 					}
 				?>
 
-				<div class="wellbg">
+				
 					<div class="row-fluid">
-						<div class="header-settings"><h2><i class="icon-large icon-wrench icon-white"></i> Settings</h2></div><br>
+						
 					</div>	
 					<div class="row-fluid">
 					<div class='span3'>
@@ -99,21 +93,25 @@
 							
 							<li class="active"><a href="#info">General</a></li>
 							<li><a href="#pms">PMS & Database</a></li>
-							<li ><a href="#myplex">myPlex</a></li>
+							<li ><a href="#myplex">Plex Authentication</a></li>
 							<li ><a href="#grouping">Grouping</a></li>	
 						</ul>
 					</div>
 					
 					<div class="span9">
+					<form action="includes/process_settings.php" method="POST">
+						<fieldset>
 						<div class="wellbg">
 							<div class="wellheader">
 								<div class="dashboard-wellheader">
-								<h3><a id="info">General Information</a></h3>
+									<h3><a id="info">Version Information</a></h3>
 								</div>
 							</div>
+
 							<div class="settings-general-info">
+								
 								<ul>
-									<li>plexWatch/Web Version: <strong>v1.4.1</strong></li>	
+									<li>plexWatch/Web Version: <strong>v1.5.0</strong></li>	
 								
 									<?php
 									$db = new SQLite3($plexWatch['plexWatchDb']);
@@ -124,6 +122,36 @@
 								</ul>
 							</div>
 						</div>
+						<div class="wellbg">
+							<div class="wellheader">
+								<div class="dashboard-wellheader">
+									<h3><a id="info">General</a></h3>
+								</div>
+							</div>
+
+							<!-- Text input-->
+							<div class="control-group">
+							  <label class="control-label" for="dateFormat">Date Format</label>
+							  <div class="controls">
+								<input id="dateFormat" name="dateFormat" type="text" placeholder="Y-m-d" class="input-mini" required="" value="<?php echo $plexWatch['dateFormat'] ?>">
+								<p class="help-block">The date display format plexWatch/Web should use. Current limitations require " <strong>/</strong> " as a delimiter. <a href="http://php.net/manual/en/function.date.php">Date/Time formatting documentation.</a></p>
+							  </div>
+							</div>
+
+							<!-- Text input-->
+							<div class="control-group">
+							  <label class="control-label" for="timeFormat">Time Format</label>
+							  <div class="controls">
+								<input id="timeFormat" name="timeFormat" type="text" placeholder="g:i a" class="input-mini" required="" value="<?php echo $plexWatch['timeFormat'] ?>">
+								<p class="help-block">The time display format plexWatch/Web should use. <a href="http://php.net/manual/en/function.date.php">Date/Time formatting documentation.</a></p>
+							  </div>
+							</div>
+
+						</div>
+
+
+
+
 						<div class='wellbg'>
 							<div class='wellheader'>
 								<div class='dashboard-wellheader'>
@@ -131,12 +159,8 @@
 								</div>
 							</div>
 						
-						
-							<form action="includes/process_settings.php" method="POST">
+
 							
-							
-							
-							<fieldset>
 							<!-- Text input-->
 							<div class="control-group">
 							  <label class="control-label" for="pmsIp">PMS IP Address</label>
@@ -199,24 +223,24 @@
 						<div class='wellbg'>
 						<div class='wellheader'>
 							<div class='dashboard-wellheader'>
-							<h3><a id="myplex">myPlex Settings</a></h3>
+							<h3><a id="myplex">Plex Authentication</a></h3>
 							</div>
 						</div>
 							<!-- Text input-->
 							<div class="control-group">
-							  <label class="control-label" for="myPlexUser">myPlex Username (optional)</label>
+							  <label class="control-label" for="myPlexUser">Username (optional)</label>
 							  <div class="controls">
 								  <input id="myPlexUser" name="myPlexUser" type="text" placeholder="" class="input-xlarge" value="<?php echo $plexWatch['myPlexUser'] ?>">
-								  <p class="help-block">If you would like to access plexWatch/Web on other networks, a myPlex username and password are required.</p>
+								  <p class="help-block">If you would like to access plexWatch/Web on other networks, a <a href="https://plex.tv/users/sign_in">Plex.tv</a> username and password are required.</p>
 							  </div>
 							</div>
 							
 							<!-- Text input-->
 							<div class="control-group">
-							  <label class="control-label" for="myPlexPass">myPlex Password (optional)</label>
+							  <label class="control-label" for="myPlexPass">Password (optional)</label>
 							  <div class="controls">
 								  <input id="myPlexPass" name="myPlexPass" type="password" placeholder="" class="input-xlarge" value="<?php echo $plexWatch['myPlexPass'] ?>">
-								  <p class="help-block">If you would like to access plexWatch/Web on other networks, a myPlex username and password are required.</p>
+								  <p class="help-block">If you would like to access plexWatch/Web on other networks, a <a href="https://plex.tv/users/sign_in">Plex.tv</a> username and password are required.</p>
 							  </div>
 							</div>
 						</div>
@@ -299,14 +323,12 @@
 					</fieldset>
 					</form>
 						
-				</div>
+				
 					
-			</div>		
+					
 			</div>
 			
-			<div class='span2'>
-				
-			</div>
+			
 		</div>
 	</div>
 			
@@ -319,20 +341,49 @@
 			
 				<div class="wellbg">
 					<div class="row-fluid">
-						<div class="header-settings"><h2><i class="icon-large icon-wrench icon-white"></i> Settings</h2></div><br>
+						
 					</div>	
 					<div class="row-fluid">
 					<div class='span3'>
 						<ul class="nav nav-list">
 							
-							
-							<li class="active"><a href="#pms">PMS & Database</a></li>
-							<li ><a href="#myplex">myPlex</a></li>
+							<li class="active"><a href="#info">General</a></li>
+							<li><a href="#pms">PMS & Database</a></li>
+							<li ><a href="#myplex">Plex Authentication</a></li>
 							<li ><a href="#grouping">Grouping</a></li>	
 						</ul>
 					</div>
 					
-					<div class='span9'>
+					<div class="span9">
+					<form action="includes/process_settings.php" method="POST">
+						<fieldset>
+						
+						<div class="wellbg">
+							<div class="wellheader">
+								<div class="dashboard-wellheader">
+									<h3><a id="info">General</a></h3>
+								</div>
+							</div>
+
+							<!-- Text input-->
+							<div class="control-group">
+							  <label class="control-label" for="dateFormat">Date Format</label>
+							  <div class="controls">
+								<input id="dateFormat" name="dateFormat" type="text" placeholder="Y-m-d" class="input-mini" required="" value="m/d/Y">
+								<p class="help-block">The date display format plexWatch/Web should use. Current limitations require " <strong>/</strong> " as a delimiter. <a href="http://php.net/manual/en/function.date.php">Date/Time formatting documentation.</a></p>
+							  </div>
+							</div>
+
+							<!-- Text input-->
+							<div class="control-group">
+							  <label class="control-label" for="timeFormat">Time Format</label>
+							  <div class="controls">
+								<input id="timeFormat" name="timeFormat" type="text" placeholder="g:i a" class="input-mini" required="" value="g:i a">
+								<p class="help-block">The time display format plexWatch/Web should use. <a href="http://php.net/manual/en/function.date.php">Date/Time formatting documentation.</a></p>
+							  </div>
+							</div>
+
+						</div>
 						
 						<div class='wellbg'>
 							<div class='wellheader'>
@@ -402,24 +453,24 @@
 						<div class='wellbg'>
 						<div class='wellheader'>
 							<div class='dashboard-wellheader'>
-							<h3><a id="myplex">myPlex Settings</a></h3>
+							<h3><a id="myplex">Plex Authentication</a></h3>
 							</div>
 						</div>
 							<!-- Text input-->
 							<div class="control-group">
-							  <label class="control-label" for="myPlexUser">myPlex Username (optional)</label>
+							  <label class="control-label" for="myPlexUser">Username (optional)</label>
 							  <div class="controls">
 								  <input id="myPlexUser" name="myPlexUser" type="text" placeholder="" class="input-xlarge" >
-								  <p class="help-block">If you would like to access plexWatch/Web on other networks, a myPlex username and password are required.</p>
+								  <p class="help-block">If you would like to access plexWatch/Web on other networks, a <a href="https://plex.tv/users/sign_in">Plex.tv</a> username and password are required.</p>
 							  </div>
 							</div>
 							
 							<!-- Text input-->
 							<div class="control-group">
-							  <label class="control-label" for="myPlexPass">myPlex Password (optional)</label>
+							  <label class="control-label" for="myPlexPass">Password (optional)</label>
 							  <div class="controls">
 								  <input id="myPlexPass" name="myPlexPass" type="password" placeholder="" class="input-xlarge" >
-								  <p class="help-block">If you would like to access plexWatch/Web on other networks, a myPlex username and password are required.</p>
+								  <p class="help-block">If you would like to access plexWatch/Web on other networks, a <a href="https://plex.tv/users/sign_in">Plex.tv</a> username and password are required.</p>
 							  </div>
 							</div>
 						</div>
@@ -510,30 +561,63 @@
 						}else{
 							echo "<li><i class='icon icon-warning-sign'></i> PHP Version: <strong><span class='label label-important'>No information available</strong></span></li>";
 						}
-						$sqliteVer = SQLite3::version();
-						if (!empty($sqliteVer)) {
-							echo "<li><i class='icon icon-ok'></i> PHP SQLite Support: <strong><span class='label label-success'>v".$sqliteVer['versionString']."</strong></span></li>";
+						$sqliteVersion = SQLite3::version();
+						if (!empty($sqliteVersion)) {
+							echo "<li><i class='icon icon-ok'></i> PHP SQLite Support: <strong><span class='label label-success'>v".$sqliteVersion['versionString']."</strong></span></li>";
 						}else{
 							echo "<li><i class='icon icon-warning-sign'></i> PHP SQLite Support: <strong><span class='label label-important'>No information available</strong></span></li>";
 						}
 						
-						$version = curl_version();
-						echo "<li><i class='icon icon-ok'></i> PHP Curl Support: <strong><span class='label label-success'>" .$version['version']. "</span></strong>  / SSL Support: <strong><span class='label label-success'>" .$version['ssl_version']."</strong></span></li>";	
+						$curlVersion = curl_version();
+						echo "<li><i class='icon icon-ok'></i> PHP Curl Support: <strong><span class='label label-success'>" .$curlVersion['version']. "</span></strong>  / SSL Support: <strong><span class='label label-success'>" .$curlVersion['ssl_version']."</strong></span></li>";	
 						
-						echo "<li><i class='icon icon-ok'></i> Your server's timezone: <strong><span class='label label-success'>".@date_default_timezone_get()."</strong></span></li>";	
+						
+						$json[] = '{"Yes":""}';
+						foreach ($json as $string) {
+							
+							json_decode($string);
+
+							switch (json_last_error()) {
+								case JSON_ERROR_NONE:
+									echo "<li><i class='icon icon-ok'></i> PHP JSON Support: <strong><span class='label label-success'>Yes</span></strong></li>";	
+									break;
+								case JSON_ERROR_DEPTH:
+									echo "<li><i class='icon icon-ok'></i> PHP JSON Support: <strong><span class='label label-important'>Maximum stack depth exceeded</span></strong></li>";
+									break;
+								case JSON_ERROR_STATE_MISMATCH:
+									echo "<li><i class='icon icon-ok'></i> PHP JSON Support: <strong><span class='label label-important'>Underflow or the modes mismatch</span></strong></li>";
+									break;
+								case JSON_ERROR_CTRL_CHAR:
+									echo "<li><i class='icon icon-ok'></i> PHP JSON Support: <strong><span class='label label-important'>Unexpected control character found</span></strong></li>";
+									break;
+								case JSON_ERROR_SYNTAX:
+									echo "<li><i class='icon icon-ok'></i> PHP JSON Support: <strong><span class='label label-important'>Syntax error, malformed JSON</span></strong></li>";
+									break;
+								case JSON_ERROR_UTF8:
+									echo "<li><i class='icon icon-ok'></i> PHP JSON Support: <strong><span class='label label-important'>Malformed UTF-8 characters, possibly incorrectly encoded</span></strong></li>";
+									break;
+								default:
+									echo "<li><i class='icon icon-ok'></i> PHP JSON Support: <strong><span class='label label-important'>No (Unknown Error)</span></strong></li>";
+									break;
+							}
+						}
+						
+						
+						
+						echo "<li><i class='icon icon-ok'></i> Your server's timezone: <strong><span class='label label-warning'>".@date_default_timezone_get()."</strong></span></li>";	
 						
 						
 						
 					?>	
 
 						<br>
-						<p><h4>Note: </h4>Please ensure you have installed, configured and tested <a href="https://github.com/ljunkie/plexWatch">plexWatch v0.1.6</a> or above before continuing. If all requirements have been met you can move forward by filling in a few key configuration options now.</p>
+						<p><h4>Note: </h4>Please ensure you have installed, configured and tested <a href="https://github.com/ljunkie/plexWatch">plexWatch v0.1.6</a> or above before continuing. If all requirements above are green and the timezone shown matches your timezone you can move forward by filling in a few key configuration options now.</p>
 						<br>
 
 				  </div>
 				  
 				  <div class="modal-footer">
-						<button class="btn btn-primary pull-right" data-dismiss="modal" aria-hidden="true">Nooice!!!<br>I'm ready to go.</button>
+						<button class="btn btn-primary pull-right" data-dismiss="modal" aria-hidden="true">I'm ready to go.</button>
 				  </div>
 				</div>
 			<?php
@@ -574,10 +658,17 @@
 	$(document).ready(function() {
 		$('#settings').tooltip();
 	});
+	$(document).ready(function() {
+		$('#stats').tooltip();
+	});
 	</script>
 	
 	<script>
 	$('#welcomeModal').modal('show')
+	</script>
+
+	<script>
+	$('#dateTimeModal').modal('show')
 	</script>
 	
 	<script>
@@ -595,7 +686,7 @@
     $(".alert-warning").fadeTo(500, 0).slideUp(500, function(){
         $(this).remove(); 
     });
-	}, 10000);
+	}, 5000);
 	</script>
 	
 	

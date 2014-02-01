@@ -36,11 +36,12 @@
 	<div class="container">
 		<div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
-				<a href="index.php"><div class="logo"></div></a>
+				<a href="index.php"><div class="logo hidden-phone"></div></a>
 				<ul class="nav">
 					
 					<li class="active"><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
 					<li><a href="history.php"><i class="icon-2x icon-calendar icon-white" data-toggle="tooltip" data-placement="bottom" title="History" id="history"></i></a></li>
+					<li><a href="stats.php"><i class="icon-2x icon-tasks icon-white" data-toggle="tooltip" data-placement="bottom" title="Stats" id="stats"></i></a></li>
 					<li><a href="users.php"><i class="icon-2x icon-group icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
 					<li><a href="charts.php"><i class="icon-2x icon-bar-chart icon-white" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
 					<li><a href="settings.php"><i class="icon-2x icon-wrench icon-white" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
@@ -74,68 +75,88 @@
 				}else if ($plexWatch['https'] == 'no') {
 					$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
 				}
-
+				
 				if (!empty($plexWatch['myPlexAuthToken'])) {
 					$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
-               if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$myPlexAuthToken."")) {
-				      $statusSessions = simplexml_load_string($fileContents) or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
-                }
-
+					$fileContents = '';
+					if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$myPlexAuthToken."")) {
+ 	             		$statusSessions = simplexml_load_string($fileContents) or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
+                 	}
+					$sections = simplexml_load_file("".$plexWatchPmsUrl."/library/sections?query=c&X-Plex-Token=".$myPlexAuthToken."") or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
 				}else{
 					$myPlexAuthToken = '';
-               if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/status/sessions")) {
-					   $statusSessions = simplexml_load_string($fileContents) or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
-               }
-
+					if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/status/sessions?query=c&X-Plex-Token=".$myPlexAuthToken."")) {
+ 	             		$statusSessions = simplexml_load_string($fileContents) or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
+                 	}
+					$sections = simplexml_load_file("".$plexWatchPmsUrl."/library/sections") or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");	
 				}	
 				
 				
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 						echo "<div class='dashboard-wellheader'>";
-							echo "<h3>Plex Status</h3>";
+							echo "<h3>Statistics</h3>";
 						echo "</div>";
 					echo "</div>";
 						
-					echo "<div class='dashboard-status-wrapper'>";
-							// Let's check Plex Media Server ports
-							$pmsHttp = fsockopen($plexWatch['pmsIp'], $plexWatch['pmsHttpPort']);
-							$pmsHttps = fsockopen($plexWatch['pmsIp'], $plexWatch['pmsHttpsPort']);
-							$myplexUrl = fsockopen ('my.plexapp.com', 443);
-
-							if ($pmsHttp) {
-								$statusPmsHttp = "<h5>Plex Media Server (HTTP):  <span class='label label-warning'>Online</span></h5><br>";
-							}
-
-							else {
-								$statusPmsHttp = "<h5>Plex Media Server (HTTP):  <span class='label label-important'>Offline</span></h5><br>";
-							}
-
-							if ($pmsHttps) {
-								$statusPmsHttps = "<h5>Plex Media Server (HTTPS):  <span class='label label-warning'>Online</span></h5><br>";
-							}
-							else {
-								$statusPmsHttps = "<h5>Plex Media Server (HTTPS):  <span class='label label-important'>Offline</span></h5><br>";
+					echo "<div class='stats'>";
+					
+						echo "<ul>";
+					
+							foreach ($sections->children() as $section) {
+							
+								if (!empty($plexWatch['myPlexAuthToken'])) {
+									if ($section['type'] == "movie") {
+										$sectionDetails = simplexml_load_file("".$plexWatchPmsUrl."/library/sections/".$section['key']."/all?type=1&sort=addedAt:desc&X-Plex-Container-Start=0&X-Plex-Container-Size=1&X-Plex-Token=".$myPlexAuthToken."") or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
+										
+										echo "<li>";
+												echo "<h1>".$sectionDetails['totalSize']."</h1><h5>".$section['title']."</h5>";
+										echo "</li>";
+									}else if ($section['type'] == "show") {
+										$sectionDetails = simplexml_load_file("".$plexWatchPmsUrl."/library/sections/".$section['key']."/all?type=2&sort=addedAt:desc&X-Plex-Container-Start=0&X-Plex-Container-Size=1&X-Plex-Token=".$myPlexAuthToken."") or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
+										$tvEpisodeCount = simplexml_load_file("".$plexWatchPmsUrl."/library/sections/".$section['key']."/all?type=4&X-Plex-Container-Start=0&X-Plex-Container-Size=1&X-Plex-Token=".$myPlexAuthToken."") or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
+					
+										echo "<li>";
+												echo "<h1>".$sectionDetails['totalSize']."</h1><h5>".$section['title']."</h5>";
+										echo "</li>";
+										echo "<li>";
+												echo "<h1>".$tvEpisodeCount['totalSize']."</h1><h5>TV Episodes</h5>";
+										echo "</li>";
+									}
+								}else{
+									if ($section['type'] == "movie") {
+										$sectionDetails = simplexml_load_file("".$plexWatchPmsUrl."/library/sections/".$section['key']."/all?type=1&sort=addedAt:desc&X-Plex-Container-Start=0&X-Plex-Container-Size=1") or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
+										
+										echo "<li>";
+												echo "<h1>".$sectionDetails['totalSize']."</h1><h5>".$section['title']."</h5>";
+										echo "</li>";
+									}else if ($section['type'] == "show") {
+										$sectionDetails = simplexml_load_file("".$plexWatchPmsUrl."/library/sections/".$section['key']."/all?type=2&sort=addedAt:desc&X-Plex-Container-Start=0&X-Plex-Container-Size=1") or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
+										$tvEpisodeCount = simplexml_load_file("".$plexWatchPmsUrl."/library/sections/".$section['key']."/all?type=4&X-Plex-Container-Start=0&X-Plex-Container-Size=1") or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
+					
+										echo "<li>";
+												echo "<h1>".$sectionDetails['totalSize']."</h1><h5>".$section['title']."</h5>";
+										echo "</li>";
+										echo "<li>";
+												echo "<h1>".$tvEpisodeCount['totalSize']."</h1><h5>TV Episodes</h5>";
+										echo "</li>";
+									}
+								}
 							}
 							
-							if ($myplexUrl) {
-								$statusMyplex = "<h5>myPlex: (<a href='https://my.plexapp.com'>my.plexapp.com</a>):  <span class='label label-warning'>Online</span></h5><br>";
-							}
-							else {
-								$statusMyplex = "<h5>myPlex: (<a href='https://my.plexapp.com'>my.plexapp.com</a>):  <span class='label label-important'>Offline</span></h5><br>";
-							}
+							date_default_timezone_set(@date_default_timezone_get());
+							$db = dbconnect();
+							$users = $db->querySingle("SELECT count(DISTINCT user) as users FROM processed") or die ("Failed to access plexWatch database. Please check your settings.");
 							
-							echo "<div class='dashboard-status-instance'>";
-								echo("$statusPmsHttp");
-							echo "</div>";
-							echo "<div class='dashboard-status-instance'>";
-								echo("$statusPmsHttps");
-							echo "</div>";
-							echo "<div class='dashboard-status-instance'>";
-								echo("$statusMyplex");
-							echo "</div>";
-						
+							echo "<li>";
+									echo "<h1>".$users."</h1><h5>Users</h5>";
+							echo "</li>";
+								
+							
+						echo "</ul>";		
+							
 					echo "</div>";
+					
 			echo "</div>";
 		echo "</div>";
 		echo "<div class='row-fluid'>";	
@@ -228,10 +249,10 @@
 	$(document).ready(function() {
 		$('#settings').tooltip();
 	});
+	$(document).ready(function() {
+		$('#stats').tooltip();
+	});
 	</script>
-	
-	
-
 
 
   </body>

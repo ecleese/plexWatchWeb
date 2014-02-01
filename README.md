@@ -1,5 +1,5 @@
-plexWatch/Web - v1.4.1
-======================
+plexWatch/Web - v1.5.0 master
+=============================
 
 A web front-end for plexWatch.
 
@@ -24,7 +24,7 @@ A web front-end for plexWatch.
 
 * Easy configuration setup via html form
 
-* Status activity of Plex Media Server's ports (online/offline)
+* Plex Media Server section counts / Total shard user count
 
 * Current Plex Media Server viewing activity including:
 	* number of current users
@@ -39,7 +39,7 @@ A web front-end for plexWatch.
 	
 * Recently added media and how long ago it was added
 
-* Global watching history charts (hourly, daily, monthly)
+* Global watching history charts (hourly, max hourly, daily, monthly)
 
 * Global watching history with search/filtering & dynamic column sorting
 	* date
@@ -47,19 +47,20 @@ A web front-end for plexWatch.
 	* platform
 	* ip address (if enabled in plexWatch)
 	* title
+	* stream information details
 	* start time
 	* paused duration length
 	* stop time
 	* duration length
 	* percentage completed
 	
-* full user list with gravatar
+* full user list with general information and comparison stats
 
 * individual user information
 	- username and gravatar (if available)
 	- daily, weekly, monthly, all time stats for play count and duration length
 	- individual platform stats for each user
-	- public ip address history with last seen date, geo tag location and isp information 
+	- public ip address history with last seen date and geo tag location 
 	- recently watched content
 	- watching history
 * charts
@@ -83,6 +84,7 @@ A web front-end for plexWatch.
 * php5
 * php5-sqlite
 * php5-curl
+* php5-json
 
 
 ### Install 

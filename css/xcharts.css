@@ -22,14 +22,14 @@
   font-size: 12px;
 }
 .xchart .color0 .line {
-  stroke: #ff9d00;
+  stroke: #F9AA03;
 }
 .xchart .color0 .line .fill {
   pointer-events: none;
 }
 .xchart .color0 rect,
 .xchart .color0 circle {
-  fill: #ff9d00;
+  fill: #F9AA03;
 }
 .xchart .color0 .fill {
   fill: rgba(170, 134, 56, 0.1);

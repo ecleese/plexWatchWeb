@@ -37,11 +37,12 @@
 	<div class="container">
 		<div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
-				<a href="index.php"><div class="logo"></div></a>
+				<a href="index.php"><div class="logo hidden-phone"></div></a>
 				<ul class="nav">
 					
 					<li><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
 					<li><a href="history.php"><i class="icon-2x icon-calendar icon-white" data-toggle="tooltip" data-placement="bottom" title="History" id="history"></i></a></li>
+					<li><a href="stats.php"><i class="icon-2x icon-tasks icon-white" data-toggle="tooltip" data-placement="bottom" title="Stats" id="stats"></i></a></li>
 					<li><a href="users.php"><i class="icon-2x icon-group icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
 					<li class="active"><a href="charts.php"><i class="icon-2x icon-bar-chart icon-white" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
 					<li><a href="settings.php"><i class="icon-2x icon-wrench icon-white" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
@@ -62,7 +63,20 @@
 	
 	<div class="container-fluid">
 		<div class='row-fluid'>
-			<div class='span12'>
+			<div class="span12">
+				<div class='wellheader'>
+					<div class='dashboard-wellheader-no-chevron'>
+						<h2><i class="icon-large icon-bar-chart icon-white"></i> Charts</h2>
+					</div>
+				</div>	
+			</div>
+		</div>
+			
+		<div class='row-fluid'>	
+			<div class="span12">
+
+
+
 			<?php
 				
 				$guisettingsFile = "config/config.php";
@@ -100,7 +114,7 @@
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 							echo "<div class='dashboard-wellheader'>";
-								echo "<h3>Top 10 (All Time)</h3>";
+								echo "<h4>Top 10 (All Time)</h4>";
 							echo "</div>";
 						echo "</div>";
 						echo "<div class='charts-wrapper'>";
@@ -159,7 +173,7 @@
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 							echo "<div class='dashboard-wellheader'>";
-								echo "<h3>Top 10 Films (All Time)</h3>";
+								echo "<h4>Top 10 Films (All Time)</h4>";
 							echo "</div>";
 						echo "</div>";
 						echo "<div class='charts-wrapper'>";
@@ -206,7 +220,7 @@
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 							echo "<div class='dashboard-wellheader'>";
-								echo "<h3>Top 10 TV Shows (All Time)</h3>";
+								echo "<h4>Top 10 TV Shows (All Time)</h4>";
 							echo "</div>";
 						echo "</div>";
 						echo "<div class='charts-wrapper'>";
@@ -253,7 +267,7 @@
 					echo "<div class='wellbg'>";
 						echo "<div class='wellheader'>";
 							echo "<div class='dashboard-wellheader'>";
-								echo "<h3>Top 10 TV Episodes (All Time)</h3>";
+								echo "<h4>Top 10 TV Episodes (All Time)</h4>";
 							echo "</div>";
 						echo "</div>";
 						echo "<div class='charts-wrapper'>";
@@ -330,6 +344,9 @@
 	});
 	$(document).ready(function() {
 		$('#settings').tooltip();
+	});
+	$(document).ready(function() {
+		$('#stats').tooltip();
 	});
 	</script>
 	

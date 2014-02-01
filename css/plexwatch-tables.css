@@ -163,13 +163,15 @@ table.display {
 
 table.display thead th {
 white-space:nowrap;
-padding: 0px 0px 5px 0px;
+padding: 0px 0px 5px 5px;
 border-bottom: 1px solid #343434;
 font-weight: bold;
 cursor: pointer;
 color: #999;
 font-size: 10px;
+
 }
+
 
 table.display thead th i {
 margin-top: -1px;
@@ -210,7 +212,7 @@ text-decoration:none;
 }
 
 table.display td:hover a {
-color: #ff9d00; 
+color: #F9AA03; 
 }
 
 table.display thead tr:hover {

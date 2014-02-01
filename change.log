@@ -1,5 +1,90 @@
+1.5.0 master
+* Change:	version bump to master
+* Change:	global: updated welcome logo to match new Plex logo.
+
+1.5.0.14.2 dev
+* Fix:		global: stream video details width and height were being displayed under audio column when stream was direct play type
+* Change:	global: updated logo to match new Plex logo.
+
+1.5.0.14.1 dev
+* Fix:		user.php: platform stat total plays were not matching all time total plays when grouping was enabled
+
+1.5.0.14 dev
+* Change:	global: separated stats from history logs and created a new page for them
+* Add:		global: stream info column in history tables which links to a modal containing stream and source details
+* Fix:		index.php: Recently added items would sometimes wrap to a second row depending on width of browser
+
+1.5.0.13 dev
+* Fix:		info.php: season episode thumbs and top watched episode thumbs would not appear if using internal LAN IP address for PMS and Plex authentication was disabled.
+
+1.5.0.12 dev
+* Fix:		global: Minor CSS adjustments for IE
+
+1.5.0.11.2 dev
+* Fix:		global: Additional Samsung platform icon support issues
+
+1.5.0.11.1 dev
+* Fix:		global: Samsung platform icon support (rcork)
+
+1.5.0.11 dev
+* Add:		global: Samsung platform icon support
+
+1.5.0.10 dev
+* Remove:	users.php: table column sorting is locked to alphebetically by user until a fix is available for "last seen" column
+* Change:	user.php: minor css tweaks to stats
+* Change:	current_activity.php: minor tweaks to direct stream audio codec names
+* Fix:		global: AppleTV platform icon did not appear when client device was PlexConnect
+
+1.5.0.9 dev
+* Fix:		global: duration times were incorrect for user and media history tables
+
+1.5.0.8 dev
+* Fix:		global: table date sorting by newest date would not sort properly when the year was different (This fix has a current limitation that requires "/" as the delimiter between day, month and year)
+
+1.5.0.7 dev
+* Fix:		user.php: incorrect platform image could appear when user grouping was enabled
+* Change:	user.php: public IP address platform to "Platform (Last Seen)" and include Chromecast as possible platform
+
+1.5.0.6 dev
+* Add:		global: differentiate Chromecast from Plex/Web (Chrome) platforms (current plexWatch db limitation does not allow user platform stats seperation)
+* Fix:		global: undefined fileContents variable on initial use
+
+1.5.0.5 dev
+* Fix:		global: table date column sorting fix from 1.5.0.4 did not work. Defaulting formatting with year first for now until there is a better fix
+
+1.5.0.4 dev
+* Fix:		global: table date column sorting by newest date would not sort properly when the year was different
+* Change:	settings.php: "myPlex" has been renamed "Plex Authentication" to maintain consistency with Plex.tv's removal of the myPlex name
+* Fix:		history.php: monthly plays chart would not display next month in a new year properly
+* Change:	current_activity.php: design and css adjustments
+* Change:	global: css and image changes to maintain consistency with upcoming Plex/Web v2.0
+* Fix:		history.php: left chart padding was cutting off display values above 999
+* Add:		gloabl: user definable date & time formats from settings.php
+* Change:	global: minor layout changes / added page headers
+* Remove:	info.php: movie details - commented out writers list to help maintain a more consistent height
+
+1.5.0.3 dev
+* Add:		php5-json to readme requirements. Check for json support in settings welcome modal
+* Change:	hard coded plexWatch/Web version number into settings.php so users don't have to re-save their config after every update in order to see the proper version number
+* Change:	history.php: chart widths are now dynamically set for better tablet and mobile viewing 
+
+1.5.0.2 dev
+* Add:		user.php: separated ip address information from user history by including a new tab
+* Change:	users.php: modified user list to use table view which includes more details about each user
+* Add:		history.php: max hourly plays (ljunkie)
+* Fix:		index.php: fix hardcoded library section (ljunkie)
+
+
+1.5.0.1 dev
+* Remove:	index.php: Plex status which was really just a placeholder
+* Add:		index.php: Plex Media Server stat section counts (movies,tv shows, users)
+* Change:	global: minor font size changes
+* Change:	charts.php: Top 10 episodes now use show poster rather than season poster
+
+
+
 1.4.1 master
-* Fix:    global: attempt to correct error related to simplexml_load_file (billimek / sunnyd71)
+* Fix:		global: attempt to correct error related to simplexml_load_file (billimek / sunnyd71)
 
 1.4.0 master
 * Change:	version bump to master
@@ -34,7 +119,8 @@
 * Add:		settings.php: new page with full support for configuring plexWatch/Web. config.php is written dynamically by settings.php and was relocated to /config/config.php. This file no longer needs to be edited by the user.
 
 
-1.3
+
+1.3.0
 * Fix:		info.php: if content was deleted from PMS and watching history links to info.php with this information, an error to the connection was displayed. a message now lets the user know "This media is no longer available in the Plex Media Server database"
 * Add:		info.php: season episode list if displaying season information
 * Fix:		info.php: if "genres" variable is not available it throws an error
@@ -55,7 +141,8 @@
 * Add:		config.php: Plex Media Server port# variable added for users using non-standard PMS ports
 
 
-1.2
+
+1.2.0
 * Fix:		index.php: first recently added result was getting cut off on left side, changed episode image to season thumb
 * Fix:		global: updated images in Plex/Web would not appear in plexWatchWeb
 * Change:	user.php: general usage stats changed from minutes to days, hours, minutes
@@ -69,9 +156,11 @@
 * Wiki:		information for XAMPP users	about setting timezone and password protection
 
 
-1.1
+
+1.1.0
 * initial public release
 
 
-1.0
+
+1.0.0
 * initial internal version

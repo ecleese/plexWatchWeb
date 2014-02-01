@@ -5,7 +5,7 @@ require_once(dirname(__FILE__) . '/timeago.php');
 
 if (isset($_GET['width'])) {
   $containerSize = 1; // min size?
-  $tmp = $_GET['width']/160;
+  $tmp = $_GET['width']/182;
   if ($tmp > 0) { 
     $containerSize = $tmp; 
     if (!isset($singlerow)) {  $containerSize = $containerSize*1;    }   
@@ -44,7 +44,7 @@ if (isset($_GET['width'])) {
 							if ($recentXml['type'] == "season") {
 								
 									$recentArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['art']."&width=320&height=160";                                        
-									$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['thumb']."&width=136&height=280";  
+									$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['thumb']."&width=153&height=225";  
 								
 								
 									echo "<div class='dashboard-recent-media-instance'>";
@@ -76,7 +76,7 @@ if (isset($_GET['width'])) {
 							}else if ($recentXml['type'] == "movie") {				
 							
 								$recentArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['art']."&width=320&height=160";                                        
-								$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['thumb']."&width=136&height=280";  
+								$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentXml['thumb']."&width=153&height=225";  
 								
 								
 								echo "<div class='dashboard-recent-media-instance'>";
