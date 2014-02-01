@@ -1,5 +1,5 @@
-plexWatch/Web - v1.5.0 master
-=============================
+plexWatch/Web - v1.5.0 
+=======================
 
 A web front-end for plexWatch.
 
@@ -24,7 +24,7 @@ A web front-end for plexWatch.
 
 * Easy configuration setup via html form
 
-* Plex Media Server section counts / Total shard user count
+* Plex Media Server section counts / Total user count
 
 * Current Plex Media Server viewing activity including:
 	* number of current users
