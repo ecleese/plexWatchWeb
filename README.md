@@ -1,5 +1,5 @@
-plexWatch/Web - v1.5.0.14.2 dev
-==============================
+plexWatch/Web - v1.5.0 
+=======================
 
 A web front-end for plexWatch.
 
@@ -24,7 +24,7 @@ A web front-end for plexWatch.
 
 * Easy configuration setup via html form
 
-* Status activity of Plex Media Server's ports (online/offline)
+* Plex Media Server section counts / Total user count
 
 * Current Plex Media Server viewing activity including:
 	* number of current users
@@ -39,7 +39,7 @@ A web front-end for plexWatch.
 	
 * Recently added media and how long ago it was added
 
-* Global watching history charts (hourly, daily, monthly)
+* Global watching history charts (hourly, max hourly, daily, monthly)
 
 * Global watching history with search/filtering & dynamic column sorting
 	* date

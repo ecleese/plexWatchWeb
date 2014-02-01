@@ -1,3 +1,7 @@
+1.5.0 master
+* Change:	version bump to master
+* Change:	global: updated welcome logo to match new Plex logo.
+
 1.5.0.14.2 dev
 * Fix:		global: stream video details width and height were being displayed under audio column when stream was direct play type
 * Change:	global: updated logo to match new Plex logo.
