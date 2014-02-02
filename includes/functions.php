@@ -1,6 +1,7 @@
 <?php
 ini_set('display_errors', 0); // for debugging - we might want this set to 0 in production */
 
+
 if(!isset($_SESSION))  { session_start();  }
 
 /* either load or return the plexWatch config
@@ -48,12 +49,22 @@ function FriendlyName($user,$platform = NULL) {
 /* db connector */
 function dbconnect() {
   global $plexWatch;
-  $db = new SQLite3($plexWatch['plexWatchDb']);
+  
+  try {
+    $db = new SQLite3($plexWatch['plexWatchDb']);
+  }
+  catch (Exception $exception) {
+    // sqlite3 throws an exception when it is unable to connect
+    echo "<div class=\"alert alert-warning \">Failed to access plexWatch database. Please check settings.</div>";
+    die;
+  }
+  
   $db->busyTimeout(10*1000);
   return $db;
+
 }
 
-/* dbtable -- processed of grouped */
+/* dbtable -- processed or grouped */
 function dbTable() {
   global $plexWatch;
   if ($plexWatch['globalHistoryGrouping'] == "yes") {

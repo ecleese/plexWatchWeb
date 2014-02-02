@@ -111,14 +111,36 @@
 							<div class="settings-general-info">
 								
 								<ul>
-									<li>plexWatch/Web Version: <strong>v1.5.1</strong></li>	
+									<li>plexWatch/Web Version: <strong>v1.5.2</strong></li>	
 								
 									<?php
-									$db = new SQLite3($plexWatch['plexWatchDb']);
-									$plexWatchVersion = $db->querySingle("SELECT version FROM config ");
+									do {
+										try {
+										    $db = new SQLite3($plexWatch['plexWatchDb']);
+										  }
+										  catch (Exception $exception) {
+										    // sqlite3 throws an exception when it is unable to connect
+										    echo "<li>plexWatch Version: <div class=\"alert alert-warning \">Failed to access plexWatch database. Please check settings.</div>";
+										    break;
+										  }
+
+										if (!$db) { 
+											break;
+										}else{	
+											$plexWatchVersion = $db->querySingle("SELECT version FROM config ");
+											?>
+											<li>plexWatch Version: <strong>v<?php echo $plexWatchVersion ?></strong></li>
+											<?php
+										}
+									} while (0);
 									?>
+
+
 									
-									<li>plexWatch Version: <strong>v<?php echo $plexWatchVersion ?></strong></li>
+										
+											
+									
+									
 								</ul>
 							</div>
 						</div>

@@ -181,7 +181,7 @@
 							
 							$title = $db->querySingle("SELECT title FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\'  ");
 							$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
-							$results = $db->query("SELECT * FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
+							$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter, strftime('%Y%m%d', datetime(time, 'unixepoch', 'localtime')) as date FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
 							
 							echo "<div class='dashboard-wellheader'>";
 									echo"<h3>Watching history for <strong>".$xml->Video['title']."</strong> (".$numRows." Views)</h3>";
@@ -214,7 +214,7 @@
 								while ($row = $results->fetchArray()) {
 								$rowCount++;
 									echo "<tr>";
-										echo "<td align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
+										echo "<td data-order='".$row['date']."' align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
 										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
 										
 										$rowXml = simplexml_load_string($row['xml']); 
@@ -812,7 +812,7 @@
 									while ($row = $results->fetchArray()) {
 									$rowCount++;
 									echo "<tr>";
-										echo "<td align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
+										echo "<td data-order='".$row['date']."' align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
 										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
 										
 										$rowXml = simplexml_load_string($row['xml']); 
@@ -1060,9 +1060,19 @@
 				"bStateSave": false,
 				"bSortClasses": false,
 				"sPaginationType": "bootstrap",
-				"aoColumnDefs": [
-			      { "aTargets": [ 1 ], "bSortable": true, "sType": "us_date", }
-			    ]
+				"aoColumns": [
+				{"sSortDataType": "dom-data-order", "sType": "numeric"},
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null
+				]
 			} );
 		} );
 	</script>
