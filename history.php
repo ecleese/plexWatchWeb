@@ -109,14 +109,14 @@
 					if ($plexWatch['globalHistoryGrouping'] == "yes") {
 						$plexWatchDbTable = "grouped";
 						$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable ");
-						$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM processed WHERE stopped IS NULL UNION ALL SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM $plexWatchDbTable ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your settings.");
+						$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter, strftime('%Y%m%d', datetime(time, 'unixepoch', 'localtime')) as date FROM processed WHERE stopped IS NULL UNION ALL SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter, strftime('%Y%m%d', datetime(time, 'unixepoch', 'localtime')) as date FROM $plexWatchDbTable ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your settings.");
 							
 						
 					}else if ($plexWatch['globalHistoryGrouping'] == "no") {
 						$plexWatchDbTable = "processed";
 					
 						$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable ");
-						$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM $plexWatchDbTable ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check settings.");
+						$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter, strftime('%Y%m%d', datetime(time, 'unixepoch', 'localtime')) as date FROM $plexWatchDbTable ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check settings.");
 					}	
 						
 					
@@ -153,9 +153,9 @@
 						$rowCount++;
 						echo "<tr>";
 							if (empty($row['stopped'])) {
-											echo "<td class='currentlyWatching' align='center'>Currently watching...</td>";
+											echo "<td data-order='".$row['date']."' class='currentlyWatching' align='center'>Currently watching...</td>";
 										}else{
-											echo "<td align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
+											echo "<td data-order='".$row['date']."' align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
 							}
 							
 							echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
@@ -410,9 +410,19 @@
 				"bStateSave": false,
 				"bSortClasses": false,
 				"sPaginationType": "bootstrap",
-				"aoColumnDefs": [
-			      { "aTargets": [ 1 ], "bSortable": true, "sType": "us_date", }
-			    ]	
+				"aoColumns": [
+				{"sSortDataType": "dom-data-order", "sType": "numeric"},
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null
+				]		
 			} );
 		} );
 	</script>

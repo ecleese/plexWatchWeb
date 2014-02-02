@@ -158,9 +158,9 @@
 	}
 	
 	if ($plexWatch['userHistoryGrouping'] == "yes") {
-		$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM processed WHERE user = '$user' AND stopped IS NULL UNION ALL SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your settings.");
+		$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter, strftime('%Y%m%d', datetime(time, 'unixepoch', 'localtime')) as date FROM processed WHERE user = '$user' AND stopped IS NULL UNION ALL SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter, strftime('%Y%m%d', datetime(time, 'unixepoch', 'localtime')) as date FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your settings.");
 	}else if ($plexWatch['userHistoryGrouping'] == "no") {
-		$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your settings.");
+		$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter, strftime('%Y%m%d', datetime(time, 'unixepoch', 'localtime')) as date FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your settings.");
 	}
 	
 	echo "<div class='container-fluid'>";
@@ -583,7 +583,7 @@
 			
 		echo "<div class='tab-pane' id='userAddresses'>";
 		
-			$userIpAddressesQuery = $db->query("SELECT time,ip_address,platform,xml, COUNT(ip_address) as play_count FROM processed WHERE user = '$user' GROUP BY ip_address ORDER BY time DESC");
+			$userIpAddressesQuery = $db->query("SELECT time,ip_address,platform,xml, COUNT(ip_address) as play_count, strftime('%Y%m%d', datetime(time, 'unixepoch', 'localtime')) as date FROM processed WHERE user = '$user' GROUP BY ip_address ORDER BY time DESC");
 
 			echo "<div class='container-fluid'>";	
 				echo "<div class='row-fluid'>";
@@ -627,7 +627,7 @@
 												$userIpAddressesData = simplexml_load_file($userIpAddressesUrl) or die ("<div class=\"alert alert-warning \">Cannot access http://www.geoplugin.net.</div>");
 
 												echo "<tr>";
-													echo "<td align='center'>".date($plexWatch['dateFormat'],$userIpAddresses['time'])."</td>";
+													echo "<td data-order='".$row['date']."' align='center'>".date($plexWatch['dateFormat'],$userIpAddresses['time'])."</td>";
 													echo "<td align='center'>".$userIpAddresses['ip_address']."</td>";
 													echo "<td align='left'>".$userIpAddresses['play_count']."</td>";
 
@@ -712,9 +712,9 @@
 
 										echo "<tr>";
 											if (empty($row['stopped'])) {
-												echo "<td class='currentlyWatching' align='center'>Currently watching...</td>";
+												echo "<td data-order='".$row['date']."' class='currentlyWatching' align='center'>Currently watching...</td>";
 											}else{
-												echo "<td align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
+												echo "<td data-order='".$row['date']."' align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
 											}
 											
 											if ($platform == "Chromecast") {
@@ -953,9 +953,18 @@
 				"bStateSave": false,
 				"bSortClasses": false,
 				"sPaginationType": "bootstrap",
-				"aoColumnDefs": [
-			      { "aTargets": [ 1 ], "bSortable": true, "sType": "us_date", }
-			    ]	
+				"aoColumns": [
+				{"sSortDataType": "dom-data-order", "sType": "numeric"},
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null
+				]	
 			} );
 		} );
 	</script>
@@ -972,9 +981,13 @@
 				"bStateSave": false,
 				"bSortClasses": false,
 				"sPaginationType": "bootstrap",
-				"aoColumnDefs": [
-			      { "aTargets": [ 1 ], "bSortable": true, "sType": "us_date", }
-			    ]		
+				"aoColumns": [
+				{"sSortDataType": "dom-data-order", "sType": "numeric"},
+				null,
+				null,
+				null,
+				null
+				]		
 			} );
 		} );
 	</script>

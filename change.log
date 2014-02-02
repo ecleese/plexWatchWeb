@@ -1,5 +1,9 @@
+1.5.2 master
+* Fix:		settings.php: form portion of settings page was inaccessible if plexWatch database location value was set incorrectly
+* Fix:		global: date columns were still not sorting properly in all data tables if a date format other than m/d/y was used
+
 1.5.1 master
-*Fix:		global: date columns were not sorting properly in all data tables
+* Fix:		global: date columns were not sorting properly in all data tables
 
 1.5.0 master
 * Change:	version bump to master
