@@ -411,7 +411,7 @@
 				"bSortClasses": false,
 				"sPaginationType": "bootstrap",
 				"aoColumnDefs": [
-			      { "sType": "us_date", "aTargets": [ 0 ] }
+			      { "aTargets": [ 1 ], "bSortable": true, "sType": "us_date", }
 			    ]	
 			} );
 		} );
