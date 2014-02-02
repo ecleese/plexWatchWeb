@@ -1,3 +1,6 @@
+1.5.1 master
+*Fix:		global: date columns were not sorting properly in all data tables
+
 1.5.0 master
 * Change:	version bump to master
 * Change:	global: updated welcome logo to match new Plex logo.
