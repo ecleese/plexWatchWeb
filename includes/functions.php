@@ -16,7 +16,7 @@ function loadPwConfig() {
     $db = dbconnect();
     if ($result = $db->querySingle("SELECT json_pretty from config")) {
       if ($json = json_decode($result)) {
-	$_SESSION['pwc'] =  keysToLower($json);
+	$_SESSION['pwc'] = keysToLower($json);
       }
     }
   }
@@ -35,11 +35,11 @@ function FriendlyName($user,$platform = NULL) {
     $fn = $config->{'user_display'};
     if (is_object($fn)) {
       if (isset($fn->{$user.'+'.$platform})) {
-	//print "user+platform match";
-	return $fn->{$user.'+'.$platform};
+      	//print "user+platform match";
+      	return $fn->{$user.'+'.$platform};
       } else if (isset($fn->{$user})) {
-	//print "user match";
-	return $fn->{$user};
+      	//print "user match";
+      	return $fn->{$user};
       }
     }
   }

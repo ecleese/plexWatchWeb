@@ -111,7 +111,7 @@
 							<div class="settings-general-info">
 								
 								<ul>
-									<li>plexWatch/Web Version: <strong>v1.5.2</strong></li>	
+									<li>plexWatch/Web Version: <strong>v1.5.3</strong></li>	
 								
 									<?php
 									do {
@@ -155,8 +155,8 @@
 							<div class="control-group">
 							  <label class="control-label" for="dateFormat">Date Format</label>
 							  <div class="controls">
-								<input id="dateFormat" name="dateFormat" type="text" placeholder="Y-m-d" class="input-mini" required="" value="<?php echo $plexWatch['dateFormat'] ?>">
-								<p class="help-block">The date display format plexWatch/Web should use. Current limitations require " <strong>/</strong> " as a delimiter. <a href="http://php.net/manual/en/function.date.php">Date/Time formatting documentation.</a></p>
+								<input id="dateFormat" name="dateFormat" type="text" placeholder="m/d/y" class="input-mini" required="" value="<?php echo $plexWatch['dateFormat'] ?>">
+								<p class="help-block">The date display format plexWatch/Web should use. <a href="#dateTimeOptionsModal" data-toggle="modal">Date & Time format options</a></p>
 							  </div>
 							</div>
 
@@ -165,14 +165,65 @@
 							  <label class="control-label" for="timeFormat">Time Format</label>
 							  <div class="controls">
 								<input id="timeFormat" name="timeFormat" type="text" placeholder="g:i a" class="input-mini" required="" value="<?php echo $plexWatch['timeFormat'] ?>">
-								<p class="help-block">The time display format plexWatch/Web should use. <a href="http://php.net/manual/en/function.date.php">Date/Time formatting documentation.</a></p>
+								<p class="help-block">The time display format plexWatch/Web should use. <a href="#dateTimeOptionsModal" data-toggle="modal">Date & Time format options</a></p>
 							  </div>
 							</div>
 
 						</div>
 
+						<div id="dateTimeOptionsModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="dateTimeOptionsModal" aria-hidden="true">
+						<div class="modal-header">	
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="icon icon-remove"></i></button>		
+	<h3 id="myModalLabel">Date & Time Format Options</h3>
+</div>
+								
+<div class="modal-body">
+									
+	<div class="span12">
+		
+	
+		<table>
 
+			<tbody>
 
+				<tr><td><h5>Day</h5></td></tr>
+				<tr><td align="center"><strong>d</strong></td><td width="300">Numeric, with leading zeros</td><td>01 to 31</td></tr>
+				<tr><td align="center"><strong>j</strong></td><td>Numeric, without leading zeros</td><td>1 to 31</td></tr>
+				<tr><td align="center"><strong>S</strong></td><td>The English suffix for the day of the month</td><td>st, nd or th in the 1st, 2nd or 15th.</td></tr>
+				
+				<tr><td><h5>Month</h5></td></tr>
+				<tr><td align="center"><strong>m</strong></td><td>Numeric, with leading zeros</td><td>01 to 31</td></tr>
+				<tr><td align="center"><strong>n</strong></td><td>Numeric, without leading zeros</td><td>1 to 31</td></tr>
+				<tr><td align="center"><strong>F</strong></td><td>Textual full</td><td>January – December</td></tr>
+				<tr><td align="center"><strong>M</strong></td><td>Textual three letters</td><td>Jan – Dec</td></tr>
+				
+				<tr><td><h5>Year</h5></td></tr>
+				<tr><td align="center"><strong>Y</strong></td><td>Numeric, 4 digits</td><td>Eg., 1999, 2003</td></tr>
+				<tr><td align="center"><strong>y</strong></td><td>Numeric, 2 digits</td><td>Eg., 99, 03</td></tr>
+
+				<tr><td><h5>Time</h5></td></tr>
+				<tr><td align="center"><strong>a</strong></td><td width="300">am/pm Lowercase</td><td>am, pm</td></tr>
+				<tr><td align="center"><strong>A</strong></td><td>AM/PM Uppercase</td><td>AM, PM</td></tr>
+				<tr><td align="center"><strong>g</strong></td><td>Hour, 12-hour, without leading zeros</td><td>1–12</td></tr>
+				<tr><td align="center"><strong>h</strong></td><td>Hour, 12-hour, with leading zeros</td><td>01–12</td></tr>
+				<tr><td align="center"><strong>G</strong></td><td>Hour, 24-hour, without leading zeros</td><td>0-23</td></tr>
+				<tr><td align="center"><strong>H</strong></td><td>Hour, 24-hour, with leading zeros</td><td>00-23</td></tr>
+				<tr><td align="center"><strong>i</strong></td><td>Minutes, with leading zeros</td><td>00-59</td></tr>
+				<tr><td align="center"><strong>s</strong></td><td>Seconds, with leading zeros</td><td>00-59</td></tr>
+				<tr><td align="center"><strong>T</strong></td><td>Timezone abbreviation</td><td>Eg., EST, MDT ...</td></tr>
+
+			</tbody>
+			
+		</table>
+																		
+	</div>
+	
+</div>
+										  
+<div class="modal-footer">
+
+</div>
+</div>
 
 						<div class='wellbg'>
 							<div class='wellheader'>
@@ -225,7 +276,7 @@
 							  <label class="control-label" for="https">Use HTTPS (optional)</label>
 							  <div class="controls">
 								<label class="checkbox inline" for="https-0">
-								  <input type="checkbox" name="https" id="https-0" value="yes" <?php echo $https ?>">
+								  <input type="checkbox" name="https" id="https-0" value="yes" <?php echo $https ?>>
 								  <p class="help-block">Use Plex Media Server's secure web port</p>
 								</label>
 							  </div>
@@ -335,7 +386,7 @@
 						  <label class="control-label" for="submit"></label>
 						  <div class="controls">
 							  <div id="friendlyName">
-								<button id="submit" name="submit" class="btn btn-medium btn-primary"" value="save">Save</button>
+								<button id="submit" name="submit" class="btn btn-medium btn-primary" value="save">Save</button>
 								<a href="index.php"><button type="button" class="btn btn-medium btn-cancel">Cancel</button></a>
 								</div>
 						  </div>
@@ -391,8 +442,8 @@
 							<div class="control-group">
 							  <label class="control-label" for="dateFormat">Date Format</label>
 							  <div class="controls">
-								<input id="dateFormat" name="dateFormat" type="text" placeholder="Y-m-d" class="input-mini" required="" value="m/d/Y">
-								<p class="help-block">The date display format plexWatch/Web should use. Current limitations require " <strong>/</strong> " as a delimiter. <a href="http://php.net/manual/en/function.date.php">Date/Time formatting documentation.</a></p>
+								<input id="dateFormat" name="dateFormat" type="text" placeholder="m/d/y" class="input-mini" required="" value="m/d/Y">
+								<p class="help-block">The date display format plexWatch/Web should use. <a href="#dateTimeOptionsModal" data-toggle="modal">Date & Time format options</a></p>
 							  </div>
 							</div>
 
@@ -401,11 +452,65 @@
 							  <label class="control-label" for="timeFormat">Time Format</label>
 							  <div class="controls">
 								<input id="timeFormat" name="timeFormat" type="text" placeholder="g:i a" class="input-mini" required="" value="g:i a">
-								<p class="help-block">The time display format plexWatch/Web should use. <a href="http://php.net/manual/en/function.date.php">Date/Time formatting documentation.</a></p>
+								<p class="help-block">The time display format plexWatch/Web should use. <a href="#dateTimeOptionsModal" data-toggle="modal">Date & Time format options</a></p>
 							  </div>
 							</div>
 
 						</div>
+
+						<div id="dateTimeOptionsModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="dateTimeOptionsModal" aria-hidden="true">
+						<div class="modal-header">	
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="icon icon-remove"></i></button>		
+	<h3 id="myModalLabel">Date & Time Format Options</h3>
+</div>
+								
+<div class="modal-body">
+									
+	<div class="span12">
+		
+	
+		<table>
+
+			<tbody>
+
+				<tr><td><h5>Day</h5></td></tr>
+				<tr><td align="center"><strong>d</strong></td><td width="300">Numeric, with leading zeros</td><td>01 to 31</td></tr>
+				<tr><td align="center"><strong>j</strong></td><td>Numeric, without leading zeros</td><td>1 to 31</td></tr>
+				<tr><td align="center"><strong>S</strong></td><td>The English suffix for the day of the month</td><td>st, nd or th in the 1st, 2nd or 15th.</td></tr>
+				
+				<tr><td><h5>Month</h5></td></tr>
+				<tr><td align="center"><strong>m</strong></td><td>Numeric, with leading zeros</td><td>01 to 31</td></tr>
+				<tr><td align="center"><strong>n</strong></td><td>Numeric, without leading zeros</td><td>1 to 31</td></tr>
+				<tr><td align="center"><strong>F</strong></td><td>Textual full</td><td>January – December</td></tr>
+				<tr><td align="center"><strong>M</strong></td><td>Textual three letters</td><td>Jan – Dec</td></tr>
+				
+				<tr><td><h5>Year</h5></td></tr>
+				<tr><td align="center"><strong>Y</strong></td><td>Numeric, 4 digits</td><td>Eg., 1999, 2003</td></tr>
+				<tr><td align="center"><strong>y</strong></td><td>Numeric, 2 digits</td><td>Eg., 99, 03</td></tr>
+
+				<tr><td><h5>Time</h5></td></tr>
+				<tr><td align="center"><strong>a</strong></td><td width="300">am/pm Lowercase</td><td>am, pm</td></tr>
+				<tr><td align="center"><strong>A</strong></td><td>AM/PM Uppercase</td><td>AM, PM</td></tr>
+				<tr><td align="center"><strong>g</strong></td><td>Hour, 12-hour, without leading zeros</td><td>1–12</td></tr>
+				<tr><td align="center"><strong>h</strong></td><td>Hour, 12-hour, with leading zeros</td><td>01–12</td></tr>
+				<tr><td align="center"><strong>G</strong></td><td>Hour, 24-hour, without leading zeros</td><td>0-23</td></tr>
+				<tr><td align="center"><strong>H</strong></td><td>Hour, 24-hour, with leading zeros</td><td>00-23</td></tr>
+				<tr><td align="center"><strong>i</strong></td><td>Minutes, with leading zeros</td><td>00-59</td></tr>
+				<tr><td align="center"><strong>s</strong></td><td>Seconds, with leading zeros</td><td>00-59</td></tr>
+				<tr><td align="center"><strong>T</strong></td><td>Timezone abbreviation</td><td>Eg., EST, MDT ...</td></tr>
+
+			</tbody>
+			
+		</table>
+																		
+	</div>
+	
+</div>
+										  
+<div class="modal-footer">
+
+</div>
+</div>
 						
 						<div class='wellbg'>
 							<div class='wellheader'>
@@ -542,7 +647,7 @@
 						  <label class="control-label" for="submit"></label>
 						  <div class="controls">
 							  <div id="friendlyName">
-								<button id="submit" name="submit" class="btn btn-medium btn-primary"" value="save">Save</button>
+								<button id="submit" name="submit" class="btn btn-medium btn-primary" value="save">Save</button>
 								<a href="index.php"><button type="button" class="btn btn-medium btn-cancel">Cancel</button></a>
 								</div>
 						  </div>

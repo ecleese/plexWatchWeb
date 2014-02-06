@@ -1,3 +1,11 @@
+1.5.3 master
+* Add:		index.php: Current Activity now supports music tracks
+* Add:		index.php: Current Activity now reports if a user is "buffering"
+* Change:	index.php: Current Activity CSS modifications
+* Change:	global: date columns in all tables are no longer restricted to "/" delimiters
+* Add:		settings.php: Date/Time options modal
+* Fix:		global: broken platform image link would appear if client source was reported as Plex/Web (Unknown Browser)
+
 1.5.2 master
 * Fix:		settings.php: form portion of settings page was inaccessible if plexWatch database location value was set incorrectly
 * Fix:		global: date columns were still not sorting properly in all data tables if a date format other than m/d/y was used
