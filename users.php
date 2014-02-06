@@ -125,8 +125,7 @@
 											echo "<td>";
 											if (empty($userXml->User['thumb'])) {				
 															echo "<div class='users-poster-face'><a href='user.php?user=".$user['user']."'><img src='images/gravatar-default-80x80.png' width='40px' height='40px'></></a> </div>";
-														}else if (strstr($userXml->User['thumb'], "?d=404")) {
-															echo "<div class='users-poster-face'><a href='user.php?user=".$user['user']."'><img src='images/gravatar-default-80x80.png' width='40px' height='40px'></></a> </div>";
+														
 														}else{
 															echo "<div class='users-poster-face'><a href='user.php?user=".$user['user']."'><img src='".$userXml->User['thumb']."' width='40px' height='40px'></></a> </div>";
 														}

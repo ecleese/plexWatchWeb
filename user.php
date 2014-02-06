@@ -172,8 +172,6 @@
 						$userInfoXmlField = simplexml_load_string($userInfoXml); 
 						if (empty($userInfoXmlField->User['thumb'])) {
 							echo "<div class='user-info-poster-face'><img src='images/gravatar-default-80x80.png'></></div>";
-						}else if (strstr($userInfoXmlField->User['thumb'], "?d=404")) {
-							echo "<div class='user-info-poster-face'><img src='images/gravatar-default-80x80.png'></></div>";
 						}else{
 							echo "<div class='user-info-poster-face'><img src='".$userInfoXmlField->User['thumb']."'></></div>";
 						}
@@ -425,6 +423,8 @@
 										$platformImage = "images/platforms/safari.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Internet Explorer')) {
 										$platformImage = "images/platforms/ie.png";
+									}else if(strstr($platformXmlField->Player['platform'], 'Unknown Browser')) {
+										$platformImage = "images/platforms/default.png";
 									}else if(strstr($platformXmlField->Player['platform'], 'Windows-XBMC')) {
 										$platformImage = "images/platforms/xbmc.png";
 									}else if(empty($platformXmlField->Player['platform'])) {
@@ -627,7 +627,7 @@
 												$userIpAddressesData = simplexml_load_file($userIpAddressesUrl) or die ("<div class=\"alert alert-warning \">Cannot access http://www.geoplugin.net.</div>");
 
 												echo "<tr>";
-													echo "<td data-order='".$row['date']."' align='center'>".date($plexWatch['dateFormat'],$userIpAddresses['time'])."</td>";
+													echo "<td data-order='".$userIpAddresses['date']."' align='center'>".date($plexWatch['dateFormat'],$userIpAddresses['time'])."</td>";
 													echo "<td align='center'>".$userIpAddresses['ip_address']."</td>";
 													echo "<td align='left'>".$userIpAddresses['play_count']."</td>";
 
@@ -686,7 +686,7 @@
 								echo "<table id='tableUserHistory' class='display'>";
 									echo "<thead>";
 										echo "<tr>";
-											echo "<th align='center'><i class='icon-sort icon-white'></i> Date</th>";
+											echo "<th align='left'><i class='icon-sort icon-white'></i> Date</th>";
 											echo "<th align='left'><i class='icon-sort icon-white'></i> Platform</th>";
 											echo "<th align='left'><i class='icon-sort icon-white'></i> IP Address</th>";
 											echo "<th align='left'><i class='icon-sort icon-white'></i> Title</th>";

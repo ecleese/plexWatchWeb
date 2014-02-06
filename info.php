@@ -197,7 +197,7 @@
 							echo "<table id='globalHistory' class='display'>";
 								echo "<thead>";
 									echo "<tr>";
-										echo "<th align='center'><i class='icon-sort icon-white'></i> Date</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> Date</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> User</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Platform</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> IP Address</th>";
@@ -795,7 +795,7 @@
 							echo "<table id='globalHistory' class='display'>";
 								echo "<thead>";
 									echo "<tr>";
-										echo "<th align='center'><i class='icon-sort icon-white'></i> Date</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> Date</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> User</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Platform</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> IP Address</th>";

@@ -153,9 +153,13 @@
 						$rowCount++;
 						echo "<tr>";
 							if (empty($row['stopped'])) {
-											echo "<td data-order='".$row['date']."' class='currentlyWatching' align='center'>Currently watching...</td>";
-										}else{
-											echo "<td data-order='".$row['date']."' align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
+								echo "<td data-order='".$row['date']."' class='currentlyWatching' align='center'>Currently watching...</td>";
+							}else{
+								if (empty($plexWatch['dateFormat'])) {
+									echo "<td data-order='".$row['date']."' align='center'>".date('m/d/y',$row['time'])."</td>";
+								}else{
+									echo "<td data-order='".$row['date']."' align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
+								}
 							}
 							
 							echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
