@@ -297,7 +297,7 @@
 												echo "<img src='includes/img.php?img=".urlencode($top10EpisodesXmlEpisodeThumbUrl)."'></img>";
 											echo "</div>";
 											echo "<div class='charts-instance-position-title'>";
-												echo "<li><h3><a href='info.php?id=".$top10EpisodesXml['ratingKey']."'>".$top10Episodes['orig_title']." - Season ".$top10Episodes['season'].", Episode".$top10Episodes['episode']."</a></h3><h5> (".$top10Episodes['play_count']." views)</h5></li>";
+												echo "<li><h3><a href='info.php?id=".$top10EpisodesXml['ratingKey']."'>".$top10Episodes['orig_title']." - Season ".$top10Episodes['season'].", Episode ".$top10Episodes['episode']."</a></h3><h5> (".$top10Episodes['play_count']." views)</h5></li>";
 											echo "</div>";
 										echo "</div>";
 										

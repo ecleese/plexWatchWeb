@@ -3594,11 +3594,11 @@ margin-bottom: 20px;
 min-height: 40px;
 padding-left: 20px;
 padding-right: 20px;
-background-color: #111;
-border-bottom: 2px solid #2d2d2d;
--webkit-box-shadow: 0px 0px 30px 10px rgba(30,30,30,0.85);
--moz-box-shadow: 0px 0px 30px 10px rgba(30,30,30,0.85);
-box-shadow: 0px 0px 30px 10px rgba(30,30,30,0.85);
+background-color: #000;
+border-bottom: 1px solid;
+border-color: #222;
+-webkit-box-shadow: 0 1px 0 1px rgba(0,0,0,.4);
+box-shadow: 0 1px 0 1px rgba(0,0,0,.4);
 }
 .navbar-inner {
   
@@ -3817,7 +3817,6 @@ font-weight: bold;
 .navbar .nav > .active > a:focus {
   color: #fff;
   text-decoration: none;
-  background-color: #111;
   -webkit-box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
   -moz-box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
   box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
@@ -4990,6 +4989,8 @@ color: #F9AA03;
 float: right;
 padding-right: 25px;
 width: 225px;
+position: relative;
+top: 20px;
 }
 
 .modal-body ul {
@@ -6585,49 +6586,33 @@ webkit-box-shadow: 0 0 0 2px #e9a049;
 box-shadow: 0 0 0 2px #e9a049;
 }
 
-.users-poster-face img{
+
+
+.users-poster-face img {
 bottom: 0;
 overflow: hidden;
+float: left;
+background-color: #323232;
+background-position: center;
+background-size: cover;
 -webkit-border-radius: 1000px;
 -moz-border-radius: 1000px;
 border-radius: 1000px;
--webkit-box-shadow: 0 0 0px rgba(0,0,0,0.75);
--moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
-box-shadow: 0 0 10px rgba(0,0,0,0.75);
--webkit-transform: translateZ(0);
--moz-transform: translateZ(0);
--ms-transform: translateZ(0);
--o-transform: translateZ(0);
-transform: translateZ(0);
--webkit-transform-style: preserve-3d;
--moz-transform-style: preserve-3d;
--ms-transform-style: preserve-3d;
--o-transform-style: preserve-3d;
-transform-style: preserve-3d;
--webkit-perspective: 1000;
--moz-perspective: 1000;
--ms-perspective: 1000;
--o-perspective: 1000;
-perspective: 1000;
--webkit-backface-visibility: hidden;
--moz-backface-visibility: hidden;
--ms-backface-visibility: hidden;
--o-backface-visibility: hidden;
-backface-visibility: hidden;
-float: left;
+-webkit-box-shadow: 0 0 4px rgba(0,0,0,.3),inset 0 0 0 1px rgba(255,255,255,.1);
+box-shadow: 0 0 4px rgba(0,0,0,.3),inset 0 0 0 1px rgba(255,255,255,.1);
+width: 40px;
+height: 40px;
 }
 
 .users-poster-face img:hover{
-webkit-box-shadow: 0 0 0 2px #F9AA03;
--moz-box-shadow: 0 0 0 2px #F9AA03;
-box-shadow: 0 0 0 2px #F9AA03;
+-webkit-box-shadow: 0 0 4px rgba(0,0,0,.3),inset 0 0 0 2px #F9AA03;
+box-shadow: 0 0 4px rgba(0,0,0,.3),inset 0 0 0 2px #F9AA03;
 }
 
 
 .users-name {
 position: relative;
-top: 5px;
-left: 10px;
+
 }
 
 .wellbg {
@@ -6742,9 +6727,9 @@ overflow: hidden;
 -webkit-border-radius: 2px;
 -moz-border-radius: 2px;
 border-radius: 2px;
--webkit-box-shadow: 0 0 10px rgba(0,0,0,0.85);
--moz-box-shadow: 0 0 10px rgba(0,0,0,0.85);
-box-shadow: 0 0 10px rgba(0,0,0,0.85);
+-webkit-box-shadow: 0 0 5px rgba(0,0,0,0.5);
+-moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);
+box-shadow: 0 0 5px rgba(0,0,0,0.5);
 -webkit-transform: translateZ(0);
 -moz-transform: translateZ(0);
 -ms-transform: translateZ(0);
@@ -6831,8 +6816,6 @@ width: 100%;
 position: relative;
 top: -12px;
 text-align: left;
-
-border-top: 1px solid #000;
 height: 53px;
 width: 250px;
 border-radius: 0 0 3px 3px;
@@ -7920,32 +7903,15 @@ float: left;
 .user-info-poster-face img {
 bottom: 0;
 overflow: hidden;
+float: left;
+background-color: #323232;
+background-position: center;
+background-size: cover;
 -webkit-border-radius: 1000px;
 -moz-border-radius: 1000px;
 border-radius: 1000px;
--webkit-box-shadow: 0 0 0px rgba(0,0,0,0.75);
--moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
-box-shadow: 0 0 10px rgba(0,0,0,0.75);
--webkit-transform: translateZ(0);
--moz-transform: translateZ(0);
--ms-transform: translateZ(0);
--o-transform: translateZ(0);
-transform: translateZ(0);
--webkit-transform-style: preserve-3d;
--moz-transform-style: preserve-3d;
--ms-transform-style: preserve-3d;
--o-transform-style: preserve-3d;
-transform-style: preserve-3d;
--webkit-perspective: 1000;
--moz-perspective: 1000;
--ms-perspective: 1000;
--o-perspective: 1000;
-perspective: 1000;
--webkit-backface-visibility: hidden;
--moz-backface-visibility: hidden;
--ms-backface-visibility: hidden;
--o-backface-visibility: hidden;
-backface-visibility: hidden;
+-webkit-box-shadow: 0 0 4px rgba(0,0,0,.3),inset 0 0 0 1px rgba(255,255,255,.1);
+box-shadow: 0 0 4px rgba(0,0,0,.3),inset 0 0 0 1px rgba(255,255,255,.1);
 }
 
 .user-info-username {

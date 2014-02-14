@@ -107,6 +107,7 @@
 							echo "<table id='usersTable' class='display'>";
 								echo "<thead>";
 									echo "<tr>";
+										echo "<th align='right'></th>";
 										echo "<th align='left'>User </th>";
 										echo "<th align='left'>Last Seen </th>";
 										echo "<th align='left'>Last Known IP </th>";
@@ -122,15 +123,14 @@
 									$userXml = simplexml_load_string($user['xml']) ;                         
 
 										echo "<tr>";
+											echo "<td align='right' width='40px'>";
+												if (empty($userXml->User['thumb'])) {				
+													echo "<div class='users-poster-face'><a href='user.php?user=".$user['user']."'><img src='images/gravatar-default-80x80.png' /></a></div>";			
+												}else{
+													echo "<div class='users-poster-face'><a href='user.php?user=".$user['user']."'><img src='".$userXml->User['thumb']."' onerror=\"this.src='images/gravatar-default-80x80.png'\" /></a></div>";
+												}
+											echo "</td>";
 											echo "<td>";
-											if (empty($userXml->User['thumb'])) {				
-															echo "<div class='users-poster-face'><a href='user.php?user=".$user['user']."'><img src='images/gravatar-default-80x80.png' width='40px' height='40px'></></a> </div>";
-														
-														}else{
-															echo "<div class='users-poster-face'><a href='user.php?user=".$user['user']."'><img src='".$userXml->User['thumb']."' width='40px' height='40px'></></a> </div>";
-														}
-
-											
 												echo "<div class='users-name'><a href='user.php?user=".$user['user']."'> ".FriendlyName($user['user'],$user['platform'])."</a> </div>";
 											echo "</td>";
 														
