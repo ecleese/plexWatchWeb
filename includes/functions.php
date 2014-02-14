@@ -49,20 +49,17 @@ function FriendlyName($user,$platform = NULL) {
 /* db connector */
 function dbconnect() {
   global $plexWatch;
-  
-  try {
-    $db = new SQLite3($plexWatch['plexWatchDb']);
-  }
-  catch (Exception $exception) {
-    // sqlite3 throws an exception when it is unable to connect
-    echo "<div class=\"alert alert-warning \">Failed to access plexWatch database. Please check settings.</div>";
-    die;
-  }
-  
+
+  if(!class_exists('SQLite3'))
+  die("<div class=\"alert alert-warning \">php5-sqlite is not installed. Please install this requirement and restart your webserver before continuing.</div>");
+
+  $db = new SQLite3($plexWatch['plexWatchDb']);
   $db->busyTimeout(10*1000);
   return $db;
 
 }
+
+
 
 /* dbtable -- processed or grouped */
 function dbTable() {

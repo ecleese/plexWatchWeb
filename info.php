@@ -214,7 +214,7 @@
 								while ($row = $results->fetchArray()) {
 								$rowCount++;
 									echo "<tr>";
-										echo "<td data-order='".$row['date']."' align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
+										echo "<td data-order='".$row['date']."' align='left'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
 										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
 										
 										$rowXml = simplexml_load_string($row['xml']); 
@@ -812,7 +812,7 @@
 									while ($row = $results->fetchArray()) {
 									$rowCount++;
 									echo "<tr>";
-										echo "<td data-order='".$row['date']."' align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
+										echo "<td data-order='".$row['date']."' align='left'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
 										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
 										
 										$rowXml = simplexml_load_string($row['xml']); 

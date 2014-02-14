@@ -122,6 +122,13 @@
 										echo "<li>";
 												echo "<h1>".$tvEpisodeCount['totalSize']."</h1><h5>TV Episodes</h5>";
 										echo "</li>";
+									}else if ($section['type'] == "artist") {
+										$sectionDetails = simplexml_load_file("".$plexWatchPmsUrl."/library/sections/".$section['key']."/all?sort=addedAt:desc&X-Plex-Container-Start=0&X-Plex-Container-Size=1&X-Plex-Token=".$myPlexAuthToken."") or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
+										
+										echo "<li>";
+												echo "<h1>".$sectionDetails['totalSize']."</h1><h5>".$section['title']."</h5>";
+										echo "</li>";
+
 									}
 								}else{
 									if ($section['type'] == "movie") {
@@ -139,6 +146,12 @@
 										echo "</li>";
 										echo "<li>";
 												echo "<h1>".$tvEpisodeCount['totalSize']."</h1><h5>TV Episodes</h5>";
+										echo "</li>";
+									}else if ($section['type'] == "artist") {
+										$sectionDetails = simplexml_load_file("".$plexWatchPmsUrl."/library/sections/".$section['key']."/all?sort=addedAt:desc&X-Plex-Container-Start=0&X-Plex-Container-Size=1") or die ("<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>");
+										
+										echo "<li>";
+												echo "<h1>".$sectionDetails['totalSize']."</h1><h5>".$section['title']."</h5>";
 										echo "</li>";
 									}
 								}

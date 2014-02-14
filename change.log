@@ -1,3 +1,8 @@
+1.5.4 master
+* Fix:		global: PMS owners with no gravatar account would display broken user avatar images.
+* Change:	global: minor CSS and layout tweaks
+* Add:		global: additional php5-sqlite checks to alert users if they are missing the requirement
+
 1.5.3 master
 * Add:		index.php: Current Activity now supports music tracks
 * Add:		index.php: Current Activity now reports if a user is "buffering"

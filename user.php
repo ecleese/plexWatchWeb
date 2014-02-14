@@ -171,9 +171,9 @@
 						$userInfoXml = $userInfoResults['xml'];
 						$userInfoXmlField = simplexml_load_string($userInfoXml); 
 						if (empty($userInfoXmlField->User['thumb'])) {
-							echo "<div class='user-info-poster-face'><img src='images/gravatar-default-80x80.png'></></div>";
+							echo "<div class='user-info-poster-face'><img src='images/gravatar-default-80x80.png'></></div>";					
 						}else{
-							echo "<div class='user-info-poster-face'><img src='".$userInfoXmlField->User['thumb']."'></></div>";
+							echo "<div class='user-info-poster-face'><img src='".$userInfoXmlField->User['thumb']."' onerror=\"this.src='images/gravatar-default-80x80.png'\"></></div>";
 						}
 					}
 					
@@ -601,8 +601,8 @@
 							echo "<table id='tableUserIpAddresses' class='display'>";
 								echo "<thead>";
 									echo "<tr>";
-										echo "<th align='center'><i class='icon-sort icon-white'></i> Last seen</th>";
-										echo "<th align='center'><i class='icon-sort icon-white'></i> IP Address</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> Last seen</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> IP Address</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Play Count</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Platform (Last Seen)</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Location</th>";
@@ -627,8 +627,8 @@
 												$userIpAddressesData = simplexml_load_file($userIpAddressesUrl) or die ("<div class=\"alert alert-warning \">Cannot access http://www.geoplugin.net.</div>");
 
 												echo "<tr>";
-													echo "<td data-order='".$userIpAddresses['date']."' align='center'>".date($plexWatch['dateFormat'],$userIpAddresses['time'])."</td>";
-													echo "<td align='center'>".$userIpAddresses['ip_address']."</td>";
+													echo "<td data-order='".$userIpAddresses['date']."' align='left'>".date($plexWatch['dateFormat'],$userIpAddresses['time'])."</td>";
+													echo "<td align='left'>".$userIpAddresses['ip_address']."</td>";
 													echo "<td align='left'>".$userIpAddresses['play_count']."</td>";
 
 													$userIpAddressesXml = simplexml_load_string($userIpAddresses['xml']); 
@@ -714,7 +714,7 @@
 											if (empty($row['stopped'])) {
 												echo "<td data-order='".$row['date']."' class='currentlyWatching' align='center'>Currently watching...</td>";
 											}else{
-												echo "<td data-order='".$row['date']."' align='center'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
+												echo "<td data-order='".$row['date']."' align='left'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
 											}
 											
 											if ($platform == "Chromecast") {

@@ -111,36 +111,14 @@
 							<div class="settings-general-info">
 								
 								<ul>
-									<li>plexWatch/Web Version: <strong>v1.5.3</strong></li>	
+									<li>plexWatch/Web Version: <strong>v1.5.4</strong></li>	
 								
 									<?php
-									do {
-										try {
-										    $db = new SQLite3($plexWatch['plexWatchDb']);
-										  }
-										  catch (Exception $exception) {
-										    // sqlite3 throws an exception when it is unable to connect
-										    echo "<li>plexWatch Version: <div class=\"alert alert-warning \">Failed to access plexWatch database. Please check settings.</div>";
-										    break;
-										  }
-
-										if (!$db) { 
-											break;
-										}else{	
-											$plexWatchVersion = $db->querySingle("SELECT version FROM config ");
-											?>
-											<li>plexWatch Version: <strong>v<?php echo $plexWatchVersion ?></strong></li>
-											<?php
-										}
-									} while (0);
+									    $db = dbconnect(); 	
+										$plexWatchVersion = $db->querySingle("SELECT version FROM config ");
 									?>
+									<li>plexWatch Version: <strong>v<?php echo $plexWatchVersion ?></strong></li>
 
-
-									
-										
-											
-									
-									
 								</ul>
 							</div>
 						</div>
@@ -410,6 +388,8 @@
 				
 				<?php
 				}else{
+					if(!class_exists('SQLite3'))
+					die("<div class=\"alert alert-warning \">php5-sqlite is not installed. Please install this requirement and restart your webserver before continuing.</div>");
 				?>
 			
 				<div class="wellbg">
@@ -662,7 +642,7 @@
 			}
 			
 			if (!file_exists($guisettingsFile)) {
-						
+				
 			?>
 			
 				<div id="welcomeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
