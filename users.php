@@ -124,8 +124,12 @@
 
 										echo "<tr>";
 											echo "<td align='right' width='40px'>";
-												if (empty($userXml->User['thumb'])) {				
-													echo "<div class='users-poster-face'><a href='user.php?user=".$user['user']."'><img src='images/gravatar-default-80x80.png' /></a></div>";			
+												if (empty($userXml->User['thumb'])) {
+													if (file_exists("images/users/".$user['user'].".jpg")) {
+														echo "<div class='users-poster-face'><a href='user.php?user=".$user['user']."'><img src='images/users/".$user['user'].".jpg' width='40px' height='40px'></></a> </div>";
+													}else{
+														echo "<div class='users-poster-face'><a href='user.php?user=".$user['user']."'><img src='images/gravatar-default-80x80.png' /></a></div>";
+													}
 												}else{
 													echo "<div class='users-poster-face'><a href='user.php?user=".$user['user']."'><img src='".$userXml->User['thumb']."' onerror=\"this.src='images/gravatar-default-80x80.png'\" /></a></div>";
 												}
