@@ -712,7 +712,7 @@
 
 										echo "<tr>";
 											if (empty($row['stopped'])) {
-												echo "<td data-order='".$row['date']."' class='currentlyWatching' align='center'>Currently watching...</td>";
+												echo "<td data-order='".$row['date']."' class='currentlyWatching' align='left'>Currently watching...</td>";
 											}else{
 												echo "<td data-order='".$row['date']."' align='left'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
 											}
