@@ -171,7 +171,11 @@
 						$userInfoXml = $userInfoResults['xml'];
 						$userInfoXmlField = simplexml_load_string($userInfoXml); 
 						if (empty($userInfoXmlField->User['thumb'])) {
-							echo "<div class='user-info-poster-face'><img src='images/gravatar-default-80x80.png'></></div>";					
+							if (file_exists("images/users/".$user.".jpg")) {
+								echo "<div class='user-info-poster-face'><img src='images/users/".$user.".jpg'></></div>";
+							}else{
+								echo "<div class='user-info-poster-face'><img src='images/gravatar-default-80x80.png'></></div>";
+							}
 						}else{
 							echo "<div class='user-info-poster-face'><img src='".$userInfoXmlField->User['thumb']."' onerror=\"this.src='images/gravatar-default-80x80.png'\"></></div>";
 						}
