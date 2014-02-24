@@ -1,3 +1,7 @@
+1.5.4.1 master
+* Minor CSS change to fix offset username in current activity instances.
+* Additional platform images for future use.
+
 1.5.4 master
 * Fix:		global: PMS owners with no gravatar account would display broken user avatar images.
 * Change:	global: minor CSS and layout tweaks
