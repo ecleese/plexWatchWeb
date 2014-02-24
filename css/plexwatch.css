@@ -6762,6 +6762,7 @@ overflow: hidden;
 white-space: nowrap;
 width: 82%;
 margin-right: 5px;
+float: left;
 }
 
 .dashboard-activity-metadata-user a {
@@ -6780,6 +6781,7 @@ font-size: 14px;
 width: 82%;
 margin-right: 5px;
 color: #fff;
+float: left;
 }
 
 .dashboard-activity-metadata-title a:hover {
