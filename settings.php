@@ -33,7 +33,7 @@
   </head>
 
   <body>
-<?php // if($session->logged_in){ ?> 
+<?php if($session->logged_in){ ?> 
   
   
 	<div class="container">
@@ -797,6 +797,6 @@
 	}, 5000);
 	</script>
 	
-<?php //} ?>	
+<?php } ?>	
   </body>
 </html>
