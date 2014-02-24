@@ -1,3 +1,4 @@
+<?php include("../login/include/session.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -30,7 +31,7 @@
   </head>
 
   <body>
-
+<?php if($session->logged_in){ ?
 	
   
 	<div class="container">
@@ -1012,6 +1013,6 @@
 		$('#stats').tooltip();
 	});
 	</script>
-	
+<?php } ?>	
   </body>
 </html>
