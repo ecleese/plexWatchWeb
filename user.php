@@ -31,7 +31,7 @@
   </head>
 
   <body>
-<?php if($session->logged_in){ ?
+<?php if($session->logged_in){ ?>
 	
   
 	<div class="container">
