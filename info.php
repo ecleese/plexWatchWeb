@@ -72,7 +72,7 @@
 		if (!empty($plexWatch['myPlexAuthToken'])) {
 			$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
 			$id = $_GET['id'];
-			$infoUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."?query=c&X-Plex-Token=".$myPlexAuthToken."";
+			$infoUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."?X-Plex-Token=".$myPlexAuthToken."";
 		}else{
 			$myPlexAuthToken = '';		
 			$id = $_GET['id'];
@@ -537,7 +537,7 @@
 						}else if ($xml->Directory['type'] == "season") {
 							
 							if (!empty($plexWatch['myPlexAuthToken'])) {
-								$parentInfoUrl = "".$plexWatchPmsUrl."/library/metadata/".$xml->Directory['parentRatingKey']."?query=c&X-Plex-Token=".$myPlexAuthToken."";
+								$parentInfoUrl = "".$plexWatchPmsUrl."/library/metadata/".$xml->Directory['parentRatingKey']."?X-Plex-Token=".$myPlexAuthToken."";
 							}else{
 								$parentInfoUrl = "".$plexWatchPmsUrl."/library/metadata/".$xml->Directory['parentRatingKey']."";
 							}
@@ -613,7 +613,7 @@
 						echo "</div>"; 
 								
 								if (!empty($plexWatch['myPlexAuthToken'])) {
-									$seasonEpisodesUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."/children?query=c&X-Plex-Token=".$myPlexAuthToken."";
+									$seasonEpisodesUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."/children?X-Plex-Token=".$myPlexAuthToken."";
 								}else{
 									$seasonEpisodesUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."/children";
 								}	
