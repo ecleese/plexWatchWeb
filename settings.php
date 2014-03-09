@@ -111,7 +111,7 @@
 							<div class="settings-general-info">
 								
 								<ul>
-									<li>plexWatch/Web Version: <strong>v1.5.4.1</strong></li>	
+									<li>plexWatch/Web Version: <strong>v1.5.4.2</strong></li>	
 								
 									<?php
 									    $db = dbconnect(); 	

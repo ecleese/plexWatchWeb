@@ -687,12 +687,12 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 					}
 				}
 
-                    $sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['art']."&width=300&height=169"; 
+                    $sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['thumb']."&width=300&height=300"; 
 					
 					
 					echo "<div class='instance'>";
 						
-						echo "<div class='poster'><div class='dashboard-activity-poster-face'><img src='includes/img.php?img=".urlencode($sessionsThumbUrl)."'></img></div>";
+						echo "<div class='poster'><div class='dashboard-activity-poster-face'><div class='art-music-face' style='background-image:url(includes/img.php?img=".urlencode($sessionsThumbUrl).")'></div></div>";
 
 							echo "<div class='dashboard-activity-metadata-wrapper'>";
 
