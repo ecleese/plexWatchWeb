@@ -1,3 +1,4 @@
+<?php include("../login/include/session.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -31,6 +32,7 @@
   </head>
 
   <body>
+  <?php if($session->logged_in){ ?>
 
 	
   
@@ -453,6 +455,6 @@
 	</script>
 
 	
-
+<?php } ?>
   </body>
 </html>

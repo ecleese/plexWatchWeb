@@ -1,0 +1,3 @@
+<?php
+require_once '/srv/www/pwhdesigns.com/public_html/plexWatch/includes/functions.php';
+$plexWatch['dateFormat'] = 'm/d/Y';$plexWatch['timeFormat'] = 'g:i a';$plexWatch['pmsIp'] = '23.239.1.118';$plexWatch['pmsHttpPort'] = '32400';$plexWatch['pmsHttpsPort'] = '32443';$plexWatch['https'] = 'no';$plexWatch['plexWatchDb'] = '/opt/plexWatch/plexWatch.db';$plexWatch['myPlexUser'] = 'hthighway';$plexWatch['myPlexPass'] = '22600226';$plexWatch['myPlexAuthToken'] = 'gDnzyBMFz6nGFMncQiFi';$plexWatch['globalHistoryGrouping'] = 'yes';$plexWatch['userHistoryGrouping'] = 'yes';$plexWatch['chartsGrouping'] = 'yes';?>
