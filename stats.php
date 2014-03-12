@@ -131,23 +131,23 @@
 						$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM $plexWatchDbTable ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check settings.");
 					}	
 						
-					$hourlyPlays = $db->query("SELECT strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) as date, COUNT(title) as count FROM $plexWatchDbTable WHERE datetime(time, 'unixepoch', 'localtime') >= datetime('now', '-24 hours', 'localtime') GROUP BY strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) ORDER BY date ASC;") or die ("Failed to access plexWatch database. Please check your settings.");
+					$hourlyPlays = $db->query("SELECT time, COUNT(title) as count FROM $plexWatchDbTable WHERE datetime(time, 'unixepoch', 'localtime') >= datetime('now', '-24 hours', 'localtime') GROUP BY strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) ORDER BY time ASC;") or die ("Failed to access plexWatch database. Please check your settings.");
 					$hourlyPlaysNum = 0;
 					$hourlyPlayFinal = '';
 					while ($hourlyPlay = $hourlyPlays->fetchArray()) {
 						$hourlyPlaysNum++;
-						$hourlyPlayDate[$hourlyPlaysNum] = $hourlyPlay['date'];
+						$hourlyPlayDate[$hourlyPlaysNum] = date("Y-m-d H", $hourlyPlay['time']);
 						$hourlyPlayCount[$hourlyPlaysNum] = $hourlyPlay['count'];
 						$hourlyPlayTotal = "{ \"x\": \"".$hourlyPlayDate[$hourlyPlaysNum]."\", \"y\": ".$hourlyPlayCount[$hourlyPlaysNum]." }, ";
 						$hourlyPlayFinal .= $hourlyPlayTotal;
 					}
 
-					$maxhourlyPlays = $db->query("SELECT strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) as date, COUNT(title) as count FROM $plexWatchDbTable GROUP BY strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) ORDER BY count(*) desc limit 25;") or die ("Failed to access plexWatch database. Please check your settings.");
+					$maxhourlyPlays = $db->query("SELECT time, COUNT(title) as count FROM $plexWatchDbTable GROUP BY strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) ORDER BY count(*) DESC LIMIT 25;") or die ("Failed to access plexWatch database. Please check your settings.");
 					$maxhourlyPlaysNum = 0;
 					$maxhourlyPlayFinal = '';
 					while ($maxhourlyPlay = $maxhourlyPlays->fetchArray()) {
 						$maxhourlyPlaysNum++;
-						$maxhourlyPlayDate[$maxhourlyPlaysNum] = $maxhourlyPlay['date'];
+						$maxhourlyPlayDate[$maxhourlyPlaysNum] = date("Y-m-d H", $maxhourlyPlay['time']);
 						$maxhourlyPlayCount[$maxhourlyPlaysNum] = $maxhourlyPlay['count'];
 						$maxhourlyPlayTotal = "{ \"x\": \"".$maxhourlyPlayDate[$maxhourlyPlaysNum]."\", \"y\": ".$maxhourlyPlayCount[$maxhourlyPlaysNum]." }, ";
 						$maxhourlyPlayFinal .= $maxhourlyPlayTotal;
@@ -155,23 +155,23 @@
 						
 							
 						
-					$dailyPlays = $db->query("SELECT date(time, 'unixepoch','localtime') as date, count(title) as count FROM $plexWatchDbTable GROUP BY date ORDER BY time DESC LIMIT 30") or die ("Failed to access plexWatch database. Please check your settings.");
+					$dailyPlays = $db->query("SELECT time, count(title) as count FROM $plexWatchDbTable GROUP BY time ORDER BY time DESC LIMIT 30;") or die ("Failed to access plexWatch database. Please check your settings.");
 					$dailyPlaysNum = 0;
 					$dailyPlayFinal = '';
 					while ($dailyPlay = $dailyPlays->fetchArray()) {
 						$dailyPlaysNum++;
-						$dailyPlayDate[$dailyPlaysNum] = $dailyPlay['date'];
+						$dailyPlayDate[$dailyPlaysNum] = date("Y-m-d", $dailyPlay['time']);
 						$dailyPlayCount[$dailyPlaysNum] = $dailyPlay['count'];
 						$dailyPlayTotal = "{ \"x\": \"".$dailyPlayDate[$dailyPlaysNum]."\", \"y\": ".$dailyPlayCount[$dailyPlaysNum]." }, ";
 						$dailyPlayFinal .= $dailyPlayTotal;
 					}
 						
-					$monthlyPlays = $db->query("SELECT strftime('%Y-%m', datetime(time, 'unixepoch', 'localtime')) as date, COUNT(title) as count FROM $plexWatchDbTable WHERE datetime(time, 'unixepoch', 'localtime') >= datetime('now', '-12 months', 'localtime') GROUP BY strftime('%Y-%m', datetime(time, 'unixepoch', 'localtime'))  ORDER BY date DESC LIMIT 6;") or die ("Failed to access plexWatch database. Please check your settings.");
+					$monthlyPlays = $db->query("SELECT time, COUNT(title) as count FROM $plexWatchDbTable WHERE datetime(time, 'unixepoch', 'localtime') >= datetime('now', '-12 months', 'localtime') GROUP BY strftime('%Y-%m', datetime(time, 'unixepoch', 'localtime'))  ORDER BY time DESC LIMIT 6;") or die ("Failed to access plexWatch database. Please check your settings.");
 					$monthlyPlaysNum = 0;
 					$monthlyPlayFinal = '';
 					while ($monthlyPlay = $monthlyPlays->fetchArray()) {
 						$monthlyPlaysNum++;
-						$monthlyPlayDate[$monthlyPlaysNum] = $monthlyPlay['date'];
+						$monthlyPlayDate[$monthlyPlaysNum] = date("Y-m", $monthlyPlay['time']);
 						$monthlyPlayCount[$monthlyPlaysNum] = $monthlyPlay['count'];
 						$monthlyPlayTotal = "{ \"x\": \"".$monthlyPlayDate[$monthlyPlaysNum]."\", \"y\": ".$monthlyPlayCount[$monthlyPlaysNum]." }, ";
 						$monthlyPlayFinal .= $monthlyPlayTotal;
