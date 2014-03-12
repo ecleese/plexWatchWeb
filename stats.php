@@ -155,7 +155,7 @@
 						
 							
 						
-					$dailyPlays = $db->query("SELECT time, count(title) as count FROM $plexWatchDbTable GROUP BY time ORDER BY time DESC LIMIT 30;") or die ("Failed to access plexWatch database. Please check your settings.");
+					$dailyPlays = $db->query("SELECT time, count(title) as count FROM $plexWatchDbTable GROUP BY date(time, 'unixepoch','localtime') ORDER BY time DESC LIMIT 30;") or die ("Failed to access plexWatch database. Please check your settings.");
 					$dailyPlaysNum = 0;
 					$dailyPlayFinal = '';
 					while ($dailyPlay = $dailyPlays->fetchArray()) {
