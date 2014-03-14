@@ -72,7 +72,7 @@
 
 	<?php
 	
-	date_default_timezone_set(@date_default_timezone_get());
+	$tzOffset = date('Z');
 	
 	
 	
@@ -109,14 +109,14 @@
 					if ($plexWatch['globalHistoryGrouping'] == "yes") {
 						$plexWatchDbTable = "grouped";
 						$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable ");
-						$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter, strftime('%Y%m%d', datetime(time, 'unixepoch', 'localtime')) as date FROM processed WHERE stopped IS NULL UNION ALL SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter, strftime('%Y%m%d', datetime(time, 'unixepoch', 'localtime')) as date FROM $plexWatchDbTable ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your settings.");
+						$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter, strftime('%Y%m%d', datetime(time, 'unixepoch', '$tzOffset seconds')) as date FROM processed WHERE stopped IS NULL UNION ALL SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter, strftime('%Y%m%d', datetime(time, 'unixepoch', '$tzOffset seconds')) as date FROM $plexWatchDbTable ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your settings.");
 							
 						
 					}else if ($plexWatch['globalHistoryGrouping'] == "no") {
 						$plexWatchDbTable = "processed";
 					
 						$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable ");
-						$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter, strftime('%Y%m%d', datetime(time, 'unixepoch', 'localtime')) as date FROM $plexWatchDbTable ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check settings.");
+						$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter, strftime('%Y%m%d', datetime(time, 'unixepoch', '$tzOffset seconds')) as date FROM $plexWatchDbTable ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check settings.");
 					}	
 						
 					
