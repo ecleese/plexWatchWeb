@@ -79,7 +79,7 @@
 			$infoUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."";
 		}
 		
-		date_default_timezone_set(@date_default_timezone_get());
+		$tzOffset = date('Z');
 		
 		
 					
@@ -181,7 +181,7 @@
 							
 							$title = $db->querySingle("SELECT title FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\'  ");
 							$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
-							$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter, strftime('%Y%m%d', datetime(time, 'unixepoch', 'localtime')) as date FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
+							$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter, strftime('%Y%m%d', datetime(time, 'unixepoch', '$tzOffset seconds')) as date FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
 							
 							echo "<div class='dashboard-wellheader'>";
 									echo"<h3>Watching history for <strong>".$xml->Video['title']."</strong> (".$numRows." Views)</h3>";

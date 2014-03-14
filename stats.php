@@ -72,7 +72,7 @@
 
 	<?php
 	
-	date_default_timezone_set(@date_default_timezone_get());
+	$tzOffset = date('Z');
 	
 	
 	
@@ -131,7 +131,7 @@
 						$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM $plexWatchDbTable ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check settings.");
 					}	
 						
-					$hourlyPlays = $db->query("SELECT strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) as date, COUNT(title) as count FROM $plexWatchDbTable WHERE datetime(time, 'unixepoch', 'localtime') >= datetime('now', '-24 hours', 'localtime') GROUP BY strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) ORDER BY date ASC;") or die ("Failed to access plexWatch database. Please check your settings.");
+					$hourlyPlays = $db->query("SELECT strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', '$tzOffset seconds')) as date, COUNT(title) as count FROM $plexWatchDbTable WHERE datetime(time, 'unixepoch', '$tzOffset seconds') >= datetime('now', '-24 hours', '$tzOffset seconds') GROUP BY strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', '$tzOffset seconds')) ORDER BY date ASC;") or die ("Failed to access plexWatch database. Please check your settings.");
 					$hourlyPlaysNum = 0;
 					$hourlyPlayFinal = '';
 					while ($hourlyPlay = $hourlyPlays->fetchArray()) {
@@ -142,7 +142,7 @@
 						$hourlyPlayFinal .= $hourlyPlayTotal;
 					}
 
-					$maxhourlyPlays = $db->query("SELECT strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) as date, COUNT(title) as count FROM $plexWatchDbTable GROUP BY strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) ORDER BY count(*) desc limit 25;") or die ("Failed to access plexWatch database. Please check your settings.");
+					$maxhourlyPlays = $db->query("SELECT strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', '$tzOffset seconds')) as date, COUNT(title) as count FROM $plexWatchDbTable GROUP BY strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', '$tzOffset seconds')) ORDER BY count(*) desc limit 25;") or die ("Failed to access plexWatch database. Please check your settings.");
 					$maxhourlyPlaysNum = 0;
 					$maxhourlyPlayFinal = '';
 					while ($maxhourlyPlay = $maxhourlyPlays->fetchArray()) {
@@ -155,7 +155,7 @@
 						
 							
 						
-					$dailyPlays = $db->query("SELECT date(time, 'unixepoch','localtime') as date, count(title) as count FROM $plexWatchDbTable GROUP BY date ORDER BY time DESC LIMIT 30") or die ("Failed to access plexWatch database. Please check your settings.");
+					$dailyPlays = $db->query("SELECT date(time, 'unixepoch','$tzOffset seconds') as date, count(title) as count FROM $plexWatchDbTable GROUP BY date ORDER BY time DESC LIMIT 30") or die ("Failed to access plexWatch database. Please check your settings.");
 					$dailyPlaysNum = 0;
 					$dailyPlayFinal = '';
 					while ($dailyPlay = $dailyPlays->fetchArray()) {
@@ -166,7 +166,7 @@
 						$dailyPlayFinal .= $dailyPlayTotal;
 					}
 						
-					$monthlyPlays = $db->query("SELECT strftime('%Y-%m', datetime(time, 'unixepoch', 'localtime')) as date, COUNT(title) as count FROM $plexWatchDbTable WHERE datetime(time, 'unixepoch', 'localtime') >= datetime('now', '-12 months', 'localtime') GROUP BY strftime('%Y-%m', datetime(time, 'unixepoch', 'localtime'))  ORDER BY date DESC LIMIT 6;") or die ("Failed to access plexWatch database. Please check your settings.");
+					$monthlyPlays = $db->query("SELECT strftime('%Y-%m', datetime(time, 'unixepoch', '$tzOffset seconds')) as date, COUNT(title) as count FROM $plexWatchDbTable WHERE datetime(time, 'unixepoch', '$tzOffset seconds') >= datetime('now', '-12 months', '$tzOffset seconds') GROUP BY strftime('%Y-%m', datetime(time, 'unixepoch', '$tzOffset seconds'))  ORDER BY date DESC LIMIT 6;") or die ("Failed to access plexWatch database. Please check your settings.");
 					$monthlyPlaysNum = 0;
 					$monthlyPlayFinal = '';
 					while ($monthlyPlay = $monthlyPlays->fetchArray()) {
