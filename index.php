@@ -131,6 +131,7 @@
         <script src="js/jquery-2.0.3.js"></script>
         <script src="js/bootstrap.js"></script>
         <script src="js/spin.min.js"></script>
+        <script src="js/cacher.js"></script>
         <script>
 
             function currentActivityHeader() {
@@ -185,18 +186,26 @@
 
         <script>
             $(document).ready(function() {
-                $.post("datafactory/get-library-stats.php",
-                    function(data) {
-                        if(data)
-                        {
-                            $("#library-stats").html(data);
+                var cacheData = getCache('library-stats-cache');
+                if (cacheData) {
+                    console.log('Getting cache.');
+                    $("#library-stats").html(cacheData);
+                } else {
+                    $.post("datafactory/get-library-stats.php",
+                        function(data) {
+                            if(data)
+                            {
+                                $("#library-stats").html(data);
+                                console.log('Setting cache.');
+                                setCache('library-stats-cache', data);
+                            }
+                            else
+                            {
+                                $("#library-stats").html("Error retrieving library statistics.");
+                            }
                         }
-                        else
-                        {
-                            $("#library-stats").html("Error retrieving library statistics.");
-                        }
-                    }
-                );
+                    );
+                }
             } );
         </script>
 
