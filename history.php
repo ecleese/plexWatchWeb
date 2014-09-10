@@ -80,7 +80,7 @@
             <div class='wellbg'>
                 <?php
                 //now generate the HTML databable structure from SQL   here:
-                $cols= "id,Date,User,Platform,IP Address,Title,Started,Paused,Stopped,xml,Duration,Completed,Stream Info";  //Column names for datatable headings (typically same as sql)
+                $cols= "id,Date,User,Platform,IP Address,Title,Started,Paused,Stopped,xml,Duration,Completed";  //Column names for datatable headings (typically same as sql)
                 $html = ServerDataPDO::build_html_datatable($cols,'history_datatable');
                 echo $html;
                 ?>
@@ -121,9 +121,14 @@
 </script>
 
 <?php
-$plexWatchDbTable = "processed";
+$plexWatchDbTable = "";
+if ($plexWatch['globalHistoryGrouping'] == "yes") {
+    $plexWatchDbTable = "grouped";
+} else if ($plexWatch['globalHistoryGrouping'] == "no") {
+    $plexWatchDbTable = "processed";
+}
 $db_array=array(
-    "sql"=>"SELECT id, time, user, platform, ip_address, title, time, paused_counter, stopped, xml from ".$plexWatchDbTable, /* Spell out columns names no SELECT * Table */
+    "sql"=>"SELECT id|date(time,'unixepoch', 'localtime')|user|platform|ip_address|title|time|paused_counter|stopped|xml|round((julianday(datetime(stopped,'unixepoch', 'localtime')) - julianday(datetime(time,'unixepoch', 'localtime')))*86400)-(case when paused_counter is null then 0 else paused_counter end) from ".$plexWatchDbTable, /* Use | as delimiter. Spell out columns names no SELECT * Table */
     "table"=>$plexWatchDbTable, /* DB table to use assigned by constructor*/
     "idxcol"=>"id" /* Indexed column (used for fast and accurate table cardinality) */
 );
@@ -131,3 +136,24 @@ $javascript = ServerDataPDO::build_jquery_datatable($db_array,'history_datatable
 
 echo $javascript;
 ?>
+
+<script>
+    $(document).ready(function() {
+        $('#home').tooltip();
+    });
+    $(document).ready(function() {
+        $('#history').tooltip();
+    });
+    $(document).ready(function() {
+        $('#users').tooltip();
+    });
+    $(document).ready(function() {
+        $('#charts').tooltip();
+    });
+    $(document).ready(function() {
+        $('#settings').tooltip();
+    });
+    $(document).ready(function() {
+        $('#stats').tooltip();
+    });
+</script>
