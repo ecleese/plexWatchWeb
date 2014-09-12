@@ -226,7 +226,7 @@
 						echo "<div class='charts-wrapper'>";
 							echo "<ul>";
 							
-							$queryTop10Shows = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(orig_title) AS play_count FROM ".$plexWatchDbTable." GROUP BY orig_title HAVING play_count > 0 ORDER BY play_count DESC,time DESC");
+							$queryTop10Shows = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(orig_title) AS play_count FROM ".$plexWatchDbTable." WHERE season != '' GROUP BY orig_title HAVING play_count > 0 ORDER BY play_count DESC,time DESC");
 				
 							// Run through each feed item
 							$top10Shows_Num_rows = 0;
@@ -273,7 +273,7 @@
 						echo "<div class='charts-wrapper'>";
 							echo "<ul>";
 							
-							$queryTop10Episodes = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(*) AS play_count FROM ".$plexWatchDbTable." GROUP BY title HAVING play_count > 0 ORDER BY play_count DESC,time DESC");
+							$queryTop10Episodes = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(*) AS play_count FROM ".$plexWatchDbTable." WHERE season != '' GROUP BY title HAVING play_count > 0 ORDER BY play_count DESC,time DESC");
 				
 							// Run through each feed item
 							$top10Episodes_Num_rows = 0;
