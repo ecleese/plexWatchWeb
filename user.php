@@ -380,7 +380,7 @@ $userInfo = $db->query("SELECT user,xml FROM ".$plexWatchDbTable." WHERE user = 
             ipTable = $('#tableUserIpAddresses').dataTable(ipTableOptions);
         } else {
             $.ajax({
-                url: "../datafactory/get-user-ip-stats.php",
+                url: "datafactory/get-user-ip-stats.php",
                 data: { user: "<?php echo $user; ?>" },
                 type: "post",
                 dataType: "json",
