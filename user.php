@@ -323,6 +323,7 @@ $userInfo = $db->query("SELECT user,xml FROM ".$plexWatchDbTable." WHERE user = 
             "bSort": true,
             "bInfo": true,
             "iDisplayLength": 10,
+            "aaSorting": [[0,'desc']],
             "bAutoWidth": true,
             "bProcessing": true,
             "bStateSave": false,
