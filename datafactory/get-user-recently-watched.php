@@ -58,9 +58,9 @@ if ($recentXml['type'] == "episode") {
                 echo "<li>";
 
                 if($recentThumbUrlRequest->Video['parentThumb']) {
-                                echo "<div class='poster'><div class='poster-face'><a href='../info.php?id=" .$recentXml['ratingKey']. "'><img src='../includes/img.php?img=".urlencode($recentThumbUrl)."' class='poster-face'></img></a></div></div>";
+                                echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='includes/img.php?img=".urlencode($recentThumbUrl)."' class='poster-face'></img></a></div></div>";
                         }else{
-                                echo "<div class='poster'><div class='poster-face'><a href='../info.php?id=" .$recentXml['ratingKey']. "'><img src='../images/poster.png' class='poster-face'></img></a></div></div>";
+                                echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='images/poster.png' class='poster-face'></img></a></div></div>";
                 }
 
                 echo "<div class=dashboard-recent-media-metacontainer>";
@@ -88,9 +88,9 @@ if ($recentXml['type'] == "episode") {
                 echo "<li>";
 
                 if($recentThumbUrlRequest->Video['thumb']) {
-                        echo "<div class='poster'><div class='poster-face'><a href='../info.php?id=" .$recentXml['ratingKey']. "'><img src='../includes/img.php?img=".urlencode($recentThumbUrl)."' class='poster-face'></img></a></div></div>";
+                        echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='includes/img.php?img=".urlencode($recentThumbUrl)."' class='poster-face'></img></a></div></div>";
                 }else{
-                        echo "<div class='poster'><div class='poster-face'><a href='../info.php?id=" .$recentXml['ratingKey']. "'><img src='../images/poster.png' class='poster-face'></img></a></div></div>";
+                        echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='images/poster.png' class='poster-face'></img></a></div></div>";
                 }
 
                 echo "<div class=dashboard-recent-media-metacontainer>";
@@ -116,7 +116,7 @@ if ($recentXml['type'] == "episode") {
 
                 echo "<div class='dashboard-recent-media-instance'>";
                 echo "<li>";
-                echo "<div class='poster'><div class='poster-face'><a href='" .$recentXml['ratingKey']. "'><img src='../images/poster.png' class='poster-face'></img></a></div></div>";
+                echo "<div class='poster'><div class='poster-face'><a href='" .$recentXml['ratingKey']. "'><img src='images/poster.png' class='poster-face'></img></a></div></div>";
 
                 echo "<div class=dashboard-recent-media-metacontainer>";
                 $parentIndexPadded = sprintf("%01s", $recentXml['parentIndex']);
