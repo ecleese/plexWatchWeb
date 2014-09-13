@@ -1,21 +1,28 @@
-if(sessionStorage === null) console.log("Storage not supported by the browser");
+// check if browser supports session storage, if not log error in console.
+if(sessionStorage === null) console.log("Session storage not supported by this browser.");
 
-//cached object
+// get cache object
 var temp = sessionStorage.getItem('cacheObj');
 var cacheObj = $.parseJSON(temp);
 
+// create cache object if it doesn't exist
 if (cacheObj === null) {
     var cacheObj = new Object();
 }
 
-function setCache(postId, postData) {
-    
+// setCache function
+// usage: setCache(unique_identifier, data_to_be_cached, minutes_to_remain_cached [optional, default = 60] )
+function setCache(postId, postData, validityTime) {
+
+    validityTime = typeof validityTime !== 'undefined' ? validityTime : 60;
+
+    // get the current time
     var milliseconds = new Date().getTime();
-    
+
     if (cacheObj.length > 0) {
-        
+
         var objectExists = false;
-        
+
         //check if we already have this data stored and is current
         for (var i = 0; i < cacheObj.length; i++) {
             if (cacheObj[i].postId === postId) {
@@ -24,28 +31,31 @@ function setCache(postId, postData) {
         }
         // add the data to the object if it's not there already
         if (!objectExists) {
-            cacheObj.push( { postId: postId, data: postData, timestamp: milliseconds } );
+            cacheObj.push( { postId: postId, data: postData, expire: (milliseconds + (validityTime * 60 * 1000)) } );
             sessionStorage.setItem('cacheObj', JSON.stringify(cacheObj));
         }
-    } else {        
-        cacheObj =  [ { postId: postId, data: postData, timestamp: milliseconds } ];
+    } else {
+        cacheObj =  [ { postId: postId, data: postData, expire: (milliseconds + (validityTime * 60 * 1000)) } ];
         sessionStorage.setItem('cacheObj', JSON.stringify(cacheObj));
     }
 
 };
 
+// getCache function
+// usage: getCache(unique_identifier)
 function getCache(postId) {
-    
+
+    // get the current time
     var milliseconds = new Date().getTime();
-    var validityMilliseconds = 60000*60*1; // 1 hour
-    //var validityMilliseconds = 30000; // 30 seconds
-    
+
     if (cacheObj.length > 0) {
         for (var i = 0; i < cacheObj.length; i++) {
             if (cacheObj[i].postId === postId) {
-                if (milliseconds < (cacheObj[i].timestamp + validityMilliseconds)) {
+                // check if item has expired
+                if (milliseconds < cacheObj[i].expire) {
                     return cacheObj[i].data;
                 } else {
+                    // if item expired then remove from cache object
                     console.log('Object expired, destroying.');
                     cacheObj.splice(i, 1);
                 }

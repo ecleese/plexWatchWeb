@@ -3,7 +3,7 @@
 date_default_timezone_set(@date_default_timezone_get());
 
 $guisettingsFile = "../config/config.php";
-if (file_exists($guisettingsFile)) {
+if (file_exists($guisettingsFile)) { 
     require_once('../config/config.php');
 } else {
     error_log('PlexWatchWeb :: Config file not found.');
@@ -23,13 +23,13 @@ if (isset($_POST['id'])) {
 
 $plexWatchDbTable = "";
 
-if ($plexWatch['globalHistoryGrouping'] == "yes") {
-    $plexWatchDbTable = "grouped";
-} else if ($plexWatch['globalHistoryGrouping'] == "no") {
-    $plexWatchDbTable = "processed";
+if ($plexWatch['userHistoryGrouping'] == "yes") {
+        $plexWatchDbTable = "grouped";
+} else if ($plexWatch['userHistoryGrouping'] == "no") {
+        $plexWatchDbTable = "processed";
 }
 $results = $db->querySingle("SELECT xml FROM $plexWatchDbTable WHERE id = $id") or die ("Failed to access plexWatch database. Please check your settings.");
-$xmlfield = simplexml_load_string($results) ;
+$xmlfield = simplexml_load_string($results) ; 
 
 if (array_key_exists('TranscodeSession',$xmlfield)) { ?>
     <div class="span4">
@@ -59,12 +59,12 @@ if (array_key_exists('TranscodeSession',$xmlfield)) { ?>
         <li>Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
         <li>Bitrate: <strong><?php echo $xmlfield->Media['bitrate']; ?> kbps</strong></li>
     </div>
-    <div class="span4">
+    <div class="span4">	
         <h4>Video Source Details</h4>
         <ul>
             <li>Width: <strong><?php echo $xmlfield->Media['width']; ?></strong></li>
             <li>Height: <strong><?php echo $xmlfield->Media['height']; ?></strong></li>
-            <li>Aspect Ratio: <strong><?php echo $xmlfield->Media['aspectRatio']; ?></strong></li>
+            <li>Aspect Ratio: <strong><?php echo $xmlfield->Media['aspectRatio']; ?></strong></li>											
             <li>Video Frame Rate: <strong><?php echo $xmlfield->Media['videoFrameRate']; ?></strong></li>
             <li>Video Codec: <strong><?php echo $xmlfield->Media['videoCodec']; ?></strong></li>
         </ul>
@@ -76,11 +76,11 @@ if (array_key_exists('TranscodeSession',$xmlfield)) { ?>
             <?php } else { ?>
                 <li>Audio Codec: <strong><?php echo $xmlfield->Media['audioCodec']; ?></strong></li>
             <?php } ?>
-            <li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
+                <li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
         </ul>
     </div>
 
-<?php } else { ?>
+    <?php } else { ?>
 
     <div class="span4">
         <h4>Stream Details</strong></h4>
@@ -100,7 +100,7 @@ if (array_key_exists('TranscodeSession',$xmlfield)) { ?>
             <?php } else { ?>
                 <li>Audio Codec: <strong><?php echo $xmlfield->Media['audioCodec']; ?></strong></li>
             <?php } ?>
-            <li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
+                <li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
         </ul>
     </div>
     <div class="span4">
@@ -109,12 +109,12 @@ if (array_key_exists('TranscodeSession',$xmlfield)) { ?>
         <li>Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
         <li>Bitrate: <strong><?php echo $xmlfield->Media['bitrate']; ?> kbps</strong></li>
     </div>
-    <div class="span4">
+    <div class="span4">	
         <h4>Video Source Details</h4>
         <ul>
             <li>Width: <strong><?php echo $xmlfield->Media['width']; ?></strong></li>
             <li>Height: <strong><?php echo $xmlfield->Media['height']; ?></strong></li>
-            <li>Aspect Ratio: <strong><?php echo $xmlfield->Media['aspectRatio']; ?></strong></li>
+            <li>Aspect Ratio: <strong><?php echo $xmlfield->Media['aspectRatio']; ?></strong></li>											
             <li>Video Frame Rate: <strong><?php echo $xmlfield->Media['videoFrameRate']; ?></strong></li>
             <li>Video Codec: <strong><?php echo $xmlfield->Media['videoCodec']; ?></strong></li>
         </ul>
@@ -126,7 +126,8 @@ if (array_key_exists('TranscodeSession',$xmlfield)) { ?>
             <?php } else { ?>
                 <li>Audio Codec: <strong><?php echo $xmlfield->Media['audioCodec']; ?></strong></li>
             <?php } ?>
-            <li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
+                <li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
         </ul>
     </div>
 <?php } ?>
+

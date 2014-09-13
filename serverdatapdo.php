@@ -1,8 +1,8 @@
 <?php
 /*
 * ServerDataPDO is a class file that wraps data tables SERVER-SIDE processing with PDO (PHP) SQL data abstraction
-* and it provides a simple way to integrate Jquery  data tables with server side databases like SQLite, MySQL and other
-* PDO supported DB's. It also dynamically renders the Jquery (JAvascript) data tables code and corresponding HTML
+* and it provides a simple way to integrate Jquery  data tables with server side databases like SQLite, MySQL and other 
+* PDO supported DB's. It also dynamically renders the Jquery (JAvascript) data tables code and corresponding HTML 
 * (c) Tony Brandao <ab@abrandao.com>
 *
 * This source file is subject to the MIT license that is bundled
@@ -12,7 +12,7 @@
 $guisettingsFile = "config/config.php";
 
 if (file_exists($guisettingsFile)) {
-    require_once('config/config.php');
+    require_once(dirname(__FILE__) . '/config/config.php');
 } else {
     error_log('plexWatchWeb :: Config file not found.');
     exit;
@@ -38,7 +38,7 @@ if ( isset($_GET['oDb']) )    //is this being called from datatables ajax?
     //Do we have an object database info (Serialized) if so expand it\\
     //echo $_GET['oDb'];
     $d=unserialize(base64_decode($_GET['oDb']));  //NOTE HARDEN  by encrypting
-    $pdo = new ServerDataPDO($db_dsn,$user,$pass,$d['sql'],$d['columns'],$d['table'],$d['idxcol']);  //construct the object
+    $pdo = new ServerDataPDO($db_dsn,$user,$pass,$d['sql'],$d['columns'],$d['table'],$d['idxcol'],$d['where']);  //construct the object
     $result=$pdo->query_datatables(); //now return the JSON Requested data */
     echo $result;
     exit;
@@ -56,7 +56,8 @@ class ServerDataPDO
         "sql"=>null,
         "columns"=>null,
         "table"=>null, /* DB table to use assigned by constructor*/
-        "idxcol"=>null /* Indexed column (used for fast and accurate table cardinality) */
+        "idxcol"=>null, /* Indexed column (used for fast and accurate table cardinality) */
+        "where"=>null
     );
 
     public static $default_ajax_url=__FILE__; //Defaults to current file name
@@ -68,7 +69,7 @@ class ServerDataPDO
     /********************************************************************
     constructor function : called when object is first instantiated
      */
-    public function __construct($dsn=null,$user=null,$pass=null,$sql=null, $columns=null, $table=null, $index_col=null)
+    public function __construct($dsn=null,$user=null,$pass=null,$sql=null, $columns=null, $table=null, $index_col=null, $where=null)
     {
         $this->db['dsn']= empty($dsn)? $this->db['dsn'] : $dsn;
         $this->db['sql']= empty($sql)? $this->db['sql'] : $sql;
@@ -89,13 +90,14 @@ class ServerDataPDO
         /* assign table and index if provided */
         $this->db['idxcol'] = $index_col;
         $this->db['table'] = $table;
+        $this->db['where'] = $where;
     }
 
     /********************************************************************
     pdo_conn : Creates a connection to a database vai the PDO (PHP) database abstraction layer
     Refer to http://ca1.php.net/manual/en/pdo.drivers.php  for possible PDO drivers and DSN strings
     Called by the constructor
-    @dsn  matches PDO DSN string name for database connection
+    @dsn  matches PDO DSN string name for database connection 
     @return  null , sets global $db['conn'] variable
      */
     public function pdo_conn($dsn=null,$username=null,$password=null)
@@ -126,10 +128,10 @@ class ServerDataPDO
         $pattern = "/$s1(.*?)$s2/i";
         if (preg_match($pattern, $sql, $matches))
         {
-            //print_r($matches);
+            //print_r($matches);	
             error_log("matches: ".$matches[1]);
             $this->aColumns=explode($split_on, $matches[1]);  //return into
-            $this->aColumns=array_map('trim',$this->aColumns ); //trim white space
+            $this->aColumns=array_map('trim',$this->aColumns ); //trim white space	  
         }
         else
         {
@@ -142,10 +144,15 @@ class ServerDataPDO
     build_jquery_datables:  Static function no object needed to instantiate
     Builds the Javascript JQuery code to call for the database call use this function
      */
-    public static function  build_jquery_datatable($aDBInfo=null,$table_id="datatable1",$ajax_source_url=null,$datatable_properties=null)
+    public static function  build_jquery_datatable($aDBInfo=null,$table_id="datatable1",$modal_datasource=null,$ajax_source_url=null,$datatable_properties=null)
     {
         $js=null;  //Holds the javascript string
         $dba=array("a","b");
+
+        global $plexWatch;
+
+        $dateFormat = $plexWatch['dateFormat'];
+        $timeFormat = $plexWatch['timeFormat'];
 
         $ajax_source_url = is_null($ajax_source_url)? basename(__FILE__) : $ajax_source_url;
 
@@ -169,30 +176,32 @@ class ServerDataPDO
             "bServerSide": true,
             "sPaginationType": 'bootstrap',
             "sAjaxSource": "$ajax_source_url?oDb='$serializd_db'",
-            "bStateSave": false,$datatable_properties
+            "bStateSave": false,$datatable_properties 
             "bDeferRender": true,
             "aaSorting": [[0,'desc']],
             "bAutoWidth": false,
             "aoColumnDefs": [
-                {
+                { 
                     "sName": 'id',
                     "aTargets": [ 0 ],
                     "bVisible": false,
                     "bSearchable": false
                 },
-                {
+                { 
                   //  "sName": 'date',
                     "aTargets": [ 1 ],
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
                         if(oData[8] === null) {
                             $(nTd).addClass('currentlyWatching');
                             $(nTd).html('Currently watching...');
+                        } else {
+                            $(nTd).html(moment(sData,"X").format('$dateFormat'));
                         }
                     },
                     "bSearchable": false,
                     "sWidth": '10%'
                 },
-                {
+                { 
                     "sName": 'title',
                     "aTargets": [ 5 ],
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
@@ -200,21 +209,21 @@ class ServerDataPDO
                             var xmlDoc=loadXMLString(oData[9]);
                             var mediaId = xmlDoc.getElementsByTagName("opt")[0].getAttribute("ratingKey");
                             $(nTd).html('<a href="info.php?id='+mediaId+'">'+sData+'</a>');
-                        }
+                        }    
                     },
                     "sWidth": '35%'
                 },
-                {
+                { 
                     "sName": 'user',
                     "aTargets": [ 2 ],
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
                         if(sData !== '') {
                             $(nTd).html('<a href="user.php?user='+sData+'">'+sData+'</a>');
-                        }
+                        }    
                     },
                     "sWidth": '10%'
                 },
-                {
+                { 
                     "sName": 'platform',
                     "aTargets": [ 3 ],
                     "sWidth": '10%',
@@ -222,24 +231,24 @@ class ServerDataPDO
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
                         if(sData !== '') {
                             $(nTd).html('<a href="#info-modal" data-toggle="modal"><span data-toggle="tooltip" data-placement="left" title="Stream Info" id="stream-info" class="badge badge-inverse"><i class="icon-info icon-white"></i></span></a>&nbsp'+sData);
-                        }
+                        }    
                     }
                 },
-                {
+                { 
                    // "sName": 'time',
                     "aTargets": [ 6 ],
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                        $(nTd).html(moment(sData,"X").format("h:mm a"));
+                        $(nTd).html(moment(sData,"X").format('$timeFormat'));
                     },
                     "bSearchable": false,
                     "sWidth": '5%'
                 },
-                {
+                { 
                     "sName": 'stopped',
                     "aTargets": [ 8 ],
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
                         if(sData !== '') {
-                            $(nTd).html(moment(sData,"X").format("h:mm a"));
+                            $(nTd).html(moment(sData,"X").format('$timeFormat'));
                         } else {
                             $(nTd).html('n/a');
                         }
@@ -247,7 +256,7 @@ class ServerDataPDO
                     "bSearchable": false,
                     "sWidth": '5%'
                 },
-                {
+                { 
                     "sName": 'ip_address',
                     "aTargets": [ 4 ],
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
@@ -255,11 +264,11 @@ class ServerDataPDO
                             $(nTd).html('n/a');
                         } else {
                             $(nTd).html(sData);
-                        }
+                        }    
                     },
                     "sWidth": '10%'
                 },
-                {
+                { 
                     "sName": 'paused_counter',
                     "aTargets": [ 7 ],
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
@@ -267,12 +276,12 @@ class ServerDataPDO
                             $(nTd).html('0 min');
                         } else {
                             $(nTd).html(Math.round((sData/60),1)+' min');
-                        }
+                        }    
                     },
                     "bSearchable": false,
                     "sWidth": '5%'
                 },
-                {
+                { 
                     "sName": 'xml',
                     "aTargets": [ 9 ],
                     "bVisible": false,
@@ -285,7 +294,7 @@ class ServerDataPDO
                             $(nTd).html('0 min');
                         } else {
                             $(nTd).html(Math.round((sData/60),1)+' min');
-                        }
+                        }    
                     },
                     "bSearchable": false,
                     "sWidth": '5%'
@@ -311,18 +320,18 @@ class ServerDataPDO
                 }
             ]
         } );
-
+        
         $('#$table_id').on('mouseenter', 'td.modal-control span', function () {
             $(this).tooltip();
         } );
-
+         
         $('#$table_id').on('click', 'td.modal-control', function () {
-
+        
             var tr = $(this).parents('tr');
             var id = tr.attr('id');
             var rowData = $table_id.fnGetData(id);
 
-            $.post("datafactory/get-info-modal.php", { id: rowData[0] },
+            $.post("$modal_datasource", { id: rowData[0] },
                 function(data) {
                     if(data)
                     {
@@ -338,7 +347,7 @@ class ServerDataPDO
         } );
     } );
 </script>
-<!--  End generated Jquery from  $ajax_source_url --->
+<!--  End generated Jquery from  $ajax_source_url ---> 
 EOT;
 
         return $js;  //returns the completed jquery string
@@ -362,7 +371,7 @@ EOT;
         else
             die(" $columns columns array must be  defined, such as col1,col2,col3");
 
-        //build the header loop through the array and of columns
+        //build the header loop through the array and of columns 
         $count_cols=count($columns);
 
         $i = 0;
@@ -406,7 +415,7 @@ EOT;
     }
 
     /********************************************************************
-    query_array : Create an array from a SQL Query string
+    query_array : Create an array from a SQL Query string 
     @sql  SQL to be executed and returned
     @returns $results an array  a PHP array (2D) of results of SQL
      */
@@ -417,7 +426,6 @@ EOT;
         try {
             if ($debug)
                 $time_start = microtime(true);
-
             $stmt = $this->db['conn']->prepare($sql);
             $stmt->execute();
 
@@ -487,7 +495,15 @@ EOT;
                 }
             }
             $sWhere = substr_replace( $sWhere, "", -3 );
-            $sWhere .= ')';
+            if (($this->db['where'] !== null)) {
+                $sWhere .= " AND ".$this->db['where'].")";
+            } else {
+                $sWhere .= ")";
+            }
+        } else {
+            if (($this->db['where'] !== null)) {
+                $sWhere .= " WHERE ".$this->db['where'];
+            }
         }
 
         /* Individual column filtering */
@@ -514,7 +530,6 @@ EOT;
             $sOrder
             $sLimit
             ";
-        error_log('sQuery: '.$sQuery);
         try {
             $aResult  = $this->query_array($sQuery);
         } catch (PDOException $e) {
@@ -566,6 +581,6 @@ EOT;
 
     } //end of function
 
-} //end of class
+} //end of class	
 
 ?>

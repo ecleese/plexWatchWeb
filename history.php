@@ -33,6 +33,7 @@
             font-size: 14px;
             background-color: white;
         }
+
     </style>
 
     <!-- touch icons -->
@@ -128,11 +129,11 @@ if ($plexWatch['globalHistoryGrouping'] == "yes") {
     $plexWatchDbTable = "processed";
 }
 $db_array=array(
-    "sql"=>"SELECT id|date(time,'unixepoch', 'localtime')|user|platform|ip_address|title|time|paused_counter|stopped|xml|round((julianday(datetime(stopped,'unixepoch', 'localtime')) - julianday(datetime(time,'unixepoch', 'localtime')))*86400)-(case when paused_counter is null then 0 else paused_counter end) from ".$plexWatchDbTable, /* Use | as delimiter. Spell out columns names no SELECT * Table */
+    "sql"=>"SELECT id|time|user|platform|ip_address|title|time|paused_counter|stopped|xml|round((julianday(datetime(stopped,'unixepoch', 'localtime')) - julianday(datetime(time,'unixepoch', 'localtime')))*86400)-(case when paused_counter is null then 0 else paused_counter end) from ".$plexWatchDbTable, /* Use | as delimiter. Spell out columns names no SELECT * Table */
     "table"=>$plexWatchDbTable, /* DB table to use assigned by constructor*/
     "idxcol"=>"id" /* Indexed column (used for fast and accurate table cardinality) */
 );
-$javascript = ServerDataPDO::build_jquery_datatable($db_array,'history_datatable');
+$javascript = ServerDataPDO::build_jquery_datatable($db_array,'history_datatable','datafactory/get-info-modal.php');
 
 echo $javascript;
 ?>
