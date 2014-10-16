@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <title>plexWatch</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,16 +9,35 @@
 
     <!-- css styles -->
     <link href="css/plexwatch.css" rel="stylesheet">
-	<link href="css/plexwatch-tables.css" rel="stylesheet">
-	<link href="css/font-awesome.min.css" rel="stylesheet" >
+    <link href="css/plexwatch-tables.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet" >
     <style type="text/css">
-      body {
-        padding-top: 60px;
-        padding-bottom: 40px;
-      }
-      .sidebar-nav {
-        padding: 9px 0;
-      }
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+        .dataTables_processing {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 250px;
+            height: 30px;
+            margin-left: -125px;
+            margin-top: -15px;
+            padding: 14px 0 2px 0;
+            border: 1px solid #ddd;
+            text-align: center;
+            color: black;
+            font-size: 14px;
+            background-color: white;
+        }
+        .spinner {
+            padding-bottom: 25px;
+            position: relative;
+        }
     </style>
 
     <!-- touch icons -->
@@ -26,992 +45,430 @@
     <link rel="apple-touch-icon" href="images/icon_iphone.png">
     <link rel="apple-touch-icon" sizes="72x72" href="images/icon_ipad.png">
     <link rel="apple-touch-icon" sizes="114x114" href="images/icon_iphone@2x.png">
-	<link rel="apple-touch-icon" sizes="144x144" href="images/icon_ipad@2x.png">
-  </head>
+    <link rel="apple-touch-icon" sizes="144x144" href="images/icon_ipad@2x.png">
+</head>
 
-  <body>
-
-	
-  
-	<div class="container">
-		    			
-		<div class="navbar navbar-fixed-top">
-			<div class="navbar-inner">
-				
-				<a href="index.php"><div class="logo hidden-phone"></div></a>
-				<ul class="nav">
-					
-					<li><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
-					<li><a href="history.php"><i class="icon-2x icon-calendar icon-white" data-toggle="tooltip" data-placement="bottom" title="History" id="history"></i></a></li>
-					<li><a href="stats.php"><i class="icon-2x icon-tasks icon-white" data-toggle="tooltip" data-placement="bottom" title="Stats" id="stats"></i></a></li>
-					<li><a href="users.php"><i class="icon-2x icon-group icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
-					<li><a href="charts.php"><i class="icon-2x icon-bar-chart icon-white" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
-					<li><a href="settings.php"><i class="icon-2x icon-wrench icon-white" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
-					
-				</ul>
-			</div>
-		</div>
+<body>
+<div class="container">
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <a href="index.php"><div class="logo hidden-phone"></div></a>
+            <ul class="nav">
+                <li><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
+                <li><a href="history.php"><i class="icon-2x icon-calendar icon-white" data-toggle="tooltip" data-placement="bottom" title="History" id="history"></i></a></li>
+                <li><a href="stats.php"><i class="icon-2x icon-tasks icon-white" data-toggle="tooltip" data-placement="bottom" title="Stats" id="stats"></i></a></li>
+                <li><a href="users.php"><i class="icon-2x icon-group icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
+                <li><a href="charts.php"><i class="icon-2x icon-bar-chart icon-white" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
+                <li><a href="settings.php"><i class="icon-2x icon-wrench icon-white" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
+            </ul>
+        </div>
     </div>
-	<?php
-	
-	date_default_timezone_set(@date_default_timezone_get());
-	
-	$guisettingsFile = "config/config.php";
-	
-	if (file_exists($guisettingsFile)) { 
-		require_once(dirname(__FILE__) . '/config/config.php');
-	}else{
-		header("Location: settings.php");
-	}
+</div>
+<?php
 
-	
-	if ($plexWatch['https'] == "yes") {
-		$plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
-	}else if ($plexWatch['https'] == "no") {
-		$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
-	}else{
-	}
+include "serverdatapdo.php";
+$guisettingsFile = "config/config.php";
 
-	$user = $_GET['user'];
+if (file_exists($guisettingsFile)) {
+    require_once(dirname(__FILE__) . '/config/config.php');
+} else {
+    header("Location: settings.php");
+}
 
-	$db = dbconnect();
-	
-	if ($plexWatch['userHistoryGrouping'] == "yes") {
-		$plexWatchDbTable = "grouped";
-	}else if ($plexWatch['userHistoryGrouping'] == "no") {
-		$plexWatchDbTable = "processed";
-	}
-	
-	$numRows = $db->querySingle("SELECT COUNT(*) as count FROM ".$plexWatchDbTable." ");
-	$userInfo = $db->query("SELECT user,xml FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC LIMIT 1") or die ("Failed to access plexWatch database. Please check your settings.");
-	
-	$userStatsDailyCount = $db->querySingle("SELECT COUNT(*) FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now', 'localtime') AND user='$user' ");
-	
-	$userStatsDailyTimeFetch = $db->query("SELECT time,stopped,paused_counter FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now', 'localtime') AND user='$user' ");
-	$userStatsDailyTimeViewedTime = 0;
-	while ($userStatsDailyTimeRow = $userStatsDailyTimeFetch->fetchArray()) {
-		$userStatsDailyTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsDailyTimeRow['stopped']));
-		$userStatsDailyTimeFromTimeRow = strtotime(date("m/d/Y g:i a",$userStatsDailyTimeRow['time']));
-		$userStatsDailyTimePausedTimeRow = round(abs($userStatsDailyTimeRow['paused_counter']) ,1);			
-		$userStatsDailyTimeViewedTimeRow = round(abs($userStatsDailyTimeToTimeRow - $userStatsDailyTimeFromTimeRow - $userStatsDailyTimePausedTimeRow) ,0);
-		$userStatsDailyTimeViewedTimeRowLength = strlen($userStatsDailyTimeViewedTimeRow);
+$user = $_GET['user'];
+$db = dbconnect();
 
-		$userStatsDailyTimeViewedTime += $userStatsDailyTimeViewedTimeRow;
-		$userStatsDailyTimeViewedTimeDays = floor($userStatsDailyTimeViewedTime / 86400);
-		$userStatsDailyTimeViewedTimeHours = floor(($userStatsDailyTimeViewedTime % 86400 ) / 3600);
-		$userStatsDailyTimeViewedTimeMinutes = floor(($userStatsDailyTimeViewedTime % 3600 ) / 60);
-	}								
-	
+if ($plexWatch['userHistoryGrouping'] == "yes") {
+    $plexWatchDbTable = "grouped";
+} else if ($plexWatch['userHistoryGrouping'] == "no") {
+    $plexWatchDbTable = "processed";
+}
 
-	$userStatsWeeklyCount = $db->querySingle("SELECT COUNT(*) FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch') >= datetime('now', '-7 days', 'localtime') AND user='$user' ");
-	
-	$userStatsWeeklyTimeFetch = $db->query("SELECT time,stopped,paused_counter FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-7 days', 'localtime') AND user='$user' ");
-	$userStatsWeeklyTimeViewedTime = 0;
-	while ($userStatsWeeklyTimeRow = $userStatsWeeklyTimeFetch->fetchArray()) {
-		$userStatsWeeklyTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsWeeklyTimeRow['stopped']));
-		$userStatsWeeklyTimeFromTimeRow = strtotime(date("m/d/Y g:i a",$userStatsWeeklyTimeRow['time']));
-		$userStatsWeeklyTimePausedTimeRow = round(abs($userStatsWeeklyTimeRow['paused_counter']) ,1);			
-		$userStatsWeeklyTimeViewedTimeRow = round(abs($userStatsWeeklyTimeToTimeRow - $userStatsWeeklyTimeFromTimeRow - $userStatsWeeklyTimePausedTimeRow) ,0);
-		$userStatsWeeklyTimeViewedTimeRowLength = strlen($userStatsWeeklyTimeViewedTimeRow);
-		
-		$userStatsWeeklyTimeViewedTime += $userStatsWeeklyTimeViewedTimeRow;
-		$userStatsWeeklyTimeViewedTimeDays = floor($userStatsWeeklyTimeViewedTime / 86400);
-		$userStatsWeeklyTimeViewedTimeHours = floor(($userStatsWeeklyTimeViewedTime % 86400 ) / 3600);
-		$userStatsWeeklyTimeViewedTimeMinutes = floor(($userStatsWeeklyTimeViewedTime % 3600 ) / 60);
-	}
-	
-	
-	$userStatsMonthlyCount = $db->querySingle("SELECT COUNT(*) FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-30 days', 'localtime') AND user='$user' ");
-	
-	$userStatsMonthlyTimeFetch = $db->query("SELECT time,stopped,paused_counter FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-30 days', 'localtime') AND user='$user' ");
-	$userStatsMonthlyTimeViewedTime = 0;
-	while ($userStatsMonthlyTimeRow = $userStatsMonthlyTimeFetch->fetchArray()) {
-		$userStatsMonthlyTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsMonthlyTimeRow['stopped']));
-		$userStatsMonthlyTimeFromTimeRow = strtotime(date("m/d/Y g:i a",$userStatsMonthlyTimeRow['time']));
-		$userStatsMonthlyTimePausedTimeRow = round(abs($userStatsMonthlyTimeRow['paused_counter']) ,1);			
-		$userStatsMonthlyTimeViewedTimeRow = round(abs($userStatsMonthlyTimeToTimeRow - $userStatsMonthlyTimeFromTimeRow - $userStatsMonthlyTimePausedTimeRow) ,0);
-		$userStatsMonthlyTimeViewedTimeRowLength = strlen($userStatsMonthlyTimeViewedTimeRow);
-		
-		$userStatsMonthlyTimeViewedTime += $userStatsMonthlyTimeViewedTimeRow;
-		$userStatsMonthlyTimeViewedTimeDays = floor($userStatsMonthlyTimeViewedTime / 86400);
-		$userStatsMonthlyTimeViewedTimeHours = floor(($userStatsMonthlyTimeViewedTime % 86400 ) / 3600);
-		$userStatsMonthlyTimeViewedTimeMinutes = floor(($userStatsMonthlyTimeViewedTime % 3600 ) / 60);
-	}
-	
-	
-	$userStatsAlltimeCount = $db->querySingle("SELECT COUNT(*) FROM ".$plexWatchDbTable." WHERE user='$user' ");
-	
-	$userStatsAlltimeTimeFetch = $db->query("SELECT time,stopped,paused_counter FROM ".$plexWatchDbTable." WHERE user='$user' ");
-	$userStatsAlltimeTimeViewedTime = 0;
-	while ($userStatsAlltimeTimeRow = $userStatsAlltimeTimeFetch->fetchArray()) {
-		$userStatsAlltimeTimeToTimeRow = strtotime(date("m/d/Y g:i a",$userStatsAlltimeTimeRow['stopped']));
-		$userStatsAlltimeTimeFromTimeRow = strtotime(date("m/d/Y g:i a",$userStatsAlltimeTimeRow['time']));
-		$userStatsAlltimeTimePausedTimeRow = round(abs($userStatsAlltimeTimeRow['paused_counter']) ,1);			
-		$userStatsAlltimeTimeViewedTimeRow = round(abs($userStatsAlltimeTimeToTimeRow - $userStatsAlltimeTimeFromTimeRow - $userStatsAlltimeTimePausedTimeRow) ,0);
-		$userStatsAlltimeTimeViewedTimeRowLength = strlen($userStatsAlltimeTimeViewedTimeRow);
-		
-		$userStatsAlltimeTimeViewedTime += $userStatsAlltimeTimeViewedTimeRow;
-		$userStatsAlltimeTimeViewedTimeDays = floor($userStatsAlltimeTimeViewedTime / 86400);
-		$userStatsAlltimeTimeViewedTimeHours = floor(($userStatsAlltimeTimeViewedTime % 86400 ) / 3600);
-		$userStatsAlltimeTimeViewedTimeMinutes = floor(($userStatsAlltimeTimeViewedTime % 3600 ) / 60);
-		
-	}
-	
-	if ($plexWatch['userHistoryGrouping'] == "yes") {
-		$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter, strftime('%Y%m%d', datetime(time, 'unixepoch', 'localtime')) as date FROM processed WHERE user = '$user' AND stopped IS NULL UNION ALL SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter, strftime('%Y%m%d', datetime(time, 'unixepoch', 'localtime')) as date FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your settings.");
-	}else if ($plexWatch['userHistoryGrouping'] == "no") {
-		$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter, strftime('%Y%m%d', datetime(time, 'unixepoch', 'localtime')) as date FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC") or die ("Failed to access plexWatch database. Please check your settings.");
-	}
-	
-	echo "<div class='container-fluid'>";
-		echo "<div class='row-fluid'>";
-			echo "<div class='span12'>";
-				echo "<div class='user-info-wrapper'>";
-					while ($userInfoResults= $userInfo->fetchArray()) {
-						$userInfoXml = $userInfoResults['xml'];
-						$userInfoXmlField = simplexml_load_string($userInfoXml); 
-						if (empty($userInfoXmlField->User['thumb'])) {
-							echo "<div class='user-info-poster-face'><img src='images/gravatar-default-80x80.png'></></div>";					
-						}else{
-							echo "<div class='user-info-poster-face'><img src='".$userInfoXmlField->User['thumb']."' onerror=\"this.src='images/gravatar-default-80x80.png'\"></></div>";
-						}
-					}
-					
-					echo "<div class='user-info-username'>".FriendlyName($user)."</div>";
-					echo "<div class='user-info-nav'>";
-						echo "<ul class='user-info-nav'>";
-							echo "<li class='active'><a href='#profile' data-toggle='tab'>Profile</a></li>";
-							echo "<li><a href='#userAddresses' data-toggle='tab'>IP Addresses</a></li>";
-							echo "<li><a href='#userHistory' data-toggle='tab'>History</a></li>";
-							
-						echo "</ul>";
-					echo"</div>";			
-				echo"</div>";		
-			echo"</div>";
-					
-					
-		echo "</div>";
-	echo "</div>";
-	
-	echo "<div class='tab-content'>";
-	
-		echo "<div class='tab-pane active' id='profile'>";
-		
-			echo "<div class='container-fluid'>";	
-				echo "<div class='row-fluid'>";
-					echo "<div class='span12'>";
-						echo "<div class='wellbg'>";
-							echo "<div class='wellheader'>";
-								echo "<div class='dashboard-wellheader'>";
-									echo"<h3>Global Stats</h3>";
-								echo"</div>";
-							echo"</div>";
+$userInfo = $db->query("SELECT user,xml FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC LIMIT 1") or die ("Failed to access plexWatch database. Please check your settings.");
+?>
+<div class='container-fluid'>
+    <div class='row-fluid'>
+        <div class='span12'>
+            <div class='user-info-wrapper'>
+                <?php
+                while ($userInfoResults= $userInfo->fetchArray()) {
+                $userInfoXml = $userInfoResults['xml'];
+                $userInfoXmlField = simplexml_load_string($userInfoXml);
+                if (empty($userInfoXmlField->User['thumb'])) {
+                ?><div class='user-info-poster-face'><img src='images/gravatar-default-80x80.png'></></div><?php
+            } else {
+            ?><div class='user-info-poster-face'><img src='<?php echo $userInfoXmlField->User['thumb'];?>' onerror=\"this.src='images/gravatar-default-80x80.png'\"></></div><?php
+        }
+        }
+        ?>
+        <div class='user-info-username'><?php echo FriendlyName($user); ?></div>
+        <div class='user-info-nav'>
+            <ul class='user-info-nav'>
+                <li class='active'><a href='#profile' data-toggle='tab'>Profile</a></li>
+                <li><a id='ip-tab-btn' href='#userAddresses' data-toggle='tab'>IP Addresses</a></li>
+                <li><a href='#userHistory' data-toggle='tab'>History</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div>
+</div>
 
-							echo "<div class='user-overview-stats-wrapper'>";
-								echo"<ul>";
-								
-									echo "<div class='user-overview-stats-instance'>";
-										echo "<li>";
-										echo "<div class='user-overview-stats-instance-text'>";
-											echo "<h4>Today</h4>";
-											if ($userStatsDailyCount == 1) {
-												echo "<h3>".$userStatsDailyCount."</h3><p>play</p>";
-											}else{
-												echo "<h3>".$userStatsDailyCount."</h3><p>plays</p>";
-											}
-											
-											if (empty($userStatsDailyTimeViewedTimeRowLength)){
-												echo "<h1> / </h1><h3>0</h3><p> mins</p>";
-											}else if ($userStatsDailyTimeViewedTimeRowLength == 10) {
-												echo "";
-											}else if (empty($userStatsDailyTimeViewedTimeMinutes) && empty($userStatsDailyTimeViewedTimeHours) && empty($userStatsDailyTimeViewedTimeDays)) {
-												echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
-											}else if ($userStatsDailyTimeViewedTimeDays == 0 && $userStatsDailyTimeViewedTimeHours == 0 && $userStatsDailyTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsDailyTimeViewedTimeMinutes."</h3> <p>min</p>";
-											}else if ($userStatsDailyTimeViewedTimeDays == 0 && $userStatsDailyTimeViewedTimeHours == 0) {
-												echo "<h1> / </h1><h3>".$userStatsDailyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsDailyTimeViewedTimeDays == 0 && $userStatsDailyTimeViewedTimeHours == 1) {
-												echo "<h1> / </h1><h3>".$userStatsDailyTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsDailyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsDailyTimeViewedTimeDays == 0 && $userStatsDailyTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsDailyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsDailyTimeViewedTimeMinutes."</h3> <p>min</p>";
-											}else if ($userStatsDailyTimeViewedTimeDays == 0) {
-												echo "<h1> / </h1><h3>".$userStatsDailyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsDailyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsDailyTimeViewedTimeDays == 1) {
-												echo "<h1> / </h1><h3>".$userStatsDailyTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsDailyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsDailyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsDailyTimeViewedTimeDays == 1 && $userStatsDailyTimeViewedTimeHours == 1) {
-												echo "<h1> / </h1><h3>".$userStatsDailyTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsDailyTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsDailyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsDailyTimeViewedTimeDays == 1 && $userStatsDailyTimeViewedTimeHours == 1 && $userStatsDailyTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsDailyTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsDailyTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsDailyTimeViewedTimeMinutes."</h3> <p>min</p>";
-											}else{
-												echo "<h1> / </h1><h3>".$userStatsDailyTimeViewedTimeDays."</h3> <p>days </p><h3>".$userStatsDailyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsDailyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}
-										echo"</div>";
-										echo "</li>";
-									echo"</div>";	
-								
-									echo "<div class='user-overview-stats-instance'>";
-										echo "<li>";
-										echo "<div class='user-overview-stats-instance-text'>";
-										echo "<h4>Last week</h4>";
-											if ($userStatsWeeklyCount == 1) {
-												echo "<h3>".$userStatsWeeklyCount."</h3><p>play</p>";
-											}else{
-												echo "<h3>".$userStatsWeeklyCount."</h3><p>plays</p>";
-											}
-											
-											if (empty($userStatsWeeklyTimeViewedTimeRowLength)){
-												echo "<h1> / </h1><h3>0</h3><p> mins</p>";
-											}else if ($userStatsWeeklyTimeViewedTimeRowLength == 10) {
-												echo "";
-											}else if (empty($userStatsWeeklyTimeViewedTimeMinutes) && empty($userStatsWeeklyTimeViewedTimeHours) && empty($userStatsWeeklyTimeViewedTimeDays)) {
-												echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
-											}else if ($userStatsWeeklyTimeViewedTimeDays == 0 && $userStatsWeeklyTimeViewedTimeHours == 0 && $userStatsWeeklyTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTimeMinutes."</h3> <p>min</p>";
-											}else if ($userStatsWeeklyTimeViewedTimeDays == 0 && $userStatsWeeklyTimeViewedTimeHours == 0) {
-												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsWeeklyTimeViewedTimeDays == 0 && $userStatsWeeklyTimeViewedTimeHours == 1) {
-												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsWeeklyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsWeeklyTimeViewedTimeDays == 0 && $userStatsWeeklyTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsWeeklyTimeViewedTimeMinutes."</h3> <p>min</p>";
-											}else if ($userStatsWeeklyTimeViewedTimeDays == 0) {
-												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsWeeklyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsWeeklyTimeViewedTimeDays == 1) {
-												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsWeeklyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsWeeklyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsWeeklyTimeViewedTimeDays == 1 && $userStatsWeeklyTimeViewedTimeHours == 1) {
-												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsWeeklyTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsWeeklyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsWeeklyTimeViewedTimeDays == 1 && $userStatsWeeklyTimeViewedTimeHours == 1 && $userStatsWeeklyTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsWeeklyTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsWeeklyTimeViewedTimeMinutes."</h3> <p>min</p>";
-											}else{
-												echo "<h1> / </h1><h3>".$userStatsWeeklyTimeViewedTimeDays."</h3> <p>days </p><h3>".$userStatsWeeklyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsWeeklyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}
-										echo"</div>";
-										echo "</li>";
-									echo"</div>";
-								
-									echo "<div class='user-overview-stats-instance'>";
-										echo "<li>";
-										echo "<div class='user-overview-stats-instance-text'>";
-										echo "<h4>Last month</h4>";
-											if ($userStatsMonthlyCount == 1) {
-												echo "<h3>".$userStatsMonthlyCount."</h3><p>play</p>";
-											}else{
-												echo "<h3>".$userStatsMonthlyCount."</h3><p>plays</p>";
-											}
-											
-											if (empty($userStatsMonthlyTimeViewedTimeRowLength)){
-												echo "<h1> / </h1><h3>0</h3><p> mins</p>";
-											}else if ($userStatsMonthlyTimeViewedTimeRowLength == 10) {
-												echo "";
-											}else if (empty($userStatsMonthlyTimeViewedTimeMinutes) && empty($userStatsMonthlyTimeViewedTimeHours) && empty($userStatsMonthlyTimeViewedTimeDays)) {
-												echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
-											}else if ($userStatsMonthlyTimeViewedTimeDays == 0 && $userStatsMonthlyTimeViewedTimeHours == 0 && $userStatsMonthlyTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsMonthlyTimeViewedTimeMinutes."</h3> <p>min</p>";
-											}else if ($userStatsMonthlyTimeViewedTimeDays == 0 && $userStatsMonthlyTimeViewedTimeHours == 0) {
-												echo "<h1> / </h1><h3>".$userStatsMonthlyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsMonthlyTimeViewedTimeDays == 0 && $userStatsMonthlyTimeViewedTimeHours == 1) {
-												echo "<h1> / </h1><h3>".$userStatsMonthlyTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsMonthlyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsMonthlyTimeViewedTimeDays == 0 && $userStatsMonthlyTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsMonthlyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsMonthlyTimeViewedTimeMinutes."</h3> <p>min</p>";
-											}else if ($userStatsMonthlyTimeViewedTimeDays == 0) {
-												echo "<h1> / </h1><h3>".$userStatsMonthlyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsMonthlyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsMonthlyTimeViewedTimeDays == 1) {
-												echo "<h1> / </h1><h3>".$userStatsMonthlyTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsMonthlyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsMonthlyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsMonthlyTimeViewedTimeDays == 1 && $userStatsMonthlyTimeViewedTimeHours == 1) {
-												echo "<h1> / </h1><h3>".$userStatsMonthlyTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsMonthlyTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsMonthlyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsMonthlyTimeViewedTimeDays == 1 && $userStatsMonthlyTimeViewedTimeHours == 1 && $userStatsMonthlyTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsMonthlyTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsMonthlyTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsMonthlyTimeViewedTimeMinutes."</h3> <p>min</p>";
-											}else{
-												echo "<h1> / </h1><h3>".$userStatsMonthlyTimeViewedTimeDays."</h3> <p>days </p><h3>".$userStatsMonthlyTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsMonthlyTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}
-										echo"</div>";
-										echo "</li>";
-									echo"</div>";
-								
-									echo "<div class='user-overview-stats-instance'>";
-										echo "<li>";
-										echo "<div class='user-overview-stats-instance-text'>";
-										echo "<h4>All Time</h4>";
-											if ($userStatsAlltimeCount == 1) {
-												echo "<h3>".$userStatsAlltimeCount."</h3><p>play</p>";
-											}else{
-												echo "<h3>".$userStatsAlltimeCount."</h3><p>plays</p>";
-											}
-											
-											if (empty($userStatsAlltimeTimeViewedTimeRowLength)){
-												echo "<h1> / </h1><h3>0</h3><p> mins</p>";
-											}else if ($userStatsAlltimeTimeViewedTimeRowLength == 10) {
-												echo "";
-											}else if (empty($userStatsAlltimeTimeViewedTimeMinutes) && empty($userStatsAlltimeTimeViewedTimeHours) && empty($userStatsAlltimeTimeViewedTimeDays)) {
-												echo "<h1> / </h1><h3>0</h3><p> mins</p>";	
-											}else if ($userStatsAlltimeTimeViewedTimeDays == 0 && $userStatsAlltimeTimeViewedTimeHours == 0 && $userStatsAlltimeTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>min</p>";
-											}else if ($userStatsAlltimeTimeViewedTimeDays == 0 && $userStatsAlltimeTimeViewedTimeHours == 0) {
-												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsAlltimeTimeViewedTimeDays == 0 && $userStatsAlltimeTimeViewedTimeHours == 1) {
-												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsAlltimeTimeViewedTimeDays == 0 && $userStatsAlltimeTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>min</p>";
-											}else if ($userStatsAlltimeTimeViewedTimeDays == 0) {
-												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsAlltimeTimeViewedTimeDays == 1) {
-												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsAlltimeTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsAlltimeTimeViewedTimeDays == 1 && $userStatsAlltimeTimeViewedTimeHours == 1) {
-												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsAlltimeTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}else if ($userStatsAlltimeTimeViewedTimeDays == 1 && $userStatsAlltimeTimeViewedTimeHours == 1 && $userStatsAlltimeTimeViewedTimeMinutes == 1) {
-												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeDays."</h3> <p>day </p><h3>".$userStatsAlltimeTimeViewedTimeHours."</h3> <p>hr </p><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>min</p>";
-											}else{
-												echo "<h1> / </h1><h3>".$userStatsAlltimeTimeViewedTimeDays."</h3> <p>days </p><h3>".$userStatsAlltimeTimeViewedTimeHours."</h3> <p>hrs </p><h3>".$userStatsAlltimeTimeViewedTimeMinutes."</h3> <p>mins</p>";
-											}
-										echo"</div>";	
-										echo "</li>";
-									echo"</div>";
-								echo"</ul>";
-							echo"</div>";
-							
-							
-						echo "</div>";
-					echo "</div>";	
-					
-				echo "</div>";		
-			echo "</div>";	
-			
-			echo "<div class='container-fluid'>";
-				echo "<div class='row-fluid'>";
-						echo "<div class='span12'>";
-							echo "<div class='wellbg'>";
-								echo "<div class='wellheader'>";
-									echo "<div class='dashboard-wellheader'>";
-										echo"<h3>Platform Stats</h3>";
-									echo"</div>";
-								echo"</div>";
-								
-								$platformResults = $db->query ("SELECT xml,platform, COUNT(platform) as platform_count FROM ".$plexWatchDbTable." WHERE user = '$user' GROUP BY platform ORDER BY platform ASC") or die ("Failed to access plexWatch database. Please check your settings.");
-								 
-								
-								$platformImage = 0;
-								while ($platformResultsRow = $platformResults->fetchArray()) {
-								
-								$platformXml = $platformResultsRow['xml'];
-								$platformXmlField = simplexml_load_string($platformXml);
-								
-									
-									if(strstr($platformXmlField->Player['platform'], 'Roku')) {
-										$platformImage = "images/platforms/roku.png";
-									}else if(strstr($platformXmlField->Player['platform'], 'Apple TV')) {
-										$platformImage = "images/platforms/appletv.png";
-									}else if(strstr($platformXmlField->Player['platform'], 'Firefox')) {
-										$platformImage = "images/platforms/firefox.png";
-									}else if(strstr($platformXmlField->Player['platform'], 'Chromecast')) {
-										$platformImage = "images/platforms/chromecast.png";
-									}else if(strstr($platformXmlField->Player['platform'], 'Chrome')) {
-										$platformImage = "images/platforms/chrome.png";
-									}else if(strstr($platformXmlField->Player['platform'], 'Android')) {
-										$platformImage = "images/platforms/android.png";
-									}else if(strstr($platformXmlField->Player['platform'], 'Nexus')) {
-										$platformImage = "images/platforms/android.png";
-									}else if(strstr($platformXmlField->Player['platform'], 'iPad')) {
-										$platformImage = "images/platforms/ios.png";
-									}else if(strstr($platformXmlField->Player['platform'], 'iPhone')) {
-										$platformImage = "images/platforms/ios.png";
-									}else if(strstr($platformXmlField->Player['platform'], 'iOS')) {
-										$platformImage = "images/platforms/ios.png";
-									}else if(strstr($platformXmlField->Player['platform'], 'Plex Home Theater')) {
-										$platformImage = "images/platforms/pht.png";
-									}else if(strstr($platformXmlField->Player['platform'], 'Linux/RPi-XBMC')) {
-										$platformImage = "images/platforms/xbmc.png";
-									}else if(strstr($platformXmlField->Player['platform'], 'Safari')) {
-										$platformImage = "images/platforms/safari.png";
-									}else if(strstr($platformXmlField->Player['platform'], 'Internet Explorer')) {
-										$platformImage = "images/platforms/ie.png";
-									}else if(strstr($platformXmlField->Player['platform'], 'Unknown Browser')) {
-										$platformImage = "images/platforms/default.png";
-									}else if(strstr($platformXmlField->Player['platform'], 'Windows-XBMC')) {
-										$platformImage = "images/platforms/xbmc.png";
-									}else if(empty($platformXmlField->Player['platform'])) {
-										if(strstr($platformXmlField->Player['title'], 'Apple')) {
-											$platformImage = "images/platforms/atv.png";
-										//Code below matches Samsung naming standard: [Display Technology: 2 Letters][Size: 2 digits][Generation: 1 letter][Model: 4 digits]
-										}else if(preg_match("/TV [a-z][a-z]\d\d[a-z]/i",$platformXmlField->Player['title'])) {
-											$platformImage = "images/platforms/samsung.png";	
-										}else{
-											$platformImage = "images/platforms/default.png";
-										}
-									}
-									
-									echo "<div class='user-platforms'>";
-										echo "<ul>";
-											echo "<div class='user-platforms-instance'>";
-												echo "<li>";
-												echo "<img class='user-platforms-instance-poster' src='".$platformImage."'></img>";
+<div class='tab-content'>
 
-												if ($platformXmlField->Player['platform'] == "Chromecast") {
-													echo "<div class='user-platforms-instance-name'>Plex/Web (Chrome) & Chromecast</div>";
-												}else{
-													echo "<div class='user-platforms-instance-name'>".$platformResultsRow['platform']."</div>";
-												}
+    <div class='tab-pane active' id='profile'>
+        <div class='container-fluid'>
+            <div class='row-fluid'>
+                <div class='span12'>
+                    <div class='wellbg'>
+                        <div class='wellheader'>
+                            <div class='dashboard-wellheader'>
+                                <h3>Global Stats</h3>
+                            </div>
+                        </div>
+                        <div id='user-time-stats' class='user-overview-stats-wrapper'><div id='user-stats-spinner' class='spinner'></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-												
-												echo "<div class='user-platforms-instance-playcount'><h3>".$platformResultsRow['platform_count']."</h3><p> plays</p></div>";
-												echo "</li>";
-											echo "</div>";
-										echo "</ul>";
-									echo "</div>";
-								}
-							echo "</div>";
-						echo "</div>";	
-				echo "</div>";		
-			echo "</div>";	
-	
-			echo "<div class='container-fluid'>";	
-				echo "<div class='row-fluid'>";
-					echo "<div class='span12'>";
-						echo "<div class='wellbg'>";
-						
-							echo "<div class='wellheader'>";
-								echo "<div class='dashboard-wellheader'>";
-									echo"<h3>Recently watched</h3>";
-								echo"</div>";
-							echo"</div>";
-							
-							echo "<div class='dashboard-recent-media-row'>";
-								echo "<ul class='dashboard-recent-media'>";
-						
-									$recentlyWatchedResults = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC LIMIT 10");
-									// Run through each feed item
-									while ($recentlyWatchedRow = $recentlyWatchedResults->fetchArray()) {
+        <div class='container-fluid'>
+            <div class='row-fluid'>
+                <div class='span12'>
+                    <div class='wellbg'>
+                        <div class='wellheader'>
+                            <div class='dashboard-wellheader'>
+                                <h3>Platform Stats</h3>
+                            </div>
+                        </div>
+                        <div id='user-platform-stats' class='user-platforms'><div id='user-platform-spinner' class='spinner'></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-									$request_url = $recentlyWatchedRow['xml'];
-									$recentXml = simplexml_load_string($request_url) ;                      
-					
-									if ($recentXml['type'] == "episode") {
-										if (!empty($plexWatch['myPlexAuthToken'])) {
-											$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
-											$recentMetadata = "".$plexWatchPmsUrl."/library/metadata/".$recentXml['ratingKey']."?X-Plex-Token=".$myPlexAuthToken."";
-										}else{
-											$myPlexAuthToken = '';
-											$recentMetadata = "".$plexWatchPmsUrl."/library/metadata/".$recentXml['ratingKey']."";
-										}
-										
-										if ($recentThumbUrlRequest = @simplexml_load_file ($recentMetadata)) { 
-											
-											$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['parentThumb']."&width=136&height=280";                                        
+        <div class='container-fluid'>
+            <div class='row-fluid'>
+                <div class='span12'>
+                    <div class='wellbg'>
+                        <div class='wellheader'>
+                            <div class='dashboard-wellheader'>
+                                <h3>Recently watched</h3>
+                            </div>
+                        </div>
+                        <div id='user-recently-watched' class='dashboard-recent-media-row'><div id='user-watched-spinner' class='spinner'></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-											echo "<div class='dashboard-recent-media-instance'>";
-											echo "<li>";
-												
-											if($recentThumbUrlRequest->Video['parentThumb']) {
-													echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='includes/img.php?img=".urlencode($recentThumbUrl)."' class='poster-face'></img></a></div></div>";
-												}else{
-													echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='images/poster.png' class='poster-face'></img></a></div></div>";
-											}
-												
-											echo "<div class=dashboard-recent-media-metacontainer>";
-												$parentIndexPadded = sprintf("%01s", $recentXml['parentIndex']);
-												$indexPadded = sprintf("%02s", $recentXml['index']);
-												echo "<h3>Season ".$parentIndexPadded.", Episode ".$indexPadded."</h3>";
-											echo "</div>";
-											echo "</li>";
-											echo "</div>";
-										}
-									}else if ($recentXml['type'] == "movie") {	
-										if (!empty($plexWatch['myPlexAuthToken'])) {
-											$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
-											$recentMetadata = "".$plexWatchPmsUrl."/library/metadata/".$recentXml['ratingKey']."?X-Plex-Token=".$myPlexAuthToken."";
-										}else{
-											$myPlexAuthToken = '';
-											$recentMetadata = "".$plexWatchPmsUrl."/library/metadata/".$recentXml['ratingKey']."";
-										}
-										
-										if ($recentThumbUrlRequest = @simplexml_load_file ($recentMetadata)) {          
+    </div>
 
-											$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['thumb']."&width=136&height=280";                                        
+    <div class='tab-pane' id='userAddresses'>
+        <div class='container-fluid'>
+            <div class='row-fluid'>
+                <div class='span12'>
+                    <div class='wellbg'>
+                        <div class='wellheader'>
+                            <div class='dashboard-wellheader'>
+                                <h3>Public IP Addresses for <strong><?php echo $user; ?></strong></h3>
+                            </div>
+                        </div>
+                        <table id='tableUserIpAddresses' class='display' width='100%'>
+                            <thead>
+                            <tr>
+                                <th align='left'><i class='icon-sort icon-white'></i> Last seen</th>
+                                <th align='left'><i class='icon-sort icon-white'></i> IP Address</th>
+                                <th align='left'><i class='icon-sort icon-white'></i> Play Count</th>
+                                <th align='left'><i class='icon-sort icon-white'></i> Platform (Last Seen)</th>
+                                <th align='left'><i class='icon-sort icon-white'></i> Location</th>
+                                <th align='left'><i class='icon-sort icon-white'></i> Location</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-											echo "<div class='dashboard-recent-media-instance'>";
-											echo "<li>";
-											
-											if($recentThumbUrlRequest->Video['thumb']) {
-												echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='includes/img.php?img=".urlencode($recentThumbUrl)."' class='poster-face'></img></a></div></div>";
-											}else{
-												echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='images/poster.png' class='poster-face'></img></a></div></div>";
-											}
-											
-											echo "<div class=dashboard-recent-media-metacontainer>";
-											$parentIndexPadded = sprintf("%01s", $recentXml['parentIndex']);
-											$indexPadded = sprintf("%02s", $recentXml['index']);
-											echo "<h3>".$recentXml['title']." (".$recentXml['year'].")</h3>";
+    <div class='tab-pane' id='userHistory'>
+        <div class='container-fluid'>
+            <div class='row-fluid'>
+                <div class='span12'>
+                    <div class='wellbg'>
+                        <div class='wellheader'>
+                            <div class='dashboard-wellheader'>
+                                <h3>Watching History for <strong><?php echo $user; ?></strong></h3>
+                            </div>
+                        </div>
+                        <?php
+                        //now generate the HTML databable structure from SQL   here:
+                        $cols= "id,Date,User,Platform,IP Address,Title,Started,Paused,Stopped,xml,Duration,Completed";  //Column names for datatable headings (typically same as sql)
+                        $html = ServerDataPDO::build_html_datatable($cols,'user_history_datatable');
+                        echo $html;
+                        ?>
+                        <div id="info-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="info-modal" aria-hidden="true">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="icon icon-remove"></i></button>
+                                <h3 id="myModalLabel"><i class="icon-info-sign icon-white"></i> Stream Info: <strong><span id="modal-stream-info"></span></strong></h3>
+                            </div>
+                            <div class="modal-body" id="modal-text"></div>
+                            <div class="modal-footer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-											echo "</div>";
-											echo "</li>";
-											echo "</div>";
-										}	
-									}else if ($recentXml['type'] == "clip") {	
-										if (!empty($plexWatch['myPlexAuthToken'])) {
-											$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
-											$recentMetadata = "".$plexWatchPmsUrl."/library/metadata/".$recentXml['ratingKey']."?X-Plex-Token=".$myPlexAuthToken."";
-										}else{
-											$myPlexAuthToken = '';
-											$recentMetadata = "".$plexWatchPmsUrl."/library/metadata/".$recentXml['ratingKey']."";
-										}
-										if ($recentThumbUrlRequest = @simplexml_load_file ($recentMetadata)) {          
+</div>
 
-											$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['thumb']."&width=136&height=280";
-											
-											echo "<div class='dashboard-recent-media-instance'>";
-											echo "<li>";
-											echo "<div class='poster'><div class='poster-face'><a href='" .$recentXml['ratingKey']. "'><img src='images/poster.png' class='poster-face'></img></a></div></div>";
-											
-											echo "<div class=dashboard-recent-media-metacontainer>";
-											$parentIndexPadded = sprintf("%01s", $recentXml['parentIndex']);
-											$indexPadded = sprintf("%02s", $recentXml['index']);
-											echo "<h3>".$recentXml['title']." (".$recentXml['year'].")</h3>";
+<footer>
+</footer>
 
-											echo "</div>";
-											echo "</li>";
-											echo "</div>";
-										}	
-									}else{}
-									}
-								echo "</ul>";
-							echo "</div>";
-							
-						echo"</div>";	
-					echo "</div>";
-				echo "</div>";
-			echo "</div>";
-			
-		echo "</div>";
-			
-		echo "<div class='tab-pane' id='userAddresses'>";
-		
-			$userIpAddressesQuery = $db->query("SELECT time,ip_address,platform,xml, COUNT(ip_address) as play_count, strftime('%Y%m%d', datetime(time, 'unixepoch', 'localtime')) as date FROM processed WHERE user = '$user' GROUP BY ip_address ORDER BY time DESC");
+<!-- javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="js/jquery-2.0.3.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/jquery.dataTables.js"></script>
+<script src="js/jquery.dataTables.plugin.date_sorting.js"></script>
+<script src="js/jquery.dataTables.plugin.bootstrap_pagination.js"></script>
+<script src="js/moment-with-locale.js"></script>
+<script src="js/cacher.js"></script>
+<script src="js/spin.min.js"></script>
 
-			echo "<div class='container-fluid'>";	
-				echo "<div class='row-fluid'>";
-					echo "<div class='span12'>";
-						echo "<div class='wellbg'>";
-							
-							echo "<div class='wellheader'>";
-							
-								echo "<div class='dashboard-wellheader'>";
-										echo"<h3>Public IP Addresses for <strong>".$user."</strong></h3>";
-								echo"</div>";
-							
-							echo"</div>";
-								
-							echo "<table id='tableUserIpAddresses' class='display'>";
-								echo "<thead>";
-									echo "<tr>";
-										echo "<th align='left'><i class='icon-sort icon-white'></i> Last seen</th>";
-										echo "<th align='left'><i class='icon-sort icon-white'></i> IP Address</th>";
-										echo "<th align='left'><i class='icon-sort icon-white'></i> Play Count</th>";
-										echo "<th align='left'><i class='icon-sort icon-white'></i> Platform (Last Seen)</th>";
-										echo "<th align='left'><i class='icon-sort icon-white'></i> Location</th>";
-										
-									echo "</tr>";
-								echo "</thead>";
-								echo "<tbody>";
-								
-								while ($userIpAddresses = $userIpAddressesQuery->fetchArray()) {
-								
-										if (!empty($userIpAddresses['ip_address'])) {
-													
-											if (strpos($userIpAddresses['ip_address'], "192.168" ) === 0) {
-													
-											}else if (strpos($userIpAddresses['ip_address'], "10." ) === 0) {
-		
-											}else if (strpos($userIpAddresses['ip_address'], "172.16" ) === 0) {	//need a solution to check for 17-31
-											
-											}else{ 
-												
-												$userIpAddressesUrl = "http://www.geoplugin.net/xml.gp?ip=".$userIpAddresses['ip_address']."";
-												$userIpAddressesData = simplexml_load_file($userIpAddressesUrl) or die ("<div class=\"alert alert-warning \">Cannot access http://www.geoplugin.net.</div>");
+<script>
+    function loadXMLString(txt) {
+        if (window.DOMParser) {
+            parser=new DOMParser();
+            xmlDoc=parser.parseFromString(txt,"text/xml");
+        } else { // code for IE
+            xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+            xmlDoc.async=false;
+            xmlDoc.loadXML(txt);
+        }
+        return xmlDoc;
+    }
+</script>
 
-												echo "<tr>";
-													echo "<td data-order='".$userIpAddresses['date']."' align='left'>".date($plexWatch['dateFormat'],$userIpAddresses['time'])."</td>";
-													echo "<td align='left'>".$userIpAddresses['ip_address']."</td>";
-													echo "<td align='left'>".$userIpAddresses['play_count']."</td>";
+<script>
+    $(document).ready(function() {
+        var cacheData = getCache('<?php echo $user;?>'+'-user-recently-watched-cache');
+        if (cacheData) {
+            $("#user-recently-watched").html(cacheData);
+        } else {
+            $.ajax({
+                url: 'datafactory/get-user-recently-watched.php',
+                type: "POST",
+                async: true,
+                data: { user : '<?php echo $user; ?>' },
+                success: function(data) {
+                    $("#user-recently-watched").html(data);
+                    setCache('<?php echo $user;?>'+'-user-recently-watched-cache', data);
+                }
+            });
+        }
+    } );
+</script>
 
-													$userIpAddressesXml = simplexml_load_string($userIpAddresses['xml']); 
-													
-													if ($userIpAddressesXml->Player['platform'] == "Chromecast") {
-														echo "<td align='left'>".$userIpAddressesXml->Player['platform']."</td>";
-													}else{
-														echo "<td align='left'>".$userIpAddresses['platform']."</td>";
-													}
+<script>
+    $(document).ready(function() {
+        var cacheData = getCache('<?php echo $user;?>'+'-user-time-stats-cache');
+        if (cacheData) {
+            $("#user-time-stats").html(cacheData);
+        } else {
+            $.ajax({
+                url: 'datafactory/get-user-time-stats.php',
+                type: "POST",
+                async: true,
+                data: { user : '<?php echo $user; ?>' },
+                success: function(data) {
+                    $("#user-time-stats").html(data);
+                    setCache('<?php echo $user;?>'+'-user-time-stats-cache', data);
+                }
+            });
+        }
+    } );
+</script>
 
-													
-													if (empty($userIpAddressesData->geoplugin_city)) {
-														echo "<td align='left'>n/a</td>";
-													}else{
-														echo "<td align='left'><a href='https://maps.google.com/maps?q=".$userIpAddressesData->geoplugin_city.", ".$userIpAddressesData->geoplugin_region."'><i class='icon-map-marker icon-white'></i> ".$userIpAddressesData->geoplugin_city.", ".$userIpAddressesData->geoplugin_region."</a></td>";
-														
-													}
-													
-												echo "</tr>";
-											}
-												
-										}
-										
-									}	
-										
-								echo "</tbody>";
-							echo "</table>";
-								
-							
-						echo "</div>";
-					echo "</div>";
-				echo "</div>";
-			echo "</div>";
-		
-		echo "</div>";
-		echo "<div class='tab-pane' id='userHistory'>";	
-		
-			echo "<div class='container-fluid'>";	
-				echo "<div class='row-fluid'>";
-					echo "<div class='span12'>";
-						echo "<div class='wellbg'>";
-							echo "<div class='wellheader'>";
+<script>
+    $(document).ready(function() {
+        var cacheData = getCache('<?php echo $user;?>'+'-user-platform-stats-cache');
+        if (cacheData) {
+            $("#user-platform-stats").html(cacheData);
+        } else {
+            $.ajax({
+                url: 'datafactory/get-user-platform-stats.php',
+                type: "POST",
+                async: true,
+                data: { user : '<?php echo $user; ?>' },
+                success: function(data) {
+                    $("#user-platform-stats").html(data);
+                    setCache('<?php echo $user;?>'+'-user-platform-stats-cache', data);
+                }
+            });
+        }
+    } );
+</script>
 
-								echo "<div class='dashboard-wellheader'>";
-										echo"<h3>Watching History for <strong>".$user."</strong></h3>";
-									echo"</div>";
-								echo"</div>";
-								
-								if ($numRows < 1) {
+<script>
+    $(document).ready(function() {
+        var ipTableOptions = {
+            "bPaginate": true,
+            "bDestroy": true,
+            "bLengthChange": true,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "iDisplayLength": 10,
+            "aaSorting": [[0,'desc']],
+            "bAutoWidth": true,
+            "bProcessing": true,
+            "bStateSave": false,
+            "bSortClasses": false,
+            "sPaginationType": "bootstrap",
+            "aaData": [
+                {   0: "Loading...",
+                    1: "",
+                    2: "",
+                    3: "",
+                    4: "",
+                    5: ""   }
+            ],
+            "aoColumnDefs": [
+                {
+                    "aTargets": [ 0 ],
+                    "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                        if (sData != "Loading...") {
+                            $(nTd).html(moment(sData,"X").format("<?php echo $plexWatch['dateFormat']; ?>"));
+                        }
+                    }
+                },
+                {
+                    "aTargets": [ 1 ]
+                },
+                {
+                    "aTargets": [ 2 ]
+                },
+                {
+                    "aTargets": [ 3 ]
+                },
+                {
+                    "aTargets": [ 4 ],
+                    "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                        if(oData[5] !== '') {
+                            $(nTd).html('<a target="_blank" href="'+oData[5]+'"><i class="icon-map-marker icon-white"></i>&nbsp'+sData+'</a>');
+                        } else {
+                            $(nTd).html(sData);
+                        }
+                    }
+                },
+                {
+                    "aTargets": [ 5 ],
+                    "bVisible": false
+                }
+            ]
+        };
 
-								echo "No Results.";
+        ipTable = $('#tableUserIpAddresses').dataTable(ipTableOptions);
 
-								} else {
-								
-								echo "<table id='tableUserHistory' class='display'>";
-									echo "<thead>";
-										echo "<tr>";
-											echo "<th align='left'><i class='icon-sort icon-white'></i> Date</th>";
-											echo "<th align='left'><i class='icon-sort icon-white'></i> Platform</th>";
-											echo "<th align='left'><i class='icon-sort icon-white'></i> IP Address</th>";
-											echo "<th align='left'><i class='icon-sort icon-white'></i> Title</th>";
-											echo "<th align='center'><i class='icon-sort icon-white'></i> Stream Info</th>";
-											echo "<th align='center'><i class='icon-sort icon-white'></i> Started</th>";
-											echo "<th align='center'><i class='icon-sort icon-white'></i> Paused</th>";
-											echo "<th align='center'><i class='icon-sort icon-white'></i> Stopped</th>";
-											echo "<th align='center'><i class='icon-sort icon-white'></i> Duration</th>";
-											echo "<th align='center'><i class='icon-sort icon-white'></i> Completed</th>";
-										echo "</tr>";
-									echo "</thead>";
-									echo "<tbody>";
-									$rowCount = 0;
-									while ($row = $results->fetchArray()) {
-										$rowCount++;
-										$request_url = $row['xml'];
-										$xmlfield = simplexml_load_string($request_url) ; 
-										$ratingKey = $xmlfield['ratingKey'];
-										$type = $xmlfield['type'];
-										$duration = $xmlfield['duration'];
-										$viewOffset = $xmlfield['viewOffset'];
-										$platform = $xmlfield->Player['platform'];
+        var cacheData = getCache('<?php echo $user;?>'+'-ip-stats-cache');
+        if (cacheData) {
+            ipTableOptions.aaData = cacheData.data;
+            ipTable = $('#tableUserIpAddresses').dataTable(ipTableOptions);
+        } else {
+            $.ajax({
+                url: "datafactory/get-user-ip-stats.php",
+                data: { user: "<?php echo $user; ?>" },
+                type: "post",
+                dataType: "json",
+                async: true,
+                success: function(data){
+                    ipTableOptions.aaData = data.data;
+                    ipTable = $('#tableUserIpAddresses').dataTable(ipTableOptions);
+                    // set expiration on this cached item to 10 minutes.
+                    setCache('<?php echo $user;?>'+'-ip-stats-cache',data,10);
+                }
+            } );
+        }
+    } );
+</script>
 
-										echo "<tr>";
-											if (empty($row['stopped'])) {
-												echo "<td data-order='".$row['date']."' class='currentlyWatching' align='left'>Currently watching...</td>";
-											}else{
-												echo "<td data-order='".$row['date']."' align='left'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
-											}
-											
-											if ($platform == "Chromecast") {
-												echo "<td align='left'>".$platform."</td>";
-											}else{
-												echo "<td align='left'>".$row['platform']."</td>";
-											}
+<?php
+$plexWatchDbTable = "";
+if ($plexWatch['userHistoryGrouping'] == "yes") {
+    $plexWatchDbTable = "grouped";
+} else if ($plexWatch['userHistoryGrouping'] == "no") {
+    $plexWatchDbTable = "processed";
+}
 
-											if (empty($row['ip_address'])) {
-												echo "<td align='left'>n/a</td>";
+$db_array=array(
+    "sql"=>"SELECT id|time|user|platform|ip_address|title|time|paused_counter|stopped|xml|round((julianday(datetime(stopped,'unixepoch', 'localtime')) - julianday(datetime(time,'unixepoch', 'localtime')))*86400)-(case when paused_counter is null then 0 else paused_counter end) from ".$plexWatchDbTable, /* Use | as delimiter. Spell out columns names no SELECT * Table */
+    "table"=>$plexWatchDbTable, /* DB table to use assigned by constructor*/
+    "idxcol"=>"id", /* Indexed column (used for fast and accurate table cardinality) */
+    "where"=>"user = '".$user."'" /* Option where clause (omit WHERE text) */
+);
 
-											}else{
+$javascript = ServerDataPDO::build_jquery_datatable($db_array,'user_history_datatable','datafactory/get-user-info-modal.php');
+echo $javascript;
+?>
+<script>
+    var opts = {
+        lines: 8, // The number of lines to draw
+        length: 8, // The length of each line
+        width: 4, // The line thickness
+        radius: 5, // The radius of the inner circle
+        corners: 1, // Corner roundness (0..1)
+        rotate: 0, // The rotation offset
+        direction: 1, // 1: clockwise, -1: counterclockwise
+        color: '#fff', // #rgb or #rrggbb or array of colors
+        speed: 1, // Rounds per second
+        trail: 60, // Afterglow percentage
+        shadow: false, // Whether to render a shadow
+        hwaccel: false, // Whether to use hardware acceleration
+        className: 'spinner', // The CSS class to assign to the spinner
+        zIndex: 2e9, // The z-index (defaults to 2000000000)
+        top: '0', // Top position relative to parent
+        left: '50%' // Left position relative to parent
+    };
+    var target_a = document.getElementById('user-stats-spinner');
+    var spinner_a = new Spinner(opts).spin(target_a);
 
-												echo "<td align='left'>".$row['ip_address']."</td>";
-											}
-											
-											
-											
-											if ($type=="movie") {
-											echo "<td class='title' align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
-											}else if ($type=="episode") {
-											echo "<td class='title' align='left'><a href='info.php?id=".$ratingKey."'>".$row['title']."</a></td>";
-											}else if (!array_key_exists('',$type)) {
-											echo "<td class='title' align='left'><a href='".$ratingKey."'>".$row['title']."</a></td>";
-											}else{
+    var target_b = document.getElementById('user-platform-spinner');
+    var spinner_b = new Spinner(opts).spin(target_b);
 
-											}
+    var target_c = document.getElementById('user-watched-spinner');
+    var spinner_c = new Spinner(opts).spin(target_c);
 
+</script>
 
-											echo "<td align='center'><a href='#streamDetailsModal".$rowCount."' data-toggle='modal'><span class='badge badge-inverse'><i class='icon-info icon-white'></i></span></a></td>";
-							
-							
+<script>
+    $(document).ready(function() {
+        $('#home').tooltip();
+    });
 
-							echo "<div id='streamDetailsModal".$rowCount."' class='modal hide fade' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>";
-							?>
-								<div class="modal-header">	
-									<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="icon icon-remove"></i></button>		
-									<h3 id="myModalLabel"><i class="icon-info-sign icon-white"></i> Stream Info: <strong><?php echo $row['title']; ?></strong></h3>
-								</div>
-								
-								<div class="modal-body">
-									<?php
-									
-									if (array_key_exists('TranscodeSession',$xmlfield)) {
+    $(document).ready(function() {
+        $('#history').tooltip();
+    });
 
-									?>
-										<div class="span4">
-											<h4>Stream Details</h4>
-											<ul>
-											<h5>Video</h5>
-											<li>Stream Type: <strong><?php echo $xmlfield->TranscodeSession['videoDecision']; ?></strong></li>
-											<li>Video Resolution: <strong><?php echo $xmlfield->TranscodeSession['height']; ?>p</strong></li>
-											<li>Video Codec: <strong><?php echo $xmlfield->TranscodeSession['videoCodec']; ?></strong></li>
-											<li>Video Width: <strong><?php echo $xmlfield->TranscodeSession['width']; ?></strong></li>
-											<li>Video Height: <strong><?php echo $xmlfield->TranscodeSession['height']; ?></strong></li>
-											</ul>
-											<ul>
-											<h5>Audio</h5>
-											<li>Stream Type: <strong><?php echo $xmlfield->TranscodeSession['audioDecision']; ?></strong></li>
-											<?php if ($xmlfield->TranscodeSession['audioCodec'] == "dca") { ?>
-												<li>Audio Codec: <strong>dts</strong></li>
-											<?php }else{ ?>
-												<li>Audio Codec: <strong><?php echo $xmlfield->TranscodeSession['audioCodec']; ?></strong></li>
-											<?php } ?>
-											<li>Audio Channels: <strong><?php echo $xmlfield->TranscodeSession['audioChannels']; ?></strong></li>
-											</ul>
-										</div>
-										<div class="span4">
-											<h4>Media Source Details</h4>
-											<li>Container: <strong><?php echo $xmlfield->Media['container']; ?></strong></li>
-											<li>Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
-											<li>Bitrate: <strong><?php echo $xmlfield->Media['bitrate']; ?> kbps</strong></li>
-										</div>
-										<div class="span4">	
-											<h4>Video Source Details</h4>
-											<ul>
-												<li>Width: <strong><?php echo $xmlfield->Media['width']; ?></strong></li>
-												<li>Height: <strong><?php echo $xmlfield->Media['height']; ?></strong></li>
-												<li>Aspect Ratio: <strong><?php echo $xmlfield->Media['aspectRatio']; ?></strong></li>											
-												<li>Video Frame Rate: <strong><?php echo $xmlfield->Media['videoFrameRate']; ?></strong></li>
-												<li>Video Codec: <strong><?php echo $xmlfield->Media['videoCodec']; ?></strong></li>
-											</ul>
-											<ul> </ul>
-											<h4>Audio Source Details</h4>
-											<ul>
-												<?php if ($xmlfield->Media['audioCodec'] == "dca") { ?>
-													<li>Audio Codec: <strong>dts</strong></li>
-												<?php }else{ ?>
-													<li>Audio Codec: <strong><?php echo $xmlfield->Media['audioCodec']; ?></strong></li>
-												<?php } ?>
-												<li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
-											</ul>
-										</div>
-										
-										
-									
-									<?php }else{ ?>
+    $(document).ready(function() {
+        $('#users').tooltip();
+    });
 
-										<div class="span4">
-											<h4>Stream Details</strong></h4>
-											<ul>
-												<h5>Video</h5>
-												<li>Stream Type: <strong>Direct Play</strong></li>
-												<li>Video Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
-												<li>Video Codec: <strong><?php echo $xmlfield->Media['videoCodec']; ?></strong></li>
-												<li>Video Width: <strong><?php echo $xmlfield->Media['width']; ?></strong></li>
-												<li>Video Height: <strong><?php echo $xmlfield->Media['height']; ?></strong></li>
-											</ul>
-											<ul>
-												<h5>Audio</h5>
-												<li>Stream Type: <strong>Direct Play</strong></li>
-												
-												<?php if ($xmlfield->Media['audioCodec'] == "dca") { ?>
-														<li>Audio Codec: <strong>dts</strong></li>
-													<?php }else{ ?>
-														<li>Audio Codec: <strong><?php echo $xmlfield->Media['audioCodec']; ?></strong></li>
-													<?php } ?>
-												<li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
-											</ul>
-										</div>
-										<div class="span4">
-											<h4>Media Source Details</h4>
-											<li>Container: <strong><?php echo $xmlfield->Media['container']; ?></strong></li>
-											<li>Resolution: <strong><?php echo $xmlfield->Media['videoResolution']; ?>p</strong></li>
-											<li>Bitrate: <strong><?php echo $xmlfield->Media['bitrate']; ?> kbps</strong></li>
-										</div>
-										<div class="span4">	
-											<h4>Video Source Details</h4>
-											<ul>
-												<li>Width: <strong><?php echo $xmlfield->Media['width']; ?></strong></li>
-												<li>Height: <strong><?php echo $xmlfield->Media['height']; ?></strong></li>
-												<li>Aspect Ratio: <strong><?php echo $xmlfield->Media['aspectRatio']; ?></strong></li>											
-												<li>Video Frame Rate: <strong><?php echo $xmlfield->Media['videoFrameRate']; ?></strong></li>
-												<li>Video Codec: <strong><?php echo $xmlfield->Media['videoCodec']; ?></strong></li>
-											</ul>
-											<ul> </ul>
-											<h4>Audio Source Details</h4>
-											<ul>
-												<?php if ($xmlfield->Media['audioCodec'] == "dca") { ?>
-													<li>Audio Codec: <strong>dts</strong></li>
-												<?php }else{ ?>
-													<li>Audio Codec: <strong><?php echo $xmlfield->Media['audioCodec']; ?></strong></li>
-												<?php } ?>
-												<li>Audio Channels: <strong><?php echo $xmlfield->Media['audioChannels']; ?></strong></li>
-											</ul>
-										</div>
-									<?php } ?>
-									
-										
-										
-										
-								</div>
-										  
-								<div class="modal-footer">
-								</div>
+    $(document).ready(function() {
+        $('#charts').tooltip();
+    });
 
-							</div>
-							<?php
+    $(document).ready(function() {
+        $('#settings').tooltip();
+    });
 
-															
-											echo "<td align='center'>".date($plexWatch['timeFormat'],$row['time'])."</td>";
-											
-											$paused_duration = round(abs($row['paused_counter']) / 60,1);
-											echo "<td align='center'>".$paused_duration." min</td>";
-											
-											$stopped_time = date($plexWatch['timeFormat'],$row['stopped']);
-											
-											if (empty($row['stopped'])) {								
-												echo "<td align='center'>n/a</td>";
-											}else{
-												echo "<td align='center'>".$stopped_time."</td>";
-											}
+    $(document).ready(function() {
+        $('#stats').tooltip();
+    });
+</script>
 
-											$to_time = strtotime(date("m/d/Y g:i a",$row['stopped']));
-											$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
-											$paused_time = strtotime(date("m/d/Y g:i a",$row['paused_counter']));
-											
-											$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
-											$viewed_time_length = strlen($viewed_time);
-											
-											
-											
-											if ($viewed_time_length == 8) {
-												echo "<td align='center'>n/a</td>";
-											}else{
-												echo "<td align='center'>".$viewed_time. " min</td>";
-											}
-											
-											$percentComplete = ($duration == 0 ? 0 : sprintf("%2d", ($viewOffset / $duration) * 100));
-												if ($percentComplete >= 90) {	
-												  $percentComplete = 100;    
-												}
-
-											echo "<td align='center'><span class='badge badge-warning'>".$percentComplete."%</span></td>";
-										echo "</tr>";   
-									}
-								}
-									echo "</tbody>";
-								echo "</table>";
-							
-						echo "</div>";
-					echo "</div>";
-				echo "</div>";
-			echo "</div>";			
-		echo "</div>";
-		
-		
-	echo "</div>";
-		
-	?>
-		<footer>
-		
-		</footer>
-		
-    
-    
-    <!-- javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="js/jquery-2.0.3.js"></script>
-	<script src="js/bootstrap.js"></script>
-	<script src="js/jquery.dataTables.js"></script>
-	<script src="js/jquery.dataTables.plugin.date_sorting.js"></script>
-	<script src="js/jquery.dataTables.plugin.bootstrap_pagination.js"></script>
-	
-	<script>
-		$(document).ready(function() {
-			var oTable = $('#tableUserHistory').dataTable( {
-				"bPaginate": true,
-				"bLengthChange": true,
-				"bFilter": true,
-				"bSort": true,
-				"bInfo": true,
-				"bAutoWidth": true,	
-				"aaSorting": [[ 0, "desc" ]],			
-				"bStateSave": false,
-				"bSortClasses": false,
-				"sPaginationType": "bootstrap",
-				"aoColumns": [
-				{"sSortDataType": "dom-data-order", "sType": "numeric"},
-				null,
-				null,
-				null,
-				null,
-				null,
-				null,
-				null,
-				null,
-				null
-				]	
-			} );
-		} );
-	</script>
-	<script>
-		$(document).ready(function() {
-			var oTable = $('#tableUserIpAddresses').dataTable( {
-				"bPaginate": true,
-				"bLengthChange": true,
-				"bFilter": true,
-				"bSort": true,
-				"bInfo": true,
-				"bAutoWidth": true,	
-				"aaSorting": [[ 0, "desc" ]],			
-				"bStateSave": false,
-				"bSortClasses": false,
-				"sPaginationType": "bootstrap",
-				"aoColumns": [
-				{"sSortDataType": "dom-data-order", "sType": "numeric"},
-				null,
-				null,
-				null,
-				null
-				]		
-			} );
-		} );
-	</script>
-	
-	<script>
-	$(document).ready(function() {
-		$('#home').tooltip();
-	});
-	$(document).ready(function() {
-		$('#history').tooltip();
-	});
-	$(document).ready(function() {
-		$('#users').tooltip();
-	});
-	$(document).ready(function() {
-		$('#charts').tooltip();
-	});
-	$(document).ready(function() {
-		$('#settings').tooltip();
-	});
-	$(document).ready(function() {
-		$('#stats').tooltip();
-	});
-	</script>
-	
-  </body>
+</body>
 </html>
