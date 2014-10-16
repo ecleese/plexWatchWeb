@@ -1,3 +1,7 @@
+1.6.0 dev
+* Add:		global: server side processing for history tables. (drzoidberg33) (note: info.php table code needs revised)
+* Add:		global: icon support for xbox consoles.
+
 1.5.4.2 master
 * Fix:		global: API call contained an invalid parameter (merged pull request #62 from ljunkie)
 * Fix:		current activity: music thumbs would not always display

@@ -74,6 +74,8 @@ $platformXmlField = simplexml_load_string($platformXml);
                 $platformImage = "images/platforms/default.png";
         }else if(strstr($platformXmlField->Player['platform'], 'Windows-XBMC')) {
                 $platformImage = "images/platforms/xbmc.png";
+		}else if(strstr($sessions->Player['platform'], 'Xbox')) {
+				$platformImage = "images/platforms/xbox.png";
         }else if(empty($platformXmlField->Player['platform'])) {
                 if(strstr($platformXmlField->Player['title'], 'Apple')) {
                         $platformImage = "images/platforms/atv.png";
@@ -83,6 +85,8 @@ $platformXmlField = simplexml_load_string($platformXml);
                 }else{
                         $platformImage = "images/platforms/default.png";
                 }
+		}else{
+				$platformImage = "images/platforms/default.png";
         }
         
         echo "<ul>";

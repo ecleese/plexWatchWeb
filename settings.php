@@ -114,7 +114,7 @@ if (isset($_GET['s'])) {
     <div class="settings-general-info">
 
         <ul>
-            <li>plexWatch/Web Version: <strong>v1.5.4.2</strong></li>
+            <li>plexWatch/Web Version: <strong>v1.6.0 dev</strong></li>
 
             <?php
             $db = dbconnect();
@@ -721,7 +721,7 @@ if (!file_exists($guisettingsFile)) {
             ?>
 
             <br>
-            <p><h4>Note: </h4>Please ensure you have installed, configured and tested <a href="https://github.com/ljunkie/plexWatch">plexWatch v0.1.6</a> or above before continuing. If all requirements above are green and the timezone shown matches your timezone you can move forward by filling in a few key configuration options now.</p>
+            <p><h4>Note: </h4>Please ensure you have installed, configured and tested <a href="https://github.com/ljunkie/plexWatch">plexWatch v0.3.1</a> or above before continuing. If all requirements above are green and the timezone shown matches your timezone you can move forward by filling in a few key configuration options now.</p>
             <br>
 
         </div>

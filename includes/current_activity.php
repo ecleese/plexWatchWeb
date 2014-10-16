@@ -62,6 +62,8 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 					$platformImage = "images/platforms/default.png";
 				}else if(strstr($sessions->Player['platform'], 'Windows-XBMC')) {
 					$platformImage = "images/platforms/xbmc.png";
+				}else if(strstr($sessions->Player['platform'], 'Xbox')) {
+					$platformImage = "images/platforms/xbox.png";
 				}else if(empty($sessions->Player['platform'])) {
 					if(strstr($sessions->Player['title'], 'Apple')) {
 						$platformImage = "images/platforms/atv.png";
@@ -71,6 +73,8 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 					}else{
 						$platformImage = "images/platforms/default.png";
 					}
+				}else{
+					$platformImage = "images/platforms/default.png";
 				}
 
 				
