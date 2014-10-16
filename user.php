@@ -75,7 +75,7 @@ if (file_exists($guisettingsFile)) {
     header("Location: settings.php");
 }
 
-$user = $_GET['user'];
+$user = htmlspecialchars($_GET['user'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', true);
 $db = dbconnect();
 
 if ($plexWatch['userHistoryGrouping'] == "yes") {

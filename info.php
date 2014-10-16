@@ -71,11 +71,11 @@
 		
 		if (!empty($plexWatch['myPlexAuthToken'])) {
 			$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
-			$id = $_GET['id'];
+			$id = intval($_GET['id']);
 			$infoUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."?X-Plex-Token=".$myPlexAuthToken."";
 		}else{
 			$myPlexAuthToken = '';		
-			$id = $_GET['id'];
+			$id = intval($_GET['id']);
 			$infoUrl = "".$plexWatchPmsUrl."/library/metadata/".$id."";
 		}
 		

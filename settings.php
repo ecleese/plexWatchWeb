@@ -74,11 +74,11 @@ require_once(dirname(__FILE__) . '/config/config.php');
 
 // check for a successful form post
 if (isset($_GET['s'])) {
-    echo "<div class=\"alert alert-warning alert-dismissable\">".$_GET['s']."";
+    echo "<div class=\"alert alert-warning alert-dismissable\">".htmlspecialchars($_GET['s'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', true)."";
     echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\"><i class=\"icon icon-remove-circle\"></i></button></div>";
     // check for a form error
 }elseif (isset($_GET['e'])) {
-    echo "<div class=\"alert alert-warning alert-dismissable\">".$_GET['e']."";
+    echo "<div class=\"alert alert-warning alert-dismissable\">".htmlspecialchars($_GET['e'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', true)."";
     echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\"><i class=\"icon icon-remove-circle\"></i></button></div>";
 }elseif (isset($_GET['error']) && ($_GET['error'] == 'datetime')) {
     echo "<div class=\"alert alert-warning alert-dismissable\">Error in date/time format. Please correct this and try again.";
@@ -521,7 +521,7 @@ if(!class_exists('SQLite3'))
             <div class="control-group">
                 <label class="control-label" for="pmsHttpPort">PMS Web Port</label>
                 <div class="controls">
-                    <input id="pmsHttpPort" name="pmsHttpPort" type="text" placeholder="32400" class="input-small" required="" >
+                    <input id="pmsHttpPort" name="pmsHttpPort" type="text" placeholder="32400" class="input-small" required="" value="32400">
                     <p class="help-block">Plex Media Server's web port</p>
                 </div>
             </div>
@@ -530,7 +530,7 @@ if(!class_exists('SQLite3'))
             <div class="control-group">
                 <label class="control-label" for="pmsHttpsPort">PMS Secure Web Port</label>
                 <div class="controls">
-                    <input id="pmsHttpsPort" name="pmsHttpsPort" type="text" placeholder="32443" class="input-small" required="" >
+                    <input id="pmsHttpsPort" name="pmsHttpsPort" type="text" placeholder="32443" class="input-small" required="" value="32443">
                     <p class="help-block">Plex Media Server's secure web port</p>
                 </div>
             </div>
@@ -553,7 +553,7 @@ if(!class_exists('SQLite3'))
             <div class="control-group">
                 <label class="control-label" for="plexWatchDb">plexWatch Database</label>
                 <div class="controls">
-                    <input id="plexWatchDb" name="plexWatchDb" type="text" placeholder="/opt/plexWatch/plexWatch.db" class="input-xlarge" required="" >
+                    <input id="plexWatchDb" name="plexWatchDb" type="text" placeholder="/opt/plexWatch/plexWatch.db" class="input-xlarge" required="" value="/opt/plexWatch/plexWatch.db">
                     <p class="help-block">File location of your plexWatch database.</p>
                 </div>
             </div>
