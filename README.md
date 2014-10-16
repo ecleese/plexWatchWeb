@@ -78,8 +78,8 @@ A web front-end for plexWatch.
 
 ###Requirements
 ---------------
-* Plex Media Server (v0.9.8+) and a PlexPass membership
-* plexWatch (v0.1.6+)
+* Plex Media Server (v0.9.9+) and a PlexPass membership
+* plexWatch (v0.3.1+)
 * a web server that supports php (apache, nginx, XAMPP, WampServer, EasyPHP, lighttpd, etc)
 * php5
 * php5-sqlite
@@ -92,7 +92,7 @@ A web front-end for plexWatch.
 
 1. Install requirements
 2. Download and unzip the plexWatchWeb package.
-3. Upload the contents to the desired location on your web server "/var/www/plexWatch"
+3. Upload the contents to the desired location on your web server. For example: "/var/www/plexWatch"
 
 
 ###Use
