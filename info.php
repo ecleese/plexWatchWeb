@@ -89,7 +89,8 @@
 			if ($xml->Video['type'] == "episode") {
 
 					$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['art']."&width=1920&height=1080";                                       
-					$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['parentThumb']."&width=256&height=352"; 
+					$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['parentThumb']."&width=256&height=352";
+					$xmlgThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['grandparentThumb']."&width=256&height=352";
 				
 							
 					echo "<div class='container-fluid'>";
@@ -111,6 +112,8 @@
 													
 													if($xml->Video['parentThumb']) {
 														echo "<img src='includes/img.php?img=".urlencode($xmlThumbUrl)."'></img>";
+													}elseif($xml->Video['grandparentThumb']){
+														echo "<img src='includes/img.php?img=".urlencode($xmlgThumbUrl)."'></img>";
 													}else{
 														echo "<img src='images/poster.png'></img>";
 													}
