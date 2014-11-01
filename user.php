@@ -495,12 +495,16 @@
 										if ($recentThumbUrlRequest = @simplexml_load_file ($recentMetadata)) { 
 											
 											$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['parentThumb']."&width=136&height=280";                                        
+											$recentgThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['grandparentThumb']."&width=136&height=280";                                        
 
 											echo "<div class='dashboard-recent-media-instance'>";
 											echo "<li>";
 												
 											if($recentThumbUrlRequest->Video['parentThumb']) {
 													echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='includes/img.php?img=".urlencode($recentThumbUrl)."' class='poster-face'></img></a></div></div>";
+											}elseif($recentThumbUrlRequest->Video['grandparentThumb']) {
+													echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='includes/img.php?img=".urlencode($recentgThumbUrl)."' class='poster-face'></img></a></div></div>";
+		
 												}else{
 													echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='images/poster.png' class='poster-face'></img></a></div></div>";
 											}
