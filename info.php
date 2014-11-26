@@ -181,7 +181,7 @@
 							
 							$title = $db->querySingle("SELECT title FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\'  ");
 							$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
-							$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter, strftime('%Y%m%d', datetime(time, 'unixepoch', 'localtime')) as date FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
+							$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
 							
 							echo "<div class='dashboard-wellheader'>";
 									echo"<h3>Watching history for <strong>".$xml->Video['title']."</strong> (".$numRows." Views)</h3>";
@@ -201,7 +201,6 @@
 										echo "<th align='left'><i class='icon-sort icon-white'></i> User</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Platform</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> IP Address</th>";
-										echo "<th align='center'><i class='icon-sort icon-white'></i> Stream Info</th>";
 										echo "<th align='center'><i class='icon-sort icon-white'></i> Started</th>";
 										echo "<th align='center'><i class='icon-sort icon-white'></i> Paused</th>";
 										echo "<th align='center'><i class='icon-sort icon-white'></i> Stopped</th>";
@@ -214,15 +213,15 @@
 								while ($row = $results->fetchArray()) {
 								$rowCount++;
 									echo "<tr>";
-										echo "<td data-order='".$row['date']."' align='left'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
+										echo "<td data-order='".$row['time']."' align='left'>".$row['time']."</td>";
 										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
 										
 										$rowXml = simplexml_load_string($row['xml']); 
 										$platform = $rowXml->Player['platform'];
 										if ($platform == "Chromecast") {
-											echo "<td align='left'>".$platform."</td>";
+											echo "<td align='left'><a href='#streamDetailsModal".$rowCount."' data-toggle='modal'><span class='badge badge-inverse'><i class='icon-info icon-white'></i></span></a>&nbsp".$platform."</td>";
 										}else{
-											echo "<td align='left'>".$row['platform']."</td>";
+											echo "<td align='left'><a href='#streamDetailsModal".$rowCount."' data-toggle='modal'><span class='badge badge-inverse'><i class='icon-info icon-white'></i></span></a>&nbsp".$row['platform']."</td>";
 										}
 
 										if (empty($row['ip_address'])) {
@@ -240,7 +239,7 @@
 										$viewOffset = $xmlfield['viewOffset'];
 
 										
-										echo "<td align='center'><a href='#streamDetailsModal".$rowCount."' data-toggle='modal'><span class='badge badge-inverse'><i class='icon-info icon-white'></i></span></a></td>";
+										//echo "<td align='center'></td>";
 							
 							
 
@@ -372,12 +371,12 @@
 							<?php
 
 														
-										echo "<td align='center'>".date($plexWatch['timeFormat'],$row['time'])."</td>";
+										echo "<td align='center'>".$row['time']."</td>";
 										
 										$paused_duration = round(abs($row['paused_counter']) / 60,1);
 										echo "<td align='center'>".$paused_duration." min</td>";
 										
-										$stopped_time = date($plexWatch['timeFormat'],$row['stopped']);
+										$stopped_time = $row['stopped'];
 										
 										if (empty($row['stopped'])) {								
 											echo "<td align='center'>n/a</td>";
@@ -385,11 +384,7 @@
 											echo "<td align='center'>".$stopped_time."</td>";
 										}
 
-										$to_time = strtotime(date("m/d/Y g:i a",$row['stopped']));
-										$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
-										$paused_time = strtotime(date("m/d/Y g:i a",$row['paused_counter']));
-										
-										$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
+										$viewed_time = round(abs($row['stopped'] - $row['time'] - $row['paused_counter']) / 60,0);
 										$viewed_time_length = strlen($viewed_time);
 										
 										if ($viewed_time_length == 8) {
@@ -799,7 +794,6 @@
 										echo "<th align='left'><i class='icon-sort icon-white'></i> User</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Platform</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> IP Address</th>";
-										echo "<th align='center'><i class='icon-sort icon-white'></i> Stream Info</th>";
 										echo "<th align='center'><i class='icon-sort icon-white'></i> Started</th>";
 										echo "<th align='center'><i class='icon-sort icon-white'></i> Paused</th>";
 										echo "<th align='center'><i class='icon-sort icon-white'></i> Stopped</th>";
@@ -812,15 +806,15 @@
 									while ($row = $results->fetchArray()) {
 									$rowCount++;
 									echo "<tr>";
-										echo "<td data-order='".$row['date']."' align='left'>".date($plexWatch['dateFormat'],$row['time'])."</td>";
+										echo "<td data-order='".$row['time']."' align='left'>".$row['time']."</td>";
 										echo "<td align='left'><a href='user.php?user=".$row['user']."'>".FriendlyName($row['user'],$row['platform'])."</td>";
 										
 										$rowXml = simplexml_load_string($row['xml']); 
 										$platform = $rowXml->Player['platform'];
 										if ($platform == "Chromecast") {
-											echo "<td align='left'>".$platform."</td>";
+											echo "<td align='left'><a href='#streamDetailsModal".$rowCount."' data-toggle='modal'><span class='badge badge-inverse'><i class='icon-info icon-white'></i></span></a>&nbsp".$platform."</td>";
 										}else{
-											echo "<td align='left'>".$row['platform']."</td>";
+											echo "<td align='left'><a href='#streamDetailsModal".$rowCount."' data-toggle='modal'><span class='badge badge-inverse'><i class='icon-info icon-white'></i></span></a>&nbsp".$row['platform']."</td>";
 										}
 
 										if (empty($row['ip_address'])) {
@@ -837,7 +831,7 @@
 										$duration = $xmlfield['duration'];
 										$viewOffset = $xmlfield['viewOffset'];
 
-										echo "<td align='center'><a href='#streamDetailsModal".$rowCount."' data-toggle='modal'><span class='badge badge-inverse'><i class='icon-info icon-white'></i></span></a></td>";
+										//echo "<td align='center'></td>";
 							
 							
 
@@ -968,12 +962,12 @@
 
 							<?php
 														
-										echo "<td align='center'>".date($plexWatch['timeFormat'],$row['time'])."</td>";
+										echo "<td align='center'>".$row['time']."</td>";
 										
 										$paused_duration = round(abs($row['paused_counter']) / 60,1);
 										echo "<td align='center'>".$paused_duration." min</td>";
 										
-										$stopped_time = date($plexWatch['timeFormat'],$row['stopped']);
+										$stopped_time = $row['stopped'];
 										
 										if (empty($row['stopped'])) {								
 											echo "<td align='center'>n/a</td>";
@@ -981,11 +975,7 @@
 											echo "<td align='center'>".$stopped_time."</td>";
 										}
 
-										$to_time = strtotime(date("m/d/Y g:i a",$row['stopped']));
-										$from_time = strtotime(date("m/d/Y g:i a",$row['time']));
-										$paused_time = strtotime(date("m/d/Y g:i a",$row['paused_counter']));
-
-										$viewed_time = round(abs($to_time - $from_time - $paused_time) / 60,0);
+										$viewed_time = round(abs($row['stopped'] - $row['time'] - $row['paused_counter']) / 60,0);
 										$viewed_time_length = strlen($viewed_time);
 										
 										
@@ -1036,6 +1026,7 @@
 	<script src="js/jquery.dataTables.plugin.date_sorting.js"></script>
 	<script src="js/jquery.dataTables.plugin.bootstrap_pagination.js"></script>
 	<script src="js/jquery.rateit.js"></script>
+        <script src="js/moment-with-locale.js"></script>
 	
 	<script>
 	var p=$('#summary-content-summary p');
@@ -1061,16 +1052,41 @@
 				"bSortClasses": false,
 				"sPaginationType": "bootstrap",
 				"aoColumns": [
-				{"sSortDataType": "dom-data-order", "sType": "numeric"},
-				null,
-				null,
-				null,
-				null,
-				null,
-				null,
-				null,
-				null,
-				null
+                                    {
+                                    "mData": function ( source, type, val ) {
+                                        if (type === 'set') {
+                                          source.date = val;
+                                          // Store the computed dislay and filter values for efficiency
+                                          source.date_display = val=="" ? "" : moment(val,"X").format('<?php echo $plexWatch['dateFormat'];?>');
+                                          source.date_filter  = val=="" ? "" : val;
+                                          return;
+                                        }
+                                        else if (type === 'display') {
+                                          return source.date_display;
+                                        }
+                                        else if (type === 'filter') {
+                                          return source.date_filter;
+                                        }
+                                        // 'sort', 'type' and undefined all just use the integer
+                                        return source.date;
+                                    }
+                                    },
+                                    null,
+                                    null,
+                                    null,
+                                    { 
+                                    "bUseRendered": false,
+                                    "mRender": function ( data, type, row ) {
+                                        return moment(data,"X").format('<?php echo $plexWatch['timeFormat'];?>');}
+                                    },
+                                    null,
+                                    { 
+                                    "bUseRendered": false,
+                                    "mRender": function ( data, type, row ) {
+                                        return moment(data,"X").format('<?php echo $plexWatch['timeFormat'];?>');}
+                                    },
+                                    null,
+                                    null
 				]
 			} );
 		} );
