@@ -4,6 +4,7 @@ function TimeAgo($datefrom,$dateto=-1)
 // Defaults and assume if 0 is passed in that
 // its an error rather than the epoch
 
+$datefrom = intval($datefrom);
 if($datefrom<=0) { return "A long time ago"; }
 if($dateto==-1) { $dateto = time(); }
 
