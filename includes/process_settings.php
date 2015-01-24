@@ -1,6 +1,11 @@
 <?php
     session_start();
 
+        require_once(dirname(__FILE__) . '/ConfigClass.php');
+
+        $config = new ConfigClass();
+        $existing_config = $config::read('../config/config.php');
+
         $dateFormat = "\$plexWatch['dateFormat'] = '".$_POST['dateFormat']."';"; 
         $timeFormat = "\$plexWatch['timeFormat'] = '".$_POST['timeFormat']."';";
         
@@ -17,10 +22,18 @@
         
         $plexWatchDb = "\$plexWatch['plexWatchDb'] = '".$_POST['plexWatchDb']."';";
         
-        $myPlexUser = "\$plexWatch['myPlexUser'] = '".$_POST['myPlexUser']."';";        
-        $myPlexPass = "\$plexWatch['myPlexPass'] = '".$_POST['myPlexPass']."';"; 
-        
-        
+        $myPlexUser = "\$plexWatch['myPlexUser'] = '".$_POST['myPlexUser']."';";
+        if (isset($_POST['myPlexPass']) && $_POST['myPlexPass'] !== '') {
+            $myPlexPass = "\$plexWatch['myPlexPass'] = '" . base64_encode($_POST['myPlexPass']) . "';";
+        } else {
+            if ($existing_config) {
+                $myPlexPass = "\$plexWatch['myPlexPass'] = '" . $existing_config['myPlexPass'] . "';";
+            } else {
+                $myPlexPass = "\$plexWatch['myPlexPass'] = '';";
+            }
+        }
+
+
         if (!isset($_POST['globalHistoryGrouping'])) {
                 $globalHistoryGrping = "\$plexWatch['globalHistoryGrouping'] = 'no';";
         }else if ($_POST['globalHistoryGrouping'] == "yes") {
