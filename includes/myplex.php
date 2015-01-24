@@ -13,7 +13,7 @@ if (file_exists($guisettingsFile)) {
 
 		$host = "https://my.plexapp.com/users/sign_in.xml";
 		$username = $plexWatch['myPlexUser'];
-		$password = $plexWatch['myPlexPass'];
+		$password = base64_decode($plexWatch['myPlexPass']);
 
 
 		$process = curl_init($host);
