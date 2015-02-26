@@ -28,13 +28,13 @@ if (file_exists($guisettingsFile)) {
 		if($authCode == 401) {
 			curl_close($process);
 			$myPlexAuthToken = '';
-			$errorCode = "<i class=\"icon icon-exclamation-sign\"></i> myPlex authentication failed. Check your myPlex username and password.";
+			$errorCode = "Plex.tv authentication failed. Check your Plex.tv username and password.";
 		
 		//Check for curl error
 		}else if(curl_errno($process)) {	
 			$curlError = curl_error($process);
 			echo $curlError;
-			$errorCode = "<i class=\"icon icon-exclamation-sign\"></i> ".$curlError."";
+			$errorCode = $curlError;
 			curl_close($process);
 			$myPlexAuthToken = '';
 			
@@ -43,7 +43,7 @@ if (file_exists($guisettingsFile)) {
 			$myPlexAuthToken = $xml['authenticationToken'];
 			
 			if (empty($myPlexAuthToken)) {
-				$errorCode = "<i class=\"icon icon-exclamation-sign\"></i> Error: Could not parse myPlex XML to retrieve authentication code.";
+				$errorCode = "Error: Could not parse Plex.tv XML to retrieve authentication code.";
 				curl_close($process);
 			}else{
 				$errorCode = '';
