@@ -78,8 +78,8 @@ A web front-end for plexWatch.
 
 ###Requirements
 ---------------
-* Plex Media Server (v0.9.9+) and a PlexPass membership
-* plexWatch (v0.3.1+)
+* Plex Media Server (v0.9.9+)
+* plexWatch (v0.3.2+)
 * a web server that supports php (apache, nginx, XAMPP, WampServer, EasyPHP, lighttpd, etc)
 * php5
 * php5-sqlite
