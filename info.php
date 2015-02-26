@@ -107,6 +107,8 @@
 													
 													if($xml->Video['parentThumb']) {
 														echo "<img src='includes/img.php?img=".urlencode($xmlThumbUrl)."'></img>";
+													}elseif($xml->Video['grandparentThumb']){
+														echo "<img src='includes/img.php?img=".urlencode($xmlgThumbUrl)."'></img>";
 													}else{
 														echo "<img src='images/poster.png'></img>";
 													}
@@ -535,7 +537,8 @@
 							$parentXml = simplexml_load_string(file_get_contents($parentInfoUrl)) or die ("Feed Not Found");
 
 								$xmlArtUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['art']. "&width=1920&height=1080";                                       
-								$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Directory['thumb']. "&width=256&height=352";  
+								$xmlThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['parentThumb']."&width=256&height=352";
+								$xmlgThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$xml->Video['grandparentThumb']."&width=256&height=352";  
 							
 							
 						echo "<div class='container-fluid'>";	
@@ -768,7 +771,7 @@
 
 							$numRows = $db->querySingle("SELECT COUNT(*) as views FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
 							
-							$results = $db->query("SELECT * FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
+							$results = $db->query("SELECT *, strftime('%Y%m%d', datetime(time, 'unixepoch', 'localtime')) as date FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
 							
 							echo "<div class='dashboard-wellheader'>";
 									echo"<h3>Watching history for <strong>".$xml->Video['title']."</strong> (".$numRows." Views)</h3>";
