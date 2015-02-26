@@ -673,7 +673,7 @@ if (!file_exists($guisettingsFile)) {
             ?>
 
             <br>
-            <p><h4>Note: </h4>Please ensure you have installed, configured and tested <a href="https://github.com/ljunkie/plexWatch">plexWatch v0.3.1</a> or above before continuing. If all requirements above are green and the timezone shown matches your timezone you can move forward by filling in a few key configuration options now.</p>
+            <p><h4>Note: </h4>Please ensure you have installed, configured and tested <a href="https://github.com/ljunkie/plexWatch">plexWatch v0.3.2</a> or above before continuing. If all requirements above are green and the timezone shown matches your timezone you can move forward by filling in a few key configuration options now.</p>
             <br>
 
         </div>
