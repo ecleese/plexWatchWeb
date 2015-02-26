@@ -1,5 +1,9 @@
 <?php
     session_start();
+		require_once(dirname(__FILE__) . '/ConfigClass.php');
+	
+		$config = new ConfigClass();
+		$existing_config = $config::read('../config/config.php');
 
         $dateFormat = "\$plexWatch['dateFormat'] = '".$_POST['dateFormat']."';"; 
         $timeFormat = "\$plexWatch['timeFormat'] = '".$_POST['timeFormat']."';";
