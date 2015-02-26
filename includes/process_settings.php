@@ -6,20 +6,19 @@
         
         $pmsIp = "\$plexWatch['pmsIp'] = '".$_POST['pmsIp']."';";        
         $pmsHttpPort = "\$plexWatch['pmsHttpPort'] = '".$_POST['pmsHttpPort']."';";
-        $pmsHttpsPort = "\$plexWatch['pmsHttpsPort'] = '".$_POST['pmsHttpsPort']."';";
-        
-        
-        if (!isset($_POST['https'])) {
-                $https = "\$plexWatch['https'] = 'no';";
-        }else if ($_POST['https'] == "yes") {
-                $https = "\$plexWatch['https'] = '".$_POST['https']."';";
-        }
         
         $plexWatchDb = "\$plexWatch['plexWatchDb'] = '".$_POST['plexWatchDb']."';";
         
-        $myPlexUser = "\$plexWatch['myPlexUser'] = '".$_POST['myPlexUser']."';";        
-        $myPlexPass = "\$plexWatch['myPlexPass'] = '".$_POST['myPlexPass']."';"; 
-        
+        $myPlexUser = "\$plexWatch['myPlexUser'] = '".$_POST['myPlexUser']."';";
+        if (isset($_POST['myPlexPass']) && $_POST['myPlexPass'] !== '') {
+            $myPlexPass = "\$plexWatch['myPlexPass'] = '" . base64_encode($_POST['myPlexPass']) . "';";
+        } else {
+            if ($existing_config) {
+                $myPlexPass = "\$plexWatch['myPlexPass'] = '" . $existing_config['myPlexPass'] . "';";
+            } else {
+                $myPlexPass = "\$plexWatch['myPlexPass'] = '';";
+            }
+        }
         
         if (!isset($_POST['globalHistoryGrouping'])) {
                 $globalHistoryGrping = "\$plexWatch['globalHistoryGrouping'] = 'no';";
@@ -42,7 +41,7 @@
         }
         
         //combine all data into one variable
-        $data = "$dateFormat\r$timeFormat\r$pmsIp\r$pmsHttpPort\r$pmsHttpsPort\r$https\r$plexWatchDb\r$myPlexUser\r$myPlexPass\r$globalHistoryGrping\r$userHistoryGrping\r$chartsGrping";
+        $data = "$dateFormat\r$timeFormat\r$pmsIp\r$pmsHttpPort\r$plexWatchDb\r$myPlexUser\r$myPlexPass\r$globalHistoryGrping\r$userHistoryGrping\r$chartsGrping";
         
         $file = "../config/config.php";
         $func_file = dirname(dirname(__FILE__)) . '/includes/functions.php';
@@ -62,7 +61,7 @@
         $myPlexToken = "\$plexWatch['myPlexAuthToken'] = '".$myPlexAuthToken."';";
         
         //include authentication code in saved data
-        $data = "$dateFormat\r$timeFormat\r$pmsIp\r$pmsHttpPort\r$pmsHttpsPort\r$https\r$plexWatchDb\r$myPlexUser\r$myPlexPass\r$myPlexToken\r$globalHistoryGrping\r$userHistoryGrping\r$chartsGrping";
+        $data = "$dateFormat\r$timeFormat\r$pmsIp\r$pmsHttpPort\r$plexWatchDb\r$myPlexUser\r$myPlexPass\r$myPlexToken\r$globalHistoryGrping\r$userHistoryGrping\r$chartsGrping";
         
         //rewrite data to config.php
         $fp = fopen($file, "w+") or die("Cannot open file $file.");

@@ -2,11 +2,7 @@
 
 require_once(dirname(__FILE__) . '/../config/config.php');
 
-if ($plexWatch['https'] == 'yes') {
-	$plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
-}else if ($plexWatch['https'] == 'no') {
-	$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
-}
+$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
 
 $fileContents = '';
 
@@ -64,6 +60,8 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 					$platformImage = "images/platforms/xbmc.png";
 				}else if(strstr($sessions->Player['platform'], 'Xbox')) {
 					$platformImage = "images/platforms/xbox.png";
+				}else if(strstr($platformXmlField->Player['platform'], 'Samsung')) {
+                			$platformImage = "images/platforms/samsung.png";
 				}else if(empty($sessions->Player['platform'])) {
 					if(strstr($sessions->Player['title'], 'Apple')) {
 						$platformImage = "images/platforms/atv.png";

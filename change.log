@@ -1,3 +1,10 @@
+1.6.1 dev
+* Fix:		patch to address the img.php vulnerability. (drzoidberg33)
+* Fix:		store plex.tv password base64 encoded (in case someone is looking over your shoulder) (drzoidberg33)
+* Fix:		user.php: Samsung and Xbox platform icons were not appearing.
+* Removed:	settings.php: "PMS Secure Web Port" and "Use HTTPS" are no longer usable options with PMS so they were removed.
+* Change:	settings.php: Plex Authentication title and description were reworded so users better understand the need to enter this data if using "Plex Home"
+
 1.6.0 dev
 * Add:		global: server side processing for history tables. (drzoidberg33) (note: info.php table code needs revised)
 * Add:		global: icon support for xbox consoles.

@@ -96,7 +96,7 @@ if (isset($_GET['s'])) {
 
         <li class="active"><a href="#info">General</a></li>
         <li><a href="#pms">PMS & Database</a></li>
-        <li ><a href="#myplex">Plex Authentication</a></li>
+        <li ><a href="#myplex">Plex.tv Authentication</a></li>
         <li ><a href="#grouping">Grouping</a></li>
     </ul>
 </div>
@@ -114,7 +114,7 @@ if (isset($_GET['s'])) {
     <div class="settings-general-info">
 
         <ul>
-            <li>plexWatch/Web Version: <strong>v1.6.0 dev</strong></li>
+            <li>plexWatch/Web Version: <strong>v1.6.1 dev</strong></li>
 
             <?php
             $db = dbconnect();
@@ -233,35 +233,6 @@ if (isset($_GET['s'])) {
         </div>
     </div>
 
-    <!-- Text input-->
-    <div class="control-group">
-        <label class="control-label" for="pmsHttpsPort">PMS Secure Web Port</label>
-        <div class="controls">
-            <input id="pmsHttpsPort" name="pmsHttpsPort" type="text" placeholder="32443" class="input-small" required="" value="<?php echo $plexWatch['pmsHttpsPort'] ?>">
-            <p class="help-block">Plex Media Server's secure web port</p>
-        </div>
-    </div>
-
-
-    <?php
-
-    if ($plexWatch['https'] == "no" ) {
-        $https = '';
-    }else if ($plexWatch['https'] == "yes" ) {
-        $https = "checked='yes'";
-    }
-    ?>
-
-    <!-- Multiple Checkboxes (inline) -->
-    <div class="control-group">
-        <label class="control-label" for="https">Use HTTPS (optional)</label>
-        <div class="controls">
-            <label class="checkbox inline" for="https-0">
-                <input type="checkbox" name="https" id="https-0" value="yes" <?php echo $https ?>>
-                <p class="help-block">Use Plex Media Server's secure web port</p>
-            </label>
-        </div>
-    </div>
 
     <!-- Text input-->
     <div class="control-group">
@@ -277,15 +248,18 @@ if (isset($_GET['s'])) {
 <div class='wellbg'>
     <div class='wellheader'>
         <div class='dashboard-wellheader'>
-            <h3><a id="myplex">Plex Authentication</a></h3>
+            <h3><a id="myplex">Plex.tv Authentication</a></h3>
         </div>
     </div>
-    <!-- Text input-->
+	
+	<!-- Text input-->
     <div class="control-group">
+		<p class="help-block">If you have enabled <a href="https://support.plex.tv/hc/en-us/articles/203815766-What-is-Plex-Home-">Plex Home</a> on your Plex Media Server, a <a href="https://plex.tv/users/sign_in">Plex.tv</a> username and password are required in order to access your server's data.</p>
+		<br>
         <label class="control-label" for="myPlexUser">Username (optional)</label>
         <div class="controls">
             <input id="myPlexUser" name="myPlexUser" type="text" placeholder="" class="input-xlarge" value="<?php echo $plexWatch['myPlexUser'] ?>">
-            <p class="help-block">If you would like to access plexWatch/Web on other networks, a <a href="https://plex.tv/users/sign_in">Plex.tv</a> username and password are required.</p>
+            
         </div>
     </div>
 
@@ -293,8 +267,8 @@ if (isset($_GET['s'])) {
     <div class="control-group">
         <label class="control-label" for="myPlexPass">Password (optional)</label>
         <div class="controls">
-            <input id="myPlexPass" name="myPlexPass" type="password" placeholder="" class="input-xlarge" value="<?php echo $plexWatch['myPlexPass'] ?>">
-            <p class="help-block">If you would like to access plexWatch/Web on other networks, a <a href="https://plex.tv/users/sign_in">Plex.tv</a> username and password are required.</p>
+            <input id="myPlexPass" name="myPlexPass" type="password" placeholder="" class="input-xlarge" value="">
+            
         </div>
     </div>
 </div>
@@ -405,7 +379,7 @@ if(!class_exists('SQLite3'))
 
         <li class="active"><a href="#info">General</a></li>
         <li><a href="#pms">PMS & Database</a></li>
-        <li ><a href="#myplex">Plex Authentication</a></li>
+        <li ><a href="#myplex">Plex.tv Authentication</a></li>
         <li ><a href="#grouping">Grouping</a></li>
     </ul>
 </div>
@@ -526,28 +500,6 @@ if(!class_exists('SQLite3'))
                 </div>
             </div>
 
-            <!-- Text input-->
-            <div class="control-group">
-                <label class="control-label" for="pmsHttpsPort">PMS Secure Web Port</label>
-                <div class="controls">
-                    <input id="pmsHttpsPort" name="pmsHttpsPort" type="text" placeholder="32443" class="input-small" required="" value="32443">
-                    <p class="help-block">Plex Media Server's secure web port</p>
-                </div>
-            </div>
-
-
-
-
-            <!-- Multiple Checkboxes (inline) -->
-            <div class="control-group">
-                <label class="control-label" for="https">Use HTTPS (optional)</label>
-                <div class="controls">
-                    <label class="checkbox inline" for="https-0">
-                        <input type="checkbox" name="https" id="https-0" value="yes" >
-                        <p class="help-block">Use Plex Media Server's secure web port</p>
-                    </label>
-                </div>
-            </div>
 
             <!-- Text input-->
             <div class="control-group">
@@ -563,7 +515,7 @@ if(!class_exists('SQLite3'))
 <div class='wellbg'>
     <div class='wellheader'>
         <div class='dashboard-wellheader'>
-            <h3><a id="myplex">Plex Authentication</a></h3>
+            <h3><a id="myplex">Plex.tv Authentication</a></h3>
         </div>
     </div>
     <!-- Text input-->
@@ -571,7 +523,7 @@ if(!class_exists('SQLite3'))
         <label class="control-label" for="myPlexUser">Username (optional)</label>
         <div class="controls">
             <input id="myPlexUser" name="myPlexUser" type="text" placeholder="" class="input-xlarge" >
-            <p class="help-block">If you would like to access plexWatch/Web on other networks, a <a href="https://plex.tv/users/sign_in">Plex.tv</a> username and password are required.</p>
+            <p class="help-block">If you have enabled <a href="https://support.plex.tv/hc/en-us/articles/203815766-What-is-Plex-Home-">Plex Home</a> on your Plex Media Server, a <a href="https://plex.tv/users/sign_in">Plex.tv</a> username and password are required in order to access your server's data.</p>
         </div>
     </div>
 
@@ -580,7 +532,7 @@ if(!class_exists('SQLite3'))
         <label class="control-label" for="myPlexPass">Password (optional)</label>
         <div class="controls">
             <input id="myPlexPass" name="myPlexPass" type="password" placeholder="" class="input-xlarge" >
-            <p class="help-block">If you would like to access plexWatch/Web on other networks, a <a href="https://plex.tv/users/sign_in">Plex.tv</a> username and password are required.</p>
+            <p class="help-block">If you have enabled <a href="https://support.plex.tv/hc/en-us/articles/203815766-What-is-Plex-Home-">Plex Home</a> on your Plex Media Server, a <a href="https://plex.tv/users/sign_in">Plex.tv</a> username and password are required in order to access your server's data.</p>
         </div>
     </div>
 </div>

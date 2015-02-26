@@ -2,11 +2,7 @@
 
 require_once(dirname(__FILE__) . '/../config/config.php');
 
-if ($plexWatch['https'] == 'yes') {
-        $plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
-}else if ($plexWatch['https'] == 'no') {
-        $plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
-}
+$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
 
 $fileContents = '';
 

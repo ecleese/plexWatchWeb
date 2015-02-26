@@ -74,19 +74,19 @@ $platformXmlField = simplexml_load_string($platformXml);
                 $platformImage = "images/platforms/default.png";
         }else if(strstr($platformXmlField->Player['platform'], 'Windows-XBMC')) {
                 $platformImage = "images/platforms/xbmc.png";
-		}else if(strstr($sessions->Player['platform'], 'Xbox')) {
-				$platformImage = "images/platforms/xbox.png";
+	}else if(strstr($platformXmlField->Player['platform'], 'Xbox')) {
+                $platformImage = "images/platforms/xbox.png";
+	}else if(strstr($platformXmlField->Player['platform'], 'Samsung')) {
+                $platformImage = "images/platforms/samsung.png";
         }else if(empty($platformXmlField->Player['platform'])) {
                 if(strstr($platformXmlField->Player['title'], 'Apple')) {
                         $platformImage = "images/platforms/atv.png";
                 //Code below matches Samsung naming standard: [Display Technology: 2 Letters][Size: 2 digits][Generation: 1 letter][Model: 4 digits]
-                }else if(preg_match("/TV [a-z][a-z]\d\d[a-z]/i",$platformXmlField->Player['title'])) {
+                }else if(preg_match("/TV [a-z][a-z]\d\d[a-z]\d\d\d\d/i",$platformXmlField->Player['title'])) {
                         $platformImage = "images/platforms/samsung.png";	
                 }else{
                         $platformImage = "images/platforms/default.png";
                 }
-		}else{
-				$platformImage = "images/platforms/default.png";
         }
         
         echo "<ul>";

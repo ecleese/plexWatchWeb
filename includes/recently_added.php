@@ -15,11 +15,9 @@ if (isset($_GET['width'])) {
 
 /* needs some indentation fixing */
 
-				if ($plexWatch['https'] == 'yes') {
-					$plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
-				}else if ($plexWatch['https'] == 'no') {
-					$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
-				}
+
+			$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
+				
 			date_default_timezone_set(@date_default_timezone_get());
 
 			if (!empty($plexWatch['myPlexAuthToken'])) {

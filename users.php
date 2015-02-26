@@ -180,7 +180,7 @@
 				"bPaginate": false,
 				"bLengthChange": true,
 				"bFilter": false,
-				"bSort": false,
+				"bSort": true,
 				"bInfo": true,
 				"bAutoWidth": true,
 				"aaSorting": [[ 0, "asc" ]],

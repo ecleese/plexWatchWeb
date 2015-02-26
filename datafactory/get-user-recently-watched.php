@@ -9,11 +9,7 @@ if (file_exists($guisettingsFile)) {
     exit;
 }
 
-if ($plexWatch['https'] == 'yes') {
-        $plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
-}else if ($plexWatch['https'] == 'no') {
-        $plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
-}
+$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
 
 $plexWatchDbTable = "";
 if ($plexWatch['userHistoryGrouping'] == "yes") {

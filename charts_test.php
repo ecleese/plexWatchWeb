@@ -1,3 +1,5 @@
+<?php include("password_protect.php"); ?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -40,13 +42,13 @@
 				<a href="index.php"><div class="logo hidden-phone"></div></a>
 				<ul class="nav">
 					
-					<li><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
+					<li class="active"><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
 					<li><a href="history.php"><i class="icon-2x icon-calendar icon-white" data-toggle="tooltip" data-placement="bottom" title="History" id="history"></i></a></li>
 					<li><a href="stats.php"><i class="icon-2x icon-tasks icon-white" data-toggle="tooltip" data-placement="bottom" title="Stats" id="stats"></i></a></li>
 					<li><a href="users.php"><i class="icon-2x icon-group icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
-					<li class="active"><a href="charts.php"><i class="icon-2x icon-bar-chart icon-white" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
+					<li><a href="charts.php"><i class="icon-2x icon-bar-chart icon-white" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
 					<li><a href="settings.php"><i class="icon-2x icon-wrench icon-white" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
-					
+					<li><a href="index.php?logout=1"><i class="icon-2x icon-remove icon-white" data-toggle="tooltip" data-placement="bottom" title="Logout" id="Logout"></i></a></li>
 				</ul>
 				
 			</div>
@@ -90,9 +92,9 @@
 				
 				if (!empty($plexWatch['myPlexAuthToken'])) {
 					$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
-               if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/status/sessions?X-Plex-Token=".$myPlexAuthToken."")) {
+				if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/status/sessions?X-Plex-Token=".$myPlexAuthToken."")) {
                   $statusSessions = simplexml_load_string($fileContents) or die ("Failed to access Plex Media Server. Please check your settings.");
-               }
+				}
 
 				}else{
 					$myPlexAuthToken = '';
@@ -222,7 +224,7 @@
 						echo "<div class='charts-wrapper'>";
 							echo "<ul>";
 							
-							$queryTop10Shows = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(orig_title) AS play_count FROM ".$plexWatchDbTable." WHERE season != '' GROUP BY orig_title HAVING play_count > 0 ORDER BY play_count DESC,time DESC");
+							$queryTop10Shows = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(orig_title) AS play_count FROM ".$plexWatchDbTable." GROUP BY orig_title HAVING play_count > 0 ORDER BY play_count DESC,time DESC");
 				
 							// Run through each feed item
 							$top10Shows_Num_rows = 0;
@@ -269,7 +271,7 @@
 						echo "<div class='charts-wrapper'>";
 							echo "<ul>";
 							
-							$queryTop10Episodes = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(*) AS play_count FROM ".$plexWatchDbTable." WHERE season != '' GROUP BY title HAVING play_count > 0 ORDER BY play_count DESC,time DESC");
+							$queryTop10Episodes = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(*) AS play_count FROM ".$plexWatchDbTable." GROUP BY title HAVING play_count > 0 ORDER BY play_count DESC,time DESC");
 				
 							// Run through each feed item
 							$top10Episodes_Num_rows = 0;

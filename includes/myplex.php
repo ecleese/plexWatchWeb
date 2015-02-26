@@ -1,21 +1,14 @@
-
-
 <?php
-
 $guisettingsFile = "./../config/config.php";
-
 if (file_exists($guisettingsFile)) { 
 	require_once(dirname(__FILE__) . '/../config/config.php');
 				
 	if (empty($plexWatch['myPlexUser']) && empty($plexWatch['myPlexPass'])) {
 		$myPlexAuthToken = '';
 	}else{	
-
 		$host = "https://my.plexapp.com/users/sign_in.xml";
 		$username = $plexWatch['myPlexUser'];
-		$password = $plexWatch['myPlexPass'];
-
-
+		$password = base64_decode($plexWatch['myPlexPass']);
 		$process = curl_init($host);
 		curl_setopt($process, CURLOPT_HTTPHEADER, array('Content-Type: application/xml; charset=utf-8', 'Content-Length: 0', 'X-Plex-Client-Identifier: plexWatchWeb'));
 		curl_setopt($process, CURLOPT_HEADER, 0);
@@ -27,7 +20,6 @@ if (file_exists($guisettingsFile)) {
 		
 		
 		curl_setopt($process, CURLOPT_RETURNTRANSFER, true);
-
 		$data = curl_exec($process);
 		
 		
@@ -62,14 +54,7 @@ if (file_exists($guisettingsFile)) {
 		
 		
 	}
-
 }else{
-
 echo "config file not found";
-
 }
 ?>
-
-
-
- 
