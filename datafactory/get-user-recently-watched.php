@@ -57,7 +57,7 @@ if ($recentXml['type'] == "episode") {
                 if($recentThumbUrlRequest->Video['parentThumb']) {
 							echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='includes/img.php?img=".urlencode($recentThumbUrl)."' class='poster-face'></img></a></div></div>";
                         }elseif($recentThumbUrlRequest->Video['grandparentThumb']) {
-+							echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='includes/img.php?img=".urlencode($recentgThumbUrl)."' class='poster-face'></img></a></div></div>";
+							echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='includes/img.php?img=".urlencode($recentgThumbUrl)."' class='poster-face'></img></a></div></div>";
 						}else{
                             echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'><img src='images/poster.png' class='poster-face'></img></a></div></div>";
                 }
