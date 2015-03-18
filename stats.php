@@ -162,7 +162,7 @@
 						$dailyPlayFinal .= $dailyPlayTotal;
 					}
 						
-					$monthlyPlays = $db->query("SELECT strftime('%Y-%m', datetime(time, 'unixepoch', 'localtime')) as date, COUNT(title) as count FROM $plexWatchDbTable WHERE datetime(time, 'unixepoch', 'localtime') >= datetime('now', '-12 months', 'localtime') GROUP BY strftime('%Y-%m', datetime(time, 'unixepoch', 'localtime'))  ORDER BY date DESC LIMIT 6;") or die ("Failed to access plexWatch database. Please check your settings.");
+					$monthlyPlays = $db->query("SELECT strftime('%Y-%m', datetime(time, 'unixepoch', 'localtime')) as date, COUNT(title) as count FROM $plexWatchDbTable WHERE datetime(time, 'unixepoch', 'localtime') >= datetime('now', '-12 months', 'localtime') GROUP BY strftime('%Y-%m', datetime(time, 'unixepoch', 'localtime'))  ORDER BY date DESC LIMIT 13;") or die ("Failed to access plexWatch database. Please check your settings.");
 					$monthlyPlaysNum = 0;
 					$monthlyPlayFinal = '';
 					while ($monthlyPlay = $monthlyPlays->fetchArray()) {
@@ -366,7 +366,7 @@
 	};
 	var opts = {
 	  "dataFormatX": function (x) { return d3.time.format('%Y-%m').parse(x); },
-	  "tickFormatX": function (x) { return d3.time.format('%b')(x); },
+	  "tickFormatX": function (x) { return d3.time.format('%b %Y')(x); },
 	  "paddingLeft": ('35'),
 	  "paddingRight": ('35'),
 	  "paddingTop": ('10'),

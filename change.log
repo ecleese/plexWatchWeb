@@ -1,3 +1,7 @@
+1.6.2 dev
+* Fix:		get-library-stats.php: fix for user count==0 (rbowden91)
+* Change:	stats.php: extended monthly plays chart to one full year, including year of month
+
 1.6.1 dev
 * Fix:		info.php: $row['date'] definition for line 815 (ljm42)
 * Fix:		info.php / user.php: Fallback to Grandparent poster if parent poster isn't available. If all else fails, drop back to image placeholder. (Keelan)

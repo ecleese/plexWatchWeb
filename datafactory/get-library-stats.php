@@ -89,6 +89,9 @@ foreach ($sections->children() as $section) {
 date_default_timezone_set(@date_default_timezone_get());
 $db = dbconnect();
 $users = $db->querySingle("SELECT count(DISTINCT user) as users FROM processed") or die ("Failed to access plexWatch database. Please check your settings.");
+if ($users === false) {
+	die ("Failed to access plexWatch database. Please check your settings.");
+}
 
 echo "<li>";
 echo "<h1>".$users."</h1><h5>Users</h5>";

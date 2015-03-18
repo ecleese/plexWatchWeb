@@ -114,7 +114,7 @@ if (isset($_GET['s'])) {
     <div class="settings-general-info">
 
         <ul>
-            <li>plexWatch/Web Version: <strong>v1.6.1 dev</strong></li>
+            <li>plexWatch/Web Version: <strong>v1.6.2 dev</strong></li>
 
             <?php
             $db = dbconnect();
