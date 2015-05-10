@@ -191,7 +191,7 @@ class ServerDataPDO
                   //  "sName": 'date',
                     "aTargets": [ 1 ],
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                        if(oData[8] === null) {
+                        if (oData[8] === null) {
                             $(nTd).addClass('currentlyWatching');
                             $(nTd).html('Currently watching...');
                         } else {
@@ -205,7 +205,7 @@ class ServerDataPDO
                     "sName": 'title',
                     "aTargets": [ 5 ],
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                        if(sData !== '') {
+                        if (sData !== '') {
                             var xmlDoc=loadXMLString(oData[9]);
                             var mediaId = xmlDoc.getElementsByTagName("opt")[0].getAttribute("ratingKey");
                             $(nTd).html('<a href="info.php?id='+mediaId+'">'+sData+'</a>');
@@ -217,7 +217,7 @@ class ServerDataPDO
                     "sName": 'user',
                     "aTargets": [ 2 ],
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                        if(sData !== '') {
+                        if (sData !== '') {
                             $(nTd).html('<a href="user.php?user='+sData+'">'+sData+'</a>');
                         }    
                     },
@@ -229,7 +229,7 @@ class ServerDataPDO
                     "sWidth": '10%',
                     "sClass": 'modal-control',
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                        if(sData !== '') {
+                        if (sData !== '') {
                             $(nTd).html('<a href="#info-modal" data-toggle="modal"><span data-toggle="tooltip" data-placement="left" title="Stream Info" id="stream-info" class="badge badge-inverse"><i class="icon-info icon-white"></i></span></a>&nbsp'+sData);
                         }    
                     }
@@ -247,7 +247,7 @@ class ServerDataPDO
                     "sName": 'stopped',
                     "aTargets": [ 8 ],
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                        if(sData !== '') {
+                        if (sData !== '') {
                             $(nTd).html(moment(sData,"X").format('$timeFormat'));
                         } else {
                             $(nTd).html('n/a');
@@ -260,7 +260,7 @@ class ServerDataPDO
                     "sName": 'ip_address',
                     "aTargets": [ 4 ],
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                        if((sData === '0') || (sData === '')) {
+                        if ((sData === '0') || (sData === '')) {
                             $(nTd).html('n/a');
                         } else {
                             $(nTd).html(sData);
@@ -272,7 +272,7 @@ class ServerDataPDO
                     "sName": 'paused_counter',
                     "aTargets": [ 7 ],
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                        if(sData === '') {
+                        if (sData === '') {
                             $(nTd).html('0 min');
                         } else {
                             $(nTd).html(Math.round((sData/60),1)+' min');
@@ -290,7 +290,7 @@ class ServerDataPDO
                 {
                     "aTargets": [ 10 ],
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                        if(sData === '') {
+                        if (sData === '') {
                             $(nTd).html('0 min');
                         } else {
                             $(nTd).html(Math.round((sData/60),1)+' min');
@@ -306,7 +306,7 @@ class ServerDataPDO
                             var xmlDoc=loadXMLString(oData[9]);
                             var mediaDuration = xmlDoc.getElementsByTagName("opt")[0].getAttribute("duration");
                             var mediaOffset = xmlDoc.getElementsByTagName("opt")[0].getAttribute("viewOffset");
-                            if((mediaDuration !== 0) && (mediaOffset !== null)) {
+                            if ((mediaDuration !== 0) && (mediaOffset !== null)) {
                                 var percentComplete = Math.round(((mediaOffset / mediaDuration) * 100));
                                 if (percentComplete >= 90) percentComplete = 100;
                             } else {
@@ -333,7 +333,7 @@ class ServerDataPDO
 
             $.post("$modal_datasource", { id: rowData[0] },
                 function(data) {
-                    if(data)
+                    if (data)
                     {
                         $("#modal-text").html(data);
                         $("#modal-stream-info").html(rowData[5]+' ('+rowData[2]+')');
@@ -375,7 +375,7 @@ EOT;
         $count_cols=count($columns);
 
         $i = 0;
-        foreach($columns as $key=>$val) {
+        foreach ($columns as $key=>$val) {
             if ($i < 11) {
                 $html_columns.="<th align='left'><i class='icon-sort icon-white'></i> ".trim($val)."</th>\n";
             } else {
@@ -429,7 +429,7 @@ EOT;
             $stmt = $this->db['conn']->prepare($sql);
             $stmt->execute();
 
-            if ($debug){
+            if ($debug) {
                 $time =  microtime(true)- $time_start;
                 echo "<HR>Executed SQL:<strong> $sql </strong> in <strong>$time</strong> s<HR>";
             }
@@ -462,7 +462,7 @@ EOT;
         if ( isset( $_GET['iSortCol_0'] ) )
         {
             $sOrder = "ORDER BY  ";
-            for ( $i=0 ; $i<intval( $_GET['iSortingCols'] ) ; $i++ )
+            for ( $i=0 ; $i<intval( $_GET['iSortingCols'] ); $i++ )
             {
                 if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
                 {
@@ -487,7 +487,7 @@ EOT;
         if ( isset($_GET['sSearch']) && $_GET['sSearch'] != "" )
         {
             $sWhere = "WHERE (";
-            for ( $i=0 ; $i<count($this->aColumns) ; $i++ )
+            for ( $i=0 ; $i<count($this->aColumns); $i++ )
             {
                 if ( isset($_GET['bSearchable_'.$i]) && $_GET['bSearchable_'.$i] == "true" )
                 {
@@ -507,7 +507,7 @@ EOT;
         }
 
         /* Individual column filtering */
-        for ( $i=0 ; $i<count($this->aColumns) ; $i++ )
+        for ( $i=0 ; $i<count($this->aColumns); $i++ )
         {
             if ( isset($_GET['bSearchable_'.$i]) && $_GET['bSearchable_'.$i] == "true" && $_GET['sSearch_'.$i] != '' )
             {
@@ -565,7 +565,7 @@ EOT;
         foreach ($aResult as $key => $aRow)
         {
             $row = array();
-            for ( $i=0 ; $i<count($this->aColumns) ; $i++ ) {
+            for ( $i=0 ; $i<count($this->aColumns); $i++ ) {
                 if ($j == 0) {
                     $row["DT_RowId"] = '0';
                 } else {
