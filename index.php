@@ -141,7 +141,7 @@
 				});
 			}
 			currentActivityHeader();
-			setInterval('currentActivityHeader()', 15000);
+			setInterval(currentActivityHeader, 15000);
 		</script>
 		<script>
 			function currentActivity() {
@@ -155,7 +155,7 @@
 				});
 			}
 			currentActivity();
-			setInterval('currentActivity()', 15000);
+			setInterval(currentActivity, 15000);
 		</script>
 		<script>
 			function recentlyAdded() {
