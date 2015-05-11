@@ -9,7 +9,7 @@ var cacheObj = $.parseJSON(temp);
 
 // create cache object if it doesn't exist
 if (cacheObj === null) {
-	var cacheObj = new Object();
+	var cacheObj = {};
 }
 
 // setCache function
@@ -38,7 +38,7 @@ function setCache(postId, postData, validityTime) {
 		cacheObj =  [ { postId: postId, data: postData, expire: (milliseconds + (validityTime * 60 * 1000)) } ];
 		sessionStorage.setItem('cacheObj', JSON.stringify(cacheObj));
 	}
-};
+}
 
 // getCache function
 // usage: getCache(unique_identifier)
@@ -61,4 +61,4 @@ function getCache(postId) {
 		}
 	}
 	return false;
-};
+}

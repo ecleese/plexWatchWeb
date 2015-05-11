@@ -853,12 +853,13 @@
 		<script src="js/moment-with-locale.js"></script>
 
 		<script>
-			var p = $('#summary-content-summary p');
-			var divh = $('#summary-content-summary').height();
-				while ($(p).outerHeight() > divh) {
-					$(p).text(function (index, text) {
-					return text.replace(/\W*\s(\S)*$/, '...');
-				});
+			var p = $('.summary-content-summary p');
+			var divh = $('.summary-content-summary').height();
+			function replaceText(index, text) {
+				return text.replace(/\W*\s(\S)*$/, '...');
+			}
+			while ($(p).outerHeight() > divh) {
+				$(p).text(replaceText);
 			}
 		</script>
 		<script>
@@ -880,8 +881,8 @@
 								if (type === 'set') {
 									source.date = val;
 									// Store the computed dislay and filter values for efficiency
-									source.date_display = val=="" ? "" : moment(val,"X").format('<?php echo $plexWatch['dateFormat'];?>');
-									source.date_filter  = val=="" ? "" : val;
+									source.date_display = val === "" ? "" : moment(val,"X").format("<?php echo $plexWatch['dateFormat'];?>");
+									source.date_filter = val === "" ? "" : val;
 									return;
 								} else if (type === 'display') {
 									return source.date_display;
@@ -898,14 +899,14 @@
 						{
 							"bUseRendered": false,
 							"mRender": function ( data, type, row ) {
-								return moment(data,"X").format('<?php echo $plexWatch['timeFormat'];?>');
+								return moment(data,"X").format("<?php echo $plexWatch['timeFormat'];?>");
 							}
 						},
 						null,
 						{
 							"bUseRendered": false,
 							"mRender": function ( data, type, row ) {
-								return moment(data,"X").format('<?php echo $plexWatch['timeFormat'];?>');
+								return moment(data,"X").format("<?php echo $plexWatch['timeFormat'];?>");
 							}
 						},
 						null,

@@ -98,7 +98,7 @@
 									$userXml = simplexml_load_string($user['xml']) ;
 									echo "<tr>";
 										echo "<td align='right' width='40px'>";
-											echo "<div class='users-poster-face'><a href='user.php?user=".$user['user']."'>"
+											echo "<div class='users-poster-face'><a href='user.php?user=".$user['user']."'>";
 											if (empty($userXml->User['thumb'])) {
 												echo "<img src='images/gravatar-default-80x80.png' /></a></div>";
 											} else {

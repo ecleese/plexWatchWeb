@@ -567,10 +567,10 @@
 			});
 		</script>
 		<script>
-			$('#welcomeModal').modal('show')
+			$('#welcomeModal').modal('show');
 		</script>
 		<script>
-			$('#dateTimeModal').modal('show')
+			$('#dateTimeModal').modal('show');
 		</script>
 		<script>
 			$('#actionSubmit').on('click', function (e) {
@@ -578,7 +578,7 @@
 				alert($('#groupedHistory').serialize());
 			});
 
-			$('.btn-group').button()
+			$('.btn-group').button();
 		</script>
 		<script>
 			window.setTimeout(function() {
