@@ -8517,3 +8517,8 @@ width: 230px;
 float: right;
 }
 
+.thumbnail-empty {
+  background-color: #323232; 
+  background-position: center; 
+  background-size: cover;
+}
