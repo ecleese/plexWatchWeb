@@ -384,7 +384,7 @@
 			"where"=>"user = '".$user."'" /* Option where clause (omit WHERE text) */
 		);
 
-		$javascript = ServerDataPDO::build_jquery_datatable($db_array,'user_history_datatable','datafactory/get-user-info-modal.php');
+		$javascript = ServerDataPDO::build_jquery_datatable($db_array,'user_history_datatable','datafactory/get-info-modal.php');
 		echo $javascript;
 		?>
 		<script>

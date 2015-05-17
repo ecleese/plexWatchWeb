@@ -20,7 +20,15 @@ if (isset($_POST['id'])) {
 	exit;
 }
 
-$plexWatchDbTable = dbTable();
+if (isset($_POST['table']) &&
+		($_POST['table'] === 'grouped' || $_POST['table'] === 'processed')) {
+	$plexWatchDbTable = $_POST['table'];
+} else {
+	error_log('PlexWatchWeb :: POST parameter "table" not found or incorrect.');
+	echo "table field is required.";
+	exit;
+}
+
 $results = $db->querySingle("SELECT xml FROM $plexWatchDbTable WHERE id = $id") or die ("Failed to access plexWatch database. Please check your settings.");
 $xmlfield = simplexml_load_string($results);
 
