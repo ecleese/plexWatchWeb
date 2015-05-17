@@ -102,12 +102,7 @@
 		</div>
 
 		<?php
-		$plexWatchDbTable = "";
-		if ($plexWatch['globalHistoryGrouping'] == "yes") {
-			$plexWatchDbTable = "grouped";
-		} else if ($plexWatch['globalHistoryGrouping'] == "no") {
-			$plexWatchDbTable = "processed";
-		}
+		$plexWatchDbTable = dbTable();
 		$db_array = array(
 			"sql"=>"SELECT id|time|user|platform|ip_address|title|time|paused_counter|stopped|xml|round((julianday(datetime(stopped,'unixepoch', 'localtime')) - julianday(datetime(time,'unixepoch', 'localtime')))*86400)-(case when paused_counter is null then 0 else paused_counter end) from ".$plexWatchDbTable, /* Use | as delimiter. Spell out columns names no SELECT * Table */
 			"table"=>$plexWatchDbTable, /* DB table to use assigned by constructor*/

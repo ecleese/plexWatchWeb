@@ -73,12 +73,7 @@
 					date_default_timezone_set(@date_default_timezone_get());
 
 					$db = dbconnect();
-
-					if ($plexWatch['userHistoryGrouping'] == "yes") {
-						$plexWatchDbTable = "grouped";
-					} else if ($plexWatch['userHistoryGrouping'] == "no") {
-						$plexWatchDbTable = "processed";
-					}
+					$plexWatchDbTable = dbTable('user');
 
 					$users = $db->query("SELECT COUNT(title) as plays, user, time, SUM(time) as timeTotal, SUM(stopped) as stoppedTotal, SUM(paused_counter) as paused_counterTotal, platform, ip_address, xml FROM ".$plexWatchDbTable." GROUP BY user ORDER BY user COLLATE NOCASE") or die ("Failed to access plexWatch database. Please check your settings.");
 					echo "<div class='wellbg'>";

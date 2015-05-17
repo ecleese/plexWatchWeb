@@ -16,13 +16,6 @@ if ($plexWatch['https'] == 'yes') {
 	$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
 }
 
-$plexWatchDbTable = "";
-if ($plexWatch['userHistoryGrouping'] == "yes") {
-	$plexWatchDbTable = "grouped";
-} else if ($plexWatch['userHistoryGrouping'] == "no") {
-	$plexWatchDbTable = "processed";
-}
-
 $db = dbconnect();
 
 if (isset($_POST['user'])) {
@@ -33,6 +26,7 @@ if (isset($_POST['user'])) {
 	exit;
 }
 
+$plexWatchDbTable = dbTable('user');
 $platformResults = $db->query ("SELECT xml,platform, COUNT(platform) as platform_count FROM ".$plexWatchDbTable." WHERE user = '$user' GROUP BY platform ORDER BY platform ASC") or die ("Failed to access plexWatch database. Please check your settings.");
 $platformImage = 0;
 while ($platformResultsRow = $platformResults->fetchArray()) {

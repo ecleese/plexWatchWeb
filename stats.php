@@ -90,13 +90,11 @@
 				$db = dbconnect();
 				$plexDBDie = "Failed to access plexWatch database. Please check settings.";
 
-				if ($plexWatch['globalHistoryGrouping'] == "yes") {
-					$plexWatchDbTable = "grouped";
-					$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable ");
+				$plexWatchDbTable = dbTable();
+				$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable ");
+				if ($plexWatchDbTable == "grouped") {
 					$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM processed WHERE stopped IS NULL UNION ALL SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM $plexWatchDbTable ORDER BY time DESC") or die ($plexDBDie);
-				} else if ($plexWatch['globalHistoryGrouping'] == "no") {
-					$plexWatchDbTable = "processed";
-					$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable ");
+				} else if ($plexWatchDbTable == "processed") {
 					$results = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM $plexWatchDbTable ORDER BY time DESC") or die ($plexDBDie);
 				}
 

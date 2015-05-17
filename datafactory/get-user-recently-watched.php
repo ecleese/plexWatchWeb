@@ -12,13 +12,6 @@ if (file_exists($guisettingsFile)) {
 
 $plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
 
-$plexWatchDbTable = "";
-if ($plexWatch['userHistoryGrouping'] == "yes") {
-	$plexWatchDbTable = "grouped";
-} else if ($plexWatch['userHistoryGrouping'] == "no") {
-	$plexWatchDbTable = "processed";
-}
-
 $db = dbconnect();
 
 if (isset($_POST['user'])) {
@@ -29,6 +22,7 @@ if (isset($_POST['user'])) {
 	exit;
 }
 
+$plexWatchDbTable = dbTable('user');
 $recentlyWatchedResults = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC LIMIT 10");
 // Run through each feed item
 while ($recentlyWatchedRow = $recentlyWatchedResults->fetchArray()) {

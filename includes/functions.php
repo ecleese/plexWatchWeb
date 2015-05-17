@@ -60,10 +60,22 @@ function dbconnect() {
 }
 
 /* dbtable -- processed or grouped */
-function dbTable() {
+function dbTable($groupType = 'global') {
 	global $plexWatch;
-	if ($plexWatch['globalHistoryGrouping'] == "yes") {
-		return "grouped";
+	switch ($groupType) {
+		case 'global':
+		case 'user':
+			if ($plexWatch[$groupType + 'HistoryGrouping'] == "yes") {
+				return "grouped";
+			}
+			break;
+		case 'charts':
+			if ($plexWatch['chartsGrouping'] == "yes") {
+				return "grouped";
+			}
+			break;
+		default:
+			break;
 	}
 	return "processed";
 }

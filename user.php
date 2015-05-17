@@ -76,12 +76,7 @@
 
 		$user = htmlspecialchars($_GET['user'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', true);
 		$db = dbconnect();
-
-		if ($plexWatch['userHistoryGrouping'] == "yes") {
-			$plexWatchDbTable = "grouped";
-		} else if ($plexWatch['userHistoryGrouping'] == "no") {
-			$plexWatchDbTable = "processed";
-		}
+		$plexWatchDbTable = dbTable('user');
 
 		$userInfo = $db->query("SELECT user,xml FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC LIMIT 1") or die ("Failed to access plexWatch database. Please check your settings.");
 		?>
@@ -380,12 +375,7 @@
 			});
 		</script>
 		<?php
-		$plexWatchDbTable = "";
-		if ($plexWatch['userHistoryGrouping'] == "yes") {
-			$plexWatchDbTable = "grouped";
-		} else if ($plexWatch['userHistoryGrouping'] == "no") {
-			$plexWatchDbTable = "processed";
-		}
+		$plexWatchDbTable = dbTable('user');
 
 		$db_array=array(
 			"sql"=>"SELECT id|time|user|platform|ip_address|title|time|paused_counter|stopped|xml|round((julianday(datetime(stopped,'unixepoch', 'localtime')) - julianday(datetime(time,'unixepoch', 'localtime')))*86400)-(case when paused_counter is null then 0 else paused_counter end) from ".$plexWatchDbTable, /* Use | as delimiter. Spell out columns names no SELECT * Table */

@@ -24,12 +24,7 @@ if ($plexWatch['https'] == 'yes') {
 	$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
 }
 
-$plexWatchDbTable = "";
-if ($plexWatch['userHistoryGrouping'] == "yes") {
-	$plexWatchDbTable = "grouped";
-} else if ($plexWatch['userHistoryGrouping'] == "no") {
-	$plexWatchDbTable = "processed";
-}
+$plexWatchDbTable = dbTable('user');
 
 $db = dbconnect();
 

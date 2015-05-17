@@ -98,11 +98,7 @@
 							echo "</div>";
 							echo "<div class='charts-wrapper'>";
 								echo "<ul>";
-								if ($plexWatch['chartsGrouping'] == "yes") {
-									$plexWatchDbTable = "grouped";
-								} else if ($plexWatch['chartsGrouping'] == "no") {
-									$plexWatchDbTable = "processed";
-								}
+								$plexWatchDbTable = dbTable('charts');
 								$queryTop10 = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(*) AS play_count FROM ".$plexWatchDbTable." GROUP BY title HAVING play_count > 0 ORDER BY play_count DESC,time DESC LIMIT 10") or die ("Failed to access plexWatch database. Please check your server and config.php settings.");
 
 								// Run through each feed item

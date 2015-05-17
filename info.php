@@ -137,12 +137,7 @@
 						echo "<div class='wellbg'>";
 							echo "<div class='wellheader'>";
 								$db = dbconnect();
-
-								if ($plexWatch['globalHistoryGrouping'] == "yes") {
-									$plexWatchDbTable = "grouped";
-								} else if ($plexWatch['globalHistoryGrouping'] == "no") {
-									$plexWatchDbTable = "processed";
-								}
+								$plexWatchDbTable = dbTable();
 
 								$title = $db->querySingle("SELECT title FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\'  ");
 								$numRows = $db->querySingle("SELECT COUNT(*) as count FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
@@ -393,12 +388,7 @@
 							echo "<div class='wellbg'>";
 								echo "<div class='wellheader'>";
 								$db = dbconnect();
-
-								if ($plexWatch['globalHistoryGrouping'] == "yes") {
-									$plexWatchDbTable = "grouped";
-								} else if ($plexWatch['globalHistoryGrouping'] == "no") {
-									$plexWatchDbTable = "processed";
-								}
+								$plexWatchDbTable = dbTable();
 
 								echo"<h3>The most watched episodes of <strong>".$xml->Directory['title']."</strong> are</h3>";
 							echo"</div>";
@@ -625,12 +615,7 @@
 						echo "<div class='wellbg'>";
 							echo "<div class='wellheader'>";
 								$db = dbconnect();
-
-								if ($plexWatch['globalHistoryGrouping'] == "yes") {
-									$plexWatchDbTable = "grouped";
-								} else if ($plexWatch['globalHistoryGrouping'] == "no") {
-									$plexWatchDbTable = "processed";
-								}
+								$plexWatchDbTable = dbTable();
 
 								$title = $db->querySingle("SELECT title FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\'  ");
 								$numRows = $db->querySingle("SELECT COUNT(*) as views FROM $plexWatchDbTable WHERE session_id LIKE '%/metadata/".$id."\_%' ESCAPE '\' ORDER BY time DESC");
