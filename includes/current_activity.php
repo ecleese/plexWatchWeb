@@ -21,54 +21,7 @@ if ($statusSessions['size'] == '0') {
 } else {
 	// Run through each feed item
 	foreach ($statusSessions->Video as $sessions) {
-		if (strstr($sessions->Player['platform'], 'Roku')) {
-			$platformImage = "images/platforms/roku.png";
-		} else if (strstr($sessions->Player['platform'], 'Apple TV')) {
-			$platformImage = "images/platforms/appletv.png";
-		} else if (strstr($sessions->Player['platform'], 'Firefox')) {
-			$platformImage = "images/platforms/firefox.png";
-		} else if (strstr($sessions->Player['platform'], 'Chromecast')) {
-			$platformImage = "images/platforms/chromecast.png";
-		} else if (strstr($sessions->Player['platform'], 'Chrome')) {
-			$platformImage = "images/platforms/chrome.png";
-		} else if (strstr($sessions->Player['platform'], 'Android')) {
-			$platformImage = "images/platforms/android.png";
-		} else if (strstr($sessions->Player['platform'], 'Nexus')) {
-			$platformImage = "images/platforms/android.png";
-		} else if (strstr($sessions->Player['platform'], 'iPad')) {
-			$platformImage = "images/platforms/ios.png";
-		} else if (strstr($sessions->Player['platform'], 'iPhone')) {
-			$platformImage = "images/platforms/ios.png";
-		} else if (strstr($sessions->Player['platform'], 'iOS')) {
-			$platformImage = "images/platforms/ios.png";
-		} else if (strstr($sessions->Player['platform'], 'Plex Home Theater')) {
-			$platformImage = "images/platforms/pht.png";
-		} else if (strstr($sessions->Player['platform'], 'Linux/RPi-XBMC')) {
-			$platformImage = "images/platforms/xbmc.png";
-		} else if (strstr($sessions->Player['platform'], 'Safari')) {
-			$platformImage = "images/platforms/safari.png";
-		} else if (strstr($sessions->Player['platform'], 'Internet Explorer')) {
-			$platformImage = "images/platforms/ie.png";
-		} else if (strstr($sessions->Player['platform'], 'Unknown Browser')) {
-			$platformImage = "images/platforms/default.png";
-		} else if (strstr($sessions->Player['platform'], 'Windows-XBMC')) {
-			$platformImage = "images/platforms/xbmc.png";
-		} else if (strstr($sessions->Player['platform'], 'Xbox')) {
-			$platformImage = "images/platforms/xbox.png";
-		} else if (strstr($platformXmlField->Player['platform'], 'Samsung')) {
-			$platformImage = "images/platforms/samsung.png";
-		} else if (empty($sessions->Player['platform'])) {
-			if (strstr($sessions->Player['title'], 'Apple')) {
-				$platformImage = "images/platforms/atv.png";
-			//Code below matches Samsung naming standard: [Display Technology: 2 Letters][Size: 2 digits][Generation: 1 letter][Model: 4 digits]
-			} else if (preg_match("/TV [a-z][a-z]\d\d[a-z]/i",$sessions->Player['title'])) {
-				$platformImage = "images/platforms/samsung.png";
-			} else {
-				$platformImage = "images/platforms/default.png";
-			}
-		} else {
-			$platformImage = "images/platforms/default.png";
-		}
+		$platformImage = getPlatformImage($sessions);
 
 		if (isset($sessions['librarySectionID'])) {
 			if ($sessions['type'] == "episode") {
@@ -495,48 +448,7 @@ if ($statusSessions['size'] == '0') {
 	}
 	foreach ($statusSessions->Track as $sessions) {
 		if ($sessions['type'] == "track") {
-			if (strstr($sessions->Player['platform'], 'Roku')) {
-				$platformImage = "images/platforms/roku.png";
-			} else if (strstr($sessions->Player['platform'], 'Apple TV')) {
-				$platformImage = "images/platforms/appletv.png";
-			} else if (strstr($sessions->Player['platform'], 'Firefox')) {
-				$platformImage = "images/platforms/firefox.png";
-			} else if (strstr($sessions->Player['platform'], 'Chromecast')) {
-				$platformImage = "images/platforms/chromecast.png";
-			} else if (strstr($sessions->Player['platform'], 'Chrome')) {
-				$platformImage = "images/platforms/chrome.png";
-			} else if (strstr($sessions->Player['platform'], 'Android')) {
-				$platformImage = "images/platforms/android.png";
-			} else if (strstr($sessions->Player['platform'], 'Nexus')) {
-				$platformImage = "images/platforms/android.png";
-			} else if (strstr($sessions->Player['platform'], 'iPad')) {
-				$platformImage = "images/platforms/ios.png";
-			} else if (strstr($sessions->Player['platform'], 'iPhone')) {
-				$platformImage = "images/platforms/ios.png";
-			} else if (strstr($sessions->Player['platform'], 'iOS')) {
-				$platformImage = "images/platforms/ios.png";
-			} else if (strstr($sessions->Player['platform'], 'Plex Home Theater')) {
-				$platformImage = "images/platforms/pht.png";
-			} else if (strstr($sessions->Player['platform'], 'Linux/RPi-XBMC')) {
-				$platformImage = "images/platforms/xbmc.png";
-			} else if (strstr($sessions->Player['platform'], 'Safari')) {
-				$platformImage = "images/platforms/safari.png";
-			} else if (strstr($sessions->Player['platform'], 'Internet Explorer')) {
-				$platformImage = "images/platforms/ie.png";
-			} else if (strstr($sessions->Player['platform'], 'Unknown Browser')) {
-				$platformImage = "images/platforms/default.png";
-			} else if (strstr($sessions->Player['platform'], 'Windows-XBMC')) {
-				$platformImage = "images/platforms/xbmc.png";
-			} else if (empty($sessions->Player['platform'])) {
-				if (strstr($sessions->Player['title'], 'Apple')) {
-					$platformImage = "images/platforms/atv.png";
-				//Code below matches Samsung naming standard: [Display Technology: 2 Letters][Size: 2 digits][Generation: 1 letter][Model: 4 digits]
-				} else if (preg_match("/TV [a-z][a-z]\d\d[a-z]/i",$sessions->Player['title'])) {
-					$platformImage = "images/platforms/samsung.png";
-				} else {
-					$platformImage = "images/platforms/default.png";
-				}
-			}
+			$platformImage = getPlatformImage($sessions);
 			$sessionsThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$sessions['thumb']."&width=300&height=300";
 			echo "<div class='instance'>";
 				echo "<div class='poster'>";
