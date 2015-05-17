@@ -10,14 +10,6 @@ if (file_exists($guisettingsFile)) {
 	exit;
 }
 
-if ($plexWatch['https'] == 'yes') {
-	$plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
-} else if ($plexWatch['https'] == 'no') {
-	$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
-}
-
-$plexWatchDbTable = dbTable('user');
-
 // Connects to your Database
 $db = dbconnect();
 
@@ -29,6 +21,7 @@ if (isset($_POST['user'])) {
 	exit;
 }
 
+$plexWatchDbTable = dbTable('user');
 $userIpAddressesQuery = $db->query("SELECT time,ip_address,platform,xml, COUNT(ip_address) as play_count, strftime('%Y%m%d', datetime(time, 'unixepoch', 'localtime')) as date FROM processed WHERE user = '$user' GROUP BY ip_address ORDER BY time DESC");
 $nrow = Array();
 $i = 0;

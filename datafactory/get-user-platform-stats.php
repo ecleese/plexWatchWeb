@@ -10,12 +10,6 @@ if (file_exists($guisettingsFile)) {
 	exit;
 }
 
-if ($plexWatch['https'] == 'yes') {
-	$plexWatchPmsUrl = "https://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpsPort']."";
-} else if ($plexWatch['https'] == 'no') {
-	$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
-}
-
 $db = dbconnect();
 
 if (isset($_POST['user'])) {
@@ -36,7 +30,6 @@ while ($platformResultsRow = $platformResults->fetchArray()) {
 		echo "<div class='user-platforms-instance'>";
 			echo "<li>";
 				echo "<img class='user-platforms-instance-poster' src='".$platformImage."'></img>";
-
 				if ($platformXmlField->Player['platform'] == "Chromecast") {
 					echo "<div class='user-platforms-instance-name'>Plex/Web (Chrome) & Chromecast</div>";
 				} else {

@@ -10,6 +10,12 @@ if (file_exists($guisettingsFile)) {
 	exit;
 }
 
+$db = dbconnect();
+$users = $db->querySingle("SELECT count(DISTINCT user) as users FROM processed") or die ("Failed to access plexWatch database. Please check your settings.");
+if ($users === false) {
+	die ("Failed to access plexWatch database. Please check your settings.");
+}
+
 $plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
 $PMSdieMsg = "<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>";
 
@@ -42,12 +48,6 @@ echo "<ul>";
 			echo "<li><h1>".$sectionDetails['totalSize']."</h1><h5>".$title." Shows</h5></li>";
 			echo "<li><h1>".$tvEpisodeCount['totalSize']."</h1><h5>".$title." Episodes</h5></li>";
 		}
-	}
-
-	$db = dbconnect();
-	$users = $db->querySingle("SELECT count(DISTINCT user) as users FROM processed") or die ("Failed to access plexWatch database. Please check your settings.");
-	if ($users === false) {
-		die ("Failed to access plexWatch database. Please check your settings.");
 	}
 	echo "<li><h1>".$users."</h1><h5>Users</h5></li>";
 echo "</ul>";
