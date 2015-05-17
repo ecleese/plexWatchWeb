@@ -100,18 +100,6 @@
 				</div>
 			</div>
 		</div>
-
-		<?php
-		$plexWatchDbTable = dbTable();
-		$db_array = array(
-			"sql"=>"SELECT id|time|user|platform|ip_address|title|time|paused_counter|stopped|xml|round((julianday(datetime(stopped,'unixepoch', 'localtime')) - julianday(datetime(time,'unixepoch', 'localtime')))*86400)-(case when paused_counter is null then 0 else paused_counter end) from ".$plexWatchDbTable, /* Use | as delimiter. Spell out columns names no SELECT * Table */
-			"table"=>$plexWatchDbTable, /* DB table to use assigned by constructor*/
-			"idxcol"=>"id" /* Indexed column (used for fast and accurate table cardinality) */
-		);
-		$javascript = ServerDataPDO::build_jquery_datatable($db_array, 'history_datatable', 'datafactory/get-info-modal.php');
-
-		echo $javascript;
-		?>
 		<script src="js/jquery-2.0.3.js"></script>
 		<script src="js/bootstrap.js"></script>
 		<script src="js/jquery.dataTables.js"></script>
@@ -151,5 +139,16 @@
 				$('#stats').tooltip();
 			});
 		</script>
+		<?php
+		$plexWatchDbTable = dbTable();
+		$db_array = array(
+			"sql"=>"SELECT id|time|user|platform|ip_address|title|time|paused_counter|stopped|xml|round((julianday(datetime(stopped,'unixepoch', 'localtime')) - julianday(datetime(time,'unixepoch', 'localtime')))*86400)-(case when paused_counter is null then 0 else paused_counter end) from ".$plexWatchDbTable, /* Use | as delimiter. Spell out columns names no SELECT * Table */
+			"table"=>$plexWatchDbTable, /* DB table to use assigned by constructor*/
+			"idxcol"=>"id" /* Indexed column (used for fast and accurate table cardinality) */
+		);
+		$javascript = ServerDataPDO::build_jquery_datatable($db_array, 'history_datatable', 'datafactory/get-info-modal.php');
+
+		echo $javascript;
+		?>
 	</body>
 </html>
