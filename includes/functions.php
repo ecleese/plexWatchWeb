@@ -65,7 +65,7 @@ function dbTable($groupType = 'global') {
 	switch ($groupType) {
 		case 'global':
 		case 'user':
-			if ($plexWatch[$groupType + 'HistoryGrouping'] == "yes") {
+			if ($plexWatch[$groupType.'HistoryGrouping'] == "yes") {
 				return "grouped";
 			}
 			break;
