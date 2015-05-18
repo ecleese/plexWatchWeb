@@ -30,10 +30,15 @@ if (isset($_POST['table']) &&
 $results = $db->querySingle("SELECT xml FROM $plexWatchDbTable WHERE id = $id") or die ("Failed to access plexWatch database. Please check your settings.");
 $xmlfield = simplexml_load_string($results);
 $transcoded = array_key_exists('TranscodeSession', $xmlfield);
+// Set $data based on the stream type
 if ($transcoded) {
-	$data = $xmlfield->TranscodeSession;
+	$data = &$xmlfield->TranscodeSession;
+	// Convert source to a friendly name if needed as well
+	if ($xmlfield->Media['audioCodec'] == 'dca') {
+		$xmlfield->Media['audioCodec'] = 'dts';
+	}
 } else {
-	$data = $xmlfield->Media;
+	$data = &$xmlfield->Media;
 	$data['audioDecision'] = 'Direct Play';
 }
 // Convert to a friendly name if needed
@@ -63,6 +68,8 @@ echo '<div class="span4">';
 			echo '<li>Audio Channels: <strong>'.$data['audioChannels'].'</strong></li>';
 		echo '</ul>';
 echo '</div>';
+// Force $data to Media to always get the source information
+$data = &$xmlfield->Media;
 echo '<div class="span4">';
 	echo '<h4>Media Source Details</h4>';
 	echo '<li>Container: <strong>'.$data['container'].'</strong></li>';
