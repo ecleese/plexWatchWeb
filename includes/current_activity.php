@@ -18,28 +18,28 @@ $statusSessions = simplexml_load_string($fileContents) or die ("Failed to parse 
 
 if ($statusSessions['size'] == '0') {
 	echo "<h5><strong>Nothing is currently being watched.</strong></h5><br>";
-	return; // Return control to the calling file
+	return; // End execution of the current script file
 }
 
 function printPosterFace($session) {
 	global $plexWatch, $plexWatchPmsUrl;
-	if ($session['type'] == "clip") {
-		$sessionThumbUrl = "".$session['art']."";
+	$sessionThumbUrl = "".$plexWatchPmsUrl.
+		"/photo/:/transcode?url=http://127.0.0.1:".
+		$plexWatch['pmsHttpPort']."";
+	if ($session['type'] == "clip" || $session['type'] == 'movie') {
+		$sessionThumbUrl .= "".$session['art']."";
 	} else {
-		$sessionThumbUrl = "".$plexWatchPmsUrl.
-			"/photo/:/transcode?url=http://127.0.0.1:".
-			$plexWatch['pmsHttpPort']."".$session['thumb'];
-		if ($session['type'] == 'track') {
-			$sessionThumbUrl .= "&width=300&height=300";
-		} else {
-			$sessionThumbUrl .= "&width=300&height=169";
-		}
+		$sessionThumbUrl .= "".$session['thumb']."";
 	}
-	if (($session['type'] == 'episode') && (!isset($session['librarySectionID']))) {
-		echo "<a href='" .$session['url']. "'>";
-			echo "<img src='includes/img.php?img=".urlencode($session['art'])."'></img>";
-		echo "</a>";
-	} else if ($session['type'] == 'track') {
+	if ($session['type'] == 'track') {
+		$sessionThumbUrl .= "&width=300&height=300";
+	} else {
+		$sessionThumbUrl .= "&width=300&height=169";
+	}
+	/* Apparently some ancient PMS versions would send out episodes without a
+	 * librarySectionID being set, but would set a $session['url']. Since no
+	 * current PMS does this the support has been removed. */
+	if ($session['type'] == 'track') {
 		echo "<div class='art-music-face' " .
 			"style='background-image:url(includes/img.php?img=" .
 			urlencode($sessionThumbUrl).")'></div>";
@@ -167,15 +167,9 @@ function printSession($session) {
 							echo "<div class='bar' style='width: ".$percentComplete."%'>".$percentComplete."%</div>";
 						echo "</div>";
 					echo "</div>";
-					if ($session['type'] == "clip") {
-						echo "<div class='platform'>";
-							echo "".$session->Player['title']. "";
-						echo "</div>";
-					} else {
-						echo "<div class='dashboard-activity-metadata-platform'>";
-							echo "<img src='".getPlatformImage($session)."'></>";
-						echo "</div>";
-					}
+					echo "<div class='dashboard-activity-metadata-platform'>";
+						echo "<img src='".getPlatformImage($session)."'></>";
+					echo "</div>";
 					printUserStatus($session);
 					echo "<div class='dashboard-activity-metadata-title'>";
 						if ($session['type'] == 'episode') {
