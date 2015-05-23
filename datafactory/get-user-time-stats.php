@@ -9,9 +9,9 @@ if (isset($_POST['user'])) {
 	exit;
 }
 
-$guisettingsFile = "../config/config.php";
+$guisettingsFile = '../config/config.php';
 if (file_exists($guisettingsFile)) {
-	require_once('../config/config.php');
+	require_once($guisettingsFile);
 } else {
 	error_log('PlexWatchWeb :: Config file not found.');
 	echo "Config file not found";

@@ -66,10 +66,9 @@
 		<?php
 
 		include "serverdatapdo.php";
-		$guisettingsFile = "config/config.php";
-
+		$guisettingsFile = 'config/config.php';
 		if (file_exists($guisettingsFile)) {
-			require_once(dirname(__FILE__) . '/config/config.php');
+			require_once(dirname(__FILE__) . $guisettingsFile);
 		} else {
 			header("Location: settings.php");
 		}

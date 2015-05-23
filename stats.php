@@ -72,9 +72,9 @@
 							echo "<div class='span6'><div class='wellbg'><div class='history-charts-header'><strong>Monthly Plays</strong><br></div><div class='history-charts-instance-chart' id='playChartMonthly'></div></div></div>";
 						echo "</div>";
 				echo "</div>";
-				$guisettingsFile = "config/config.php";
+				$guisettingsFile = 'config/config.php';
 				if (file_exists($guisettingsFile)) {
-					require_once(dirname(__FILE__) . '/config/config.php');
+					require_once(dirname(__FILE__) . $guisettingsFile);
 				} else {
 					header("Location: settings.php");
 				}

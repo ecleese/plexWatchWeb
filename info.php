@@ -3,7 +3,7 @@ date_default_timezone_set(@date_default_timezone_get());
 
 $guisettingsFile = 'config/config.php';
 if (file_exists($guisettingsFile)) {
-	require_once(dirname(__FILE__) . '/config/config.php');
+	require_once(dirname(__FILE__) . $guisettingsFile);
 } else {
 	header('Location: settings.php');
 }
