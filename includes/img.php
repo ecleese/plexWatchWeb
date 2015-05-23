@@ -11,7 +11,7 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 }
 
 $imgReq = '';
-if (isset($_GET['img']) && (substr($_GET['img'], 0, 4) == 'http')) {
+if (isset($_GET['img'])) {
 	$imgReq = $_GET['img'];
 } else {
 	trigger_error('No image to retrieve specified.', E_USER_ERROR);
