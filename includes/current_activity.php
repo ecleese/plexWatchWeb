@@ -22,10 +22,7 @@ if ($statusSessions['size'] == '0') {
 }
 
 function printPosterFace($session) {
-	global $plexWatch, $plexWatchPmsUrl;
-	$sessionThumbUrl = "".$plexWatchPmsUrl.
-		"/photo/:/transcode?url=http://127.0.0.1:".
-		$plexWatch['pmsHttpPort']."";
+	$sessionThumbUrl = '';
 	if ($session['type'] == "clip" || $session['type'] == 'movie') {
 		$sessionThumbUrl .= "".$session['art']."";
 	} else {

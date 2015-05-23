@@ -103,8 +103,8 @@
 								while ($top10 = $queryTop10->fetchArray()) {
 									$num_rows++;
 									$xml = simplexml_load_string($top10['xml']);
-									$xmlMovieThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$xml['thumb']."&width=100&height=149";
-									$xmlEpisodeThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$xml['grandparentThumb']."&width=100&height=149";
+									$xmlMovieThumbUrl = $xml['thumb']."&width=100&height=149";
+									$xmlEpisodeThumbUrl = $xml['grandparentThumb']."&width=100&height=149";
 
 									echo "<div class='charts-instance-wrapper'>";
 										echo "<div class='charts-instance-position-circle'><h1>".$num_rows."</h1></div>";
@@ -144,7 +144,7 @@
 								$top10Movies_Num_rows = 0;
 								while ($top10Movies = $queryTop10Movies->fetchArray()) {
 									$top10MoviesXml = simplexml_load_string($top10Movies['xml']);
-									$top10MoviesXmlMovieThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$top10MoviesXml['thumb']."&width=100&height=149";
+									$top10MoviesXmlMovieThumbUrl = $top10MoviesXml['thumb']."&width=100&height=149";
 									if ($top10MoviesXml['type'] == "movie") {
 										$top10Movies_Num_rows++;
 										if ($top10Movies_Num_rows == 11) {
@@ -181,7 +181,7 @@
 									$top10Shows_Num_rows = 0;
 									while ($top10Shows = $queryTop10Shows->fetchArray()) {
 										$top10ShowsXml = simplexml_load_string($top10Shows['xml']);
-										$top10ShowsXmlShowThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$top10ShowsXml['grandparentThumb']."&width=100&height=149";
+										$top10ShowsXmlShowThumbUrl = $top10ShowsXml['grandparentThumb']."&width=100&height=149";
 										if ($top10ShowsXml['type'] == "episode") {
 											$top10Shows_Num_rows++;
 											if ($top10Shows_Num_rows == 11) {
@@ -218,7 +218,7 @@
 									$top10Episodes_Num_rows = 0;
 									while ($top10Episodes = $queryTop10Episodes->fetchArray()) {
 										$top10EpisodesXml = simplexml_load_string($top10Episodes['xml']);
-										$top10EpisodesXmlEpisodeThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$top10EpisodesXml['parentThumb']."&width=100&height=149";
+										$top10EpisodesXmlEpisodeThumbUrl = $top10EpisodesXml['parentThumb']."&width=100&height=149";
 										if ($top10EpisodesXml['type'] == "episode") {
 											$top10Episodes_Num_rows++;
 											if ($top10Episodes_Num_rows == 11) {

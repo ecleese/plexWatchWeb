@@ -31,29 +31,28 @@ while ($recentlyWatchedRow = $recentlyWatchedResults->fetchArray()) {
 	$request_url = $recentlyWatchedRow['xml'];
 	$recentXml = simplexml_load_string($request_url);
 	if (!empty($plexWatch['myPlexAuthToken'])) {
-		$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
-		$recentMetadata = "".$plexWatchPmsUrl."/library/metadata/".$recentXml['ratingKey']."?X-Plex-Token=".$myPlexAuthToken."";
+		$myPlexAuthToken = "?X-Plex-Token=" . $plexWatch['myPlexAuthToken'];
 	} else {
 		$myPlexAuthToken = '';
-		$recentMetadata = "".$plexWatchPmsUrl."/library/metadata/".$recentXml['ratingKey']."";
 	}
-	if ($recentThumbUrlRequest = @simplexml_load_file ($recentMetadata)) {
+	$recentMetadata = $plexWatchPmsUrl."/library/metadata/".$recentXml['ratingKey'].$myPlexAuthToken;
+	if ($recentThumbUrlRequest = @simplexml_load_file($recentMetadata)) {
 		$thumbUrl = 'images/poster.png';
 		if ($recentXml['type'] == "episode") {
-			$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['parentThumb']."&width=136&height=280";
-			$recentgThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['grandparentThumb']."&width=136&height=280";
+			$recentThumbUrl = $recentThumbUrlRequest->Video['parentThumb']."&width=136&height=280";
+			$recentgThumbUrl = $recentThumbUrlRequest->Video['grandparentThumb']."&width=136&height=280";
 			if ($recentThumbUrlRequest->Video['parentThumb']) {
 				$thumbUrl = 'includes/img.php?img='.urlencode($recentThumbUrl);
 			} else if ($recentThumbUrlRequest->Video['grandparentThumb']) {
 				$thumbUrl = 'includes/img.php?img='.urlencode($recentgThumbUrl);
 			}
 		} else if ($recentXml['type'] == "movie") {
-			$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['thumb']."&width=136&height=280";
+			$recentThumbUrl = $recentThumbUrlRequest->Video['thumb']."&width=136&height=280";
 			if ($recentThumbUrlRequest->Video['thumb']) {
 				$thumbUrl = 'includes/img.php?img='.urlencode($recentThumbUrl);
 			}
 		} else if ($recentXml['type'] == "clip") {
-			$recentThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:".$plexWatch['pmsHttpPort']."".$recentThumbUrlRequest->Video['thumb']."&width=136&height=280";
+			$recentThumbUrl = $recentThumbUrlRequest->Video['thumb']."&width=136&height=280";
 			$thumbUrl = 'includes/img.php?img='.urlencode($recentThumbUrl);
 		}
 	} else {

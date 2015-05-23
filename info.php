@@ -16,9 +16,6 @@ if (!empty($plexWatch['myPlexAuthToken'])) {
 }
 $itemId = intval($_GET['id']);
 $infoUrl = $plexWatchPmsUrl . '/library/metadata/' . $itemId . $myPlexAuthToken;
-$plexPhotoUrl = $plexWatchPmsUrl .
-	'/photo/:/transcode' . $myPlexAuthToken .
-	'&url=http://127.0.0.1:' . $plexWatch['pmsHttpPort'];
 
 function printMetadata($xml) {
 	$data = &metaDataData($xml);
@@ -89,7 +86,6 @@ function printMetadata($xml) {
 }
 
 function metaDataData($xml) {
-	global $plexPhotoUrl;
 	$imgBase = 'includes/img.php?img=';
 	$data = [];
 	if ($xml->Video['type'] == 'episode') {
@@ -104,11 +100,11 @@ function metaDataData($xml) {
 	$durationMinutes = $data['duration'] / 1000 / 60;
 	$data['durationRounded'] = floor($durationMinutes);
 	$data['xmlArtUrl'] = $imgBase .
-		urlencode($plexPhotoUrl . $data['xmlArt'] . '&width=1920&height=1080');
+		urlencode($data['xmlArt'] . '&width=1920&height=1080');
 	$data['xmlThumbUrl'] = 'images/poster.png';
 	if (isset($data['xmlThumb'])) {
 		$data['xmlThumbUrl'] = $imgBase .
-			urlencode($plexPhotoUrl . $data['xmlThumb'] . '&width=256&height=352');
+			urlencode($data['xmlThumb'] . '&width=256&height=352');
 	}
 	if (($data['type'] == 'episode') || ($data['type'] == 'movie')) {
 		$data['span12'] = true;
@@ -383,7 +379,6 @@ function printMoviePeople($xml) {
 }
 
 function printShowWatched($xml) {
-	global $plexPhotoUrl;
 	$database = dbconnect();
 	$plexWatchDbTable = dbTable();
 	echo '<div class="container-fluid">';
@@ -413,8 +408,8 @@ function printShowWatched($xml) {
 							$numRows++;
 							$topWatchedXmlUrl = $topWatchedResultsRow['xml'];
 							$topWatchedXmlfield = simplexml_load_string($topWatchedXmlUrl);
-							$topWatchedThumbUrl = $plexPhotoUrl .
-								$topWatchedXmlfield['thumb'] . '&width=205&height=115';
+							$topWatchedThumbUrl = $topWatchedXmlfield['thumb'] .
+								'&width=205&height=115';
 							echo '<li>';
 								echo '<div class="info-top-watched-instance-position-circle">';
 									echo '<h1>' . $numRows . '</h1>';
@@ -454,7 +449,7 @@ function printShowWatched($xml) {
 }
 
 function printSeasonEpisodes($xml) {
-	global $plexWatchPmsUrl, $plexPhotoUrl, $myPlexAuthToken, $itemId;
+	global $plexWatchPmsUrl, $myPlexAuthToken, $itemId;
 	echo '<div class="container-fluid">';
 		echo '<div class="clear"></div>';
 		echo '<div class="row-fluid">';
@@ -474,7 +469,7 @@ function printSeasonEpisodes($xml) {
 					echo '<div class="season-episodes-wrapper">';
 						echo '<ul class="season-episodes-instance">';
 							foreach ($seasonEpisodesXml->Video as $seasonEpisode) {
-								$thumbUrl = $plexPhotoUrl . $seasonEpisode['thumb'] . '&width=205&height=115';
+								$thumbUrl = $seasonEpisode['thumb'] . '&width=205&height=115';
 								echo '<li>';
 									echo '<div class="season-episodes-poster">';
 										echo '<div class="season-episodes-poster-face">';

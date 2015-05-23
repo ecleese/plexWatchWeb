@@ -33,10 +33,7 @@ echo "<div class='dashboard-recent-media-row'>";
 	echo "<ul class='dashboard-recent-media'>";
 		// Run through each feed item
 		foreach ($recentRequest->children() as $recentXml) {
-			$recentThumbUrl = '' . $plexWatchPmsUrl .
-				'/photo/:/transcode?url=http://127.0.0.1:' .
-				$plexWatch['pmsHttpPort'] . '' .
-				$recentXml['thumb'].'&width=153&height=225';
+			$recentThumbUrl = $recentXml['thumb'].'&width=153&height=225';
 			echo "<div class='dashboard-recent-media-instance'>";
 				echo "<li>";
 					echo "<div class='poster'><div class='poster-face'>";
