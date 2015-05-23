@@ -26,7 +26,6 @@
 		<link rel="apple-touch-icon" sizes="114x114" href="images/icon_iphone@2x.png">
 		<link rel="apple-touch-icon" sizes="144x144" href="images/icon_ipad@2x.png">
 	</head>
-
 	<body>
 		<div class="container">
 			<div class="navbar navbar-fixed-top">
@@ -43,14 +42,12 @@
 				</div>
 			</div>
 		</div>
-
 		<div class="container-fluid">
 			<div class='row-fluid'>
 				<div class='span12'>
 				</div>
 			</div>
 		</div>
-
 		<div class="container-fluid">
 			<div class='row-fluid'>
 				<div class="span12">
@@ -109,33 +106,28 @@
 									$xmlMovieThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$xml['thumb']."&width=100&height=149";
 									$xmlEpisodeThumbUrl = "".$plexWatchPmsUrl."/photo/:/transcode?url=http://127.0.0.1:32400".$xml['grandparentThumb']."&width=100&height=149";
 
-									if ($xml['type'] == "movie") {
-										echo "<div class='charts-instance-wrapper'>";
-											echo "<div class='charts-instance-position-circle'><h1>".$num_rows."</h1></div>";
-											echo "<div class='charts-instance-poster'>";
+									echo "<div class='charts-instance-wrapper'>";
+										echo "<div class='charts-instance-position-circle'><h1>".$num_rows."</h1></div>";
+										echo "<div class='charts-instance-poster'>";
+											if ($xml['type'] == "movie") {
 												echo "<img src='includes/img.php?img=".urlencode($xmlMovieThumbUrl)."'></img>";
-											echo "</div>";
-											echo "<div class='charts-instance-position-title'>";
-												echo "<li><h3><a href='info.php?id=".$xml['ratingKey']."'>".$top10['title']." (".$xml['year'].")</a></h3><h5> (".$top10['play_count']." views)<h5></li>";
-											echo "</div>";
-										echo "</div>";
-									} else if ($xml['type'] == "episode") {
-										echo "<div class='charts-instance-wrapper'>";
-											echo "<div class='charts-instance-position-circle'><h1>".$num_rows."</h1></div>";
-											echo "<div class='charts-instance-poster'>";
+											} else {
 												echo "<img src='includes/img.php?img=".urlencode($xmlEpisodeThumbUrl)."'></img>";
-											echo "</div>";
-											echo "<div class='charts-instance-position-title'>";
-												echo "<li><h3><a href='info.php?id=".$xml['ratingKey']."'>".$top10['orig_title']." - Season ".$top10['season'].", Episode".$top10['episode']."</a></h3><h5> (".$top10['play_count']." views)</h5></li>";
-											echo "</div>";
+											}
 										echo "</div>";
-									}
+										echo "<div class='charts-instance-position-title'>";
+											if ($xml['type'] == "movie") {
+												echo "<li><h3><a href='info.php?id=".$xml['ratingKey']."'>".$top10['title']." (".$xml['year'].")</a></h3><h5> (".$top10['play_count']." views)<h5></li>";
+											} else {
+												echo "<li><h3><a href='info.php?id=".$xml['ratingKey']."'>".$top10['orig_title']." - Season ".$top10['season'].", Episode".$top10['episode']."</a></h3><h5> (".$top10['play_count']." views)</h5></li>";
+											}
+										echo "</div>";
+									echo "</div>";
 								}
 								echo "</ul>";
 							echo "</div>";
 						echo "</div>";
 					echo "</div>";
-
 					echo "<div class='span3'>";
 						echo "<div class='wellbg'>";
 							echo "<div class='wellheader'>";
