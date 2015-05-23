@@ -1,7 +1,7 @@
 <?php
-$guisettingsFile = './../config/config.php';
+$guisettingsFile = dirname(__FILE__) . '/../config/config.php';
 if (file_exists($guisettingsFile)) {
-	require_once(dirname(__FILE__) . $guisettingsFile);
+	require_once($guisettingsFile);
 
 	if (empty($plexWatch['myPlexUser']) && empty($plexWatch['myPlexPass'])) {
 		$myPlexAuthToken = '';

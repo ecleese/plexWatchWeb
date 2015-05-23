@@ -9,9 +9,9 @@
 * with this source code in the file LICENSE.
 */
 
-$guisettingsFile = "config/config.php";
+$guisettingsFile = dirname(__FILE__) . 'config/config.php';
 if (file_exists($guisettingsFile)) {
-    require_once(dirname(__FILE__) . $guisettingsFile);
+    require_once($guisettingsFile);
 } else {
     error_log('plexWatchWeb :: Config file not found.');
     exit;
