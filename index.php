@@ -55,7 +55,7 @@
 			<div class='row-fluid'>
 				<div class='span12'>
 					<?php
-					$guisettingsFile = dirname(__FILE__) . 'config/config.php';
+					$guisettingsFile = dirname(__FILE__) . '/config/config.php';
 					if (file_exists($guisettingsFile)) {
 						require_once($guisettingsFile);
 						// Check if the date format is still using the old PHP formats
