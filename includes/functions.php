@@ -11,11 +11,9 @@ if (!isset($_SESSION)) {
  * If a user doesn't close the browser, this will never update
  */
 function loadPwConfig() {
-	/* if (isset($_SESSION['pwc'])) { unset($_SESSION['pwc']); } // for testing */
 	if (!isset($_SESSION['pwc'])) {
-		global $plexWatch;
-		$db = dbconnect();
-		if ($result = $db->querySingle("SELECT json_pretty from config")) {
+		$database = dbconnect();
+		if ($result = $database->querySingle("SELECT json_pretty from config")) {
 			if ($json = json_decode($result)) {
 				$_SESSION['pwc'] = keysToLower($json);
 			}
@@ -27,20 +25,20 @@ function loadPwConfig() {
 }
 
 /* Return friends name based on user/platform */
-function FriendlyName($user,$platform = NULL) {
+function FriendlyName($user, $platform = NULL) {
 	$user = strtolower($user);
 	$platform = strtolower($platform);
 
 	$config = loadPwConfig();
 	if (is_object($config)) {
-		$fn = $config->{'user_display'};
-		if (is_object($fn)) {
-			if (isset($fn->{$user.'+'.$platform})) {
+		$friendlyName = $config->{'user_display'};
+		if (is_object($friendlyName)) {
+			if (isset($friendlyName->{$user.'+'.$platform})) {
 				//print "user+platform match";
-				return $fn->{$user.'+'.$platform};
-			} else if (isset($fn->{$user})) {
+				return $friendlyName->{$user.'+'.$platform};
+			} else if (isset($friendlyName->{$user})) {
 				//print "user match";
-				return $fn->{$user};
+				return $friendlyName->{$user};
 			}
 		}
 	}
@@ -52,12 +50,16 @@ function dbconnect() {
 	global $plexWatch;
 
 	if (!class_exists('SQLite3')) {
-		die("<div class=\"alert alert-warning \">php5-sqlite is not installed. Please install this requirement and restart your webserver before continuing.</div>");
+		trigger_error('<div class="alert alert-warning ">' .
+				'php5-sqlite is not installed. Please install this requirement and ' .
+				'restart your webserver before continuing.' .
+			'</div>',
+			E_USER_ERROR);
 	}
 
-	$db = new SQLite3($plexWatch['plexWatchDb']);
-	$db->busyTimeout(10*1000);
-	return $db;
+	$database = new SQLite3($plexWatch['plexWatchDb']);
+	$database->busyTimeout(10*1000);
+	return $database;
 }
 
 /* DBtable -- processed or grouped */
@@ -161,5 +163,71 @@ function getPlatformImage($xml) {
 			return "images/platforms/default.png";
 		}
 	}
+}
+
+function printStreamDetails($xmlfield) {
+	$transcoded = array_key_exists('TranscodeSession', $xmlfield);
+	// Set $data based on the stream type
+	if ($transcoded) {
+		$data = &$xmlfield->TranscodeSession;
+		// Convert source to a friendly name if needed as well
+		if ($xmlfield->Media['audioCodec'] == 'dca') {
+			$xmlfield->Media['audioCodec'] = 'dts';
+		}
+	} else {
+		$data = &$xmlfield->Media;
+		$data['audioDecision'] = 'Direct Play';
+	}
+	// Convert to a friendly name if needed
+	if ($data['audioCodec'] == 'dca') {
+		$data['audioCodec'] = 'dts';
+	}
+
+	echo '<div class="span4">';
+		echo '<h4>Stream Details</h4>';
+			echo '<ul>';
+				echo '<h5>Video</h5>';
+				if ($transcoded) {
+					echo '<li>Stream Type: <strong>'.$data['videoDecision'].'</strong></li>';
+					echo '<li>Video Resolution: <strong>'.$data['height'].'p</strong></li>';
+				} else {
+					echo '<li>Stream Type: <strong>Direct Play</strong></li>';
+					echo '<li>Video Resolution: <strong>'.$data['videoResolution'].'p</strong></li>';
+				}
+				echo '<li>Video Codec: <strong>'.$data['videoCodec'].'</strong></li>';
+				echo '<li>Video Width: <strong>'.$data['width'].'</strong></li>';
+				echo '<li>Video Height: <strong>'.$data['height'].'</strong></li>';
+			echo '</ul>';
+			echo '<ul>';
+				echo '<h5>Audio</h5>';
+				echo '<li>Stream Type: <strong>'.$data['audioDecision'].'</strong></li>';
+				echo '<li>Audio Codec: <strong>'.$data['audioCodec'].'</strong></li>';
+				echo '<li>Audio Channels: <strong>'.$data['audioChannels'].'</strong></li>';
+			echo '</ul>';
+	echo '</div>';
+	// Force $data to Media to always get the source information
+	$data = &$xmlfield->Media;
+	echo '<div class="span4">';
+		echo '<h4>Media Source Details</h4>';
+		echo '<li>Container: <strong>'.$data['container'].'</strong></li>';
+		echo '<li>Resolution: <strong>'.$data['videoResolution'].'p</strong></li>';
+		echo '<li>Bitrate: <strong>'.$data['bitrate'].' kbps</strong></li>';
+	echo '</div>';
+	echo '<div class="span4">';
+		echo '<h4>Video Source Details</h4>';
+		echo '<ul>';
+			echo '<li>Width: <strong>'.$data['width'].'</strong></li>';
+			echo '<li>Height: <strong>'.$data['height'].'</strong></li>';
+			echo '<li>Aspect Ratio: <strong>'.$data['aspectRatio'].'</strong></li>';
+			echo '<li>Video Frame Rate: <strong>'.$data['videoFrameRate'].'</strong></li>';
+			echo '<li>Video Codec: <strong>'.$data['videoCodec'].'</strong></li>';
+		echo '</ul>';
+		echo '<ul></ul>';
+		echo '<h4>Audio Source Details</h4>';
+		echo '<ul>';
+			echo '<li>Audio Codec: <strong>'.$data['audioCodec'].'</strong></li>';
+			echo '<li>Audio Channels: <strong>'.$data['audioChannels'].'</strong></li>';
+		echo '</ul>';
+	echo '</div>';
 }
 ?>

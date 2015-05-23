@@ -16,7 +16,7 @@ if (file_exists($guisettingsFile)) {
 		curl_setopt($process, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 		curl_setopt($process, CURLOPT_USERPWD, $username . ":" . $password);
 		curl_setopt($process, CURLOPT_TIMEOUT, 30);
-		curl_setopt($process, CURLOPT_HTTPGET, TRUE);
+		curl_setopt($process, CURLOPT_HTTPGET, true);
 		curl_setopt($process, CURLOPT_POST, 1);
 		curl_setopt($process, CURLOPT_RETURNTRANSFER, true);
 		$data = curl_exec($process);
