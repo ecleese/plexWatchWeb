@@ -1,17 +1,23 @@
 <?php
 require_once(dirname(__FILE__) . '/../config/config.php');
 
+$imgReq = '';
 if (isset($_GET['img']) && (substr($_GET['img'], 0, 4) == 'http')) {
-	$img = $_GET['img'];
-} else {
-	$img = '';
+	$imgReq = $_GET['img'];
 }
+$url = $imgReq;
 if (!empty($plexWatch['myPlexAuthToken'])) {
-	$url = $img."&X-Plex-Token=".$plexWatch['myPlexAuthToken']."";
-} else {
-	$url = $img;
+	$url = $imgReq . "&X-Plex-Token=" . $plexWatch['myPlexAuthToken'];
 }
+
 $img = file_get_contents($url);
-header("Content-Type: image/jpg");
+if ($img === false) {
+	trigger_error("Failed to retrieve \"$url\"", E_USER_ERROR);
+}
+foreach ($http_response_header as $value) {
+	if (preg_match('/^Content-Type:/i', $value)) {
+		header($value, false);
+	}
+}
 echo $img;
 ?>
