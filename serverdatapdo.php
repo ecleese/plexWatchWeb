@@ -352,7 +352,7 @@ class ServerDataPDO
         } );
     } );
 </script>
-<!--  End generated Jquery from  $ajax_source_url --->
+<!--  End generated Jquery from  $ajax_source_url -->
 EOT;
 
         return $js;  //returns the completed jquery string
