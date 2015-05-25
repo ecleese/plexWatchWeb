@@ -159,10 +159,9 @@ function getPlatformImage($xml) {
 			 *   [Generation: 1 letter][Model: 4 digits]
 			 */
 			return "images/platforms/samsung.png";
-		} else {
-			return "images/platforms/default.png";
 		}
 	}
+	return "images/platforms/default.png";
 }
 
 function printStreamDetails($xmlfield) {
