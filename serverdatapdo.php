@@ -166,8 +166,8 @@ class ServerDataPDO
 
         /* Edit Jqeury Here */
         $js=  <<<EOT
-<!-- Start generated Jquery from $ajax_source_url  --->
-<script type="text/JavaScript" charset="utf-8">
+<!-- Start generated Jquery from $ajax_source_url  -->
+<script type="text/javascript">
     $(document).ready(function() {
         var $table_id=$('#$table_id').dataTable( {
             "fnServerData": function ( sSource, aoData, fnCallback ) {
