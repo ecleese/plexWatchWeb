@@ -57,8 +57,8 @@ function dbconnect() {
 			E_USER_ERROR);
 	}
 
-	$database = new SQLite3($plexWatch['plexWatchDb']);
-	$database->busyTimeout(10*1000);
+	$database = new SQLite3($plexWatch['plexWatchDb'], SQLITE3_OPEN_READONLY);
+	$database->busyTimeout(10 * 1000);
 	return $database;
 }
 
