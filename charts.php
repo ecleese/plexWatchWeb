@@ -110,9 +110,9 @@
 										echo "<div class='charts-instance-position-circle'><h1>".$num_rows."</h1></div>";
 										echo "<div class='charts-instance-poster'>";
 											if ($xml['type'] == "movie") {
-												echo "<img src='includes/img.php?img=".urlencode($xmlMovieThumbUrl)."'></img>";
+												echo "<img src='includes/img.php?img=".urlencode($xmlMovieThumbUrl)."'>";
 											} else {
-												echo "<img src='includes/img.php?img=".urlencode($xmlEpisodeThumbUrl)."'></img>";
+												echo "<img src='includes/img.php?img=".urlencode($xmlEpisodeThumbUrl)."'>";
 											}
 										echo "</div>";
 										echo "<div class='charts-instance-position-title'>";
@@ -153,7 +153,7 @@
 											echo "<div class='charts-instance-wrapper'>";
 												echo "<div class='charts-instance-position-circle'><h1>".$top10Movies_Num_rows."</h1></div>";
 												echo "<div class='charts-instance-poster'>";
-													echo "<img src='includes/img.php?img=".urlencode($top10MoviesXmlMovieThumbUrl)."'></img>";
+													echo "<img src='includes/img.php?img=".urlencode($top10MoviesXmlMovieThumbUrl)."'>";
 												echo "</div>";
 												echo "<div class='charts-instance-position-title'>";
 													echo "<li><h3><a href='info.php?id=".$top10MoviesXml['ratingKey']."'>".$top10Movies['title']." (".$top10MoviesXml['year'].")</a></h3><h5> (".$top10Movies['play_count']." views)<h5></li>";
@@ -190,7 +190,7 @@
 												echo "<div class='charts-instance-wrapper'>";
 													echo "<div class='charts-instance-position-circle'><h1>".$top10Shows_Num_rows."</h1></div>";
 													echo "<div class='charts-instance-poster'>";
-														echo "<img src='includes/img.php?img=".urlencode($top10ShowsXmlShowThumbUrl)."'></img>";
+														echo "<img src='includes/img.php?img=".urlencode($top10ShowsXmlShowThumbUrl)."'>";
 													echo "</div>";
 													echo "<div class='charts-instance-position-title'>";
 														echo "<li><h3><a href='info.php?id=".$top10ShowsXml['grandparentRatingKey']."'>".$top10Shows['orig_title']."</a></h3><h5> (".$top10Shows['play_count']." views)</h5></li>";
@@ -227,7 +227,7 @@
 												echo "<div class='charts-instance-wrapper'>";
 													echo "<div class='charts-instance-position-circle'><h1>".$top10Episodes_Num_rows."</h1></div>";
 													echo "<div class='charts-instance-poster'>";
-														echo "<img src='includes/img.php?img=".urlencode($top10EpisodesXmlEpisodeThumbUrl)."'></img>";
+														echo "<img src='includes/img.php?img=".urlencode($top10EpisodesXmlEpisodeThumbUrl)."'>";
 													echo "</div>";
 													echo "<div class='charts-instance-position-title'>";
 														echo "<li><h3><a href='info.php?id=".$top10EpisodesXml['ratingKey']."'>".$top10Episodes['orig_title']." - Season ".$top10Episodes['season'].", Episode ".$top10Episodes['episode']."</a></h3><h5> (".$top10Episodes['play_count']." views)</h5></li>";

@@ -397,7 +397,7 @@ function printWelcomeModal() {
 			echo '</h2>';
 		echo '</div>';
 		echo '<div class="modal-body">';
-			echo '<img src="images/logo-plexWatch-welcome.png"></img>';
+			echo '<img src="images/logo-plexWatch-welcome.png">';
 			echo '<h1>Welcome to plexWatch/Web</h1>';
 			echo '<p>PlexWatch/Web makes it easy to view in-depth historical ' .
 				'statistics and activity of your Plex Media Server. Let\'s get ' .

@@ -39,7 +39,7 @@ function printMetadata($xml) {
 									echo '<div class="span9">';
 								}
 									echo '<div class="summary-content-poster hidden-phone hidden-tablet">';
-										echo '<img src="' . $data['xmlThumbUrl'] . '"></img>';
+										echo '<img src="' . $data['xmlThumbUrl'] . '">';
 									echo '</div>';
 									echo '<div class="summary-content">';
 										echo '<div class="summary-content-title">';
@@ -419,7 +419,7 @@ function printShowWatched($xml) {
 										echo '<a href="info.php?id=' . $topWatchedXmlfield['ratingKey'] . '">';
 											echo '<img src="includes/img.php?img=' .
 												urlencode($topWatchedThumbUrl) .
-												'" class="info-top-watched-poster-face"></img>';
+												'" class="info-top-watched-poster-face">';
 										echo '</a>';
 									echo '</div>';
 									echo '<div class="info-top-watch-card-overlay">';
@@ -476,7 +476,7 @@ function printSeasonEpisodes($xml) {
 											echo '<a href="info.php?id=' . $seasonEpisode['ratingKey'] . '">';
 												echo '<img src="includes/img.php?img=' . urlencode($thumbUrl) .
 													'" class="season-episodes-poster-face">';
-												echo '</img>';
+												echo '';
 											echo '</a>';
 										echo '</div>';
 										echo '<div class="season-episodes-card-overlay">';

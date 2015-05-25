@@ -40,9 +40,9 @@ echo "<div class='dashboard-recent-media-row'>";
 						echo "<a href='info.php?id=".$recentXml['ratingKey']."'>";
 						if ($recentXml['thumb']) {
 							echo "<img src='includes/img.php?img=".urlencode($recentThumbUrl).
-								"' class='poster-face'></img>";
+								"' class='poster-face'>";
 						} else {
-							echo "<img src='images/poster.png' class='poster-face'></img>";
+							echo "<img src='images/poster.png' class='poster-face'>";
 						}
 						echo "</a>";
 					echo "</div></div>";

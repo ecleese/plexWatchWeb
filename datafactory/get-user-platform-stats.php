@@ -29,7 +29,7 @@ while ($platformResultsRow = $platformResults->fetchArray()) {
 	echo "<ul>";
 		echo "<div class='user-platforms-instance'>";
 			echo "<li>";
-				echo "<img class='user-platforms-instance-poster' src='".$platformImage."'></img>";
+				echo "<img class='user-platforms-instance-poster' src='".$platformImage."'>";
 				if ($platformXmlField->Player['platform'] == "Chromecast") {
 					echo "<div class='user-platforms-instance-name'>Plex/Web (Chrome) & Chromecast</div>";
 				} else {

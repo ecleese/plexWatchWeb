@@ -42,7 +42,7 @@ function printPosterFace($session) {
 			urlencode($sessionThumbUrl).")'></div>";
 	} else {
 		echo "<a href='info.php?id=" .$session['ratingKey']. "'>";
-			echo "<img src='includes/img.php?img=".urlencode($sessionThumbUrl)."'></img>";
+			echo "<img src='includes/img.php?img=".urlencode($sessionThumbUrl)."'>";
 		echo "</a>";
 	}
 }

@@ -61,7 +61,7 @@ while ($recentlyWatchedRow = $recentlyWatchedResults->fetchArray()) {
 	echo "<div class='dashboard-recent-media-instance'>";
 		echo "<li>";
 			echo "<div class='poster'><div class='poster-face'><a href='info.php?id=" .$recentXml['ratingKey']. "'>";
-			echo "<img src='".$thumbUrl."' class='poster-face'></img></a></div></div>";
+			echo "<img src='".$thumbUrl."' class='poster-face'></a></div></div>";
 			echo "<div class=dashboard-recent-media-metacontainer>";
 				if ($recentXml['type'] == "episode") {
 					$parentIndexPadded = sprintf("%01s", $recentXml['parentIndex']);
