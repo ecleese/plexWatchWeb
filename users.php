@@ -1,3 +1,13 @@
+<?php
+date_default_timezone_set(@date_default_timezone_get());
+
+$guisettingsFile = dirname(__FILE__) . '/config/config.php';
+if (file_exists($guisettingsFile)) {
+	require_once($guisettingsFile);
+} else {
+	header("Location: settings.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -54,65 +64,65 @@
 						</div>
 					</div>
 					<?php
-					$guisettingsFile = dirname(__FILE__) . '/config/config.php';
-					if (file_exists($guisettingsFile)) {
-						require_once($guisettingsFile);
-					} else {
-						header("Location: settings.php");
-					}
-
-					$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
-
-					if (!empty($plexWatch['myPlexAuthToken'])) {
-							$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
-						} else {
-							$myPlexAuthToken = '';
-					}
-
-					date_default_timezone_set(@date_default_timezone_get());
-
 					$db = dbconnect();
 					$plexWatchDbTable = dbTable('user');
 
-					$users = $db->query("SELECT COUNT(title) as plays, user, time, SUM(time) as timeTotal, SUM(stopped) as stoppedTotal, SUM(paused_counter) as paused_counterTotal, platform, ip_address, xml FROM ".$plexWatchDbTable." GROUP BY user ORDER BY user COLLATE NOCASE") or die ("Failed to access plexWatch database. Please check your settings.");
-					echo "<div class='wellbg'>";
-						echo "<table id='usersTable' class='display'>";
-							echo "<thead>";
-								echo "<tr>";
-									echo "<th align='right'></th>";
-									echo "<th align='left'>User </th>";
-									echo "<th align='left'>Last Seen </th>";
-									echo "<th align='left'>Last Known IP </th>";
-									echo "<th align='left'>Total Plays</th>";
-								echo "</tr>";
-							echo "</thead>";
-							echo "<tbody>";
-							// Run through each feed item
+					$query = "SELECT COUNT(title) as plays, user, time, " .
+							"SUM(time) as timeTotal, SUM(stopped) as stoppedTotal, " .
+							"SUM(paused_counter) as paused_counterTotal, platform, " .
+							"ip_address, xml " .
+						"FROM $plexWatchDbTable " .
+						"GROUP BY user " .
+						"ORDER BY user " .
+						"COLLATE NOCASE";
+					$dieMsg = "Failed to access plexWatch database. Please check your settings.";
+					$users = $db->query($query) or trigger_error($dieMsg, E_USER_ERROR);
+					echo '<div class="wellbg">';
+						echo '<table id="usersTable" class="display">';
+							echo '<thead>';
+								echo '<tr>';
+									echo '<th align="right"></th>';
+									echo '<th align="left">User </th>';
+									echo '<th align="left">Last Seen </th>';
+									echo '<th align="left">Last Known IP </th>';
+									echo '<th align="left">Total Plays</th>';
+								echo '</tr>';
+							echo '</thead>';
+							echo '<tbody>';
+								// Run through each feed item
 								while ($user = $users->fetchArray()) {
 									$userXml = simplexml_load_string($user['xml']) ;
-									echo "<tr>";
-										echo "<td align='right' width='40px'>";
-											echo "<div class='users-poster-face'><a href='user.php?user=".$user['user']."'>";
-											if (empty($userXml->User['thumb'])) {
-												echo "<img src='images/gravatar-default-80x80.png' /></a></div>";
-											} else {
-												echo "<img src='".$userXml->User['thumb']."' onerror=\"this.src='images/gravatar-default-80x80.png'\" /></a></div>";
-											}
-										echo "</td>";
-										echo "<td>";
-											echo "<div class='users-name'><a href='user.php?user=".$user['user']."'> ".FriendlyName($user['user'],$user['platform'])."</a></div>";
-										echo "</td>";
+									echo '<tr>';
+										echo '<td align="right" width="40px">';
+											echo '<div class="users-poster-face">';
+												echo '<a href="user.php?user=' . $user['user'] . '">';
+												if (empty($userXml->User['thumb'])) {
+													echo '<img src="images/gravatar-default-80x80.png"/>';
+												} else {
+													echo '<img src="' . $userXml->User['thumb'] . '" ' .
+														'onerror="this.src=\'images/gravatar-default-80x80.png\'" />';
+												}
+												echo '</a>';
+											echo '</div>';
+										echo '</td>';
+										echo '<td>';
+											echo '<div class="users-name">';
+												echo '<a href="user.php?user=' . $user['user'] . '">';
+													echo FriendlyName($user['user'], $user['platform']);
+												echo '</a>';
+											echo '</div>';
+										echo '</td>';
 
 										require_once(dirname(__FILE__) . '/includes/timeago.php');
 										$lastSeenTime = $user['time'];
-										echo "<td>".TimeAgo($lastSeenTime)."</td>";
-										echo "<td>".$user['ip_address']."</td>";
-										echo "<td>".$user['plays']."</td>";
-									echo "</tr>";
+										echo '<td>' . TimeAgo($lastSeenTime) . '</td>';
+										echo '<td>' . $user['ip_address'] . '</td>';
+										echo '<td>' . $user['plays'] . '</td>';
+									echo '</tr>';
 								}
-							echo "</tbody>";
-						echo "</table>";
-					echo "</div>";
+							echo '</tbody>';
+						echo '</table>';
+					echo '</div>';
 					?>
 				</div>
 			</div><!--/.fluid-row-->
