@@ -1,3 +1,12 @@
+<?php
+$guisettingsFile = dirname(__FILE__) . '/config/config.php';
+if (file_exists($guisettingsFile)) {
+	require_once($guisettingsFile);
+} else {
+	header("Location: settings.php");
+	return;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -64,112 +73,124 @@
 			</div>
 		</div>
 		<?php
-
-		include "serverdatapdo.php";
-		$guisettingsFile = dirname(__FILE__) . '/config/config.php';
-		if (file_exists($guisettingsFile)) {
-			require_once($guisettingsFile);
-		} else {
-			header("Location: settings.php");
-		}
+		include 'serverdatapdo.php';
 
 		$user = htmlspecialchars($_GET['user'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', true);
 		$db = dbconnect();
 		$plexWatchDbTable = dbTable('user');
 
-		$userInfo = $db->query("SELECT user,xml FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC LIMIT 1") or die ("Failed to access plexWatch database. Please check your settings.");
+		$query = "SELECT user, xml " .
+			"FROM $plexWatchDbTable ".
+			"WHERE user = '$user' " .
+			"ORDER BY time DESC " .
+			"LIMIT 1;";
+		$dieMsg = "Failed to access plexWatch database. Please check your settings.";
+		$userInfo = $db->query($query) or trigger_error($dieMsg, E_USER_ERROR);
 		?>
-		<div class='container-fluid'>
-			<div class='row-fluid'>
-				<div class='span12'>
-					<div class='user-info-wrapper'>
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="span12">
+					<div class="user-info-wrapper">
 						<?php
-						while ($userInfoResults= $userInfo->fetchArray()) {
+						while ($userInfoResults = $userInfo->fetchArray()) {
 							$userInfoXml = $userInfoResults['xml'];
 							$userInfoXmlField = simplexml_load_string($userInfoXml);
-							if (empty($userInfoXmlField->User['thumb'])) {
-								?><div class='user-info-poster-face'><img src='images/gravatar-default-80x80.png'></></div><?php
-							} else {
-								?><div class='user-info-poster-face'><img src='<?php echo $userInfoXmlField->User['thumb'];?>' onerror=\"this.src='images/gravatar-default-80x80.png'\"></></div><?php
-							}
+							echo '<div class="user-info-poster-face">';
+								if (empty($userInfoXmlField->User['thumb'])) {
+									echo '<img src="images/gravatar-default-80x80.png">';
+								} else {
+									echo '<img src="' . $userInfoXmlField->User['thumb'] .
+										'" onerror="this.src=\'images/gravatar-default-80x80.png\'">';
+								}
+							echo '</div>';
 						}
 						?>
-						<div class='user-info-username'><?php echo FriendlyName($user); ?></div>
-						<div class='user-info-nav'>
-							<ul class='user-info-nav'>
-								<li class='active'><a href='#profile' data-toggle='tab'>Profile</a></li>
-								<li><a id='ip-tab-btn' href='#userAddresses' data-toggle='tab'>IP Addresses</a></li>
-								<li><a href='#userHistory' data-toggle='tab'>History</a></li>
+						<div class="user-info-username">
+							<?php echo FriendlyName($user); ?>
+						</div>
+						<div class="user-info-nav">
+							<ul class="user-info-nav">
+								<li class="active"><a href="#profile" data-toggle="tab">Profile</a></li>
+								<li><a id="ip-tab-btn" href="#userAddresses" data-toggle="tab">IP Addresses</a></li>
+								<li><a href="#userHistory" data-toggle="tab">History</a></li>
 							</ul>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class='tab-content'>
-			<div class='tab-pane active' id='profile'>
-				<div class='container-fluid'>
-					<div class='row-fluid'>
-						<div class='span12'>
-							<div class='wellbg'>
-								<div class='wellheader'>
-									<div class='dashboard-wellheader'>
+		<div class="tab-content">
+			<div class="tab-pane active" id="profile">
+				<div class="container-fluid">
+					<div class="row-fluid">
+						<div class="span12">
+							<div class="wellbg">
+								<div class="wellheader">
+									<div class="dashboard-wellheader">
 										<h3>Global Stats</h3>
 									</div>
 								</div>
-								<div id='user-time-stats' class='user-overview-stats-wrapper'><div id='user-stats-spinner' class='spinner'></div></div>
+								<div id="user-time-stats" class="user-overview-stats-wrapper">
+									<div id="user-stats-spinner" class="spinner"></div>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class='container-fluid'>
-					<div class='row-fluid'>
-						<div class='span12'>
-							<div class='wellbg'>
-								<div class='wellheader'>
-									<div class='dashboard-wellheader'>
+				<div class="container-fluid">
+					<div class="row-fluid">
+						<div class="span12">
+							<div class="wellbg">
+								<div class="wellheader">
+									<div class="dashboard-wellheader">
 										<h3>Platform Stats</h3>
 									</div>
 								</div>
-								<div id='user-platform-stats' class='user-platforms'><div id='user-platform-spinner' class='spinner'></div></div>
+								<div id="user-platform-stats" class="user-platforms">
+									<div id="user-platform-spinner" class="spinner"></div>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class='container-fluid'>
-					<div class='row-fluid'>
-						<div class='span12'>
-							<div class='wellbg'>
-								<div class='wellheader'>
-									<div class='dashboard-wellheader'>
+				<div class="container-fluid">
+					<div class="row-fluid">
+						<div class="span12">
+							<div class="wellbg">
+								<div class="wellheader">
+									<div class="dashboard-wellheader">
 										<h3>Recently watched</h3>
 									</div>
 								</div>
-								<div id='user-recently-watched' class='dashboard-recent-media-row'><div id='user-watched-spinner' class='spinner'></div></div>
+								<div id="user-recently-watched" class="dashboard-recent-media-row">
+									<div id="user-watched-spinner" class="spinner"></div>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class='tab-pane' id='userAddresses'>
-				<div class='container-fluid'>
-					<div class='row-fluid'>
-						<div class='span12'>
-							<div class='wellbg'>
-								<div class='wellheader'>
-									<div class='dashboard-wellheader'>
-										<h3>Public IP Addresses for <strong><?php echo $user; ?></strong></h3>
+			<div class="tab-pane" id="userAddresses">
+				<div class="container-fluid">
+					<div class="row-fluid">
+						<div class="span12">
+							<div class="wellbg">
+								<div class="wellheader">
+									<div class="dashboard-wellheader">
+										<h3>Public IP Addresses for <strong>
+											<?php echo FriendlyName($user); ?>
+										</strong></h3>
 									</div>
 								</div>
-								<table id='tableUserIpAddresses' class='display' width='100%'>
+								<table id="tableUserIpAddresses" class="display" width="100%">
 									<thead>
 										<tr>
-											<th align='left'><i class='icon-sort icon-white'></i> Last seen</th>
-											<th align='left'><i class='icon-sort icon-white'></i> IP Address</th>
-											<th align='left'><i class='icon-sort icon-white'></i> Play Count</th>
-											<th align='left'><i class='icon-sort icon-white'></i> Platform (Last Seen)</th>
-											<th align='left'><i class='icon-sort icon-white'></i> Location</th>
-											<th align='left'><i class='icon-sort icon-white'></i> Location</th>
+											<th align="left"><i class="icon-sort icon-white"></i> Last seen</th>
+											<th align="left"><i class="icon-sort icon-white"></i> IP Address</th>
+											<th align="left"><i class="icon-sort icon-white"></i> Play Count</th>
+											<th align="left"><i class="icon-sort icon-white"></i> Platform (Last Seen)</th>
+											<th align="left"><i class="icon-sort icon-white"></i> Location</th>
+											<th align="left"><i class="icon-sort icon-white"></i> Location</th>
 										</tr>
 									</thead>
 								</table>
@@ -178,26 +199,36 @@
 					</div>
 				</div>
 			</div>
-			<div class='tab-pane' id='userHistory'>
-				<div class='container-fluid'>
-					<div class='row-fluid'>
-						<div class='span12'>
-							<div class='wellbg'>
-								<div class='wellheader'>
-									<div class='dashboard-wellheader'>
-										<h3>Watching History for <strong><?php echo $user; ?></strong></h3>
+			<div class="tab-pane" id="userHistory">
+				<div class="container-fluid">
+					<div class="row-fluid">
+						<div class="span12">
+							<div class="wellbg">
+								<div class="wellheader">
+									<div class="dashboard-wellheader">
+										<h3>Watching History for <strong>
+											<?php echo FriendlyName($user); ?>
+										</strong></h3>
 									</div>
 								</div>
 								<?php
-								//now generate the HTML databable structure from SQL here:
-								$cols= "id,Date,User,Platform,IP Address,Title,Started,Paused,Stopped,xml,Duration,Completed";  //Column names for datatable headings (typically same as sql)
-								$html = ServerDataPDO::build_html_datatable($cols,'user_history_datatable');
+								// Now generate the HTML databable structure from SQL here:
+								// Column names for datatable headings (typically same as sql)
+								$cols = 'id,Date,User,Platform,IP Address,Title,Started,' .
+									'Paused,Stopped,xml,Duration,Completed';
+								$html = ServerDataPDO::build_html_datatable($cols, 'user_history_datatable');
 								echo $html;
 								?>
-								<div id="info-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="info-modal" aria-hidden="true">
+								<div id="info-modal" class="modal hide fade" tabindex="-1"
+									role="dialog" aria-labelledby="info-modal" aria-hidden="true">
 									<div class="modal-header">
-										<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="icon icon-remove"></i></button>
-										<h3 id="myModalLabel"><i class="icon-info-sign icon-white"></i> Stream Info: <strong><span id="modal-stream-info"></span></strong></h3>
+										<button type="button" class="close" data-dismiss="modal"
+											aria-hidden="true"><i class="icon icon-remove"></i></button>
+										<h3 id="myModalLabel">
+											<i class="icon-info-sign icon-white"></i> Stream Info: <strong>
+												<span id="modal-stream-info"></span>
+											</strong>
+										</h3>
 									</div>
 									<div class="modal-body" id="modal-text"></div>
 									<div class="modal-footer"></div>
@@ -225,7 +256,7 @@
 			function loadXMLString(txt) {
 				if (window.DOMParser) {
 					parser=new DOMParser();
-					xmlDoc=parser.parseFromString(txt,"text/xml");
+					xmlDoc=parser.parseFromString(txt, "text/xml");
 				} else { // code for IE
 					xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
 					xmlDoc.async=false;
@@ -236,7 +267,7 @@
 		</script>
 		<script>
 			$(document).ready(function() {
-				var cacheData = getCache('<?php echo $user;?>'+'-user-recently-watched-cache');
+				var cacheData = getCache('<?php echo $user; ?>' + '-user-recently-watched-cache');
 				if (cacheData) {
 					$("#user-recently-watched").html(cacheData);
 				} else {
@@ -244,10 +275,10 @@
 						url: 'datafactory/get-user-recently-watched.php',
 						type: "POST",
 						async: true,
-						data: { user : '<?php echo $user; ?>' },
+						data: { user: '<?php echo $user; ?>' },
 						success: function(data) {
 							$("#user-recently-watched").html(data);
-							setCache('<?php echo $user;?>'+'-user-recently-watched-cache', data);
+							setCache('<?php echo $user;?>' + '-user-recently-watched-cache', data);
 						}
 					});
 				}
@@ -255,7 +286,7 @@
 		</script>
 		<script>
 			$(document).ready(function() {
-				var cacheData = getCache('<?php echo $user;?>'+'-user-time-stats-cache');
+				var cacheData = getCache('<?php echo $user; ?>' + '-user-time-stats-cache');
 				if (cacheData) {
 					$("#user-time-stats").html(cacheData);
 				} else {
@@ -263,10 +294,10 @@
 						url: 'datafactory/get-user-time-stats.php',
 						type: "POST",
 						async: true,
-						data: { user : '<?php echo $user; ?>' },
+						data: { user: '<?php echo $user; ?>' },
 						success: function(data) {
 							$("#user-time-stats").html(data);
-							setCache('<?php echo $user;?>'+'-user-time-stats-cache', data);
+							setCache('<?php echo $user; ?>' + '-user-time-stats-cache', data);
 						}
 					});
 				}
@@ -274,7 +305,7 @@
 		</script>
 		<script>
 			$(document).ready(function() {
-				var cacheData = getCache('<?php echo $user;?>'+'-user-platform-stats-cache');
+				var cacheData = getCache('<?php echo $user; ?>' + '-user-platform-stats-cache');
 				if (cacheData) {
 					$("#user-platform-stats").html(cacheData);
 				} else {
@@ -282,10 +313,10 @@
 						url: 'datafactory/get-user-platform-stats.php',
 						type: "POST",
 						async: true,
-						data: { user : '<?php echo $user; ?>' },
+						data: { user: '<?php echo $user; ?>' },
 						success: function(data) {
 							$("#user-platform-stats").html(data);
-							setCache('<?php echo $user;?>'+'-user-platform-stats-cache', data);
+							setCache('<?php echo $user; ?>' + '-user-platform-stats-cache', data);
 						}
 					});
 				}
@@ -301,7 +332,7 @@
 					"bSort": true,
 					"bInfo": true,
 					"iDisplayLength": 10,
-					"aaSorting": [[0,'desc']],
+					"aaSorting": [[0, 'desc']],
 					"bAutoWidth": true,
 					"bProcessing": true,
 					"bStateSave": false,
@@ -317,34 +348,31 @@
 					}],
 					"aoColumnDefs": [
 						{
-							"aTargets": [ 0 ],
+							"aTargets": [0],
 							"fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
 								if (sData != "Loading...") {
-									$(nTd).html(moment(sData,"X").format("<?php echo $plexWatch['dateFormat']; ?>"));
+									$(nTd).html(moment(sData, "X")
+										.format("<?php echo $plexWatch['dateFormat']; ?>"));
 								}
 							}
 						},
+						{ "aTargets": [1] },
+						{ "aTargets": [2] },
+						{ "aTargets": [3] },
 						{
-							"aTargets": [ 1 ]
-						},
-						{
-							"aTargets": [ 2 ]
-						},
-						{
-							"aTargets": [ 3 ]
-						},
-						{
-							"aTargets": [ 4 ],
+							"aTargets": [4],
 							"fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
 								if (oData[5] !== '') {
-									$(nTd).html('<a target="_blank" href="'+oData[5]+'"><i class="icon-map-marker icon-white"></i>&nbsp'+sData+'</a>');
+									$(nTd).html('<a target="_blank" href="' + oData[5] +'">' +
+										'<i class="icon-map-marker icon-white"></i>&nbsp' + sData +
+										'</a>');
 								} else {
 									$(nTd).html(sData);
 								}
 							}
 						},
 						{
-							"aTargets": [ 5 ],
+							"aTargets": [5],
 							"bVisible": false
 						}
 					]
@@ -352,7 +380,7 @@
 
 				ipTable = $('#tableUserIpAddresses').dataTable(ipTableOptions);
 
-				var cacheData = getCache('<?php echo $user;?>'+'-ip-stats-cache');
+				var cacheData = getCache('<?php echo $user; ?>' + '-ip-stats-cache');
 				if (cacheData) {
 					ipTableOptions.aaData = cacheData.data;
 					ipTable = $('#tableUserIpAddresses').dataTable(ipTableOptions);
@@ -367,9 +395,9 @@
 							ipTableOptions.aaData = data.data;
 							ipTable = $('#tableUserIpAddresses').dataTable(ipTableOptions);
 							// set expiration on this cached item to 10 minutes.
-							setCache('<?php echo $user;?>'+'-ip-stats-cache',data,10);
+							setCache('<?php echo $user; ?>' + '-ip-stats-cache',data,10);
 						}
-					} );
+					});
 				}
 			});
 		</script>
@@ -377,13 +405,19 @@
 		$plexWatchDbTable = dbTable('user');
 
 		$db_array=array(
-			"sql"=>"SELECT id|time|user|platform|ip_address|title|time|paused_counter|stopped|xml|round((julianday(datetime(stopped,'unixepoch', 'localtime')) - julianday(datetime(time,'unixepoch', 'localtime')))*86400)-(case when paused_counter is null then 0 else paused_counter end) from ".$plexWatchDbTable, /* Use | as delimiter. Spell out columns names no SELECT * Table */
+			/* Use | as delimiter. Spell out columns names no SELECT * Table */
+			"sql"=>"SELECT id|time|user|platform|ip_address|title|time|" .
+				"paused_counter|stopped|xml|round((julianday(datetime(stopped," .
+				"'unixepoch', 'localtime')) - julianday(datetime(time,'unixepoch'," .
+				"'localtime')))*86400)-(case when paused_counter is null then 0 else " .
+				"paused_counter end) from " . $plexWatchDbTable,
 			"table"=>$plexWatchDbTable, /* DB table to use assigned by constructor*/
-			"idxcol"=>"id", /* Indexed column (used for fast and accurate table cardinality) */
-			"where"=>"user = '".$user."'" /* Option where clause (omit WHERE text) */
+			"idxcol"=>'id', /* Indexed column (used for fast and accurate table cardinality) */
+			"where"=>"user = '" . $user . "'" /* Option where clause (omit WHERE text) */
 		);
 
-		$javascript = ServerDataPDO::build_jquery_datatable($db_array,'user_history_datatable','datafactory/get-info-modal.php');
+		$javascript = ServerDataPDO::build_jquery_datatable($db_array,
+			'user_history_datatable','datafactory/get-info-modal.php');
 		echo $javascript;
 		?>
 		<script>
