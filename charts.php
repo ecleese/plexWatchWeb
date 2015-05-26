@@ -70,7 +70,7 @@ function printTop10($query, $type = null) {
 				echo '<h1>' . $num_rows . '</h1>';
 			echo '</div>';
 			echo '<div class="charts-instance-poster">';
-				echo '<img src="includes/img.php?img='.$imgUrl.'">';
+				echo '<img src="includes/img.php?img='.$imgUrl.'" alt="'. $title . '">';
 			echo '</div>';
 			echo '<div class="charts-instance-position-title">';
 				echo "<li>";

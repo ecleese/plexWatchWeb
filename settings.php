@@ -23,7 +23,7 @@ function printSettings() {
 						printVersions();
 					}
 					printGeneralSettings($haveConfig);
-					printDateTimeSettings();
+					printDateTimeFormat();
 					printPMSSettings($haveConfig);
 					printPlexAuthSettings($haveConfig);
 					printGroupingSettings($haveConfig);
@@ -36,10 +36,8 @@ function printSettings() {
 										'class="btn btn-medium btn-primary" value="save">';
 										echo 'Save';
 									echo '</button>';
-									echo '<a href="index.php">';
-										echo '<button type="button" class="btn btn-medium btn-cancel">';
-											echo 'Cancel';
-										echo '</button>';
+									echo '<a href="index.php" class="btn btn-medium btn-cancel">';
+										echo 'Cancel';
 									echo '</a>';
 								echo '</div>';
 							echo '</div>';
@@ -56,7 +54,7 @@ function printVersions() {
 	echo '<div class="wellbg">';
 		echo '<div class="wellheader">';
 			echo '<div class="dashboard-wellheader">';
-				echo '<h3><a id="info">Version Information</a></h3>';
+				echo '<h3><a id="version">Version Information</a></h3>';
 			echo '</div>';
 		echo '</div>';
 		echo '<div class="settings-general-info">';
@@ -82,10 +80,17 @@ function printGeneralSettings($haveConfig) {
 		echo '</div>';
 		// Text input
 		echo '<div class="control-group">';
+			echo '<p class="help-block">';
+				echo 'The date &amp; display format plexWatch/Web should use. ';
+				echo '<a href="#dateTimeOptionsModal" data-toggle="modal">';
+					echo 'Format options';
+				echo '</a>';
+			echo '</p>';
+			echo '<br>';
 			echo '<label class="control-label" for="dateFormat">Date Format</label>';
 			echo '<div class="controls">';
-				echo '<input id="dateFormat" name="dateFormat" type="text"' .
-					'placeholder="M/D/YYYY" class="input-mini" required=""' .
+				echo '<input id="dateFormat" name="dateFormat" type="text" ' .
+					'placeholder="M/D/YYYY" class="input-small" required="" ' .
 					'value="';
 					if ($haveConfig) {
 						echo $plexWatch['dateFormat'];
@@ -93,12 +98,6 @@ function printGeneralSettings($haveConfig) {
 						echo 'm/D/YYYY';
 					}
 					echo '">';
-				echo '<p class="help-block">';
-					echo 'The date display format plexWatch/Web should use. ';
-					echo '<a href="#dateTimeOptionsModal" data-toggle="modal">';
-						echo 'Date &amp; Time format options';
-					echo '</a>';
-				echo '</p>';
 			echo '</div>';
 		echo '</div>';
 		echo '<div class="control-group">';
@@ -112,18 +111,12 @@ function printGeneralSettings($haveConfig) {
 						echo 'hh:mm a';
 					}
 					echo '">';
-				echo '<p class="help-block">';
-					echo 'The time display format plexWatch/Web should use. ';
-					echo '<a href="#dateTimeOptionsModal" data-toggle="modal">';
-						echo 'Date &amp; Time format options';
-					echo '</a>';
-				echo '</p>';
 			echo '</div>';
 		echo '</div>';
 	echo '</div>';
 }
 
-function printDateTimeSettings() {
+function printDateTimeFormat() {
 	echo '<div id="dateTimeOptionsModal" class="modal hide fade" tabindex="-1" ' .
 		'role="dialog" aria-labelledby="dateTimeOptionsModal" aria-hidden="true">';
 		echo '<div class="modal-header">';
@@ -147,7 +140,7 @@ function printDateTimeSettings() {
 }
 
 function printDTRows() {
-	echo '<tr><td><h5>Day</h5></td></tr>';
+	echo '<tr><td colspan="3"><h5>Day</h5></td></tr>';
 	echo '<tr>';
 		echo '<td align="center"><strong>DD</strong></td>';
 		echo '<td width="300">Numeric, with leading zeros</td>';
@@ -164,7 +157,7 @@ function printDTRows() {
 		echo '<td>st, nd or th in the 1st, 2nd or 15th.</td>';
 	echo '</tr>';
 
-	echo '<tr><td><h5>Month</h5></td></tr>';
+	echo '<tr><td colspan="3"><h5>Month</h5></td></tr>';
 	echo '<tr>';
 		echo '<td align="center"><strong>MM</strong></td>';
 		echo '<td>Numeric, with leading zeros</td>';
@@ -186,7 +179,7 @@ function printDTRows() {
 		echo '<td>Jan – Dec</td>';
 	echo '</tr>';
 
-	echo '<tr><td><h5>Year</h5></td></tr>';
+	echo '<tr><td colspan="3"><h5>Year</h5></td></tr>';
 	echo '<tr>';
 		echo '<td align="center"><strong>YYYY</strong></td>';
 		echo '<td>Numeric, 4 digits</td>';
@@ -198,7 +191,7 @@ function printDTRows() {
 		echo '<td>Eg., 99, 03</td>';
 	echo '</tr>';
 
-	echo '<tr><td><h5>Time</h5></td></tr>';
+	echo '<tr><td colspan="3"><h5>Time</h5></td></tr>';
 	echo '<tr>';
 		echo '<td align="center"><strong>a</strong></td>';
 		echo '<td width="300">am/pm Lowercase</td>';
@@ -272,7 +265,7 @@ function printPMSSettings($haveConfig) {
 			echo '<label class="control-label" for="pmsHttpPort">PMS Web Port</label>';
 			echo '<div class="controls">';
 				echo '<input id="pmsHttpPort" name="pmsHttpPort" type="text" ' .
-					'placeholder="32400" class="input-small" required="" value="';
+					'placeholder="32400" class="input-mini" required="" value="';
 					if ($haveConfig) {
 						echo $plexWatch['pmsHttpPort'];
 					} else {
@@ -314,7 +307,8 @@ function printPlexAuthSettings($haveConfig) {
 				echo '<a href="https://support.plex.tv/hc/en-us/articles/203815766-What-is-Plex-Home-">';
 				echo 'Plex Home</a> on your Plex Media Server, a ';
 				echo '<a href="https://plex.tv/users/sign_in">Plex.tv</a> username and ';
-				echo 'password are required in order to access your server\'s data.</p>';
+				echo 'password are required in order to access your server\'s data.';
+			echo '</p>';
 			echo '<br>';
 			echo '<label class="control-label" for="myPlexUser">Username (optional)</label>';
 			echo '<div class="controls">';
@@ -343,13 +337,13 @@ function printGroupingSettings($haveConfig) {
 	$chartsGrouping = '';
 	if ($haveConfig) {
 		if ($plexWatch['globalHistoryGrouping'] == 'yes') {
-			$globalGrouping = ' checked="yes"';
+			$globalGrouping = ' checked';
 		}
 		if ($plexWatch['userHistoryGrouping'] == 'yes') {
-			$userGrouping = ' checked="yes"';
+			$userGrouping = ' checked';
 		}
 		if ($plexWatch['chartsGrouping'] == 'yes') {
-			$chartsGrouping = ' checked="yes"';
+			$chartsGrouping = ' checked';
 		}
 	}
 	echo '<div class="wellbg">';
@@ -359,28 +353,28 @@ function printGroupingSettings($haveConfig) {
 			echo '</div>';
 		echo '</div>';
 		echo '<div class="control-group">';
-			echo '<label class="control-label" for="globalHistoryGrouping">' .
+			echo '<label class="control-label" for="globalHistoryGrouping-0">' .
 				'Global History (optional)</label>';
 			echo '<div class="controls">';
-				echo '<label class="checkbox inline" for="globalHistoryGrouping">';
+				echo '<label class="checkbox inline" for="globalHistoryGrouping-0">';
 					echo '<input type="checkbox" name="globalHistoryGrouping" ' .
 						'id="globalHistoryGrouping-0" value="yes"' . $globalGrouping .'>';
-					echo '<p class="help-block">Enable global history grouping</p>';
+					echo '<span class="help-block">Enable global history grouping</span>';
 				echo '</label>';
-				echo '<label class="control-label" for="userHistoryGrouping">' .
+				echo '<label class="control-label" for="userHistoryGrouping-0">' .
 					'User History (optional)</label>';
-				echo '<label class="checkbox inline" for="userHistoryGrouping">';
+				echo '<label class="checkbox inline" for="userHistoryGrouping-0">';
 					echo '<input type="checkbox" name="userHistoryGrouping" ' .
 						'id="userHistoryGrouping-0" value="yes"' .$userGrouping .'>';
-					echo '<p class="help-block">Enable user history grouping</p>';
+					echo '<span class="help-block">Enable user history grouping</span>';
 				echo '</label>';
-				echo '<label class="control-label" for="chartsGrouping">';
+				echo '<label class="control-label" for="chartsGrouping-0">';
 					echo 'Charts (optional)';
 				echo '</label>';
-				echo '<label class="checkbox inline" for="chartsGrouping">';
+				echo '<label class="checkbox inline" for="chartsGrouping-0">';
 					echo '<input type="checkbox" name="chartsGrouping" ' .
 						'id="chartsGrouping-0" value="yes"' .$chartsGrouping. '>';
-					echo '<p class="help-block">Enable charts grouping</p>';
+					echo '<span class="help-block">Enable charts grouping</span>';
 				echo '</label>';
 			echo '</div>';
 		echo '</div>';

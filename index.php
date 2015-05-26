@@ -1,3 +1,16 @@
+<?php
+$guisettingsFile = dirname(__FILE__) . '/config/config.php';
+if (file_exists($guisettingsFile)) {
+	require_once($guisettingsFile);
+	// Check if the date format is still using the old PHP formats
+	if (strpos($plexWatch['timeFormat'],"g") !== false || strpos($plexWatch['timeFormat'],"G") !== false) {
+		header("Location: settings.php?error=datetime");
+	}
+} else {
+	header("Location: settings.php");
+	return;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -54,18 +67,6 @@
 			</div>
 			<div class='row-fluid'>
 				<div class='span12'>
-					<?php
-					$guisettingsFile = dirname(__FILE__) . '/config/config.php';
-					if (file_exists($guisettingsFile)) {
-						require_once($guisettingsFile);
-						// Check if the date format is still using the old PHP formats
-						if (strpos($plexWatch['timeFormat'],"g") !== false || strpos($plexWatch['timeFormat'],"G") !== false) {
-							header("Location: settings.php?error=datetime");
-						}
-					} else {
-						header("Location: settings.php");
-					}
-					?>
 					<div class='wellbg'>
 						<div class='wellheader'>
 							<div class='dashboard-wellheader'>

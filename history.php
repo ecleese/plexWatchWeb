@@ -81,8 +81,10 @@
 				<div class='span12'>
 					<div class='wellbg'>
 						<?php
-						//now generate the HTML databable structure from SQL here:
-						$cols= "id,Date,User,Platform,IP Address,Title,Started,Paused,Stopped,xml,Duration,Completed";  //Column names for datatable headings (typically same as sql)
+						// Now generate the HTML databable structure from SQL here:
+						//Column names for datatable headings (typically same as sql)
+						$cols = "id,Date,User,Platform,IP Address,Title,Started,Paused," .
+							"Stopped,xml,Duration,Completed";
 						$html = ServerDataPDO::build_html_datatable($cols, 'history_datatable');
 						echo $html;
 						?>

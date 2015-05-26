@@ -6,6 +6,7 @@ if (file_exists($guisettingsFile)) {
 	require_once($guisettingsFile);
 } else {
 	header("Location: settings.php");
+	return;
 }
 ?>
 <!DOCTYPE html>
@@ -97,10 +98,12 @@ if (file_exists($guisettingsFile)) {
 											echo '<div class="users-poster-face">';
 												echo '<a href="user.php?user=' . $user['user'] . '">';
 												if (empty($userXml->User['thumb'])) {
-													echo '<img src="images/gravatar-default-80x80.png"/>';
+													echo '<img src="images/gravatar-default-80x80.png" ' .
+														'alt="User Logo" />';
 												} else {
 													echo '<img src="' . $userXml->User['thumb'] . '" ' .
-														'onerror="this.src=\'images/gravatar-default-80x80.png\'" />';
+														'onerror="this.src=\'images/gravatar-default-80x80.png\'"' .
+														'alt="User Logo" />';
 												}
 												echo '</a>';
 											echo '</div>';
