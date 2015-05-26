@@ -1,3 +1,93 @@
+<?php
+date_default_timezone_set(@date_default_timezone_get());
+
+$guisettingsFile = dirname(__FILE__) . '/config/config.php';
+if (file_exists($guisettingsFile)) {
+	require_once($guisettingsFile);
+} else {
+	header('Location: settings.php');
+	return;
+}
+
+$plexWatchPmsUrl = 'http://' . $plexWatch['pmsIp'] . ':' .
+	$plexWatch['pmsHttpPort'];
+
+if (!empty($plexWatch['myPlexAuthToken'])) {
+	$myPlexAuthToken = '?X-Plex-Token=' . $plexWatch['myPlexAuthToken'];
+} else {
+	$myPlexAuthToken = '';
+}
+
+if ($fileContents = file_get_contents($plexWatchPmsUrl .
+		'/status/sessions' . $myPlexAuthToken)) {
+	$msg = 'Failed to access Plex Media Server. Please check your settings.';
+	$statusSessions = simplexml_load_string($fileContents) or
+		trigger_error($msg, E_USER_ERROR);
+}
+
+$database = dbconnect();
+$plexWatchDbTable = dbTable('charts');
+$columns = "title,time,orig_title,orig_title_ep,episode," .
+	"season,xml,COUNT(*) AS play_count ";
+
+function printTop10($query, $type = null) {
+	global $database;
+	$results = $database->query($query);
+	if ($results === false) {
+		$msg = 'There was a problem running "' . $query . '".';
+		trigger_error($msg, E_USER_ERROR);
+	}
+	$imgSize = '&width=100&height=149';
+
+	// Run through each feed item
+	$num_rows = 0;
+	while ($row = $results->fetchArray()) {
+		$num_rows++;
+		$xml = simplexml_load_string($row['xml']);
+		if ($xml['type'] == 'movie') {
+			$imgUrl = urlencode($xml['thumb'] . $imgSize);
+			$title = $row['title'] . ' (' . $xml['year'] . ')';
+			$key = $xml['ratingKey'];
+		} else {
+			$imgUrl = urlencode($xml['grandparentThumb'] . $imgSize);
+			switch ($type) {
+				case 'shows':
+					$key = $xml['grandparentRatingKey'];
+					$title = $row['orig_title'];
+					break;
+				case 'episodes':
+					$imgUrl = urlencode($xml['parentThumb'] . $imgSize);
+				default: // All time
+					$title = $row['orig_title'] . ' - Season ' . $row['season'] . ', ' .
+						'Episode ' . $row['episode'];
+					$key = $xml['ratingKey'];
+					break;
+			}
+		}
+
+		echo '<div class="charts-instance-wrapper">';
+			echo '<div class="charts-instance-position-circle">';
+				echo '<h1>' . $num_rows . '</h1>';
+			echo '</div>';
+			echo '<div class="charts-instance-poster">';
+				echo '<img src="includes/img.php?img='.$imgUrl.'">';
+			echo '</div>';
+			echo '<div class="charts-instance-position-title">';
+				echo "<li>";
+					echo '<h3>';
+						echo '<a href="info.php?id='. $key .'">';
+							echo $title;
+						echo '</a>';
+					echo '</h3>';
+					echo '<h5>';
+						echo '(' . $row['play_count'] . ' views)';
+					echo '</h5>';
+				echo '</li>';
+			echo '</div>';
+		echo '</div>';
+	}
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -60,187 +150,91 @@
 			</div>
 			<div class='row-fluid'>
 				<div class="span12">
-				<?php
-					$guisettingsFile = dirname(__FILE__) . '/config/config.php';
-					if (file_exists($guisettingsFile)) {
-						require_once($guisettingsFile);
-					} else {
-						header("Location: settings.php");
-					}
-
-					$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
-
-					if (!empty($plexWatch['myPlexAuthToken'])) {
-						$myPlexAuthToken = $plexWatch['myPlexAuthToken'];
-						if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/status/sessions?X-Plex-Token=".$myPlexAuthToken."")) {
-							$statusSessions = simplexml_load_string($fileContents) or die ("Failed to access Plex Media Server. Please check your settings.");
-						}
-					} else {
-						$myPlexAuthToken = '';
-						if ($fileContents = file_get_contents("".$plexWatchPmsUrl."/status/sessions")) {
-							$statusSessions = simplexml_load_string($fileContents) or die ("Failed to access Plex Media Server. Please check your settings.");
-						}
-					}
-
-					$db = dbconnect();
-
-					date_default_timezone_set(@date_default_timezone_get());
-
-					echo "<div class='span3'>";
-						echo "<div class='wellbg'>";
-							echo "<div class='wellheader'>";
-								echo "<div class='dashboard-wellheader'>";
-									echo "<h4>Top 10 (All Time)</h4>";
-								echo "</div>";
-							echo "</div>";
-							echo "<div class='charts-wrapper'>";
-								echo "<ul>";
-								$plexWatchDbTable = dbTable('charts');
-								$queryTop10 = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(*) AS play_count FROM ".$plexWatchDbTable." GROUP BY title HAVING play_count > 0 ORDER BY play_count DESC,time DESC LIMIT 10") or die ("Failed to access plexWatch database. Please check your server and config.php settings.");
-
-								// Run through each feed item
-								$num_rows = 0;
-								while ($top10 = $queryTop10->fetchArray()) {
-									$num_rows++;
-									$xml = simplexml_load_string($top10['xml']);
-									$xmlMovieThumbUrl = $xml['thumb']."&width=100&height=149";
-									$xmlEpisodeThumbUrl = $xml['grandparentThumb']."&width=100&height=149";
-
-									echo "<div class='charts-instance-wrapper'>";
-										echo "<div class='charts-instance-position-circle'><h1>".$num_rows."</h1></div>";
-										echo "<div class='charts-instance-poster'>";
-											if ($xml['type'] == "movie") {
-												echo "<img src='includes/img.php?img=".urlencode($xmlMovieThumbUrl)."'>";
-											} else {
-												echo "<img src='includes/img.php?img=".urlencode($xmlEpisodeThumbUrl)."'>";
-											}
-										echo "</div>";
-										echo "<div class='charts-instance-position-title'>";
-											if ($xml['type'] == "movie") {
-												echo "<li><h3><a href='info.php?id=".$xml['ratingKey']."'>".$top10['title']." (".$xml['year'].")</a></h3><h5> (".$top10['play_count']." views)<h5></li>";
-											} else {
-												echo "<li><h3><a href='info.php?id=".$xml['ratingKey']."'>".$top10['orig_title']." - Season ".$top10['season'].", Episode".$top10['episode']."</a></h3><h5> (".$top10['play_count']." views)</h5></li>";
-											}
-										echo "</div>";
-									echo "</div>";
-								}
-								echo "</ul>";
-							echo "</div>";
-						echo "</div>";
-					echo "</div>";
-					echo "<div class='span3'>";
-						echo "<div class='wellbg'>";
-							echo "<div class='wellheader'>";
-								echo "<div class='dashboard-wellheader'>";
-									echo "<h4>Top 10 Films (All Time)</h4>";
-								echo "</div>";
-							echo "</div>";
-							echo "<div class='charts-wrapper'>";
-								echo "<ul>";
-
-								$queryTop10Movies = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(*) AS play_count FROM ".$plexWatchDbTable." GROUP BY title HAVING play_count > 0 ORDER BY play_count DESC,time DESC");
-
-								// Run through each feed item
-								$top10Movies_Num_rows = 0;
-								while ($top10Movies = $queryTop10Movies->fetchArray()) {
-									$top10MoviesXml = simplexml_load_string($top10Movies['xml']);
-									$top10MoviesXmlMovieThumbUrl = $top10MoviesXml['thumb']."&width=100&height=149";
-									if ($top10MoviesXml['type'] == "movie") {
-										$top10Movies_Num_rows++;
-										if ($top10Movies_Num_rows == 11) {
-											break;
-										} else {
-											echo "<div class='charts-instance-wrapper'>";
-												echo "<div class='charts-instance-position-circle'><h1>".$top10Movies_Num_rows."</h1></div>";
-												echo "<div class='charts-instance-poster'>";
-													echo "<img src='includes/img.php?img=".urlencode($top10MoviesXmlMovieThumbUrl)."'>";
-												echo "</div>";
-												echo "<div class='charts-instance-position-title'>";
-													echo "<li><h3><a href='info.php?id=".$top10MoviesXml['ratingKey']."'>".$top10Movies['title']." (".$top10MoviesXml['year'].")</a></h3><h5> (".$top10Movies['play_count']." views)<h5></li>";
-												echo "</div>";
-											echo "</div>";
-										}
-									}
-								}
-								echo "</ul>";
-							echo "</div>";
-						echo "</div>";
-					echo "</div>";
-					echo "<div class='span3'>";
-						echo "<div class='wellbg'>";
-							echo "<div class='wellheader'>";
-								echo "<div class='dashboard-wellheader'>";
-									echo "<h4>Top 10 TV Shows (All Time)</h4>";
-								echo "</div>";
-							echo "</div>";
-							echo "<div class='charts-wrapper'>";
-								echo "<ul>";
-									$queryTop10Shows = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(orig_title) AS play_count FROM ".$plexWatchDbTable." WHERE season != '' GROUP BY orig_title HAVING play_count > 0 ORDER BY play_count DESC,time DESC");
-
-									// Run through each feed item
-									$top10Shows_Num_rows = 0;
-									while ($top10Shows = $queryTop10Shows->fetchArray()) {
-										$top10ShowsXml = simplexml_load_string($top10Shows['xml']);
-										$top10ShowsXmlShowThumbUrl = $top10ShowsXml['grandparentThumb']."&width=100&height=149";
-										if ($top10ShowsXml['type'] == "episode") {
-											$top10Shows_Num_rows++;
-											if ($top10Shows_Num_rows == 11) {
-												break;
-											} else {
-												echo "<div class='charts-instance-wrapper'>";
-													echo "<div class='charts-instance-position-circle'><h1>".$top10Shows_Num_rows."</h1></div>";
-													echo "<div class='charts-instance-poster'>";
-														echo "<img src='includes/img.php?img=".urlencode($top10ShowsXmlShowThumbUrl)."'>";
-													echo "</div>";
-													echo "<div class='charts-instance-position-title'>";
-														echo "<li><h3><a href='info.php?id=".$top10ShowsXml['grandparentRatingKey']."'>".$top10Shows['orig_title']."</a></h3><h5> (".$top10Shows['play_count']." views)</h5></li>";
-													echo "</div>";
-												echo "</div>";
-											}
-										}
-									}
-								echo "</ul>";
-							echo "</div>";
-						echo "</div>";
-					echo "</div>";
-					echo "<div class='span3'>";
-						echo "<div class='wellbg'>";
-							echo "<div class='wellheader'>";
-								echo "<div class='dashboard-wellheader'>";
-									echo "<h4>Top 10 TV Episodes (All Time)</h4>";
-								echo "</div>";
-							echo "</div>";
-							echo "<div class='charts-wrapper'>";
-								echo "<ul>";
-									$queryTop10Episodes = $db->query("SELECT title,time,user,orig_title,orig_title_ep,episode,season,xml,datetime(time, 'unixepoch') AS time, COUNT(*) AS play_count FROM ".$plexWatchDbTable." WHERE season != '' GROUP BY title HAVING play_count > 0 ORDER BY play_count DESC,time DESC");
-
-									// Run through each feed item
-									$top10Episodes_Num_rows = 0;
-									while ($top10Episodes = $queryTop10Episodes->fetchArray()) {
-										$top10EpisodesXml = simplexml_load_string($top10Episodes['xml']);
-										$top10EpisodesXmlEpisodeThumbUrl = $top10EpisodesXml['parentThumb']."&width=100&height=149";
-										if ($top10EpisodesXml['type'] == "episode") {
-											$top10Episodes_Num_rows++;
-											if ($top10Episodes_Num_rows == 11) {
-												break;
-											} else {
-												echo "<div class='charts-instance-wrapper'>";
-													echo "<div class='charts-instance-position-circle'><h1>".$top10Episodes_Num_rows."</h1></div>";
-													echo "<div class='charts-instance-poster'>";
-														echo "<img src='includes/img.php?img=".urlencode($top10EpisodesXmlEpisodeThumbUrl)."'>";
-													echo "</div>";
-													echo "<div class='charts-instance-position-title'>";
-														echo "<li><h3><a href='info.php?id=".$top10EpisodesXml['ratingKey']."'>".$top10Episodes['orig_title']." - Season ".$top10Episodes['season'].", Episode ".$top10Episodes['episode']."</a></h3><h5> (".$top10Episodes['play_count']." views)</h5></li>";
-													echo "</div>";
-												echo "</div>";
-											}
-										}
-									}
-								echo "</ul>";
-							echo "</div>";
-						echo "</div>";
-					echo "</div>";
-				?>
+					<?php
+					echo '<div class="span3">';
+						echo '<div class="wellbg">';
+							echo '<div class="wellheader">';
+								echo '<div class="dashboard-wellheader">';
+									echo '<h4>Top 10 (All Time)</h4>';
+								echo '</div>';
+							echo '</div>';
+							echo '<div class="charts-wrapper">';
+								echo '<ul>';
+									$top10Query = "SELECT $columns" .
+										"FROM $plexWatchDbTable " .
+										"GROUP BY title " .
+										"HAVING play_count > 0 " .
+										"ORDER BY play_count DESC, time DESC " .
+										"LIMIT 10;";
+									printTop10($top10Query);
+								echo '</ul>';
+							echo '</div>';
+						echo '</div>';
+					echo '</div>';
+					echo '<div class="span3">';
+						echo '<div class="wellbg">';
+							echo '<div class="wellheader">';
+								echo '<div class="dashboard-wellheader">';
+									echo '<h4>Top 10 Films (All Time)</h4>';
+								echo '</div>';
+							echo '</div>';
+							echo '<div class="charts-wrapper">';
+								echo '<ul>';
+								$top10MovieQuery = "SELECT $columns" .
+									"FROM $plexWatchDbTable " .
+									"WHERE xml LIKE '%type=\"movie\"%'" .
+									"GROUP BY title " .
+									"HAVING play_count > 0 " .
+									"ORDER BY play_count DESC, time DESC " .
+									"LIMIT 10;";
+								printTop10($top10MovieQuery);
+								echo '</ul>';
+							echo '</div>';
+						echo '</div>';
+					echo '</div>';
+					echo '<div class="span3">';
+						echo '<div class="wellbg">';
+							echo '<div class="wellheader">';
+								echo '<div class="dashboard-wellheader">';
+									echo '<h4>Top 10 TV Shows (All Time)</h4>';
+								echo '</div>';
+							echo '</div>';
+							echo '<div class="charts-wrapper">';
+								echo '<ul>';
+									$top10ShowsQuery = "SELECT $columns" .
+										"FROM $plexWatchDbTable " .
+										"WHERE xml LIKE '%type=\"episode\"%'" .
+										"GROUP BY orig_title " .
+										"HAVING play_count > 0 " .
+										"ORDER BY play_count DESC, time DESC " .
+										"LIMIT 10;";
+									printTop10($top10ShowsQuery, 'shows');
+								echo '</ul>';
+							echo '</div>';
+						echo '</div>';
+					echo '</div>';
+					echo '<div class="span3">';
+						echo '<div class="wellbg">';
+							echo '<div class="wellheader">';
+								echo '<div class="dashboard-wellheader">';
+									echo '<h4>Top 10 TV Episodes (All Time)</h4>';
+								echo '</div>';
+							echo '</div>';
+							echo '<div class="charts-wrapper">';
+								echo '<ul>';
+									$top10EpisodesQuery = "SELECT $columns" .
+										"FROM $plexWatchDbTable " .
+										"WHERE xml LIKE '%type=\"episode\"%'" .
+										"GROUP BY title " .
+										"HAVING play_count > 0 " .
+										"ORDER BY play_count DESC, time DESC " .
+										"LIMIT 10;";
+									printTop10($top10EpisodesQuery, 'episodes');
+								echo '</ul>';
+							echo '</div>';
+						echo '</div>';
+					echo '</div>';
+					?>
 				</div>
 			</div><!--/.fluid-row-->
 			<footer>
