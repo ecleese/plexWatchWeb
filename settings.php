@@ -95,7 +95,7 @@ function printGeneralSettings($haveConfig) {
 					if ($haveConfig) {
 						echo $plexWatch['dateFormat'];
 					} else {
-						echo 'm/D/YYYY';
+						echo 'M/D/YYYY';
 					}
 					echo '">';
 			echo '</div>';
@@ -104,7 +104,7 @@ function printGeneralSettings($haveConfig) {
 			echo '<label class="control-label" for="timeFormat">Time Format</label>';
 			echo '<div class="controls">';
 				echo '<input id="timeFormat" name="timeFormat" type="text" '.
-					'placeholder="h:mm a" class="input-mini" required="" value="';
+					'placeholder="hh:mm a" class="input-mini" required="" value="';
 					if ($haveConfig) {
 						echo $plexWatch['timeFormat'];
 					} else {
