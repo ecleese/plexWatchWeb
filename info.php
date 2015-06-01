@@ -159,10 +159,10 @@ function seasonMetaData($xml) {
 		trigger_error('Feed Not Found', E_USER_ERROR);
 	}
 	$data['xmlArt'] = $xml->Directory['art'];
-	if ($xml->Video['parentThumb']) {
-		$data['xmlThumb'] = $xml->Video['parentThumb'];
-	} else if ($xml->Video['grandparentThumb']) {
-		$data['xmlThumb'] = $xml->Video['grandparentThumb'];
+	if ($xml->Directory['thumb']) {
+		$data['xmlThumb'] = $xml->Directory['thumb'];
+	} else if ($xml->Directory['parentThumb']) {
+		$data['xmlThumb'] = $xml->Directory['parentThumb'];
 	}
 	$data['title'] = $xml->Directory['parentTitle'] .
 		' (' . $xml->Directory['title'] . ')';
