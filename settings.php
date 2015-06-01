@@ -59,7 +59,7 @@ function printVersions() {
 		echo '</div>';
 		echo '<div class="settings-general-info">';
 			echo '<ul>';
-				echo '<li>plexWatch/Web Version: <strong>v1.6.2 dev</strong></li>';
+				echo '<li>plexWatch/Web Version: <strong>v1.7.0 dev</strong></li>';
 				$query = "SELECT version FROM config";
 				$plexWatchVersion = $database->querySingle($query);
 				echo '<li>plexWatch Version: <strong>';

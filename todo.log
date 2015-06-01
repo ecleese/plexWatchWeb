@@ -1,7 +1,0 @@
-plexWatch/Web - v1.6.0 todo list
-================================
-
-- add: info.php server side processing to history table
-- remove: HTTPS Plex Media Server settings
-- fix: LFI vulnerabilities (if possible)
-- add: charts.php revisions/enhancements

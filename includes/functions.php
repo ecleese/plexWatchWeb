@@ -149,9 +149,20 @@ function getPlatformImage($xml) {
 		return "images/platforms/xbox.png";
 	} else if (strstr($xml->Player['platform'], 'Samsung')) {
 		return "images/platforms/samsung.png";
-	} else if (empty($xml->Player['platform'])) {
+	}else if(strstr($xml->Player['platform'], 'Opera')) {
+		return "images/platforms/opera.png";
+	}else if(strstr($xml->Player['platform'], 'KODI')) {
+		return "images/platforms/kodi.png";
+	}else if(strstr($xml->Player['platform'], 'Mystery 3')) {
+		return "images/platforms/playstation.png";
+	}else if(strstr($xml->Player['platform'], 'Mystery 4')) {
+		return "images/platforms/playstation.png";			
+				
+	}else if (empty($xml->Player['platform'])) {
 		if (strstr($xml->Player['title'], 'Apple')) {
 			return "images/platforms/atv.png";
+		} else if(stristr($xml->Player['title'], 'Plex for Sony')) {
+			return "images/platforms/playstation.png";
 		} else if (preg_match("/TV [a-z][a-z]\d\d[a-z]\d\d\d\d/i",
 				$xml->Player['title'])) {
 			/* Matches Samsung naming standard:

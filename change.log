@@ -1,3 +1,7 @@
+1.7.0 dev
+* New:		global: icon support for KODI, Sony Playstation, and Opera clients
+* Change:	Code cleanup (Arcanemagus)
+
 1.6.2 dev
 * Fix:		get-library-stats.php: fix for user count==0 (rbowden91)
 * Change:	stats.php: extended monthly plays chart to one full year, including year of month
