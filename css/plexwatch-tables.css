@@ -51,7 +51,7 @@
 	text-align: center;
 	color: #999;
 	font-size: 14px;
-	
+
 }
 
 .dataTables_length {
@@ -62,7 +62,6 @@
 }
 
 .dataTables_filter {
-	
 	float: right;
 	text-align: right;
 	margin-right: 15px;
@@ -136,8 +135,6 @@
 	background: url('../images/forward_enabled_hover.png') no-repeat top right;
 }
 
-
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables display
  */
@@ -148,7 +145,7 @@ table.display {
 	font-size: 14px;
 	line-height: 30px;
 	/* Note Firefox 3.5 and before have a bug with border-collapse
-	 * ( https://bugzilla.mozilla.org/show%5Fbug.cgi?id=155955 ) 
+	 * ( https://bugzilla.mozilla.org/show%5Fbug.cgi?id=155955 )
 	 * border-spacing: 0; is one possible option. Conditional-css.com is
 	 * useful for this kind of thing
 	 *
@@ -156,25 +153,24 @@ table.display {
 	 * It subtracts one px relative to the other browsers from the first column, and
 	 * adds one to the end...
 	 *
-	 * If you want that effect I'd suggest setting a border-top/left on th/td's and 
+	 * If you want that effect I'd suggest setting a border-top/left on th/td's and
 	 * then filling in the gaps with other borders.
 	 */
 }
 
 table.display thead th {
-white-space:nowrap;
-padding: 0px 0px 5px 5px;
-border-bottom: 1px solid #343434;
-font-weight: bold;
-cursor: pointer;
-color: #999;
-font-size: 10px;
-
+	white-space:nowrap;
+	padding: 0px 0px 5px 5px;
+	border-bottom: 1px solid #343434;
+	font-weight: bold;
+	cursor: pointer;
+	color: #999;
+	font-size: 10px;
 }
 
 
 table.display thead th i {
-margin-top: -1px;
+	margin-top: -1px;
 }
 
 table.display tfoot th {
@@ -207,51 +203,45 @@ table.display tr:hover {
 }
 
 table.display tr:hover a {
-text-decoration:none;
-
+	text-decoration:none;
 }
 
 table.display td:hover a {
-color: #F9AA03; 
+	color: #F9AA03;
 }
 
 table.display thead tr:hover {
-background: transparent;
+	background: transparent;
 }
-
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables sorting
  */
 
 .sorting_asc {
-	
+
 }
 
 .sorting_desc {
-	
+
 }
 
 .sorting {
-	
+
 }
 
 .sorting_asc_disabled {
-	
+
 }
 
 .sorting_desc_disabled {
-	
+
 }
- 
+
 table.display thead th:active,
 table.display thead td:active {
 	outline: none;
 }
-
-
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables row classes
@@ -298,12 +288,8 @@ tr.odd {
 tr.even {
 	border-top: 1px solid #343434;
 	border-bottom: 1px solid #343434;
-	
+
 }
-
-
-
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Misc
@@ -412,19 +398,19 @@ table.display tr.odd.row_selected td {
  */
 /* For the standard odd/even */
 tr.odd td.sorting_1 {
-	
+
 }
 
 tr.odd td.sorting_2 {
-	
+
 }
 
 tr.odd td.sorting_3 {
-	
+
 }
 
 tr.even td.sorting_1 {
-	
+
 }
 
 tr.even td.sorting_2 {
