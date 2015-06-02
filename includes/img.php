@@ -14,7 +14,9 @@ $imgReq = '';
 if (isset($_GET['img'])) {
 	$imgReq = $_GET['img'];
 } else {
-	trigger_error('No image to retrieve specified.', E_USER_ERROR);
+	$error_msg = 'No image to retrieve specified.';
+	echo '<p>' . $error_msg . '</p>';
+	trigger_error($error_msg, E_USER_ERROR);
 }
 $url = $plexWatchPmsUrl .
 	'/photo/:/transcode' . $myPlexAuthToken .
@@ -22,7 +24,9 @@ $url = $plexWatchPmsUrl .
 
 $img = file_get_contents($url);
 if ($img === false) {
-	trigger_error("Failed to retrieve \"$url\"", E_USER_ERROR);
+	$error_msg = 'Failed to retrieve "' . $url . '"';
+	echo '<p>' . $error_msg . '</p>';
+	trigger_error($error_msg, E_USER_ERROR);
 }
 foreach ($http_response_header as $value) {
 	if (preg_match('/^Content-Type:/i', $value)) {

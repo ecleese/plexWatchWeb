@@ -126,7 +126,11 @@ $query = "SELECT " .
 		"datetime('now', '-24 hours', 'localtime') " .
 	"GROUP BY strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) " .
 	"ORDER BY date ASC;";
-$hourlyPlays = $db->query($query) or trigger_error($plexDBDie, E_USER_ERROR);
+$hourlyPlays = $db->query($query);
+if ($hourlyPlays === false) {
+	echo '<p>' . $plexDBDie . '</p>';
+	trigger_error($plexDBDie, E_USER_ERROR);
+}
 $hourlyPlayData = [];
 while ($row = $hourlyPlays->fetchArray()) {
 	$hourlyPlayData[] = ["x"=>$row['date'], "y"=>$row['count']];
@@ -139,7 +143,11 @@ $query = "SELECT " .
 	"GROUP BY strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) " .
 	"ORDER BY count(*) desc " .
 	"LIMIT 25;";
-$maxhourlyPlays = $db->query($query) or trigger_error($plexDBDie, E_USER_ERROR);
+$maxhourlyPlays = $db->query($query);
+if ($maxhourlyPlays === false) {
+	echo '<p>' . $plexDBDie . '</p>';
+	trigger_error($plexDBDie, E_USER_ERROR);
+}
 $maxhourlyPlayData = [];
 while ($row = $maxhourlyPlays->fetchArray()) {
 	$maxhourlyPlayData[] = ["x"=>$row['date'], "y"=>$row['count']];
@@ -152,7 +160,11 @@ $query = "SELECT " .
 	"GROUP BY date " .
 	"ORDER BY time DESC " .
 	"LIMIT 30;";
-$dailyPlays = $db->query($query) or trigger_error($plexDBDie, E_USER_ERROR);
+$dailyPlays = $db->query($query);
+if ($dailyPlays === false) {
+	echo '<p>' . $plexDBDie . '</p>';
+	trigger_error($plexDBDie, E_USER_ERROR);
+}
 $dailyPlayData = [];
 while ($row = $dailyPlays->fetchArray()) {
 	$dailyPlayData[] = ["x"=>$row['date'], "y"=>$row['count']];
@@ -167,7 +179,11 @@ $query = "SELECT " .
 	"GROUP BY strftime('%Y-%m', datetime(time, 'unixepoch', 'localtime')) " .
 	"ORDER BY date DESC " .
 	"LIMIT 13;";
-$monthlyPlays = $db->query($query) or trigger_error($plexDBDie, E_USER_ERROR);
+$monthlyPlays = $db->query($query);
+if ($monthlyPlays === false) {
+	echo '<p>' . $plexDBDie . '</p>';
+	trigger_error($plexDBDie, E_USER_ERROR);
+}
 $monthlyPlayData = [];
 while ($row = $monthlyPlays->fetchArray()) {
 	$monthlyPlayData[] = ["x"=>$row['date'], "y"=>$row['count']];

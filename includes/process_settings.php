@@ -3,7 +3,10 @@ session_start();
 require_once(dirname(__FILE__) . '/ConfigClass.php');
 
 $config = new ConfigClass();
-$existing_config = $config::read('../config/config.php');
+$config_file = '../config/config.php';
+if (file_exists($config_file)) {
+	$existing_config = $config::read($config_file);
+}
 
 $dateFormat = "\$plexWatch['dateFormat'] = '".$_POST['dateFormat']."';";
 $timeFormat = "\$plexWatch['timeFormat'] = '".$_POST['timeFormat']."';";
@@ -43,17 +46,19 @@ if (!isset($_POST['chartsGrouping'])) {
 }
 
 //combine all data into one variable
-$data = "$dateFormat\r$timeFormat\r$pmsIp\r$pmsHttpPort\r$plexWatchDb\r$myPlexUser\r$myPlexPass\r$globalHistoryGrping\r$userHistoryGrping\r$chartsGrping";
+$data = $dateFormat . PHP_EOL . $timeFormat . PHP_EOL . $pmsIp . PHP_EOL .
+	$pmsHttpPort . PHP_EOL . $plexWatchDb . PHP_EOL . $myPlexUser . PHP_EOL .
+	$myPlexPass . PHP_EOL . $globalHistoryGrping . PHP_EOL . $userHistoryGrping .
+	PHP_EOL . $chartsGrping;
 
-$file = "../config/config.php";
 $func_file = dirname(dirname(__FILE__)) . '/includes/functions.php';
 
 //write data to config.php file
-$fp = fopen($file, "w+") or die("Cannot open file $file.");
-fwrite($fp, "<?php\r\r") or die("Cannot write to file $file.");
-fwrite($fp, "\nrequire_once '$func_file';\n") or die("Cannot write to file $file.");
-fwrite($fp, $data) or die("Cannot write to file $file.");
-fwrite($fp, "\r\r?>") or die("Cannot write to file $file.");
+$fp = fopen($config_file, "w+") or die("Cannot open file $config_file.");
+fwrite($fp, "<?php" . PHP_EOL . PHP_EOL) or die("Cannot write to file $config_file.");
+fwrite($fp, PHP_EOL . "require_once '$func_file';" . PHP_EOL) or die("Cannot write to file $config_file.");
+fwrite($fp, $data) or die("Cannot write to file $config_file.");
+fwrite($fp, PHP_EOL . PHP_EOL . "?>") or die("Cannot write to file $config_file.");
 fclose($fp);
 
 sleep(1);
@@ -63,14 +68,17 @@ require_once(dirname(__FILE__) . '/myplex.php');
 $myPlexToken = "\$plexWatch['myPlexAuthToken'] = '".$myPlexAuthToken."';";
 
 //include authentication code in saved data
-$data = "$dateFormat\r$timeFormat\r$pmsIp\r$pmsHttpPort\r$plexWatchDb\r$myPlexUser\r$myPlexPass\r$myPlexToken\r$globalHistoryGrping\r$userHistoryGrping\r$chartsGrping";
+$data = $dateFormat . PHP_EOL . $timeFormat . PHP_EOL . $pmsIp . PHP_EOL .
+	$pmsHttpPort . PHP_EOL . $plexWatchDb . PHP_EOL . $myPlexUser . PHP_EOL .
+	$myPlexPass . PHP_EOL . $myPlexToken . PHP_EOL . $globalHistoryGrping .
+	PHP_EOL . $userHistoryGrping . PHP_EOL . $chartsGrping;
 
 //rewrite data to config.php
-$fp = fopen($file, "w+") or die("Cannot open file $file.");
-fwrite($fp, "<?php\r\r") or die("Cannot write to file $file.");
-fwrite($fp, "\nrequire_once '$func_file';\n") or die("Cannot write to file $file.");
-fwrite($fp, $data) or die("Cannot write to file $file.");
-fwrite($fp, "\r\r?>") or die("Cannot write to file $file.");
+$fp = fopen($config_file, "w+") or die("Cannot open file $config_file.");
+fwrite($fp, "<?php" . PHP_EOL . PHP_EOL) or die("Cannot write to file $config_file.");
+fwrite($fp, PHP_EOL . "require_once '$func_file';" . PHP_EOL) or die("Cannot write to file $config_file.");
+fwrite($fp, $data) or die("Cannot write to file $config_file.");
+fwrite($fp, PHP_EOL . PHP_EOL . "?>") or die("Cannot write to file $config_file.");
 fclose($fp);
 
 // check if an error was found - if there was, send the user back to the form
@@ -79,5 +87,5 @@ if (!empty($errorCode)) {
 }
 
 // send the user back to the form
-header("Location: ../settings.php?s=".urlencode("Settings saved.")); exit;
+header('Location: ../settings.php?s='.urlencode('Settings saved.')); exit;
 ?>

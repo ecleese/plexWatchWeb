@@ -85,7 +85,11 @@ if (file_exists($guisettingsFile)) {
 			"ORDER BY time DESC " .
 			"LIMIT 1;";
 		$dieMsg = "Failed to access plexWatch database. Please check your settings.";
-		$userInfo = $db->query($query) or trigger_error($dieMsg, E_USER_ERROR);
+		$userInfo = $db->query($query);
+		if ($userInfo === false) {
+			echo '<p>' . $dieMsg . '</p>';
+			trigger_error($dieMsg, E_USER_ERROR);
+		}
 		?>
 		<div class="container-fluid">
 			<div class="row-fluid">

@@ -155,8 +155,10 @@ function seasonMetaData($xml) {
 	$parentInfoUrl = $plexWatchPmsUrl . '/library/metadata/'.
 		$xml->Directory['parentRatingKey'] . $myPlexAuthToken;
 	$parentXml = simplexml_load_string(file_get_contents($parentInfoUrl));
-	if (!$parentXml) {
-		trigger_error('Feed Not Found', E_USER_ERROR);
+	if ($parentXml === false) {
+		$error_msg = 'Feed Not Found';
+		echo '<p>' . $error_msg . '</p>';
+		trigger_error($error_msg, E_USER_ERROR);
 	}
 	$data['xmlArt'] = $xml->Directory['art'];
 	if ($xml->Video['parentThumb']) {
@@ -463,8 +465,10 @@ function printSeasonEpisodes($xml) {
 					$seasonEpisodesUrl = $plexWatchPmsUrl . '/library/metadata/' .
 						$itemId . '/children' . $myPlexAuthToken;
 					$seasonEpisodesXml = simplexml_load_string(file_get_contents($seasonEpisodesUrl));
-					if (!$seasonEpisodesXml) {
-						trigger_error('Feed Not Found', E_USER_ERROR);
+					if ($seasonEpisodesXml === false) {
+						$error_msg = 'Feed Not Found';
+						echo '<p>' . $error_msg . '</p>';
+						trigger_error($error_msg, E_USER_ERROR);
 					}
 					echo '<div class="season-episodes-wrapper">';
 						echo '<ul class="season-episodes-instance">';
