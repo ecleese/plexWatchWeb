@@ -632,7 +632,7 @@ function printJSONSupport() {
 								'this and try again.' . $errorEnd;
 						}
 						printSettings();
-						if (!file_exists($guisettingsFile)) {
+						if (!file_exists($guisettingsFile) && !isset($_GET['e'])) {
 							printWelcomeModal();
 						}
 						?>

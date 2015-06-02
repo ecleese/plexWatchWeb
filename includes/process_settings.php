@@ -8,13 +8,16 @@ if (file_exists($config_file)) {
 	$existing_config = $config::read($config_file);
 }
 
+if (!file_exists($_POST['plexWatchDb'])) {
+	haveError("Specified DB file doesn't exist!");
+}
+$plexWatchDb = "\$plexWatch['plexWatchDb'] = '".$_POST['plexWatchDb']."';";
+
 $dateFormat = "\$plexWatch['dateFormat'] = '".$_POST['dateFormat']."';";
 $timeFormat = "\$plexWatch['timeFormat'] = '".$_POST['timeFormat']."';";
 
 $pmsIp = "\$plexWatch['pmsIp'] = '".$_POST['pmsIp']."';";
 $pmsHttpPort = "\$plexWatch['pmsHttpPort'] = '".$_POST['pmsHttpPort']."';";
-
-$plexWatchDb = "\$plexWatch['plexWatchDb'] = '".$_POST['plexWatchDb']."';";
 
 $myPlexUser = "\$plexWatch['myPlexUser'] = '".$_POST['myPlexUser']."';";
 if (isset($_POST['myPlexPass']) && $_POST['myPlexPass'] !== '') {
@@ -27,21 +30,18 @@ if (isset($_POST['myPlexPass']) && $_POST['myPlexPass'] !== '') {
 	}
 }
 
-if (!isset($_POST['globalHistoryGrouping'])) {
-	$globalHistoryGrping = "\$plexWatch['globalHistoryGrouping'] = 'no';";
-} else if ($_POST['globalHistoryGrouping'] == "yes") {
+$globalHistoryGrping = "\$plexWatch['globalHistoryGrouping'] = 'no';";
+if ($_POST['globalHistoryGrouping'] == "yes") {
 	$globalHistoryGrping = "\$plexWatch['globalHistoryGrouping'] = 'yes';";
 }
 
-if (!isset($_POST['userHistoryGrouping'])) {
-	$userHistoryGrping = "\$plexWatch['userHistoryGrouping'] = 'no';";
-} else if ($_POST['userHistoryGrouping'] == "yes") {
+$userHistoryGrping = "\$plexWatch['userHistoryGrouping'] = 'no';";
+if ($_POST['userHistoryGrouping'] == "yes") {
 	$userHistoryGrping = "\$plexWatch['userHistoryGrouping'] = 'yes';";
 }
 
-if (!isset($_POST['chartsGrouping'])) {
-	$chartsGrping = "\$plexWatch['chartsGrouping'] = 'no';";
-} else if ($_POST['chartsGrouping'] == "yes") {
+$chartsGrping = "\$plexWatch['chartsGrouping'] = 'no';";
+if ($_POST['chartsGrouping'] == "yes") {
 	$chartsGrping = "\$plexWatch['chartsGrouping'] = 'yes';";
 }
 
@@ -54,11 +54,11 @@ $data = $dateFormat . PHP_EOL . $timeFormat . PHP_EOL . $pmsIp . PHP_EOL .
 $func_file = dirname(dirname(__FILE__)) . '/includes/functions.php';
 
 //write data to config.php file
-$fp = fopen($config_file, "w+") or die("Cannot open file $config_file.");
-fwrite($fp, "<?php" . PHP_EOL . PHP_EOL) or die("Cannot write to file $config_file.");
-fwrite($fp, PHP_EOL . "require_once '$func_file';" . PHP_EOL) or die("Cannot write to file $config_file.");
-fwrite($fp, $data) or die("Cannot write to file $config_file.");
-fwrite($fp, PHP_EOL . PHP_EOL . "?>") or die("Cannot write to file $config_file.");
+$fp = fopen($config_file, "w+") or haveError("Cannot open file $config_file.");
+fwrite($fp, "<?php" . PHP_EOL . PHP_EOL) or haveError("Cannot write to file $config_file.");
+fwrite($fp, PHP_EOL . "require_once '$func_file';" . PHP_EOL) or haveError("Cannot write to file $config_file.");
+fwrite($fp, $data) or haveError("Cannot write to file $config_file.");
+fwrite($fp, PHP_EOL . PHP_EOL . "?>") or haveError("Cannot write to file $config_file.");
 fclose($fp);
 
 sleep(1);
@@ -74,18 +74,19 @@ $data = $dateFormat . PHP_EOL . $timeFormat . PHP_EOL . $pmsIp . PHP_EOL .
 	PHP_EOL . $userHistoryGrping . PHP_EOL . $chartsGrping;
 
 //rewrite data to config.php
-$fp = fopen($config_file, "w+") or die("Cannot open file $config_file.");
-fwrite($fp, "<?php" . PHP_EOL . PHP_EOL) or die("Cannot write to file $config_file.");
-fwrite($fp, PHP_EOL . "require_once '$func_file';" . PHP_EOL) or die("Cannot write to file $config_file.");
-fwrite($fp, $data) or die("Cannot write to file $config_file.");
-fwrite($fp, PHP_EOL . PHP_EOL . "?>") or die("Cannot write to file $config_file.");
+$fp = fopen($config_file, "w+") or haveError("Cannot open file $config_file.");
+fwrite($fp, "<?php" . PHP_EOL . PHP_EOL) or haveError("Cannot write to file $config_file.");
+fwrite($fp, PHP_EOL . "require_once '$func_file';" . PHP_EOL) or haveError("Cannot write to file $config_file.");
+fwrite($fp, $data) or haveError("Cannot write to file $config_file.");
+fwrite($fp, PHP_EOL . PHP_EOL . "?>") or haveError("Cannot write to file $config_file.");
 fclose($fp);
 
-// check if an error was found - if there was, send the user back to the form
-if (!empty($errorCode)) {
-	header('Location: ../settings.php?e='.urlencode($errorCode)); exit;
+function haveError($msg) {
+	header('Location: ../settings.php?e=' . urlencode($msg));
+	trigger_error($msg, E_USER_ERROR);
 }
 
-// send the user back to the form
-header('Location: ../settings.php?s='.urlencode('Settings saved.')); exit;
+// Send the user back to the form
+header('Location: ../settings.php?s=' . urlencode('Settings saved.'));
+exit;
 ?>
