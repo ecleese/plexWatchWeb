@@ -87,6 +87,45 @@ function dbTable($groupType = 'global') {
 	return "processed";
 }
 
+// Determine the current PMS URL to use, and cache in the session
+function getPmsURL() {
+	global $plexWatch;
+	if (isset($_SESSION['pmsUrl'])) {
+		return $_SESSION['pmsUrl'];
+	} else {
+		$_SESSION['pmsUrl'] = false;
+	}
+	$prefix = ['https://', 'http://'];
+	$status = 'status/sessions';
+	if (!empty($plexWatch['myPlexAuthToken'])) {
+		$myPlexAuthToken = '?X-Plex-Token='.$plexWatch['myPlexAuthToken'];
+	} else {
+		$myPlexAuthToken = '';
+	}
+	for ($i = 0; $i < count($prefix); $i++) {
+		$plexWatchPmsUrl = $prefix[$i] . $plexWatch['pmsIp'] . ':' .
+			$plexWatch['pmsHttpPort'];
+		$curlHandle = curl_init($plexWatchPmsUrl . $status . $myPlexAuthToken);
+		curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($curlHandle, CURLOPT_SSL_VERIFYHOST, false);
+		curl_setopt($curlHandle, CURLOPT_FORBID_REUSE, true);
+		$authCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
+		$data = curl_exec($curlHandle);
+		if ($data === false) {
+			curl_close($curlHandle);
+			continue; // Move on to the next prefix
+		}
+		if ($authCode >= 400) {
+			curl_close($curlHandle);
+			continue; // Invalid authentication
+		}
+		curl_close($curlHandle);
+		$_SESSION['pmsUrl'] = $plexWatchPmsUrl;
+	}
+	return $_SESSION['pmsUrl'];
+}
+
 /* Function to lowercase all object keys. easier for matching */
 function &keysToLower(&$obj) {
 	$type = (int) is_object($obj) - (int) is_array($obj);

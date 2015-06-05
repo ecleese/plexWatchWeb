@@ -16,7 +16,7 @@ if ($users === false) {
 	die ("Failed to access plexWatch database. Please check your settings.");
 }
 
-$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
+$plexWatchPmsUrl = getPmsURL();
 $PMSdieMsg = "<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>";
 
 if (!empty($plexWatch['myPlexAuthToken'])) {

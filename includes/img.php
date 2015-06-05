@@ -1,8 +1,7 @@
 <?php
 require_once(dirname(__FILE__) . '/../config/config.php');
 
-$plexWatchPmsUrl = 'http://' . $plexWatch['pmsIp'] . ':' .
-	$plexWatch['pmsHttpPort'];
+$plexWatchPmsUrl = getPmsURL();
 
 if (!empty($plexWatch['myPlexAuthToken'])) {
 	$myPlexAuthToken = '?X-Plex-Token=' . $plexWatch['myPlexAuthToken'];

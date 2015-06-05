@@ -10,7 +10,7 @@ if (file_exists($guisettingsFile)) {
 	exit;
 }
 
-$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
+$plexWatchPmsUrl = getPmsURL();
 
 $db = dbconnect();
 

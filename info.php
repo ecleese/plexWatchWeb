@@ -8,7 +8,7 @@ if (file_exists($guisettingsFile)) {
 	header('Location: settings.php');
 }
 
-$plexWatchPmsUrl = 'http://' . $plexWatch['pmsIp'] . ':' . $plexWatch['pmsHttpPort'];
+$plexWatchPmsUrl = getPmsURL();
 if (!empty($plexWatch['myPlexAuthToken'])) {
 	$myPlexAuthToken = '?X-Plex-Token=' . $plexWatch['myPlexAuthToken'];
 } else {
