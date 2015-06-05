@@ -96,34 +96,57 @@ function getPmsURL() {
 		$_SESSION['pmsUrl'] = false;
 	}
 	$prefix = ['https://', 'http://'];
-	$status = 'status/sessions';
+	$status = 'status/sessions'; // Just to determine if the server is up
 	if (!empty($plexWatch['myPlexAuthToken'])) {
 		$myPlexAuthToken = '?X-Plex-Token='.$plexWatch['myPlexAuthToken'];
 	} else {
 		$myPlexAuthToken = '';
 	}
 	for ($i = 0; $i < count($prefix); $i++) {
-		$plexWatchPmsUrl = $prefix[$i] . $plexWatch['pmsIp'] . ':' .
-			$plexWatch['pmsHttpPort'];
-		$curlHandle = curl_init($plexWatchPmsUrl . $status . $myPlexAuthToken);
+		$pmsUrl = $prefix[$i] . $plexWatch['pmsIp'] . ':' . $plexWatch['pmsHttpPort'];
+		$curlHandle = curl_init($pmsUrl . $status . $myPlexAuthToken);
 		curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($curlHandle, CURLOPT_SSL_VERIFYHOST, false);
 		curl_setopt($curlHandle, CURLOPT_FORBID_REUSE, true);
-		$authCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
 		$data = curl_exec($curlHandle);
-		if ($data === false) {
+		if ($data === false || curl_getinfo($curlHandle, CURLINFO_HTTP_CODE) >= 400) {
 			curl_close($curlHandle);
 			continue; // Move on to the next prefix
 		}
-		if ($authCode >= 400) {
-			curl_close($curlHandle);
-			continue; // Invalid authentication
-		}
 		curl_close($curlHandle);
-		$_SESSION['pmsUrl'] = $plexWatchPmsUrl;
+		$_SESSION['pmsUrl'] = $pmsUrl;
 	}
 	return $_SESSION['pmsUrl'];
+}
+
+function getPMSData($path) {
+	global $plexWatch;
+	$tokenPrefix = '?';
+	if (strpos($path, '?')) {
+		$tokenPrefix = '&';
+	}
+	if (!empty($plexWatch['myPlexAuthToken'])) {
+		$myPlexAuthToken = $tokenPrefix .
+			'X-Plex-Token='.$plexWatch['myPlexAuthToken'];
+	} else {
+		$myPlexAuthToken = '';
+	}
+	$url = getPmsURL() . $path . $myPlexAuthToken;
+	$curlHandle = curl_init($url);
+	curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
+	curl_setopt($curlHandle, CURLOPT_SSL_VERIFYHOST, false);
+	$data = curl_exec($curlHandle);
+	if ($data === false || curl_getinfo($curlHandle, CURLINFO_HTTP_CODE) >= 400) {
+		curl_close($curlHandle);
+		$msg = 'Failed to retrieve "' . $url . '"';
+		echo $msg;
+		trigger_error($msg, E_USER_ERROR);
+		return false;
+	}
+	curl_close($curlHandle);
+	return $data;
 }
 
 /* Function to lowercase all object keys. easier for matching */

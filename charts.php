@@ -9,16 +9,7 @@ if (file_exists($guisettingsFile)) {
 	return;
 }
 
-$plexWatchPmsUrl = getPmsURL();
-
-if (!empty($plexWatch['myPlexAuthToken'])) {
-	$myPlexAuthToken = '?X-Plex-Token=' . $plexWatch['myPlexAuthToken'];
-} else {
-	$myPlexAuthToken = '';
-}
-
-if ($fileContents = file_get_contents($plexWatchPmsUrl .
-		'/status/sessions' . $myPlexAuthToken)) {
+if ($fileContents = getPMSData('/status/sessions')) {
 	$statusSessions = simplexml_load_string($fileContents);
 	if ($statusSessions === false) {
 		$error_msg = 'Failed to access Plex Media Server. Please check your settings.';

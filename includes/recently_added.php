@@ -15,16 +15,9 @@ if (isset($_GET['width'])) {
 	}
 	$containerSize = floor($containerSize);
 }
-$plexWatchPmsUrl = getPmsURL();
 
-if (!empty($plexWatch['myPlexAuthToken'])) {
-	$myPlexAuthToken = '&X-Plex-Token='.$plexWatch['myPlexAuthToken'];
-} else {
-	$myPlexAuthToken = '';
-}
-$fileContents = file_get_contents("" . $plexWatchPmsUrl .
-	'/library/recentlyAdded?X-Plex-Container-Start=0&X-Plex-Container-Size=' .
-	$containerSize . $myPlexAuthToken) or
+$fileContents = getPmsData('/library/recentlyAdded?X-Plex-Container-Start=0' .
+	'&X-Plex-Container-Size=' .	$containerSize) or
 	die ("<div class='alert alert-warning'>Failed to access Plex Media Server. " .
 		"Please check your settings.</div>");
 $recentRequest = simplexml_load_string($fileContents);
