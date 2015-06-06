@@ -1,52 +1,58 @@
 <?php
 $guisettingsFile = dirname(__FILE__) . '/../config/config.php';
-if (file_exists($guisettingsFile)) {
-	require_once($guisettingsFile);
+if (!file_exists($guisettingsFile)) {
+	$error_msg = 'config file not found';
+	echo $error_msg;
+	trigger_error($error_msg, E_USER_ERROR);
+}
+require_once($guisettingsFile);
 
-	if (empty($plexWatch['myPlexUser']) && empty($plexWatch['myPlexPass'])) {
-		$myPlexAuthToken = '';
-	} else {
-		$host = "https://my.plexapp.com/users/sign_in.xml";
-		$username = $plexWatch['myPlexUser'];
-		$password = base64_decode($plexWatch['myPlexPass']);
-		$process = curl_init($host);
-		curl_setopt($process, CURLOPT_HTTPHEADER, array('Content-Type: application/xml; charset=utf-8', 'Content-Length: 0', 'X-Plex-Client-Identifier: plexWatchWeb'));
-		curl_setopt($process, CURLOPT_HEADER, 0);
-		curl_setopt($process, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-		curl_setopt($process, CURLOPT_USERPWD, $username . ":" . $password);
-		curl_setopt($process, CURLOPT_TIMEOUT, 30);
-		curl_setopt($process, CURLOPT_HTTPGET, true);
-		curl_setopt($process, CURLOPT_POST, 1);
-		curl_setopt($process, CURLOPT_RETURNTRANSFER, true);
-		$data = curl_exec($process);
+$myPlexAuthToken = '';
+if (empty($plexWatch['myPlexUser']) || empty($plexWatch['myPlexPass'])) {
+	return;
+}
+$host = 'https://plex.tv/users/sign_in.xml';
+$username = $plexWatch['myPlexUser'];
+$password = base64_decode($plexWatch['myPlexPass']);
+$process = curl_init($host);
+curl_setopt($process, CURLOPT_HTTPHEADER, array(
+	'Content-Type: application/xml; charset=utf-8',
+	'Content-Length: 0',
+	'X-Plex-Device-Name: plexWatch/Web',
+	'X-Plex-Product: plexWatch/Web',
+	// FIXME: Version should be specified in the settings
+	'X-Plex-Version: ' . 'v1.7.0 dev',
+	'X-Plex-Client-Identifier: ' . uniqid('plexWatchWeb', true)
+));
+curl_setopt($process, CURLOPT_HEADER, false);
+curl_setopt($process, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+curl_setopt($process, CURLOPT_USERPWD, $username . ':' . $password);
+curl_setopt($process, CURLOPT_TIMEOUT, 30);
+curl_setopt($process, CURLOPT_HTTPGET, true);
+curl_setopt($process, CURLOPT_POST, true);
+curl_setopt($process, CURLOPT_RETURNTRANSFER, true);
+$data = curl_exec($process);
 
-		//Check for 401 (authentication failure)
-		$authCode = curl_getinfo($process, CURLINFO_HTTP_CODE);
-		if ($authCode == 401) {
-			curl_close($process);
-			$myPlexAuthToken = '';
-			$errorCode = "Plex.tv authentication failed. Check your Plex.tv username and password.";
-		//Check for curl error
-		} else if (curl_errno($process)) {
-			$curlError = curl_error($process);
-			echo $curlError;
-			$errorCode = $curlError;
-			curl_close($process);
-			$myPlexAuthToken = '';
-		} else {
-			$xml = simplexml_load_string($data);
-			$myPlexAuthToken = $xml['authenticationToken'];
-
-			if (empty($myPlexAuthToken)) {
-				$errorCode = "Error: Could not parse Plex.tv XML to retrieve authentication code.";
-				curl_close($process);
-			} else {
-				$errorCode = '';
-				curl_close($process);
-			}
-		}
-	}
+$authCode = curl_getinfo($process, CURLINFO_HTTP_CODE);
+$curlError = curl_error($process);
+curl_close($process);
+if ($authCode == 401) {
+	// Authentication failure
+	$errorCode = 'Plex.tv authentication failed. Check your Plex.tv username and password.';
+	return;
+} else if ($curlError != 0) {
+	// cURL error
+	$errorCode = $curlError;
+	return;
 } else {
-	echo "config file not found";
+	$xml = simplexml_load_string($data);
+	if ($xml === false) {
+		$errorCode = 'Error: Could not parse Plex.tv XML to retrieve authentication code.';
+		return;
+	}
+	$myPlexAuthToken = $xml['authenticationToken'];
+	if (empty($myPlexAuthToken)) {
+		$errorCode = 'Error: Could not parse Plex.tv XML to retrieve authentication code.';
+	}
 }
 ?>

@@ -9,20 +9,13 @@ if (file_exists($guisettingsFile)) {
 	return;
 }
 
-$plexWatchPmsUrl = 'http://' . $plexWatch['pmsIp'] . ':' .
-	$plexWatch['pmsHttpPort'];
-
-if (!empty($plexWatch['myPlexAuthToken'])) {
-	$myPlexAuthToken = '?X-Plex-Token=' . $plexWatch['myPlexAuthToken'];
-} else {
-	$myPlexAuthToken = '';
-}
-
-if ($fileContents = file_get_contents($plexWatchPmsUrl .
-		'/status/sessions' . $myPlexAuthToken)) {
-	$msg = 'Failed to access Plex Media Server. Please check your settings.';
-	$statusSessions = simplexml_load_string($fileContents) or
-		trigger_error($msg, E_USER_ERROR);
+if ($fileContents = getPMSData('/status/sessions')) {
+	$statusSessions = simplexml_load_string($fileContents);
+	if ($statusSessions === false) {
+		$error_msg = 'Failed to access Plex Media Server. Please check your settings.';
+		echo '<p>' . $error_msg . '</p>';
+		trigger_error($error_msg, E_USER_ERROR);
+	}
 }
 
 $database = dbconnect();
@@ -34,8 +27,9 @@ function printTop10($query, $type = null) {
 	global $database;
 	$results = $database->query($query);
 	if ($results === false) {
-		$msg = 'There was a problem running "' . $query . '".';
-		trigger_error($msg, E_USER_ERROR);
+		$error_msg = 'There was a problem running "' . $query . '".';
+		echo '<p>' . $error_msg . '</p>';
+		trigger_error($error_msg, E_USER_ERROR);
 	}
 	$imgSize = '&width=100&height=149';
 

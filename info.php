@@ -8,14 +8,9 @@ if (file_exists($guisettingsFile)) {
 	header('Location: settings.php');
 }
 
-$plexWatchPmsUrl = 'http://' . $plexWatch['pmsIp'] . ':' . $plexWatch['pmsHttpPort'];
-if (!empty($plexWatch['myPlexAuthToken'])) {
-	$myPlexAuthToken = '?X-Plex-Token=' . $plexWatch['myPlexAuthToken'];
-} else {
-	$myPlexAuthToken = '';
-}
+$plexWatchPmsUrl = getPmsURL();
 $itemId = intval($_GET['id']);
-$infoUrl = $plexWatchPmsUrl . '/library/metadata/' . $itemId . $myPlexAuthToken;
+$infoPath = '/library/metadata/' . $itemId;
 
 function printMetadata($xml) {
 	$data = &metaDataData($xml);
@@ -149,14 +144,14 @@ function showMetaData($xml) {
 }
 
 function seasonMetaData($xml) {
-	global $plexWatchPmsUrl, $myPlexAuthToken;
 	$data = [];
 	$data['type'] = 'season';
-	$parentInfoUrl = $plexWatchPmsUrl . '/library/metadata/'.
-		$xml->Directory['parentRatingKey'] . $myPlexAuthToken;
-	$parentXml = simplexml_load_string(file_get_contents($parentInfoUrl));
-	if (!$parentXml) {
-		trigger_error('Feed Not Found', E_USER_ERROR);
+	$parentInfoPath = '/library/metadata/' . $xml->Directory['parentRatingKey'];
+	$parentXml = simplexml_load_string(getPMSData($parentInfoPath));
+	if ($parentXml === false) {
+		$error_msg = 'Feed Not Found';
+		echo '<p>' . $error_msg . '</p>';
+		trigger_error($error_msg, E_USER_ERROR);
 	}
 	$data['xmlArt'] = $xml->Directory['art'];
 	if ($xml->Directory['thumb']) {
@@ -449,7 +444,7 @@ function printShowWatched($xml) {
 }
 
 function printSeasonEpisodes($xml) {
-	global $plexWatchPmsUrl, $myPlexAuthToken, $itemId;
+	global $itemId;
 	echo '<div class="container-fluid">';
 		echo '<div class="clear"></div>';
 		echo '<div class="row-fluid">';
@@ -460,11 +455,12 @@ function printSeasonEpisodes($xml) {
 							echo'<h3>' . $xml->Directory['title'] . '</h3>';
 						echo '</div>';
 					echo '</div>';
-					$seasonEpisodesUrl = $plexWatchPmsUrl . '/library/metadata/' .
-						$itemId . '/children' . $myPlexAuthToken;
-					$seasonEpisodesXml = simplexml_load_string(file_get_contents($seasonEpisodesUrl));
-					if (!$seasonEpisodesXml) {
-						trigger_error('Feed Not Found', E_USER_ERROR);
+					$seasonEpisodesPath = '/library/metadata/' . $itemId . '/children';
+					$seasonEpisodesXml = simplexml_load_string(getPmsData($seasonEpisodesPath));
+					if ($seasonEpisodesXml === false) {
+						$error_msg = 'Feed Not Found';
+						echo '<p>' . $error_msg . '</p>';
+						trigger_error($error_msg, E_USER_ERROR);
 					}
 					echo '<div class="season-episodes-wrapper">';
 						echo '<ul class="season-episodes-instance">';
@@ -555,7 +551,7 @@ function printSeasonEpisodes($xml) {
 				'<div class="span10 offset1">' .
 					'<h3>This media is no longer available in the Plex Media Server database.</h3>' .
 				'</div></div></div>';
-		$xml = simplexml_load_string(file_get_contents($infoUrl)) or die ($msg);
+		$xml = simplexml_load_string(getPmsData($infoPath)) or die ($msg);
 		if ($xml->Video['type'] == 'episode') {
 			printMetadata($xml);
 			printHistory($xml);

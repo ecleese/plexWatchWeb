@@ -1,33 +1,46 @@
 <?php
 require_once(dirname(__FILE__) . '/../config/config.php');
 
-$plexWatchPmsUrl = 'http://' . $plexWatch['pmsIp'] . ':' .
-	$plexWatch['pmsHttpPort'];
-
-if (!empty($plexWatch['myPlexAuthToken'])) {
-	$myPlexAuthToken = '?X-Plex-Token=' . $plexWatch['myPlexAuthToken'];
-} else {
-	$myPlexAuthToken = '';
-}
-
-$imgReq = '';
 if (isset($_GET['img'])) {
 	$imgReq = $_GET['img'];
 } else {
-	trigger_error('No image to retrieve specified.', E_USER_ERROR);
+	$error_msg = 'No image to retrieve specified.';
+	echo '<p>' . $error_msg . '</p>';
+	trigger_error($error_msg, E_USER_ERROR);
 }
-$url = $plexWatchPmsUrl .
-	'/photo/:/transcode' . $myPlexAuthToken .
-	'&url=http://127.0.0.1:' . $plexWatch['pmsHttpPort'] . $imgReq;
+$path = '/photo/:/transcode?url=http://127.0.0.1:' . $plexWatch['pmsHttpPort'] .
+	$imgReq;
 
-$img = file_get_contents($url);
+/**********************
+ * FIXME: This should use getPMSData(), but we need the content-type
+ */
+if (!empty($plexWatch['myPlexAuthToken'])) {
+	$myPlexAuthToken = '&X-Plex-Token='.$plexWatch['myPlexAuthToken'];
+} else {
+	$myPlexAuthToken = '';
+}
+$url = getPmsURL() . $path . $myPlexAuthToken;
+$curlHandle = curl_init($url);
+curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($curlHandle, CURLOPT_SSL_VERIFYHOST, false);
+$img = curl_exec($curlHandle);
+if ($img === false || curl_getinfo($curlHandle, CURLINFO_HTTP_CODE) >= 400) {
+	curl_close($curlHandle);
+	$msg = 'Failed to retrieve "' . $url . '"';
+	echo $msg;
+	trigger_error($msg, E_USER_ERROR);
+	return false;
+}
+$imgType = curl_getinfo($curlHandle, CURLINFO_CONTENT_TYPE);
+curl_close($curlHandle);
+// ******************
+
 if ($img === false) {
-	trigger_error("Failed to retrieve \"$url\"", E_USER_ERROR);
+	$error_msg = 'Failed to retrieve "' . $path . '"';
+	echo '<p>' . $error_msg . '</p>';
+	trigger_error($error_msg, E_USER_ERROR);
 }
-foreach ($http_response_header as $value) {
-	if (preg_match('/^Content-Type:/i', $value)) {
-		header($value, false);
-	}
-}
+header('Content-Type: ' . $imgType, false);
 echo $img;
 ?>

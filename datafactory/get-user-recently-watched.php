@@ -10,33 +10,31 @@ if (file_exists($guisettingsFile)) {
 	exit;
 }
 
-$plexWatchPmsUrl = "http://".$plexWatch['pmsIp'].":".$plexWatch['pmsHttpPort']."";
-
 $db = dbconnect();
 
 if (isset($_POST['user'])) {
 	$user = $db->escapeString($_POST['user']);
 } else {
 	error_log('PlexWatchWeb :: POST parameter "user" not found.');
-	echo "user field is required.";
+	echo "User field is required.";
 	exit;
 }
 
 $plexWatchDbTable = dbTable('user');
-$recentlyWatchedResults = $db->query("SELECT title, user, platform, time, stopped, ip_address, xml, paused_counter FROM ".$plexWatchDbTable." WHERE user = '$user' ORDER BY time DESC LIMIT 10");
+$recentlyWatchedResults = $db->query("SELECT title, user, platform, time, " .
+		"stopped, ip_address, xml, paused_counter " .
+	"FROM " . $plexWatchDbTable . " " .
+	"WHERE user = '$user' " .
+	"ORDER BY time DESC " .
+	"LIMIT 10");
 
 echo "<ul class='dashboard-recent-media'>";
 // Run through each feed item
 while ($recentlyWatchedRow = $recentlyWatchedResults->fetchArray()) {
 	$request_url = $recentlyWatchedRow['xml'];
 	$recentXml = simplexml_load_string($request_url);
-	if (!empty($plexWatch['myPlexAuthToken'])) {
-		$myPlexAuthToken = "?X-Plex-Token=" . $plexWatch['myPlexAuthToken'];
-	} else {
-		$myPlexAuthToken = '';
-	}
-	$recentMetadata = $plexWatchPmsUrl."/library/metadata/".$recentXml['ratingKey'].$myPlexAuthToken;
-	if ($recentThumbUrlRequest = @simplexml_load_file($recentMetadata)) {
+	$recentMetadata = getPmsData('/library/metadata/' . $recentXml['ratingKey']);
+	if ($recentThumbUrlRequest = simplexml_load_string($recentMetadata)) {
 		$thumbUrl = 'images/poster.png';
 		if ($recentXml['type'] == "episode") {
 			$recentThumbUrl = $recentThumbUrlRequest->Video['parentThumb']."&width=136&height=280";

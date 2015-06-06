@@ -50,16 +50,20 @@ function dbconnect() {
 	global $plexWatch;
 
 	if (!class_exists('SQLite3')) {
-		trigger_error('<div class="alert alert-warning ">' .
-				'php5-sqlite is not installed. Please install this requirement and ' .
-				'restart your webserver before continuing.' .
-			'</div>',
-			E_USER_ERROR);
+		$error_msg = 'php5-sqlite is not installed. Please install this ' .
+			'requirement and restart your webserver before continuing.';
+		echo '<div class="alert alert-warning ">' . $error_msg . '</div>';
+		trigger_error($error_msg, E_USER_ERROR);
 	}
-
-	$database = new SQLite3($plexWatch['plexWatchDb'], SQLITE3_OPEN_READONLY);
-	$database->busyTimeout(10 * 1000);
-	return $database;
+	try {
+		$database = new SQLite3($plexWatch['plexWatchDb'], SQLITE3_OPEN_READONLY);
+		$database->busyTimeout(10 * 1000);
+		return $database;
+	} catch (Exception $exception) {
+		$error_msg = 'There was an error connecting to the database!';
+		echo '<p>' . $error_msg . '</p>';
+		trigger_error($error_msg, E_USER_ERROR);
+	}
 }
 
 /* DBtable -- processed or grouped */
@@ -81,6 +85,68 @@ function dbTable($groupType = 'global') {
 			break;
 	}
 	return "processed";
+}
+
+// Determine the current PMS URL to use, and cache in the session
+function getPmsURL() {
+	global $plexWatch;
+	if (isset($_SESSION['pmsUrl'])) {
+		return $_SESSION['pmsUrl'];
+	} else {
+		$_SESSION['pmsUrl'] = false;
+	}
+	$prefix = ['https://', 'http://'];
+	$status = 'status/sessions'; // Just to determine if the server is up
+	if (!empty($plexWatch['myPlexAuthToken'])) {
+		$myPlexAuthToken = '?X-Plex-Token='.$plexWatch['myPlexAuthToken'];
+	} else {
+		$myPlexAuthToken = '';
+	}
+	for ($i = 0; $i < count($prefix); $i++) {
+		$pmsUrl = $prefix[$i] . $plexWatch['pmsIp'] . ':' . $plexWatch['pmsHttpPort'];
+		$curlHandle = curl_init($pmsUrl . $status . $myPlexAuthToken);
+		curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($curlHandle, CURLOPT_SSL_VERIFYHOST, false);
+		curl_setopt($curlHandle, CURLOPT_FORBID_REUSE, true);
+		$data = curl_exec($curlHandle);
+		if ($data === false || curl_getinfo($curlHandle, CURLINFO_HTTP_CODE) >= 400) {
+			curl_close($curlHandle);
+			continue; // Move on to the next prefix
+		}
+		curl_close($curlHandle);
+		$_SESSION['pmsUrl'] = $pmsUrl;
+	}
+	return $_SESSION['pmsUrl'];
+}
+
+function getPMSData($path) {
+	global $plexWatch;
+	$tokenPrefix = '?';
+	if (strpos($path, '?')) {
+		$tokenPrefix = '&';
+	}
+	if (!empty($plexWatch['myPlexAuthToken'])) {
+		$myPlexAuthToken = $tokenPrefix .
+			'X-Plex-Token='.$plexWatch['myPlexAuthToken'];
+	} else {
+		$myPlexAuthToken = '';
+	}
+	$url = getPmsURL() . $path . $myPlexAuthToken;
+	$curlHandle = curl_init($url);
+	curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
+	curl_setopt($curlHandle, CURLOPT_SSL_VERIFYHOST, false);
+	$data = curl_exec($curlHandle);
+	if ($data === false || curl_getinfo($curlHandle, CURLINFO_HTTP_CODE) >= 400) {
+		curl_close($curlHandle);
+		$msg = 'Failed to retrieve "' . $url . '"';
+		echo $msg;
+		trigger_error($msg, E_USER_ERROR);
+		return false;
+	}
+	curl_close($curlHandle);
+	return $data;
 }
 
 /* Function to lowercase all object keys. easier for matching */
@@ -149,19 +215,18 @@ function getPlatformImage($xml) {
 		return "images/platforms/xbox.png";
 	} else if (strstr($xml->Player['platform'], 'Samsung')) {
 		return "images/platforms/samsung.png";
-	}else if(strstr($xml->Player['platform'], 'Opera')) {
+	} else if(strstr($xml->Player['platform'], 'Opera')) {
 		return "images/platforms/opera.png";
-	}else if(strstr($xml->Player['platform'], 'KODI')) {
+	} else if(strstr($xml->Player['platform'], 'KODI')) {
 		return "images/platforms/kodi.png";
-	}else if(strstr($xml->Player['platform'], 'Mystery 3')) {
+	} else if(strstr($xml->Player['platform'], 'Mystery 3')) {
 		return "images/platforms/playstation.png";
-	}else if(strstr($xml->Player['platform'], 'Mystery 4')) {
-		return "images/platforms/playstation.png";			
-				
-	}else if (empty($xml->Player['platform'])) {
+	} else if(strstr($xml->Player['platform'], 'Mystery 4')) {
+		return "images/platforms/playstation.png";
+	} else if (empty($xml->Player['platform'])) {
 		if (strstr($xml->Player['title'], 'Apple')) {
 			return "images/platforms/atv.png";
-		} else if(stristr($xml->Player['title'], 'Plex for Sony')) {
+		} else if (stristr($xml->Player['title'], 'Plex for Sony')) {
 			return "images/platforms/playstation.png";
 		} else if (preg_match("/TV [a-z][a-z]\d\d[a-z]\d\d\d\d/i",
 				$xml->Player['title'])) {

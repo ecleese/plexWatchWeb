@@ -59,6 +59,7 @@ function printVersions() {
 		echo '</div>';
 		echo '<div class="settings-general-info">';
 			echo '<ul>';
+				// FIXME: Version should be specified in the settings
 				echo '<li>plexWatch/Web Version: <strong>v1.7.0 dev</strong></li>';
 				$query = "SELECT version FROM config";
 				$plexWatchVersion = $database->querySingle($query);
@@ -610,11 +611,9 @@ function printJSONSupport() {
 					<div class="wellbg">
 						<?php
 						if (!class_exists('SQLite3')) {
-							$error_msg = '<div class="alert alert-warning ">' .
-									'php5-sqlite is not installed. Please install this ' .
-									'requirement and restart your webserver before continuing.' .
-								'</div>';
-							echo $error_msg;
+							$error_msg = 'php5-sqlite is not installed. Please install this ' .
+								'requirement and restart your webserver before continuing.';
+							echo '<div class="alert alert-warning">' . $error_msg . '</div>';
 							trigger_error($error_msg, E_USER_ERROR);
 						}
 						// Check for a successful form post
@@ -634,7 +633,7 @@ function printJSONSupport() {
 								'this and try again.' . $errorEnd;
 						}
 						printSettings();
-						if (!file_exists($guisettingsFile)) {
+						if (!file_exists($guisettingsFile) && !isset($_GET['e'])) {
 							printWelcomeModal();
 						}
 						?>

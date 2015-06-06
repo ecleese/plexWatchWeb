@@ -3,6 +3,11 @@ ini_set("auto_detect_line_endings", true);
 class ConfigClass {
 	public static function read($filename) {
 		$config_array = array();
+		if (!file_exists($filename)) {
+			$error_msg = 'Attempted to read non-existent settings!';
+			echo '<p>' . $error_msg . '</p>';
+			trigger_error($error_msg, E_USER_ERROR);
+		}
 		$handle = fopen($filename, "r");
 		if ($handle) {
 			while (($line = fgets($handle)) !== false) {

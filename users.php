@@ -77,7 +77,11 @@ if (file_exists($guisettingsFile)) {
 						"ORDER BY user " .
 						"COLLATE NOCASE";
 					$dieMsg = "Failed to access plexWatch database. Please check your settings.";
-					$users = $db->query($query) or trigger_error($dieMsg, E_USER_ERROR);
+					$users = $db->query($query);
+					if ($users === false) {
+						echo '<p>' . $dieMsg . '</p>';
+						trigger_error($dieMsg, E_USER_ERROR);
+					}
 					echo '<div class="wellbg">';
 						echo '<table id="usersTable" class="display">';
 							echo '<thead>';
