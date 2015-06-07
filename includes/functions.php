@@ -96,7 +96,7 @@ function getPmsURL() {
 		$_SESSION['pmsUrl'] = false;
 	}
 	$prefix = ['https://', 'http://'];
-	$status = 'status/sessions'; // Just to determine if the server is up
+	$status = '/status/sessions'; // Just to determine if the server is up
 	if (!empty($plexWatch['myPlexAuthToken'])) {
 		$myPlexAuthToken = '?X-Plex-Token='.$plexWatch['myPlexAuthToken'];
 	} else {
