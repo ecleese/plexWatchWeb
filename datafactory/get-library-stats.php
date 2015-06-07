@@ -6,36 +6,32 @@ if (file_exists($guisettingsFile)) {
 	require_once($guisettingsFile);
 } else {
 	error_log('PlexWatchWeb :: Config file not found.');
-	echo "Config file not found";
+	echo 'Config file not found';
 	exit;
 }
 
-$db = dbconnect();
-$users = $db->querySingle("SELECT count(DISTINCT user) as users FROM processed") or die ("Failed to access plexWatch database. Please check your settings.");
-if ($users === false) {
-	die ("Failed to access plexWatch database. Please check your settings.");
-}
+$database = dbconnect();
+$query = "SELECT count(DISTINCT user) as users FROM processed";
+$results = getResults($database, $query);
+$users = $results->fetchColumn();
 
-$plexWatchPmsUrl = getPmsURL();
-$PMSdieMsg = "<div class=\"alert alert-warning \">Failed to access Plex Media Server. Please check your settings.</div>";
-
-if (!empty($plexWatch['myPlexAuthToken'])) {
-	$myPlexAuthToken = "X-Plex-Token=".$plexWatch['myPlexAuthToken'];
-} else {
-	$myPlexAuthToken = '';
-}
+$PMSdieMsg = '<div class=\"alert alert-warning \">Failed to access Plex Media ' .
+	'Server. Please check your settings.</div>';
 
 $sessionsData = getPmsData('/status/sessions');
 $statusSessions = simplexml_load_string($sessionsData) or die ($PMSdieMsg);
 $sectionsData = getPmsData('/library/sections');
 $sections = simplexml_load_string($sectionsData) or die ($PMSdieMsg);
-echo "<ul>";
+echo '<ul>';
 	foreach ($sections->children() as $section) {
-		if (($section['type'] == "movie") || ($section['type'] == "artist"))  {
+		if (($section['type'] == 'movie') || ($section['type'] == 'artist'))  {
 			$sectionDetails = simplexml_load_string(getPmsData('/library/sections/' .
 				$section['key'] . '/all?X-Plex-Container-Start=0&X-Plex-Container-Size=0'))
 				or die ($PMSdieMsg);
-			echo "<li><h1>".$sectionDetails['totalSize']."</h1><h5>".$section['title']."</h5></li>";
+			echo '<li>';
+				echo '<h1>' . $sectionDetails['totalSize'] . '</h1>';
+				echo '<h5>' . $section['title'] . '</h5>';
+			echo '</li>';
 		} else if ($section['type'] == "show") {
 			$sectionDetails = simplexml_load_string(getPmsData('/library/sections/' .
 				$section['key'] . '/all?type=2&X-Plex-Container-Start=0&X-Plex-Container-Size=0'))
@@ -50,10 +46,16 @@ echo "<ul>";
 			} else {
 				$title = $section['title'];
 			}
-			echo "<li><h1>".$sectionDetails['totalSize']."</h1><h5>".$title." Shows</h5></li>";
-			echo "<li><h1>".$tvEpisodeCount['totalSize']."</h1><h5>".$title." Episodes</h5></li>";
+			echo '<li>';
+				echo '<h1>' . $sectionDetails['totalSize'] . '</h1>';
+				echo '<h5>' . $title . ' Shows</h5>';
+			echo '</li>';
+			echo '<li>';
+				echo '<h1>' . $tvEpisodeCount['totalSize'] . '</h1>';
+				echo '<h5>' . $title . ' Episodes</h5>';
+			echo '</li>';
 		}
 	}
-	echo "<li><h1>".$users."</h1><h5>Users</h5></li>";
-echo "</ul>";
+	echo '<li><h1>'. $users . '</h1><h5>Users</h5></li>';
+echo '</ul>';
 ?>

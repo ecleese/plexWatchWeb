@@ -25,17 +25,12 @@ $columns = "title,time,orig_title,orig_title_ep,episode," .
 
 function printTop10($query, $type = null) {
 	global $database;
-	$results = $database->query($query);
-	if ($results === false) {
-		$error_msg = 'There was a problem running "' . $query . '".';
-		echo '<p>' . $error_msg . '</p>';
-		trigger_error($error_msg, E_USER_ERROR);
-	}
+	$results = getResults($database, $query);
 	$imgSize = '&width=100&height=149';
 
 	// Run through each feed item
 	$num_rows = 0;
-	while ($row = $results->fetchArray()) {
+	while ($row = $results->fetch(PDO::FETCH_ASSOC)) {
 		$num_rows++;
 		$xml = simplexml_load_string($row['xml']);
 		if ($xml['type'] == 'movie') {

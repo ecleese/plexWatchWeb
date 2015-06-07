@@ -1,12 +1,9 @@
 <?php
 date_default_timezone_set(@date_default_timezone_get());
 
-if (isset($_POST['user'])) {
-	$user = $_POST['user'];
-} else {
-	error_log('PlexWatchWeb :: POST parameter "id" not found.');
-	echo "id field is required.";
-	exit;
+if (!isset($_POST['user'])) {
+	echo "User field is required.";
+	trigger_error('PlexWatchWeb :: POST parameter "user" not found.', E_USER_ERROR);
 }
 
 $guisettingsFile = dirname(__FILE__) . '/../config/config.php';
@@ -23,9 +20,10 @@ class elapsedTimeResult {
 	public $hours;
 	public $days;
 	public $strLen;
+	public $plays;
 	function setElapsedTime($elapsedTimeFetch) {
 		$elapsedTime = 0;
-		while ($elapsedTimeRow = $elapsedTimeFetch->fetchArray()) {
+		while ($elapsedTimeRow = $elapsedTimeFetch->fetch(PDO::FETCH_ASSOC)) {
 			$stopTime = strtotime(date("m/d/Y g:i a",$elapsedTimeRow['stopped']));
 			$startTime = strtotime(date("m/d/Y g:i a",$elapsedTimeRow['time']));
 			$minutesPaused = round(abs($elapsedTimeRow['paused_counter']), 1);
@@ -36,13 +34,14 @@ class elapsedTimeResult {
 			$this->days = floor($elapsedTime / 86400);
 			$this->hours = floor(($elapsedTime % 86400 ) / 3600);
 			$this->minutes = floor(($elapsedTime % 3600 ) / 60);
+			$this->plays++;
 		}
 	}
 	public function outputHTML() {
 		if (empty($this->strLen)) {
-			echo "<h1> / </h1><h3>0</h3><p> mins</p>";
+			echo '<h1> / </h1><h3>0</h3><p> mins</p>';
 		} else if ($this->strLen == 10) {
-			echo "";
+			echo '';
 		} else if (empty($this->minutes) && empty($this->hours) && empty($this->days)) {
 			echo "<h1> / </h1><h3>0</h3><p> mins</p>";
 		} else if ($this->days == 0 && $this->hours == 0 && $this->minutes == 1) {
@@ -66,38 +65,51 @@ class elapsedTimeResult {
 		}
 	}
 	function __construct($results) {
+		$this->plays = 0;
 		$this->setElapsedTime($results);
 	}
 }
 
 $plexWatchDbTable = dbTable('user');
-$db = dbconnect();
+$database = dbconnect();
+$columns = 'time, stopped, paused_counter';
 
-$userStatsDailyCount = $db->querySingle("SELECT COUNT(*) FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now', 'localtime') AND user='$user' ");
-$userStatsDailyTimeFetch = $db->query("SELECT time,stopped,paused_counter FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now', 'localtime') AND user='$user' ");
-$dailyStats = new elapsedTimeResult($userStatsDailyTimeFetch);
+$query = "SELECT $columns " .
+	"FROM $plexWatchDbTable " .
+	"WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now', 'localtime') " .
+	"AND user = :user";
+$results = getResults($database, $query, [':user'=>$_POST['user']]);
+$dailyStats = new elapsedTimeResult($results);
 
-$userStatsWeeklyCount = $db->querySingle("SELECT COUNT(*) FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch') >= datetime('now', '-7 days', 'localtime') AND user='$user' ");
-$userStatsWeeklyTimeFetch = $db->query("SELECT time,stopped,paused_counter FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-7 days', 'localtime') AND user='$user' ");
-$weeklyStats = new elapsedTimeResult($userStatsWeeklyTimeFetch);
+$query = "SELECT $columns " .
+	"FROM $plexWatchDbTable " .
+	"WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-7 days', 'localtime') " .
+	"AND user = :user";
+$results = getResults($database, $query, [':user'=>$_POST['user']]);
+$weeklyStats = new elapsedTimeResult($results);
 
-$userStatsMonthlyCount = $db->querySingle("SELECT COUNT(*) FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-30 days', 'localtime') AND user='$user' ");
-$userStatsMonthlyTimeFetch = $db->query("SELECT time,stopped,paused_counter FROM ".$plexWatchDbTable." WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-30 days', 'localtime') AND user='$user' ");
-$monthlyStats = new elapsedTimeResult($userStatsMonthlyTimeFetch);
+$query = "SELECT $columns " .
+	"FROM $plexWatchDbTable " .
+	"WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-30 days', 'localtime') " .
+	"AND user = :user";
+$results = getResults($database, $query, [':user'=>$_POST['user']]);
+$monthlyStats = new elapsedTimeResult($results);
 
-$userStatsAlltimeCount = $db->querySingle("SELECT COUNT(*) FROM ".$plexWatchDbTable." WHERE user='$user' ");
-$userStatsAlltimeTimeFetch = $db->query("SELECT time,stopped,paused_counter FROM ".$plexWatchDbTable." WHERE user='$user' ");
-$allTimeStats = new elapsedTimeResult($userStatsAlltimeTimeFetch);
+$query = "SELECT $columns " .
+	"FROM $plexWatchDbTable " .
+	"WHERE user = :user";
+$results = getResults($database, $query, [':user'=>$_POST['user']]);
+$allTimeStats = new elapsedTimeResult($results);
 
 echo"<ul>";
 	echo "<div class='user-overview-stats-instance'>";
 		echo "<li>";
 			echo "<div class='user-overview-stats-instance-text'>";
 				echo "<h4>Today</h4>";
-				if ($userStatsDailyCount == 1) {
-					echo "<h3>".$userStatsDailyCount."</h3><p>play</p>";
+				if ($dailyStats->plays == 1) {
+					echo "<h3>".$dailyStats->plays."</h3><p>play</p>";
 				} else {
-					echo "<h3>".$userStatsDailyCount."</h3><p>plays</p>";
+					echo "<h3>".$dailyStats->plays."</h3><p>plays</p>";
 				}
 				$dailyStats->outputHTML();
 			echo"</div>";
@@ -107,10 +119,10 @@ echo"<ul>";
 		echo "<li>";
 			echo "<div class='user-overview-stats-instance-text'>";
 				echo "<h4>Last week</h4>";
-				if ($userStatsWeeklyCount == 1) {
-					echo "<h3>".$userStatsWeeklyCount."</h3><p>play</p>";
+				if ($weeklyStats->plays == 1) {
+					echo "<h3>".$weeklyStats->plays."</h3><p>play</p>";
 				} else {
-					echo "<h3>".$userStatsWeeklyCount."</h3><p>plays</p>";
+					echo "<h3>".$weeklyStats->plays."</h3><p>plays</p>";
 				}
 				$weeklyStats->outputHTML();
 			echo"</div>";
@@ -120,10 +132,10 @@ echo"<ul>";
 		echo "<li>";
 			echo "<div class='user-overview-stats-instance-text'>";
 				echo "<h4>Last month</h4>";
-				if ($userStatsMonthlyCount == 1) {
-					echo "<h3>".$userStatsMonthlyCount."</h3><p>play</p>";
+				if ($monthlyStats->plays == 1) {
+					echo "<h3>".$monthlyStats->plays."</h3><p>play</p>";
 				} else {
-					echo "<h3>".$userStatsMonthlyCount."</h3><p>plays</p>";
+					echo "<h3>".$monthlyStats->plays."</h3><p>plays</p>";
 				}
 				$monthlyStats->outputHTML();
 			echo"</div>";
@@ -133,10 +145,10 @@ echo"<ul>";
 		echo "<li>";
 			echo "<div class='user-overview-stats-instance-text'>";
 				echo "<h4>All Time</h4>";
-				if ($userStatsAlltimeCount == 1) {
-					echo "<h3>".$userStatsAlltimeCount."</h3><p>play</p>";
+				if ($allTimeStats->plays == 1) {
+					echo "<h3>".$allTimeStats->plays."</h3><p>play</p>";
 				} else {
-					echo "<h3>".$userStatsAlltimeCount."</h3><p>plays</p>";
+					echo "<h3>".$allTimeStats->plays."</h3><p>plays</p>";
 				}
 				$allTimeStats->outputHTML();
 			echo"</div>";

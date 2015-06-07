@@ -8,7 +8,7 @@ if (file_exists($guisettingsFile)) {
 	header('Location: settings.php');
 }
 
-$plexWatchPmsUrl = getPmsURL();
+$database = dbconnect();
 $itemId = intval($_GET['id']);
 $infoPath = '/library/metadata/' . $itemId;
 
@@ -205,15 +205,17 @@ function printEpisodeWriters($xml) {
 }
 
 function printHistory($xml) {
-	global $itemId;
-	$database = dbconnect();
+	global $itemId, $database;
 	$plexWatchDbTable = dbTable();
 	$clauses = "FROM $plexWatchDbTable " .
 		"WHERE session_id LIKE '%/metadata/" . $itemId . "\_%' ESCAPE '\' " .
 		"ORDER BY time DESC";
-	$numRows = $database->querySingle('SELECT COUNT(*) as count ' . $clauses);
-	$results = $database->query('SELECT title, user, platform, time, stopped, ' .
-		'ip_address, xml, paused_counter ' . $clauses);
+	$countQuery = 'SELECT COUNT(*) as count ' . $clauses;
+	$results = getResults($database, $countQuery);
+	$numRows = $results->fetchColumn();
+	$historyQuery = 'SELECT title, user, platform, time, stopped, ip_address, ' .
+		'xml, paused_counter ' . $clauses;
+	$results = getResults($database, $historyQuery);
 	echo '<div class="container-fluid">';
 		echo '<div class="clear"></div>';
 		echo '<div class="row-fluid">';
@@ -244,7 +246,7 @@ function printHistory($xml) {
 							echo '</thead>';
 							echo '<tbody>';
 								$rowCount = 0;
-								while ($row = $results->fetchArray()) {
+								while ($row = $results->fetch(PDO::FETCH_ASSOC)) {
 									$rowCount++;
 									printHistoryRow($row, $rowCount);
 								}
@@ -374,7 +376,7 @@ function printMoviePeople($xml) {
 }
 
 function printShowWatched($xml) {
-	$database = dbconnect();
+	global $database;
 	$plexWatchDbTable = dbTable();
 	echo '<div class="container-fluid">';
 		echo '<div class="clear"></div>';
@@ -388,7 +390,6 @@ function printShowWatched($xml) {
 				echo '<div class="info-top-watched-wrapper">';
 					echo '<ul class="info-top-watched-instance">';
 						// Run through each feed item
-						$numRows = 0;
 						$query = 'SELECT title,time,user,orig_title,orig_title_ep,episode,' .
 								'season,xml,datetime(time, \'unixepoch\') AS time, ' .
 								'COUNT(*) AS play_count ' .
@@ -398,40 +399,40 @@ function printShowWatched($xml) {
 							'HAVING play_count > 0 ' .
 							'ORDER BY play_count DESC,time DESC ' .
 							'LIMIT 7';
-						$topWatchedResults = $database->query($query);
-						while ($topWatchedResultsRow = $topWatchedResults->fetchArray()) {
+						$results = getResults($database, $query);
+						$numRows = 0;
+						while ($row = $results->fetch(PDO::FETCH_ASSOC)) {
 							$numRows++;
-							$topWatchedXmlUrl = $topWatchedResultsRow['xml'];
-							$topWatchedXmlfield = simplexml_load_string($topWatchedXmlUrl);
-							$topWatchedThumbUrl = $topWatchedXmlfield['thumb'] .
-								'&width=205&height=115';
+							$rawShowXML = $row['xml'];
+							$showXML = simplexml_load_string($rawShowXML);
+							$thumb = $showXML['thumb'] . '&width=205&height=115';
 							echo '<li>';
 								echo '<div class="info-top-watched-instance-position-circle">';
 									echo '<h1>' . $numRows . '</h1>';
 								echo '</div>';
 								echo '<div class="info-top-watched-poster">';
 									echo '<div class="info-top-watched-poster-face">';
-										echo '<a href="info.php?id=' . $topWatchedXmlfield['ratingKey'] . '">';
+										echo '<a href="info.php?id=' . $showXML['ratingKey'] . '">';
 											echo '<img src="includes/img.php?img=' .
-												urlencode($topWatchedThumbUrl) .
+												urlencode($thumb) .
 												'" class="info-top-watched-poster-face">';
 										echo '</a>';
 									echo '</div>';
 									echo '<div class="info-top-watch-card-overlay">';
 										echo '<div class="info-top-watched-season">';
-											echo 'Season ' . $topWatchedResultsRow['season'] . ',' .
-												' Episode ' . $topWatchedResultsRow['episode'];
+											echo 'Season ' . $row['season'] . ',' .
+												' Episode ' . $row['episode'];
 										echo '</div>';
 										echo '<div class="info-top-watched-playcount">';
-											echo '<strong>' . $topWatchedResultsRow['play_count'] .
+											echo '<strong>' . $row['play_count'] .
 												'</strong> views';
 										echo '</div>';
 									echo '</div>';
 								echo '</div>';
 								echo '<div class="info-top-watched-instance-text-wrapper">';
 									echo '<div class="info-top-watched-title">';
-										echo '<a href="info.php?id=' . $topWatchedXmlfield['ratingKey'] .
-											'"> "'.$topWatchedResultsRow['orig_title_ep'] . '"</a>';
+										echo '<a href="info.php?id=' . $showXML['ratingKey'] .
+											'"> "'.$row['orig_title_ep'] . '"</a>';
 									echo '</div>';
 								echo '</div>';
 							echo '</li>';
