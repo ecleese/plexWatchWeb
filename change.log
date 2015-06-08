@@ -1,3 +1,11 @@
+1.7.0.1
+* Change:	Switch to using PDO for database access ((Arcanemagus)
+* Change:	Adjust status variable in getPMSUrl (timrettop)
+* Change:	Error handling update (Arcanemagus)
+* Add:		Plex HTTPS support (Arcanemagus)
+* Fix:		Fix Season thumbnails (Arcanemagus)
+* Fix:		Fix issue where times are displayed incorrectly in certain areas if php's timezone is different than the system's. (ghost)
+
 1.7.0 dev
 * New:		global: icon support for KODI, Sony Playstation, and Opera clients
 * Change:	Code cleanup (Arcanemagus)
