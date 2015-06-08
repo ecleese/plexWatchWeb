@@ -65,7 +65,10 @@ function dbconnect() {
 
 	try {
 		$database = new PDO('sqlite:' . $plexWatch['plexWatchDb']);
+		// Throw exceptions on errors
 		$database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		// Wait up to 5 seconds before giving up on getting a lock
+		$database->setAttribute(PDO::ATTR_TIMEOUT, 5);
 		return $database;
 	} catch (PDOException $e) {
 		$error_msg = 'Connection to the database failed: ' . $e->getMessage() .
