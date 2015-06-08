@@ -1,8 +1,8 @@
 <?php
 require_once(dirname(__FILE__) . '/../config/config.php');
 
-$imgReq = filter_input(INPUT_GET, 'img', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-if (!isset($imgReq) && $imgReq === false) {
+$imgReq = filter_input(INPUT_GET, 'img', FILTER_SANITIZE_URL);
+if (!isset($imgReq) || $imgReq === false) {
 	$error_msg = 'No image to retrieve specified.';
 	echo '<p>' . $error_msg . '</p>';
 	trigger_error($error_msg, E_USER_ERROR);
