@@ -9,7 +9,13 @@ if (file_exists($guisettingsFile)) {
 }
 
 $database = dbconnect();
-$itemId = intval($_GET['id']);
+$itemId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT,
+	['options'=>['min_range'=>1]]);
+if (!isset($itemId) || $itemId === false) {
+	echo "<p>ID field is required.</p>";
+	$error_msg = 'PlexWatchWeb :: POST parameter "id" not found or invalid.';
+	trigger_error($error_msg, E_USER_ERROR);
+}
 $infoPath = '/library/metadata/' . $itemId;
 
 function printMetadata($xml) {
