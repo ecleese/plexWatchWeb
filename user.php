@@ -76,7 +76,12 @@ if (file_exists($guisettingsFile)) {
 		<?php
 		include 'serverdatapdo.php';
 
-		$user = htmlspecialchars($_GET['user'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', true);
+		$user = filter_input(INPUT_GET, 'user', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		if (!isset($user) || $user === false) {
+			echo "<p>User field is required.</p>";
+			$error_msg = 'PlexWatchWeb :: POST parameter "user" not found or invalid.';
+			trigger_error($error_msg, E_USER_ERROR);
+		}
 		$database = dbconnect();
 		$plexWatchDbTable = dbTable('user');
 

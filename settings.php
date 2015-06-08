@@ -624,13 +624,13 @@ function printJSONSupport() {
 									'data-dismiss="alert" aria-hidden="true"><i class="icon ' .
 									'icon-remove-circle"></i></button></div>';
 						if (isset($_GET['s'])) {
-							echo $errorStart . htmlspecialchars($_GET['s'], ENT_QUOTES | ENT_SUBSTITUTE,
-								'UTF-8', true) . $errorEnd;
+							$error = filter_input(INPUT_GET, 's', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+							echo $errorStart . $error . $errorEnd;
 						} elseif (isset($_GET['e'])) {
 							// check for a form error
-							echo $errorStart . htmlspecialchars($_GET['e'], ENT_QUOTES | ENT_SUBSTITUTE,
-								'UTF-8', true) . $errorEnd;
-						} elseif (isset($_GET['error']) && ($_GET['error'] == 'datetime')) {
+							$error = filter_input(INPUT_GET, 'e', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+							echo $errorStart . $error . $errorEnd;
+						} elseif (isset($_GET['error']) && ($_GET['error'] === 'datetime')) {
 							echo $errorStart . 'Error in date/time format. Please correct ' .
 								'this and try again.' . $errorEnd;
 						}
