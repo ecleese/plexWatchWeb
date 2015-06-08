@@ -73,32 +73,33 @@ class elapsedTimeResult {
 $plexWatchDbTable = dbTable('user');
 $database = dbconnect();
 $columns = 'time, stopped, paused_counter';
+$params = array(':user'=>$_POST['user']);
 
 $query = "SELECT $columns " .
 	"FROM $plexWatchDbTable " .
 	"WHERE datetime(stopped, 'unixepoch', 'localtime') >= date('now', 'localtime') " .
 	"AND user = :user";
-$results = getResults($database, $query, [':user'=>$_POST['user']]);
+$results = getResults($database, $query, $params);
 $dailyStats = new elapsedTimeResult($results);
 
 $query = "SELECT $columns " .
 	"FROM $plexWatchDbTable " .
 	"WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-7 days', 'localtime') " .
 	"AND user = :user";
-$results = getResults($database, $query, [':user'=>$_POST['user']]);
+$results = getResults($database, $query, $params);
 $weeklyStats = new elapsedTimeResult($results);
 
 $query = "SELECT $columns " .
 	"FROM $plexWatchDbTable " .
 	"WHERE datetime(stopped, 'unixepoch', 'localtime') >= datetime('now', '-30 days', 'localtime') " .
 	"AND user = :user";
-$results = getResults($database, $query, [':user'=>$_POST['user']]);
+$results = getResults($database, $query, $params);
 $monthlyStats = new elapsedTimeResult($results);
 
 $query = "SELECT $columns " .
 	"FROM $plexWatchDbTable " .
 	"WHERE user = :user";
-$results = getResults($database, $query, [':user'=>$_POST['user']]);
+$results = getResults($database, $query, $params);
 $allTimeStats = new elapsedTimeResult($results);
 
 echo"<ul>";
