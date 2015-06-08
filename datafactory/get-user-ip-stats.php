@@ -25,42 +25,46 @@ $query = "SELECT time, ip_address, platform, xml," .
 	"GROUP BY ip_address " .
 	"ORDER BY time DESC";
 $results = getResults($database, $query, [':user'=>$_POST['user']]);
-$nrow = Array();
+$nrow = [];
 $i = 0;
 while ($row = $results->fetch(PDO::FETCH_ASSOC)) {
 	if (empty($row['ip_address'])) {
 		continue;
 	}
-	if (strpos($row['ip_address'], "192.168" ) !== false) {
-	} else if (strpos($row['ip_address'], "10." ) !== false) {
-	} else if (strpos($row['ip_address'], "172.16" ) !== false) {
-		//need a solution to check for 17-31
+	$nrow[$i][] = $row['time'];
+	$nrow[$i][] = $row['ip_address'];
+	$nrow[$i][] = $row['play_count'];
+	$nrow[$i][] = $row['platform'];
+	if (
+			(substr_compare($row['ip_address'], '192.168.', 0, 8) == 0) ||
+			(substr_compare($row['ip_address'], '10.', 0, 3) == 0) ||
+			(
+				(preg_match('/172\.\d\d\./', $row['ip_address']) == 1) &&
+				(substr($row['ip_address'], 4, 2) > 15 &&
+					substr($row['ip_address'], 4, 2) < 32)
+			)
+		) {
+		// Private IP Address
+		$nrow[$i][] = "n/a";
+		$nrow[$i][] = "";
 	} else {
-		$rowUrl = "http://www.geoplugin.net/xml.gp?ip=" .
-			$row['ip_address'];
+		// Public, so attempt to geolocate
+		$rowUrl = "http://www.geoplugin.net/xml.gp?ip=" . $row['ip_address'];
 		$rowData = simplexml_load_file($rowUrl)
 			or die ('<div class="alert alert-warning ">Cannot access '.
-				'http://www.geoplugin.net.</div>');
-		$nrow[$i][] = $row['time'];
-		$nrow[$i][] = $row['ip_address'];
-		$nrow[$i][] = $row['play_count'];
-		$nrow[$i][] = $row['platform'];
-
+				'http://freegeoip.net</div>');
 		if (empty($rowData->geoplugin_city)) {
 			$nrow[$i][] = "n/a";
 			$nrow[$i][] = "";
 		} else {
-			$nrow[$i][] = $rowData->geoplugin_city . ", " .
-				$rowData->geoplugin_region;
+			$nrow[$i][] = $rowData->geoplugin_city . ", " . $rowData->geoplugin_region;
 			$nrow[$i][] = "https://maps.google.com/maps?q=" .
-				urlencode($rowData->geoplugin_city . ", " .
-					$rowData->geoplugin_region);
+				urlencode($rowData->geoplugin_city . ", " . $rowData->geoplugin_region);
 		}
-		$i++;
 	}
+	$i++;
 }
 
 $graph_data = array('data'=>$nrow);
-
 echo json_encode($graph_data, JSON_NUMERIC_CHECK);
 ?>
