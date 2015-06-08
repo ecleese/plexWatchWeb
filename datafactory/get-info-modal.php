@@ -10,11 +10,7 @@ if (file_exists($guisettingsFile)) {
 	exit;
 }
 
-$db = dbconnect();
-
-if (isset($_POST['id'])) {
-	$id = $db->escapeString($_POST['id']);
-} else {
+if (!isset($_POST['id'])) {
 	error_log('PlexWatchWeb :: POST parameter "id" not found.');
 	echo "id field is required.";
 	exit;
@@ -27,7 +23,13 @@ if (isset($_POST['table']) &&
 	$plexWatchDbTable = dbTable();
 }
 
-$results = $db->querySingle("SELECT xml FROM $plexWatchDbTable WHERE id = $id") or die ("Failed to access plexWatch database. Please check your settings.");
-$xmlfield = simplexml_load_string($results);
+$database = dbconnect();
+$query = "SELECT xml FROM :table WHERE id = :id";
+$results = getResults($database, $query, [
+		'table'=>$plexWatchDbTable,
+		'id'=>$_POST['id']
+	]);
+$xml = $results->fetchColumn();
+$xmlfield = simplexml_load_string($xml);
 printStreamDetails($xmlfield);
 ?>

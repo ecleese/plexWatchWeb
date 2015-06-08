@@ -76,28 +76,23 @@ if (file_exists($guisettingsFile)) {
 		include 'serverdatapdo.php';
 
 		$user = htmlspecialchars($_GET['user'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', true);
-		$db = dbconnect();
+		$database = dbconnect();
 		$plexWatchDbTable = dbTable('user');
 
 		$query = "SELECT user, xml " .
 			"FROM $plexWatchDbTable ".
-			"WHERE user = '$user' " .
+			"WHERE user = :user " .
 			"ORDER BY time DESC " .
 			"LIMIT 1;";
-		$dieMsg = "Failed to access plexWatch database. Please check your settings.";
-		$userInfo = $db->query($query);
-		if ($userInfo === false) {
-			echo '<p>' . $dieMsg . '</p>';
-			trigger_error($dieMsg, E_USER_ERROR);
-		}
+		$userInfo = getResults($database, $query, [':user'=>$user]);
 		?>
 		<div class="container-fluid">
 			<div class="row-fluid">
 				<div class="span12">
 					<div class="user-info-wrapper">
 						<?php
-						while ($userInfoResults = $userInfo->fetchArray()) {
-							$userInfoXml = $userInfoResults['xml'];
+						while ($row = $userInfo->fetch(PDO::FETCH_ASSOC)) {
+							$userInfoXml = $row['xml'];
 							$userInfoXmlField = simplexml_load_string($userInfoXml);
 							echo '<div class="user-info-poster-face">';
 								if (empty($userInfoXmlField->User['thumb'])) {

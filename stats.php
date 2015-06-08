@@ -114,8 +114,7 @@ if (file_exists($guisettingsFile)) {
 		</div>
 		<footer></footer>
 <?php
-$db = dbconnect();
-$plexDBDie = 'Failed to access plexWatch database. Please check settings.';
+$database = dbconnect();
 $plexWatchDbTable = dbTable();
 
 $query = "SELECT " .
@@ -126,14 +125,10 @@ $query = "SELECT " .
 		"datetime('now', '-24 hours', 'localtime') " .
 	"GROUP BY strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) " .
 	"ORDER BY date ASC;";
-$hourlyPlays = $db->query($query);
-if ($hourlyPlays === false) {
-	echo '<p>' . $plexDBDie . '</p>';
-	trigger_error($plexDBDie, E_USER_ERROR);
-}
+$hourlyPlays = getResults($database, $query);
 $hourlyPlayData = [];
-while ($row = $hourlyPlays->fetchArray()) {
-	$hourlyPlayData[] = ["x"=>$row['date'], "y"=>$row['count']];
+while ($row = $hourlyPlays->fetch(PDO::FETCH_ASSOC)) {
+	$hourlyPlayData[] = ["x"=>$row['date'], "y"=>(int) $row['count']];
 }
 
 $query = "SELECT " .
@@ -143,14 +138,10 @@ $query = "SELECT " .
 	"GROUP BY strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) " .
 	"ORDER BY count(*) desc " .
 	"LIMIT 25;";
-$maxhourlyPlays = $db->query($query);
-if ($maxhourlyPlays === false) {
-	echo '<p>' . $plexDBDie . '</p>';
-	trigger_error($plexDBDie, E_USER_ERROR);
-}
+$maxhourlyPlays = getResults($database, $query);
 $maxhourlyPlayData = [];
-while ($row = $maxhourlyPlays->fetchArray()) {
-	$maxhourlyPlayData[] = ["x"=>$row['date'], "y"=>$row['count']];
+while ($row = $maxhourlyPlays->fetch(PDO::FETCH_ASSOC)) {
+	$maxhourlyPlayData[] = ["x"=>$row['date'], "y"=>(int) $row['count']];
 }
 
 $query = "SELECT " .
@@ -160,14 +151,10 @@ $query = "SELECT " .
 	"GROUP BY date " .
 	"ORDER BY time DESC " .
 	"LIMIT 30;";
-$dailyPlays = $db->query($query);
-if ($dailyPlays === false) {
-	echo '<p>' . $plexDBDie . '</p>';
-	trigger_error($plexDBDie, E_USER_ERROR);
-}
+$dailyPlays = getResults($database, $query);
 $dailyPlayData = [];
-while ($row = $dailyPlays->fetchArray()) {
-	$dailyPlayData[] = ["x"=>$row['date'], "y"=>$row['count']];
+while ($row = $dailyPlays->fetch(PDO::FETCH_ASSOC)) {
+	$dailyPlayData[] = ["x"=>$row['date'], "y"=>(int) $row['count']];
 }
 
 $query = "SELECT " .
@@ -179,14 +166,10 @@ $query = "SELECT " .
 	"GROUP BY strftime('%Y-%m', datetime(time, 'unixepoch', 'localtime')) " .
 	"ORDER BY date DESC " .
 	"LIMIT 13;";
-$monthlyPlays = $db->query($query);
-if ($monthlyPlays === false) {
-	echo '<p>' . $plexDBDie . '</p>';
-	trigger_error($plexDBDie, E_USER_ERROR);
-}
+$monthlyPlays = getResults($database, $query);
 $monthlyPlayData = [];
-while ($row = $monthlyPlays->fetchArray()) {
-	$monthlyPlayData[] = ["x"=>$row['date'], "y"=>$row['count']];
+while ($row = $monthlyPlays->fetch(PDO::FETCH_ASSOC)) {
+	$monthlyPlayData[] = ["x"=>$row['date'], "y"=>(int) $row['count']];
 }
 ?>
 		<!-- javascript

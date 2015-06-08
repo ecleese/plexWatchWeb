@@ -65,7 +65,7 @@ if (file_exists($guisettingsFile)) {
 						</div>
 					</div>
 					<?php
-					$db = dbconnect();
+					$database = dbconnect();
 					$plexWatchDbTable = dbTable('user');
 
 					$query = "SELECT COUNT(title) as plays, user, time, " .
@@ -76,12 +76,7 @@ if (file_exists($guisettingsFile)) {
 						"GROUP BY user " .
 						"ORDER BY user " .
 						"COLLATE NOCASE";
-					$dieMsg = "Failed to access plexWatch database. Please check your settings.";
-					$users = $db->query($query);
-					if ($users === false) {
-						echo '<p>' . $dieMsg . '</p>';
-						trigger_error($dieMsg, E_USER_ERROR);
-					}
+					$users = getResults($database, $query);
 					echo '<div class="wellbg">';
 						echo '<table id="usersTable" class="display">';
 							echo '<thead>';
@@ -95,7 +90,7 @@ if (file_exists($guisettingsFile)) {
 							echo '</thead>';
 							echo '<tbody>';
 								// Run through each feed item
-								while ($user = $users->fetchArray()) {
+								while ($user = $users->fetch(PDO::FETCH_ASSOC)) {
 									$userXml = simplexml_load_string($user['xml']) ;
 									echo '<tr>';
 										echo '<td align="right" width="40px">';

@@ -10,55 +10,53 @@ if (file_exists($guisettingsFile)) {
 	exit;
 }
 
-// Connects to your Database
-$db = dbconnect();
-
-if (isset($_POST['user'])) {
-	$user = $db->escapeString($_POST['user']);
-} else {
-	error_log('PlexWatchWeb :: POST parameter "user" not found.');
-	echo "user field is required.";
-	exit;
+if (!isset($_POST['user'])) {
+	echo "User field is required.";
+	trigger_error('PlexWatchWeb :: POST parameter "user" not found.', E_USER_ERROR);
 }
 
+$database = dbconnect();
 $plexWatchDbTable = dbTable('user');
-$userIpAddressesQuery = $db->query("SELECT time, ip_address, platform, xml," .
+$query = "SELECT time, ip_address, platform, xml," .
 		"COUNT(ip_address) as play_count, " .
 		"strftime('%Y%m%d', datetime(time, 'unixepoch', 'localtime')) as date " .
 	"FROM processed " .
-	"WHERE user = '$user' " .
+	"WHERE user = :user " .
 	"GROUP BY ip_address " .
-	"ORDER BY time DESC");
+	"ORDER BY time DESC";
+$results = getResults($database, $query, [':user'=>$_POST['user']]);
 $nrow = Array();
 $i = 0;
-while ($userIpAddresses = $userIpAddressesQuery->fetchArray()) {
-	if (!empty($userIpAddresses['ip_address'])) {
-		if (strpos($userIpAddresses['ip_address'], "192.168" ) === false) {
-		} else if (strpos($userIpAddresses['ip_address'], "10." ) === false) {
-		} else if (strpos($userIpAddresses['ip_address'], "172.16" ) === false) {
-			//need a solution to check for 17-31
-		} else {
-			$userIpAddressesUrl = "http://www.geoplugin.net/xml.gp?ip=" .
-				$userIpAddresses['ip_address'];
-			$userIpAddressesData = simplexml_load_file($userIpAddressesUrl)
-				or die ("<div class=\"alert alert-warning \">Cannot access http://www.geoplugin.net.</div>");
-			$nrow[$i][] = $userIpAddresses['time'];
-			$nrow[$i][] = $userIpAddresses['ip_address'];
-			$nrow[$i][] = $userIpAddresses['play_count'];
-			$nrow[$i][] = $userIpAddresses['platform'];
+while ($row = $results->fetch(PDO::FETCH_ASSOC)) {
+	if (empty($row['ip_address'])) {
+		continue;
+	}
+	if (strpos($row['ip_address'], "192.168" ) !== false) {
+	} else if (strpos($row['ip_address'], "10." ) !== false) {
+	} else if (strpos($row['ip_address'], "172.16" ) !== false) {
+		//need a solution to check for 17-31
+	} else {
+		$rowUrl = "http://www.geoplugin.net/xml.gp?ip=" .
+			$row['ip_address'];
+		$rowData = simplexml_load_file($rowUrl)
+			or die ('<div class="alert alert-warning ">Cannot access '.
+				'http://www.geoplugin.net.</div>');
+		$nrow[$i][] = $row['time'];
+		$nrow[$i][] = $row['ip_address'];
+		$nrow[$i][] = $row['play_count'];
+		$nrow[$i][] = $row['platform'];
 
-			if (empty($userIpAddressesData->geoplugin_city)) {
-				$nrow[$i][] = "n/a";
-				$nrow[$i][] = "";
-			} else {
-				$nrow[$i][] = $userIpAddressesData->geoplugin_city . ", " .
-					$userIpAddressesData->geoplugin_region;
-				$nrow[$i][] = "https://maps.google.com/maps?q=" .
-					urlencode($userIpAddressesData->geoplugin_city . ", " .
-						$userIpAddressesData->geoplugin_region);
-			}
-			$i++;
+		if (empty($rowData->geoplugin_city)) {
+			$nrow[$i][] = "n/a";
+			$nrow[$i][] = "";
+		} else {
+			$nrow[$i][] = $rowData->geoplugin_city . ", " .
+				$rowData->geoplugin_region;
+			$nrow[$i][] = "https://maps.google.com/maps?q=" .
+				urlencode($rowData->geoplugin_city . ", " .
+					$rowData->geoplugin_region);
 		}
+		$i++;
 	}
 }
 

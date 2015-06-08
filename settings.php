@@ -62,7 +62,8 @@ function printVersions() {
 				// FIXME: Version should be specified in the settings
 				echo '<li>plexWatch/Web Version: <strong>v1.7.0 dev</strong></li>';
 				$query = "SELECT version FROM config";
-				$plexWatchVersion = $database->querySingle($query);
+				$results = getResults($database, $query);
+				$plexWatchVersion = $results->fetchColumn();
 				echo '<li>plexWatch Version: <strong>';
 					echo 'v' . $plexWatchVersion;
 				echo '</strong></li>';

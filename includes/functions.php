@@ -13,13 +13,14 @@ if (!isset($_SESSION)) {
 function loadPwConfig() {
 	if (!isset($_SESSION['pwc'])) {
 		$database = dbconnect();
-		if ($result = $database->querySingle("SELECT json_pretty from config")) {
+		$query = "SELECT json from config";
+		$result = getResults($database, $query);
+		if ($result = $result->fetchColumn()) {
 			if ($json = json_decode($result)) {
 				$_SESSION['pwc'] = keysToLower($json);
 			}
 		}
-	}
-	if (isset($_SESSION['pwc'])) {
+	} else {
 		return $_SESSION['pwc'];
 	}
 }
@@ -49,18 +50,29 @@ function FriendlyName($user, $platform = NULL) {
 function dbconnect() {
 	global $plexWatch;
 
-	if (!class_exists('SQLite3')) {
-		$error_msg = 'php5-sqlite is not installed. Please install this ' .
+	if (!extension_loaded('PDO')) {
+		$error_msg = 'PHP PDO is not enabled. Please enable this ' .
 			'requirement and restart your webserver before continuing.';
 		echo '<div class="alert alert-warning ">' . $error_msg . '</div>';
 		trigger_error($error_msg, E_USER_ERROR);
 	}
+	if (!extension_loaded('pdo_sqlite')) {
+		$error_msg = 'PDO SQlite driver is not installed. Please install this ' .
+			'requirement and restart your webserver before continuing.';
+		echo '<div class="alert alert-warning ">' . $error_msg . '</div>';
+		trigger_error($error_msg, E_USER_ERROR);
+	}
+
 	try {
-		$database = new SQLite3($plexWatch['plexWatchDb'], SQLITE3_OPEN_READONLY);
-		$database->busyTimeout(10 * 1000);
+		$database = new PDO('sqlite:' . $plexWatch['plexWatchDb']);
+		// Throw exceptions on errors
+		$database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		// Wait up to 5 seconds before giving up on getting a lock
+		$database->setAttribute(PDO::ATTR_TIMEOUT, 5);
 		return $database;
-	} catch (Exception $exception) {
-		$error_msg = 'There was an error connecting to the database!';
+	} catch (PDOException $e) {
+		$error_msg = 'Connection to the database failed: ' . $e->getMessage() .
+			"\nStack Trace:\n" . $e->getTraceAsString();
 		echo '<p>' . $error_msg . '</p>';
 		trigger_error($error_msg, E_USER_ERROR);
 	}
@@ -85,6 +97,45 @@ function dbTable($groupType = 'global') {
 			break;
 	}
 	return "processed";
+}
+
+function getResults($database, $query, $params = NULL) {
+	if (!isset($params)) {
+		// Simple query
+		try {
+			$results = $database->query($query);
+		} catch (PDOException $e) {
+			$error_msg = 'There was a problem running "' . $query . "\".\n" .
+				"Stack Trace:\n" . $e->getTraceAsString();
+			echo '<p>' . $error_msg . '</p>';
+			trigger_error($error_msg, E_USER_ERROR);
+		}
+	} else {
+		// Parameterized query
+		try {
+			$statement = $database->prepare($query);
+		} catch (PDOException $e) {
+			$error_msg = 'There was a problem preparing "' . $query . "\".\n" .
+				"Stack Trace:\n" . $e->getTraceAsString();
+			echo '<p>' . $error_msg . '</p>';
+			trigger_error($error_msg, E_USER_ERROR);
+		}
+		try {
+			$statement->execute($params);
+			$results = $statement;
+		} catch (PDOException $e) {
+			$error_msg = 'There was a problem executing "' . $query . "\".\n" .
+				"Stack Trace:\n" . $e->getTraceAsString();
+			echo '<p>' . $error_msg . '</p>';
+			trigger_error($error_msg, E_USER_ERROR);
+		}
+	}
+	if ($results === false) {
+		$error_msg = 'There was a problem running "' . $query . '".';
+		echo '<p>' . $error_msg . '</p>';
+		trigger_error($error_msg, E_USER_ERROR);
+	}
+	return $results;
 }
 
 // Determine the current PMS URL to use, and cache in the session
