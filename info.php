@@ -233,15 +233,15 @@ function printHistory($xml) {
 						echo '<table id="globalHistory" class="display">';
 							echo '<thead>';
 								echo '<tr>';
-									echo '<th align="left"><i class="icon-sort icon-white"></i> Date</th>';
-									echo '<th align="left"><i class="icon-sort icon-white"></i> User</th>';
-									echo '<th align="left"><i class="icon-sort icon-white"></i> Platform</th>';
-									echo '<th align="left"><i class="icon-sort icon-white"></i> IP Address</th>';
-									echo '<th align="center"><i class="icon-sort icon-white"></i> Started</th>';
-									echo '<th align="center"><i class="icon-sort icon-white"></i> Paused</th>';
-									echo '<th align="center"><i class="icon-sort icon-white"></i> Stopped</th>';
-									echo '<th align="center"><i class="icon-sort icon-white"></i> Duration</th>';
-									echo '<th align="center"><i class="icon-sort icon-white"></i> Completed</th>';
+									echo '<th align="left"><i class="fa fa-sort"></i> Date</th>';
+									echo '<th align="left"><i class="fa fa-sort"></i> User</th>';
+									echo '<th align="left"><i class="fa fa-sort"></i> Platform</th>';
+									echo '<th align="left"><i class="fa fa-sort"></i> IP Address</th>';
+									echo '<th align="center"><i class="fa fa-sort"></i> Started</th>';
+									echo '<th align="center"><i class="fa fa-sort"></i> Paused</th>';
+									echo '<th align="center"><i class="fa fa-sort"></i> Stopped</th>';
+									echo '<th align="center"><i class="fa fa-sort"></i> Duration</th>';
+									echo '<th align="center"><i class="fa fa-sort"></i> Completed</th>';
 								echo '</tr>';
 							echo '</thead>';
 							echo '<tbody>';
@@ -274,7 +274,7 @@ function printHistoryRow($row, $rowCount) {
 		echo '<td align="left">';
 			echo '<a href="#streamDetailsModal' . $rowCount . '" data-toggle="modal">';
 				echo '<span class="badge badge-inverse">';
-					echo '<i class="icon-info icon-white"></i>';
+					echo '<i class="fa fa-info"></i>';
 				echo '</span>';
 			echo '</a>';
 		if ($platform == 'Chromecast') {
@@ -510,8 +510,9 @@ function printSeasonEpisodes($xml) {
 
 		<!-- css styles -->
 		<link href="css/plexwatch.css" rel="stylesheet">
+		<link href="css/font-awesome.css" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
 		<link href="css/plexwatch-tables.css" rel="stylesheet">
-		<link href="css/font-awesome.min.css" rel="stylesheet">
 		<style type="text/css">
 			body {
 				padding-top: 60px;
@@ -535,12 +536,12 @@ function printSeasonEpisodes($xml) {
 				<div class="navbar-inner">
 					<a href="index.php"><div class="logo hidden-phone"></div></a>
 					<ul class="nav">
-						<li><a href="index.php"><i class="icon-2x icon-home icon-white" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
-						<li><a href="history.php"><i class="icon-2x icon-calendar icon-white" data-toggle="tooltip" data-placement="bottom" title="History" id="history"></i></a></li>
-						<li><a href="stats.php"><i class="icon-2x icon-tasks icon-white" data-toggle="tooltip" data-placement="bottom" title="Stats" id="stats"></i></a></li>
-						<li><a href="users.php"><i class="icon-2x icon-group icon-white" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
-						<li><a href="charts.php"><i class="icon-2x icon-bar-chart icon-white" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
-						<li><a href="settings.php"><i class="icon-2x icon-wrench icon-white" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
+						<li><a href="index.php"><i class="fa fa-home fa-2x" data-toggle="tooltip" data-placement="bottom" title="Home" id="home"></i></a></li>
+						<li><a href="history.php"><i class="fa fa-history fa-2x" data-toggle="tooltip" data-placement="bottom" title="History" id="history"></i></a></li>
+						<li><a href="users.php"><i class="fa fa-users fa-2x" data-toggle="tooltip" data-placement="bottom" title="Users" id="users"></i></a></li>
+						<li><a href="stats.php"><i class="fa fa-area-chart fa-2x" data-toggle="tooltip" data-placement="bottom" title="Stats" id="stats"></i></a></li>
+						<li><a href="charts.php"><i class="fa fa-bar-chart fa-2x" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
+						<li><a href="settings.php"><i class="fa fa-cogs fa-2x" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
 					</ul>
 				</div>
 			</div>

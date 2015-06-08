@@ -235,7 +235,7 @@ class ServerDataPDO
                     "sClass": 'modal-control',
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
                         if (sData !== '') {
-                            $(nTd).html('<a href="#info-modal" data-toggle="modal"><span data-toggle="tooltip" data-placement="left" title="Stream Info" id="stream-info" class="badge badge-inverse"><i class="icon-info icon-white"></i></span></a>&nbsp'+sData);
+                            $(nTd).html('<a href="#info-modal" data-toggle="modal"><span data-toggle="tooltip" data-placement="left" title="Stream Info" id="stream-info" class="badge badge-inverse"><i class="fa fa-info"></i></span></a>&nbsp'+sData);
                         }
                     }
                 },
@@ -382,7 +382,7 @@ EOT;
         $i = 0;
         foreach ($columns as $key=>$val) {
             if ($i < 11) {
-                $html_columns.="<th align='left'><i class='icon-sort icon-white'></i> ".trim($val)."</th>\n";
+                $html_columns.="<th align='left'><i class='fa fa-sort'></i> ".trim($val)."</th>\n";
             } else {
                 $html_columns.="<th align='left'>".trim($val)."</th>\n";
             }
