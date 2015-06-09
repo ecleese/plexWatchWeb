@@ -11,7 +11,7 @@ if (file_exists($guisettingsFile)) {
 }
 
 $itemId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT,
-	array('options'=>array('min_range'=>1)));
+	['options'=>['min_range'=>1]]);
 if (!isset($itemId) || $itemId === false) {
 	echo "<p>ID field is required.</p>";
 	$error_msg = 'PlexWatchWeb :: POST parameter "id" not found or invalid.';
@@ -27,8 +27,10 @@ if (isset($_POST['table']) &&
 
 $database = dbconnect();
 $query = "SELECT xml FROM :table WHERE id = :id";
-$params = array(':table'=>$plexWatchDbTable, ':id'=>$itemId);
-$results = getResults($database, $query, $params);
+$results = getResults($database, $query, [
+		'table'=>$plexWatchDbTable,
+		'id'=>$itemId
+	]);
 $xml = $results->fetchColumn();
 $xmlfield = simplexml_load_string($xml);
 printStreamDetails($xmlfield);

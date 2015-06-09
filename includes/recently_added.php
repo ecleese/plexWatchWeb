@@ -5,7 +5,7 @@ require_once(dirname(__FILE__) . '/../config/config.php');
 require_once(dirname(__FILE__) . '/timeago.php');
 
 $width = filter_input(INPUT_GET, 'width', FILTER_VALIDATE_INT,
-	array('options'=>array('min_range'=>1)));
+	['options'=>['min_range'=>1]]);
 if (!isset($width) || $width === false) {
 	echo '<p>Width field is required.</p>';
 	$error_msg = 'PlexWatchWeb :: POST parameter "width" not found or invalid.';

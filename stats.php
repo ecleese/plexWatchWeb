@@ -127,9 +127,9 @@ $query = "SELECT " .
 	"GROUP BY strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) " .
 	"ORDER BY date ASC;";
 $hourlyPlays = getResults($database, $query);
-$hourlyPlayData = array();
+$hourlyPlayData = [];
 while ($row = $hourlyPlays->fetch(PDO::FETCH_ASSOC)) {
-	$hourlyPlayData[] = array("x"=>$row['date'], "y"=>(int) $row['count']);
+	$hourlyPlayData[] = ["x"=>$row['date'], "y"=>(int) $row['count']];
 }
 
 $query = "SELECT " .

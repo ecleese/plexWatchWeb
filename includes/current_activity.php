@@ -7,7 +7,7 @@ $fileContents = getPmsData('/status/sessions') or
 $statusSessions = simplexml_load_string($fileContents) or die ("Failed to parse Plex response.");
 
 if ($statusSessions['size'] == '0') {
-	echo "<h5><strong>Nothing is currently being watched.</strong></h5><br>";
+	echo "<div class='muted'>Nothing is currently being watched.</div><br>";
 	return; // End execution of the current script file
 }
 

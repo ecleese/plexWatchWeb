@@ -10,7 +10,7 @@ if (file_exists($guisettingsFile)) {
 
 $database = dbconnect();
 $itemId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT,
-	array('options'=>array('min_range'=>1)));
+	['options'=>['min_range'=>1]]);
 if (!isset($itemId) || $itemId === false) {
 	echo "<p>ID field is required.</p>";
 	$error_msg = 'PlexWatchWeb :: POST parameter "id" not found or invalid.';
@@ -88,7 +88,7 @@ function printMetadata($xml) {
 
 function metaDataData($xml) {
 	$imgBase = 'includes/img.php?img=';
-	$data = array();
+	$data = [];
 	if ($xml->Video['type'] == 'episode') {
 		$data = episodeMetaData($xml);
 	} else if ($xml->Directory['type'] == 'show') {
@@ -116,7 +116,7 @@ function metaDataData($xml) {
 }
 
 function episodeMetaData($xml) {
-	$data = array();
+	$data = [];
 	$data['type'] = 'episode';
 	$data['xmlArt'] = $xml->Video['art'];
 	if ($xml->Video['parentThumb']) {
@@ -137,7 +137,7 @@ function episodeMetaData($xml) {
 }
 
 function showMetaData($xml) {
-	$data = array();
+	$data = [];
 	$data['type'] = 'show';
 	$data['xmlArt'] = $xml->Directory['art'];
 	$data['xmlThumb'] = $xml->Directory['thumb'];
@@ -150,7 +150,7 @@ function showMetaData($xml) {
 }
 
 function seasonMetaData($xml) {
-	$data = array();
+	$data = [];
 	$data['type'] = 'season';
 	$parentInfoPath = '/library/metadata/' . $xml->Directory['parentRatingKey'];
 	$parentXml = simplexml_load_string(getPMSData($parentInfoPath));
@@ -175,7 +175,7 @@ function seasonMetaData($xml) {
 }
 
 function movieMetaData($xml) {
-	$data = array();
+	$data = [];
 	$data['type'] = 'movie';
 	$data['xmlArt'] = $xml->Video['art'];
 	$data['xmlThumb'] = $xml->Video['thumb'];

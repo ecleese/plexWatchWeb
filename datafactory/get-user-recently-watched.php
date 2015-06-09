@@ -23,8 +23,7 @@ $query = "SELECT title, user, platform, time, " .
 	"WHERE user = :user " .
 	"ORDER BY time DESC " .
 	"LIMIT 10";
-$params = array(':user'=>$_POST['user']);
-$results = getResults($database, $query, $params);
+$results = getResults($database, $query, [':user'=>$_POST['user']]);
 $imgSize = '&width=136&height=280';
 
 echo '<ul class="dashboard-recent-media">';

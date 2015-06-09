@@ -56,7 +56,7 @@ if (file_exists($guisettingsFile)) {
 				</div>
 			</div>
 		</div>
-		<div class="clear"></div>
+		
 		<div class="container-fluid">
 			<div class="row-fluid">
 				<div class="span12">

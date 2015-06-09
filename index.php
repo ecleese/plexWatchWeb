@@ -63,8 +63,19 @@ if (file_exists($guisettingsFile)) {
 		</div>
 		<div class="container-fluid">
 			<div class="row-fluid">
-				<div class="span12"></div>
-			</div>
+					<div class="span12">
+						<div class="wellbg">
+							<div class="wellheader">
+								<div class="dashboard-wellheader">
+									<div id="currentActivityHeader">
+									</div>
+								</div>
+							</div>
+							<div id="currentActivity">
+							</div>
+						</div>
+					</div>
+				</div>
 			<div class="row-fluid">
 				<div class="span12">
 					<div class="wellbg">
@@ -75,20 +86,6 @@ if (file_exists($guisettingsFile)) {
 						</div>
 						<div id="library-stats" class="stats">
 							<div id="stats-spinner" class="spinner"></div>
-						</div>
-					</div>
-				</div>
-				<div class='row-fluid'>
-					<div class='span12'>
-						<div class='wellbg'>
-							<div class='wellheader'>
-								<div class='dashboard-wellheader'>
-									<div id='currentActivityHeader'>
-									</div>
-								</div>
-							</div>
-							<div id='currentActivity'>
-							</div>
 						</div>
 					</div>
 				</div>

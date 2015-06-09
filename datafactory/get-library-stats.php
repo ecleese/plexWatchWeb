@@ -23,6 +23,7 @@ $statusSessions = simplexml_load_string($sessionsData) or die ($PMSdieMsg);
 $sectionsData = getPmsData('/library/sections');
 $sections = simplexml_load_string($sectionsData) or die ($PMSdieMsg);
 echo '<ul>';
+	echo '<li><h1>'. $users . '</h1><h5>Users</h5></li>';
 	foreach ($sections->children() as $section) {
 		if (($section['type'] == 'movie') || ($section['type'] == 'artist'))  {
 			$sectionDetails = simplexml_load_string(getPmsData('/library/sections/' .
@@ -56,6 +57,5 @@ echo '<ul>';
 			echo '</li>';
 		}
 	}
-	echo '<li><h1>'. $users . '</h1><h5>Users</h5></li>';
 echo '</ul>';
 ?>

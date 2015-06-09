@@ -204,7 +204,7 @@ class ServerDataPDO
                         }
                     },
                     "bSearchable": false,
-                    "sWidth": '10%'
+                    "sWidth": '5%'
                 },
                 {
                     "sName": 'title',
@@ -216,7 +216,7 @@ class ServerDataPDO
                             $(nTd).html('<a href="info.php?id='+mediaId+'">'+sData+'</a>');
                         }
                     },
-                    "sWidth": '35%'
+                    "sWidth": '30%'
                 },
                 {
                     "sName": 'user',
@@ -317,11 +317,11 @@ class ServerDataPDO
                             } else {
                                 var percentComplete = 0;
                             }
-                            $(nTd).html('<span class="badge badge-warning">'+percentComplete+'%</span>');
+                            $(nTd).html('<span class="badge">'+percentComplete+'%</span>');
                     },
                     "bSearchable": false,
                     "bSortable": false,
-                    "sWidth": '5%'
+                    "sWidth": '6%'
                 }
             ]
         } );

@@ -448,7 +448,6 @@ function printServerSupport() {
 
 function printPHPSupport() {
 	echo '<li>';
-		// Min: 5.3.3
 		$phpVersion = phpversion();
 		if (!empty($phpVersion)) {
 				echo '<i class="icon icon-ok"></i> ';

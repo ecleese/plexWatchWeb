@@ -63,7 +63,7 @@ html {
 }
 a:focus {
 	outline: thin dotted #333;
-	outline: 5px auto -webkit-focus-ring-color;
+	outline: 5px auto #fff;
 	outline-offset: -2px;
 }
 a:hover,
@@ -202,11 +202,11 @@ textarea {
 }
 body {
 	margin: 0;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 15px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 14px;
 	line-height: 20px;
-	color: #ccc;
-	background: #9a9a9a url(../images/background.png);
+	color: #eee;
+	background: #1f1f1f;
 	text-shadow: 0 1px 0 #000;
 	text-rendering: optimizelegibility;
 }
@@ -532,8 +532,8 @@ a:focus {
 	clear: both;
 }
 .container-fluid {
-	padding-right: 20px;
-	padding-left: 20px;
+	padding-right: 0px;
+	padding-left: 0px;
 	*zoom: 1;
 }
 .container-fluid:before,
@@ -616,12 +616,12 @@ h3,
 h4,
 h5,
 h6 {
-	margin: 5px 0;
+	margin: 0 0;
 	font-family: inherit;
 	font-weight: normal;
 	line-height: 20px;
 	color: inherit;
-	text-shadow: 0 1px 0 #000;
+	text-shadow: 0 1px 0 #000;	
 	text-rendering: optimizelegibility;
 }
 h1 small,
@@ -640,10 +640,10 @@ h3,
 h4,
 h5,
 h6 {
-	line-height: 20px;
+	line-height: 24px;
 }
 h1 {
-	font-size: 24px;
+	font-size: 30px;
 }
 h2 {
 	font-size: 22px;
@@ -863,10 +863,9 @@ pre code {
 .label,
 .badge {
 	display: inline-block;
-	padding: 2px 4px;
-	font-size: 11px;
-	font-weight: bold;
-	line-height: 14px;
+	font-size: 14px;
+	padding: 4px 8px;
+	border-radius: 10px;
 	vertical-align: baseline;
 	white-space: nowrap;
 	text-shadow: none;
@@ -877,11 +876,19 @@ pre code {
 	border-radius: 3px;
 }
 .badge {
-	padding-left: 9px;
-	padding-right: 9px;
-	-webkit-border-radius: 9px;
-	-moz-border-radius: 9px;
-	border-radius: 9px;
+	display: inline-block;
+	font-weight: normal;
+	padding: 4px 8px;
+	font-size: 14px;
+	border-radius: 10px;
+	vertical-align: baseline;
+	white-space: nowrap;
+	text-shadow: none;
+	background-color: rgba(255,255,255,.1);
+	min-width: 10px;
+	color: #fff;
+	text-align: center;
+	line-height: 1;
 }
 .label:empty,
 .badge:empty {
@@ -906,7 +913,7 @@ a.badge:focus {
 .label-warning,
 .badge-warning {
 	background-color: #F9AA03;
-	color: #111;
+	color: #ccc;
 }
 .label-warning[href],
 .badge-warning[href] {
@@ -1218,7 +1225,10 @@ input,
 button,
 select,
 textarea {
-	font-family: 'Helvetica Neue', 'HelveticaNeue', Helvetica, Arial, sans-serif;
+	color: #fff;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: normal;
 }
 label {
 	display: block;
@@ -1279,15 +1289,19 @@ input[type="color"],
 .uneditable-input {
 	margin-top: 5px;
 	color: #F9AA03;
-	border: 2px solid #444;
+	border: 0px solid #444;
 	background: #333;
 	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 	-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 	-webkit-transition: border linear .2s, box-shadow linear .2s;
-	-moz-transition: border linear .2s, box-shadow linear .2s;
+	-moz-transition: border linear .2s, box-shadow linear .2s;	
 	-o-transition: border linear .2s, box-shadow linear .2s;
 	transition: border linear .2s, box-shadow linear .2s;
+	height: 29px;
+	padding: 2px 5px 2px 12px;
+	background-color: #3a3a3a;
+	border-radius: 14.5px;
 }
 textarea:focus,
 input[type="text"]:focus,
@@ -3547,14 +3561,12 @@ text-shadow: 0 0 10px rgba(255,255,255,0.85);
 .navbar {
 	overflow: visible;
 	margin-bottom: 20px;
-	min-height: 40px;
-	padding-left: 20px;
-	padding-right: 20px;
+	min-height: 50px;
+	padding-left: 10px;
+	padding-right: 10px;
 	background-color: #000;
 	border-bottom: 1px solid;
 	border-color: #222;
-	-webkit-box-shadow: 0 1px 0 1px rgba(0,0,0,.4);
-	box-shadow: 0 1px 0 1px rgba(0,0,0,.4);
 }
 .navbar-inner {
 
@@ -3732,10 +3744,11 @@ text-shadow: 0 0 10px rgba(255,255,255,0.85);
 }
 .navbar .nav {
 	position: relative;
+	top: -5px;
 	left: 0;
 	display: block;
 	float: right;
-	margin: -3px 0px 0px -10px;
+	margin: 0px 0px 0px -10px;
 }
 .navbar .nav.pull-right {
 	float: right;
@@ -3743,6 +3756,8 @@ text-shadow: 0 0 10px rgba(255,255,255,0.85);
 }
 .navbar .nav > li {
 	float: left;
+	padding-left: 3px;
+	padding-right: 3px;
 }
 .navbar .nav > li > a {
 	float: none;
@@ -6525,18 +6540,10 @@ button.close {
 	position: relative;
 }
 .wellbg {
-	padding: 10px 20px 0px 20px;
-	margin-bottom: 30px;
-	background-color: #222;
-	background-color: rgba(0,0,0,0.15);
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	border-radius: 2px;
-	border-color: #1d1d1d;
-	border: 2px solid rgba(0,0,0,0.15);
-	-webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
-	-moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
-	box-shadow: 0 0 5px rgba(255,255,255,0.05);
+	position: relative;
+	padding: 30px 0px 0px 20px;
+	background-color: transparent;
+	line-height: 22px;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-ms-box-sizing: border-box;
@@ -6553,10 +6560,15 @@ button.close {
 	margin-left: 0px;
 }
 .wellheader {
-	padding-bottom: 5px;
-	margin-bottom: 30px;
-	border-color: #333;
-	border-bottom: 1px solid rgba(255,255,255,0.1);
+	height: 50px;
+	padding: 5px 0 0 0;
+	line-height: 50px;
+}
+.wellheader-bg {
+	height: 40px;
+	padding: 15px 0 0 0;
+	line-height: 50px;
+	background-color: rgba(255,255,255,.03);
 }
 .row-wrapper {
 	overflow: hidden;
@@ -6575,19 +6587,17 @@ button.close {
 .dashboard-wellheader {
 	background-repeat: no-repeat;
 	background-position: 0 0;
-	border-bottom: 1px solid rgba(0,0,0,0.3);
-	margin-bottom: -5px;
 }
 .dashboard-wellheader-no-chevron {
 	padding-left: 0;
 	background-repeat: no-repeat;
 	background-position: 0 0;
-	border-bottom: 1px solid rgba(0,0,0,0.3);
 	margin-bottom: -5px;
+	margin-left: 20px;
+	margin-right: 20px;
 }
 .dashboard-wellheader-no-chevron h2{
 	color: #fff;
-	text-shadow: 0 0 10px rgba(255,255,255,0.5);
 }
 .platform {
 	padding-bottom: 0px;
@@ -7859,12 +7869,14 @@ ol.test >li {
 	-webkit-padding-start: 0px;
 }
 .stats li {
-	width: 138px;
+	width: 145px;
 	float: left;
 	margin-right: 27px;
 	position: relative;
-	margin-top: -10px;
-	margin-bottom: 30px;
+	margin-bottom: 27px;
+	background-color: rgba(255,255,255,.03);
+	padding: 10px 5px 15px 5px;
+	border-radius: 3px;
 }
 .stats h1 {
 	font-size: 36px;
@@ -7875,10 +7887,9 @@ ol.test >li {
 	margin: 0 0 0 0;
 }
 .stats h5 {
-	font-size: 13px;
-	line-height: 15px;
+	font-size: 14px;
+	line-height: 14px;
 	color: #fff;
-	font-weight: bold;
 	position: relative;
 	top: 5px;
 	left: 0px;

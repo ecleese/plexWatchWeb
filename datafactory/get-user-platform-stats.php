@@ -23,8 +23,7 @@ $query = "SELECT xml, platform, COUNT(platform) as platform_count " .
 	"WHERE user = :user " .
 	"GROUP BY platform " .
 	"ORDER BY platform ASC";
-$params = array(':user'=>$_POST['user']);
-$platformResults = getResults($database, $query, $params);
+$platformResults = getResults($database, $query, [':user'=>$_POST['user']]);
 while ($row = $platformResults->fetch(PDO::FETCH_ASSOC)) {
 	$platformXml = $row['xml'];
 	$platformXmlField = simplexml_load_string($platformXml);
