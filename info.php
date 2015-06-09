@@ -341,7 +341,7 @@ function printHistoryRow($row, $rowCount) {
 			$percentComplete = 100;
 		}
 		echo '<td align="center">';
-			echo '<span class="badge badge-warning">' . $percentComplete . '%</span>';
+			echo '<span class="badge">' . $percentComplete . '%</span>';
 		echo '</td>';
 	echo '</tr>';
 }

@@ -4106,7 +4106,7 @@ text-shadow: 0 0 10px rgba(255,255,255,0.85);
 	line-height: 20px;
 	text-decoration: none;
 	background-color: #262626;
-	border: 1px solid #222;
+	border: 1px solid #1f1f1f;
 	border-left-width: 0;
 }
 .pagination ul > li > a:hover,
