@@ -25,6 +25,7 @@ $query = "SELECT title, user, platform, time, " .
 	"LIMIT 10";
 $params = array(':user'=>$_POST['user']);
 $results = getResults($database, $query, $params);
+$imgBase = 'includes/img.php?img=';
 $imgSize = '&width=136&height=280';
 
 echo '<ul class="dashboard-recent-media">';
@@ -36,21 +37,19 @@ while ($row = $results->fetch(PDO::FETCH_ASSOC)) {
 	if ($metadata = simplexml_load_string($rawMetadata)) {
 		$thumbUrl = 'images/poster.png';
 		if ($xml['type'] == 'episode') {
-			$thumbURL = $metadata->Video['parentThumb'] . $imgSize;
-			$gthumbURL = $metadata->Video['grandparentThumb'] . $imgSize;
 			if ($metadata->Video['parentThumb']) {
-				$thumbUrl = 'includes/img.php?img='.urlencode($thumbURL);
+				$thumbUrl = $imgBase . urlencode($metadata->Video['parentThumb'] . $imgSize);
 			} else if ($metadata->Video['grandparentThumb']) {
-				$thumbUrl = 'includes/img.php?img='.urlencode($gthumbURL);
+				$thumbUrl = $imgBase . urlencode($metadata->Video['grandparentThumb'] . $imgSize);
 			}
 		} else if ($xml['type'] == 'movie') {
-			$thumbURL = $metadata->Video['thumb'] . $imgSize;
 			if ($metadata->Video['thumb']) {
-				$thumbUrl = 'includes/img.php?img='.urlencode($thumbURL);
+				$thumbUrl = $imgBase . urlencode($metadata->Video['thumb'] . $imgSize);
 			}
 		} else if ($xml['type'] == 'clip') {
-			$thumbURL = $metadata->Video['thumb'] . $imgSize;
-			$thumbUrl = 'includes/img.php?img='.urlencode($thumbURL);
+			if ($metadata->Video['thumb']) {
+				$thumbUrl = $imgBase . urlencode($metadata->Video['thumb'] . $imgSize);
+			}
 		}
 	} else {
 		continue;
