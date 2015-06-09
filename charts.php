@@ -9,18 +9,9 @@ if (file_exists($guisettingsFile)) {
 	return;
 }
 
-if ($fileContents = getPMSData('/status/sessions')) {
-	$statusSessions = simplexml_load_string($fileContents);
-	if ($statusSessions === false) {
-		$error_msg = 'Failed to access Plex Media Server. Please check your settings.';
-		echo '<p>' . $error_msg . '</p>';
-		trigger_error($error_msg, E_USER_ERROR);
-	}
-}
-
 $database = dbconnect();
 $plexWatchDbTable = dbTable('charts');
-$columns = "title,time,orig_title,orig_title_ep,episode," .
+$columns = "title,time,orig_title,episode," .
 	"season,xml,COUNT(*) AS play_count ";
 
 function printTop10($query, $type = null) {
@@ -122,7 +113,7 @@ function printTop10($query, $type = null) {
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="container-fluid">
 			<div class="row-fluid">
 				<div class="span12">
