@@ -92,7 +92,7 @@
 						<div id="info-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="info-modal" aria-hidden="true">
 							<div class="modal-header">
 								<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-remove"></i></button>
-								<h3 id="myModalLabel"><i class="fa fa-info"></i> Stream Info: <strong><span id="modal-stream-info"></span></strong></h3>
+								<h3 id="myModalLabel">Stream Info: <strong><span id="modal-stream-info"></span></strong></h3>
 							</div>
 							<div class="modal-body" id="modal-text">
 							</div>

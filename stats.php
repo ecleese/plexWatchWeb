@@ -77,7 +77,7 @@ if (file_exists($guisettingsFile)) {
 						echo '<div class="span6">';
 							echo '<div class="wellbg">';
 								echo '<div class="history-charts-header">';
-									echo '<strong>Hourly Plays </strong>(Last 24 Hours)<br>';
+									echo 'Hourly Plays (Last 24 Hours)<br>';
 								echo '</div>';
 								echo '<div class="history-charts-instance-chart" id="playChartHourly"></div>';
 							echo '</div>';
@@ -85,7 +85,7 @@ if (file_exists($guisettingsFile)) {
 						echo '<div class="span6">';
 							echo '<div class="wellbg">';
 								echo '<div class="history-charts-header">';
-									echo '<strong>Max Hourly Plays</strong><br>';
+									echo 'Max Hourly Plays<br>';
 								echo '</div>';
 								echo '<div class="history-charts-instance-chart" id="playChartMaxHourly"></div>';
 							echo '</div>';
@@ -95,7 +95,7 @@ if (file_exists($guisettingsFile)) {
 						echo '<div class="span6">';
 							echo '<div class="wellbg">';
 								echo '<div class="history-charts-header">';
-									echo '<strong>Daily Plays</strong><br>';
+									echo 'Daily Plays<br>';
 								echo '</div>';
 								echo '<div class="history-charts-instance-chart" id="playChartDaily"></div>';
 							echo '</div>';
@@ -103,7 +103,7 @@ if (file_exists($guisettingsFile)) {
 						echo '<div class="span6">';
 							echo '<div class="wellbg">';
 								echo '<div class="history-charts-header">';
-									echo '<strong>Monthly Plays</strong><br>';
+									echo 'Monthly Plays<br>';
 								echo '</div>';
 								echo '<div class="history-charts-instance-chart" id="playChartMonthly"></div>';
 							echo '</div>';

@@ -304,12 +304,11 @@ function printHistoryRow($row, $rowCount) {
 			'aria-labelledby="myModalLabel" aria-hidden="true">';
 			echo '<div class="modal-header">';
 				echo '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">';
-					echo '<i class="icon icon-remove"></i>';
+					echo '<i class="fa fa-remove"></i>';
 				echo '</button>';
 				echo '<h3 id="myModalLabel">';
-					echo '<i class="icon-info-sign icon-white"></i> ';
-					echo 'Stream Info: <strong>' . $row['title'] . ' ('.
-						FriendlyName($row['user'], $row['platform']) . ')</strong>';
+					echo 'Stream Info: ' . $row['title'] . ' ('.
+						FriendlyName($row['user'], $row['platform']) . ')';
 				echo '</h3>';
 			echo '</div>';
 			echo '<div class="modal-body">';

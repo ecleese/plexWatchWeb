@@ -4880,14 +4880,14 @@ font-weight: bold;
 	border-bottom: 1px solid #1C1C1C;
 }
 .modal-header .close {
-	margin-top: 2px;
+
 }
 .modal-header h2 {
  color: #fff;
 }
 .modal-header h3 {
 	margin: 0;
-	line-height: 30px;
+	line-height: 20px;
 }
 .modal-header h3 strong{
 	color: #eee;
@@ -7383,7 +7383,6 @@ button.close {
 .charts-instance-position-title	h3 {
 	text-decoration: none;
 	font-size: 14px;
-	font-weight: bold;
 	color: #fff;
 }
 .charts-instance-position-title	a {
