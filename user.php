@@ -229,12 +229,8 @@ if (file_exists($guisettingsFile)) {
 									role="dialog" aria-labelledby="info-modal" aria-hidden="true">
 									<div class="modal-header">
 										<button type="button" class="close" data-dismiss="modal"
-											aria-hidden="true"><i class="icon icon-remove"></i></button>
-										<h3 id="myModalLabel">
-											<i class="icon-info-sign icon-white"></i> Stream Info: <strong>
-												<span id="modal-stream-info"></span>
-											</strong>
-										</h3>
+											aria-hidden="true"><i class="fa fa-remove"></i></button>
+										<h3 id="myModalLabel">Stream Info: <span id="modal-stream-info"></span></h3>
 									</div>
 									<div class="modal-body" id="modal-text"></div>
 									<div class="modal-footer"></div>
