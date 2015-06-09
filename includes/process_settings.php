@@ -16,6 +16,12 @@ $plexWatchDb = "\$plexWatch['plexWatchDb'] = '".$_POST['plexWatchDb']."';";
 $dateFormat = "\$plexWatch['dateFormat'] = '".$_POST['dateFormat']."';";
 $timeFormat = "\$plexWatch['timeFormat'] = '".$_POST['timeFormat']."';";
 
+if (isset($_POST['userPicturesPath'])) {
+	$userPicturesPath = "\$plexWatch['userPicturesPath'] = '".$_POST['userPicturesPath']."';";
+} else {
+	$userPicturesPath = "\$plexWatch['userPicturesPath'] = '';";
+}
+
 $pmsIp = "\$plexWatch['pmsIp'] = '".$_POST['pmsIp']."';";
 $pmsHttpPort = "\$plexWatch['pmsHttpPort'] = '".$_POST['pmsHttpPort']."';";
 
@@ -46,7 +52,7 @@ if ($_POST['chartsGrouping'] == "yes") {
 }
 
 //combine all data into one variable
-$data = $dateFormat . PHP_EOL . $timeFormat . PHP_EOL . $pmsIp . PHP_EOL .
+$data = $dateFormat . PHP_EOL . $timeFormat . PHP_EOL . $userPicturesPath . PHP_EOL . $pmsIp . PHP_EOL .
 	$pmsHttpPort . PHP_EOL . $plexWatchDb . PHP_EOL . $myPlexUser . PHP_EOL .
 	$myPlexPass . PHP_EOL . $globalHistoryGrping . PHP_EOL . $userHistoryGrping .
 	PHP_EOL . $chartsGrping;
@@ -68,7 +74,7 @@ require_once(dirname(__FILE__) . '/myplex.php');
 $myPlexToken = "\$plexWatch['myPlexAuthToken'] = '".$myPlexAuthToken."';";
 
 //include authentication code in saved data
-$data = $dateFormat . PHP_EOL . $timeFormat . PHP_EOL . $pmsIp . PHP_EOL .
+$data = $dateFormat . PHP_EOL . $timeFormat . PHP_EOL . $userPicturesPath . PHP_EOL . $pmsIp . PHP_EOL .
 	$pmsHttpPort . PHP_EOL . $plexWatchDb . PHP_EOL . $myPlexUser . PHP_EOL .
 	$myPlexPass . PHP_EOL . $myPlexToken . PHP_EOL . $globalHistoryGrping .
 	PHP_EOL . $userHistoryGrping . PHP_EOL . $chartsGrping;

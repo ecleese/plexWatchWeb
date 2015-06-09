@@ -103,7 +103,13 @@ if (file_exists($guisettingsFile)) {
 							$userInfoXmlField = simplexml_load_string($userInfoXml);
 							echo '<div class="user-info-poster-face">';
 								if (empty($userInfoXmlField->User['thumb'])) {
-									echo '<img src="images/gravatar-default-80x80.png">';
+									if (file_exists($plexWatch['userPicturesPath'].'/'.$user.'.jpg')) {
+										echo '<img src="'.$plexWatch['userPicturesPath'].'/'.$user.'.jpg">';
+									} else if (file_exists($plexWatch['userPicturesPath'].'/'.$user.'.png')) {
+										echo '<img src="'.$plexWatch['userPicturesPath'].'/'.$user.'.png">';
+									} else {
+										echo '<img src="images/gravatar-default-80x80.png">';
+									}
 								} else {
 									echo '<img src="' . $userInfoXmlField->User['thumb'] .
 										'" onerror="this.src=\'images/gravatar-default-80x80.png\'">';

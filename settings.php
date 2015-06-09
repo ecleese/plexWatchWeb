@@ -115,6 +115,24 @@ function printGeneralSettings($haveConfig) {
 					echo '">';
 			echo '</div>';
 		echo '</div>';
+		echo '<div class="control-group">';
+			echo '<label class="control-label" for="userPicturesPath">Own User Pictures Path (optional)</label>';
+			echo '<div class="controls">';
+				echo '<input id="userPicturesPath" name="userPicturesPath" type="text" '.
+					'placeholder="images/users" class="input-xlarge" value="';
+					if ($haveConfig) {
+						echo $plexWatch['userPicturesPath'];
+					} else {
+						echo 'images/users';
+					}
+					echo '">';
+				echo '<p class="help-block">';
+					echo 'Save your own user pictures here in jpg or png format. Size should be 80x80 pixels';
+				echo '</p>';
+
+			echo '</div>';
+		echo '</div>';
+
 	echo '</div>';
 }
 
