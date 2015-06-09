@@ -90,8 +90,7 @@ if (file_exists($guisettingsFile)) {
 			"WHERE user = :user " .
 			"ORDER BY time DESC " .
 			"LIMIT 1;";
-		$params = array(':user'=>$user);
-		$userInfo = getResults($database, $query, $params);
+		$userInfo = getResults($database, $query, [':user'=>$user]);
 		?>
 		<div class="container-fluid">
 			<div class="row-fluid">
@@ -284,7 +283,7 @@ if (file_exists($guisettingsFile)) {
 						data: { user: '<?php echo $user; ?>' },
 						success: function(data) {
 							$("#user-recently-watched").html(data);
-							setCache('<?php echo $user; ?>' + '-user-recently-watched-cache', data);
+							setCache('<?php echo $user;?>' + '-user-recently-watched-cache', data);
 						}
 					});
 				}
@@ -410,7 +409,7 @@ if (file_exists($guisettingsFile)) {
 		<?php
 		$plexWatchDbTable = dbTable('user');
 
-		$db_array = array(
+		$db_array=array(
 			/* Use | as delimiter. Spell out columns names no SELECT * Table */
 			"sql"=>"SELECT id|time|user|platform|ip_address|title|time|" .
 				"paused_counter|stopped|xml|round((julianday(datetime(stopped," .
@@ -423,7 +422,7 @@ if (file_exists($guisettingsFile)) {
 		);
 
 		$javascript = ServerDataPDO::build_jquery_datatable($db_array,
-			'user_history_datatable', 'datafactory/get-info-modal.php');
+			'user_history_datatable','datafactory/get-info-modal.php');
 		echo $javascript;
 		?>
 		<script>
