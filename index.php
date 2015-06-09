@@ -120,8 +120,10 @@ if (file_exists($guisettingsFile)) {
 						url: 'datafactory/get-library-stats.php',
 						async: true,
 						success: function(data) {
-							$("#library-stats").html(data);
 							setCache('library-stats-cache', data);
+						},
+						complete: function(xhr, status) {
+							$("#library-stats").html(xhr.responseText);
 						}
 					});
 				}
@@ -133,8 +135,8 @@ if (file_exists($guisettingsFile)) {
 					url: 'includes/current_activity_header.php',
 					cache: false,
 					async: true,
-					success: function(data) {
-						$("#currentActivityHeader").html(data);
+					complete: function(xhr, status) {
+						$("#currentActivityHeader").html(xhr.responseText);
 					}
 				});
 			}
@@ -147,8 +149,8 @@ if (file_exists($guisettingsFile)) {
 					url: 'includes/current_activity.php',
 					cache: false,
 					async: true,
-					success: function(data) {
-						$("#currentActivity").html(data);
+					complete: function(xhr, status) {
+						$("#currentActivity").html(xhr.responseText);
 					}
 				});
 			}
@@ -163,8 +165,8 @@ if (file_exists($guisettingsFile)) {
 					type: "GET",
 					async: true,
 					data: { width : widthVal },
-					success: function(data) {
-						$("#recentlyAdded").html(data);
+					complete: function(xhr, status) {
+						$("#recentlyAdded").html(xhr.responseText);
 					}
 				});
 			}

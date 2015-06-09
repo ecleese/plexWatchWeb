@@ -331,28 +331,25 @@ class ServerDataPDO
         } );
 
         $('#$table_id').on('click', 'td.modal-control', function () {
-
             var tr = $(this).parents('tr');
             var id = tr.attr('id');
             var rowData = $table_id.fnGetData(id);
-
-            $.post("$modal_datasource", { id: rowData[0], "table": "$table_id" },
-                function(data) {
-                    if (data)
-                    {
-                        $("#modal-text").html(data);
-                        $("#modal-stream-info").html(rowData[5]+' ('+rowData[2]+')');
-                    }
-                    else
-                    {
-                        $("#modal-text").html("Something is wrong!");
-                    }
-                }
-            );
+            $.ajax({
+              type: "POST",
+              url: "$modal_datasource",
+              data: { id: rowData[0], "table": "$table_id" },
+              success: function(data) {
+                  $("#modal-text").html(data);
+                  $("#modal-stream-info").html(rowData[5]+' ('+rowData[2]+')');
+              },
+              error: function(xhr, status, error) {
+                  $("#modal-text").html("Something is wrong!");
+              }
+            });
         } );
     } );
 </script>
-<!--  End generated Jquery from  $ajax_source_url -->
+<!--  End generated Jquery from $ajax_source_url -->
 EOT;
 
         return $js;  //returns the completed jquery string
