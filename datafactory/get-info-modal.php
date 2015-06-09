@@ -10,7 +10,7 @@ if (file_exists($guisettingsFile)) {
 	exit;
 }
 
-$itemId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT,
+$itemId = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT,
 	array('options'=>array('min_range'=>1)));
 if (!isset($itemId) || $itemId === false) {
 	echo "<p>ID field is required.</p>";
@@ -26,8 +26,8 @@ if (isset($_POST['table']) &&
 }
 
 $database = dbconnect();
-$query = "SELECT xml FROM :table WHERE id = :id";
-$params = array(':table'=>$plexWatchDbTable, ':id'=>$itemId);
+$query = "SELECT xml FROM $plexWatchDbTable WHERE id = :id";
+$params = array(':id'=>$itemId);
 $results = getResults($database, $query, $params);
 $xml = $results->fetchColumn();
 $xmlfield = simplexml_load_string($xml);
