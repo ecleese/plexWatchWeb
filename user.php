@@ -283,8 +283,10 @@ if (file_exists($guisettingsFile)) {
 						async: true,
 						data: { user: '<?php echo $user; ?>' },
 						success: function(data) {
-							$("#user-recently-watched").html(data);
 							setCache('<?php echo $user; ?>' + '-user-recently-watched-cache', data);
+						},
+						complete: function(xhr, status) {
+							$("#user-recently-watched").html(xhr.responseText);
 						}
 					});
 				}
@@ -302,8 +304,10 @@ if (file_exists($guisettingsFile)) {
 						async: true,
 						data: { user: '<?php echo $user; ?>' },
 						success: function(data) {
-							$("#user-time-stats").html(data);
 							setCache('<?php echo $user; ?>' + '-user-time-stats-cache', data);
+						},
+						complete: function(xhr, status) {
+							$("#user-time-stats").html(xhr.responseText);
 						}
 					});
 				}
@@ -321,8 +325,10 @@ if (file_exists($guisettingsFile)) {
 						async: true,
 						data: { user: '<?php echo $user; ?>' },
 						success: function(data) {
-							$("#user-platform-stats").html(data);
 							setCache('<?php echo $user; ?>' + '-user-platform-stats-cache', data);
+						},
+						complete: function(xhr, status) {
+							$("#user-platform-stats").html(xhr.responseText);
 						}
 					});
 				}
@@ -401,7 +407,11 @@ if (file_exists($guisettingsFile)) {
 							ipTableOptions.aaData = data.data;
 							ipTable = $('#tableUserIpAddresses').dataTable(ipTableOptions);
 							// set expiration on this cached item to 10 minutes.
-							setCache('<?php echo $user; ?>' + '-ip-stats-cache',data,10);
+							setCache('<?php echo $user; ?>' + '-ip-stats-cache', data, 10);
+						},
+						error: function(xhr, status, error) {
+							window.alert('Error retrieving data, see console for details.');
+							console.log(xhr.responseText);
 						}
 					});
 				}
