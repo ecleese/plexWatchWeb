@@ -18,8 +18,6 @@ $users = $results->fetchColumn();
 $PMSdieMsg = '<div class=\"alert alert-warning \">Failed to access Plex Media ' .
 	'Server. Please check your settings.</div>';
 
-$sessionsData = getPmsData('/status/sessions');
-$statusSessions = simplexml_load_string($sessionsData) or die ($PMSdieMsg);
 $sectionsData = getPmsData('/library/sections');
 $sections = simplexml_load_string($sectionsData) or die ($PMSdieMsg);
 echo '<ul>';
