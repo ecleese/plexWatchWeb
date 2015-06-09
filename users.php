@@ -8,6 +8,7 @@ if (file_exists($guisettingsFile)) {
 	header("Location: settings.php");
 	return;
 }
+require_once(dirname(__FILE__) . '/includes/timeago.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -56,7 +57,7 @@ if (file_exists($guisettingsFile)) {
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="container-fluid">
 			<div class="row-fluid">
 				<div class="span12">
@@ -69,9 +70,7 @@ if (file_exists($guisettingsFile)) {
 					$database = dbconnect();
 					$plexWatchDbTable = dbTable('user');
 
-					$query = "SELECT COUNT(title) as plays, user, time, " .
-							"SUM(time) as timeTotal, SUM(stopped) as stoppedTotal, " .
-							"SUM(paused_counter) as paused_counterTotal, platform, " .
+					$query = "SELECT COUNT(title) as plays, user, time, platform, " .
 							"ip_address, xml " .
 						"FROM $plexWatchDbTable " .
 						"GROUP BY user " .
@@ -85,6 +84,7 @@ if (file_exists($guisettingsFile)) {
 									echo '<th align="right"></th>';
 									echo '<th align="left">User </th>';
 									echo '<th align="left">Last Seen </th>';
+									echo '<th>Hidden sort time</th>';
 									echo '<th align="left">Last Known IP </th>';
 									echo '<th align="left">Total Plays</th>';
 								echo '</tr>';
@@ -115,10 +115,9 @@ if (file_exists($guisettingsFile)) {
 												echo '</a>';
 											echo '</div>';
 										echo '</td>';
-
-										require_once(dirname(__FILE__) . '/includes/timeago.php');
 										$lastSeenTime = $user['time'];
 										echo '<td>' . TimeAgo($lastSeenTime) . '</td>';
+										echo '<td>' . $lastSeenTime . '</td>';
 										echo '<td>' . $user['ip_address'] . '</td>';
 										echo '<td>' . $user['plays'] . '</td>';
 									echo '</tr>';
@@ -145,10 +144,12 @@ if (file_exists($guisettingsFile)) {
 					"bPaginate": false,
 					"bLengthChange": true,
 					"bFilter": false,
-					"bSort": false,
+					"bSort": true,
 					"bInfo": true,
 					"bAutoWidth": true,
 					"aaSorting": [[ 0, "asc" ]],
+					"aoColumnDefs": [{ "iDataSort": 3, "aTargets": [2] }],
+					"aoColumns": [{}, {}, {}, { "bVisible": false }, {}, {}],
 					"bStateSave": false,
 					"bSortClasses": true,
 					"sPaginationType": "bootstrap"
