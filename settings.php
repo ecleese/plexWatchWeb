@@ -450,12 +450,25 @@ function printPHPSupport() {
 	echo '<li>';
 		$phpVersion = phpversion();
 		if (!empty($phpVersion)) {
+			// Minimum required: 5.3.3
+			if (defined('PHP_MAJOR_VERSION') && // >= 5.2.7
+				((PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION == 3 && PHP_RELEASE_VERSION >= 3) ||
+				(PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 3) ||
+				(PHP_MAJOR_VERSION > 5))) {
 				echo '<i class="icon icon-ok"></i> ';
 				echo 'PHP Version: <strong>';
 					echo '<span class="label label-success">';
 						echo 'v' . $phpVersion;
 					echo '</span>';
 				echo '</strong>';
+			} else {
+				echo '<i class="icon icon-warning-sign"></i> ';
+				echo 'PHP Version: <strong>';
+					echo '<span class="label label-important">';
+						echo 'v' . $phpVersion . ' (Min: 5.3.3)';
+					echo '</span>';
+				echo '</strong>';
+			}
 		} else {
 			echo '<i class="icon icon-warning-sign"></i> ';
 			echo 'PHP Version: <strong>';
