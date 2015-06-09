@@ -17,6 +17,7 @@ $columns = "title,time,orig_title,episode," .
 function printTop10($query, $type = null) {
 	global $database;
 	$results = getResults($database, $query);
+	$imgBase = 'includes/img.php?img=';
 	$imgSize = '&width=100&height=149';
 
 	// Run through each feed item
@@ -24,19 +25,27 @@ function printTop10($query, $type = null) {
 	while ($row = $results->fetch(PDO::FETCH_ASSOC)) {
 		$num_rows++;
 		$xml = simplexml_load_string($row['xml']);
+		$imgUrl = 'images/poster.png';
 		if ($xml['type'] == 'movie') {
-			$imgUrl = urlencode($xml['thumb'] . $imgSize);
+			if ($xml['thumb']) {
+				$imgUrl = $imgBase . urlencode($xml['thumb'] . $imgSize);
+			}
 			$title = $row['title'] . ' (' . $xml['year'] . ')';
 			$key = $xml['ratingKey'];
 		} else {
-			$imgUrl = urlencode($xml['grandparentThumb'] . $imgSize);
+			if ($xml['grandparentThumb']) {
+				$imgUrl = $imgBase . urlencode($xml['grandparentThumb'] . $imgSize);
+			}
 			switch ($type) {
 				case 'shows':
 					$key = $xml['grandparentRatingKey'];
 					$title = $row['orig_title'];
 					break;
 				case 'episodes':
-					$imgUrl = urlencode($xml['parentThumb'] . $imgSize);
+					// If the season has a thumbnail, override the show level one
+					if ($xml['parentThumb']) {
+						$imgUrl = $imgBase . urlencode($xml['parentThumb'] . $imgSize);
+					}
 				default: // All time
 					$title = $row['orig_title'] . ' - Season ' . $row['season'] . ', ' .
 						'Episode ' . $row['episode'];
@@ -50,7 +59,7 @@ function printTop10($query, $type = null) {
 				echo '<h1>' . $num_rows . '</h1>';
 			echo '</div>';
 			echo '<div class="charts-instance-poster">';
-				echo '<img src="includes/img.php?img='.$imgUrl.'" alt="'. $title . '">';
+				echo '<img src="' . $imgUrl . '" alt="' . $title . '">';
 			echo '</div>';
 			echo '<div class="charts-instance-position-title">';
 				echo "<li>";

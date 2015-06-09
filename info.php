@@ -140,7 +140,9 @@ function showMetaData($xml) {
 	$data = array();
 	$data['type'] = 'show';
 	$data['xmlArt'] = $xml->Directory['art'];
-	$data['xmlThumb'] = $xml->Directory['thumb'];
+	if ($xml->Directory['thumb']) {
+		$data['xmlThumb'] = $xml->Directory['thumb'];
+	}
 	$data['title'] = $xml->Directory['title'];
 	$data['director'] = 'Studio <strong>' . $xml->Directory['studio'] . '</strong>';
 	$data['duration'] = $xml->Directory['duration'];
@@ -178,7 +180,9 @@ function movieMetaData($xml) {
 	$data = array();
 	$data['type'] = 'movie';
 	$data['xmlArt'] = $xml->Video['art'];
-	$data['xmlThumb'] = $xml->Video['thumb'];
+	if ($xml->Video['thumb']) {
+		$data['xmlThumb'] = $xml->Video['thumb'];
+	}
 	$data['title'] = $xml->Video['title'] . ' (' . $xml->Video['year'] . ')';
 	$data['starRating'] = ceil($xml->Video['rating'] / 2);
 	$data['director'] = 'Directed by <strong>' . $xml->Video->Director['tag'] .
