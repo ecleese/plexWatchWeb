@@ -13,10 +13,10 @@ if ($statusSessions['size'] == '0') {
 
 function printPosterFace($session) {
 	$sessionThumbUrl = '';
-	if ($session['type'] == "clip" || $session['type'] == 'movie') {
-		$sessionThumbUrl .= "".$session['art']."";
+	if ($session['type'] == 'clip' || $session['type'] == 'movie') {
+		$sessionThumbUrl .= $session['art'];
 	} else {
-		$sessionThumbUrl .= "".$session['thumb']."";
+		$sessionThumbUrl .= $session['thumb'];
 	}
 	if ($session['type'] == 'track') {
 		$sessionThumbUrl .= "&width=300&height=300";
