@@ -57,7 +57,7 @@ if (file_exists($guisettingsFile)) {
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="container-fluid">
 			<div class="row-fluid">
 				<div class="span12">
@@ -127,9 +127,9 @@ $query = "SELECT " .
 	"GROUP BY strftime('%Y-%m-%d %H', datetime(time, 'unixepoch', 'localtime')) " .
 	"ORDER BY date ASC;";
 $hourlyPlays = getResults($database, $query);
-$hourlyPlayData = [];
+$hourlyPlayData = array();
 while ($row = $hourlyPlays->fetch(PDO::FETCH_ASSOC)) {
-	$hourlyPlayData[] = ["x"=>$row['date'], "y"=>(int) $row['count']];
+	$hourlyPlayData[] = array('x'=>$row['date'], 'y'=>(int) $row['count']);
 }
 
 $query = "SELECT " .
@@ -140,9 +140,9 @@ $query = "SELECT " .
 	"ORDER BY count(*) desc " .
 	"LIMIT 25;";
 $maxhourlyPlays = getResults($database, $query);
-$maxhourlyPlayData = [];
+$maxhourlyPlayData = array();
 while ($row = $maxhourlyPlays->fetch(PDO::FETCH_ASSOC)) {
-	$maxhourlyPlayData[] = ["x"=>$row['date'], "y"=>(int) $row['count']];
+	$maxhourlyPlayData[] = array('x'=>$row['date'], 'y'=>(int) $row['count']);
 }
 
 $query = "SELECT " .
@@ -153,9 +153,9 @@ $query = "SELECT " .
 	"ORDER BY time DESC " .
 	"LIMIT 30;";
 $dailyPlays = getResults($database, $query);
-$dailyPlayData = [];
+$dailyPlayData = array();
 while ($row = $dailyPlays->fetch(PDO::FETCH_ASSOC)) {
-	$dailyPlayData[] = ["x"=>$row['date'], "y"=>(int) $row['count']];
+	$dailyPlayData[] = array('x'=>$row['date'], 'y'=>(int) $row['count']);
 }
 
 $query = "SELECT " .
@@ -168,9 +168,9 @@ $query = "SELECT " .
 	"ORDER BY date DESC " .
 	"LIMIT 13;";
 $monthlyPlays = getResults($database, $query);
-$monthlyPlayData = [];
+$monthlyPlayData = array();
 while ($row = $monthlyPlays->fetch(PDO::FETCH_ASSOC)) {
-	$monthlyPlayData[] = ["x"=>$row['date'], "y"=>(int) $row['count']];
+	$monthlyPlayData[] = array('x'=>$row['date'], 'y'=>(int) $row['count']);
 }
 ?>
 		<!-- javascript
