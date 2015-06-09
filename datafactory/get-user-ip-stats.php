@@ -24,8 +24,9 @@ $query = "SELECT time, ip_address, platform, xml," .
 	"WHERE user = :user " .
 	"GROUP BY ip_address " .
 	"ORDER BY time DESC";
-$results = getResults($database, $query, [':user'=>$_POST['user']]);
-$nrow = [];
+$params = array(':user'=>$_POST['user']);
+$results = getResults($database, $query, $params);
+$nrow = array();
 $i = 0;
 while ($row = $results->fetch(PDO::FETCH_ASSOC)) {
 	if (empty($row['ip_address'])) {
