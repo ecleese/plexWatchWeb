@@ -124,7 +124,7 @@ function printDateTimeFormat() {
 		echo '<div class="modal-header">';
 			echo '<button type="button" class="close" data-dismiss="modal" ' .
 				'aria-hidden="true">';
-				echo '<i class="icon icon-remove"></i>';
+				echo '<i class="fa fa-remove"></i>';
 			echo '</button>';
 			echo '<h3 id="myModalLabel">Date &amp; Time Format Options</h3>';
 		echo '</div>';
