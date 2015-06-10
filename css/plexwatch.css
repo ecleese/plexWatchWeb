@@ -1288,20 +1288,14 @@ input[type="tel"],
 input[type="color"],
 .uneditable-input {
 	margin-top: 5px;
-	color: #F9AA03;
+	color: #fff;
 	border: 0px solid #444;
 	background: #333;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-	-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-	-webkit-transition: border linear .2s, box-shadow linear .2s;
-	-moz-transition: border linear .2s, box-shadow linear .2s;	
-	-o-transition: border linear .2s, box-shadow linear .2s;
-	transition: border linear .2s, box-shadow linear .2s;
-	height: 29px;
+	height: 24px;
 	padding: 2px 5px 2px 12px;
 	background-color: #3a3a3a;
 	border-radius: 14.5px;
+	transition: background-color .3s;
 }
 textarea:focus,
 input[type="text"]:focus,
@@ -1319,14 +1313,12 @@ input[type="search"]:focus,
 input[type="tel"]:focus,
 input[type="color"]:focus,
 .uneditable-input:focus {
-	border-color: rgba(253, 153, 45, 0.8);
 	outline: 0;
 	outline: thin dotted \9;
+	color: #555;
+	background-color: #fff;
+	transition: background-color .3s;
 	/* IE6-9 */
-
-	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(253, 153, 45, 0.6);
-	-moz-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(253, 153, 45, 0.6);
-	box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(253, 153, 45, 0.6);
 }
 input[type="radio"],
 input[type="checkbox"] {
@@ -1375,8 +1367,6 @@ select:focus,
 input[type="file"]:focus,
 input[type="radio"]:focus,
 input[type="checkbox"]:focus {
-	outline: thin dotted #333;
-	outline: 5px auto -webkit-focus-ring-color;
 	outline-offset: -2px;
 }
 .uneditable-input,
@@ -4628,8 +4618,7 @@ font-weight: bold;
 	z-index: 1030;
 	display: block;
 	visibility: visible;
-	font-size: 14px;
-	font-weight: bold;
+	font-size: 13px;
 	line-height: 1.4;
 	opacity: 0;
 	filter: alpha(opacity=0);
@@ -6725,6 +6714,11 @@ button.close {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
+	color: #999;
+}
+.dashboard-activity-info-details-content strong {
+	color: #fff;
+	font-weight: normal;
 }
 .instance {
 	padding-bottom: 15px;
