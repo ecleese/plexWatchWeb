@@ -1,5 +1,24 @@
-1.7.0.1
-* Change:	Switch to using PDO for database access ((Arcanemagus)
+1.7.0.2 dev
+* Change:	more UI tweaks
+* Add:		Add sorting icons to users table header (Arcanemagus)
+* Fix:		Fix sorting user list by time (Arcanemagus)
+* Add:		Properly handle missing thumbs (Arcanemagus)
+* Fix:		Fix functions 5.3.3 compat (Arcanemagus)
+* Change:	User history - stream info modal header updates
+* Add:		Display errors for AJAX requests (Arcanemagus)
+* Fix:		Fix the info modal
+* Change:	Modals / Stats minor UI tweaks
+* Fix:		Don't grab session data for library stats (Arcanemagus)
+* Change:	Minor table UI tweaks
+* New:		UI Changes
+* Change:	Minor cleanup of charts (Arcanemagus)
+* Change:	PHP 5.3.3 compatibility (Arcanemagus)
+* Fix:		Security fixes (Arcanemagus)
+* Add:		Show all IP addresses in user page (Arcanemagus)
+* Change:	Upgrade Font-Awesome to v4.3
+
+1.7.0.1 dev
+* Change:	Switch to using PDO for database access (Arcanemagus)
 * Change:	Adjust status variable in getPMSUrl (timrettop)
 * Change:	Error handling update (Arcanemagus)
 * Add:		Plex HTTPS support (Arcanemagus)

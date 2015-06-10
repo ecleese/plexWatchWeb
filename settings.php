@@ -60,7 +60,7 @@ function printVersions() {
 		echo '<div class="settings-general-info">';
 			echo '<ul>';
 				// FIXME: Version should be specified in the settings
-				echo '<li>plexWatch/Web Version: <strong>v1.7.0.1 dev</strong></li>';
+				echo '<li>plexWatch/Web Version: <strong>v1.7.0.2 dev</strong></li>';
 				$query = "SELECT version FROM config";
 				$results = getResults($database, $query);
 				$plexWatchVersion = $results->fetchColumn();
@@ -142,7 +142,7 @@ function printDateTimeFormat() {
 		echo '<div class="modal-header">';
 			echo '<button type="button" class="close" data-dismiss="modal" ' .
 				'aria-hidden="true">';
-				echo '<i class="icon icon-remove"></i>';
+				echo '<i class="fa fa-remove"></i>';
 			echo '</button>';
 			echo '<h3 id="myModalLabel">Date &amp; Time Format Options</h3>';
 		echo '</div>';
