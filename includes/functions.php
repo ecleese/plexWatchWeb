@@ -2,6 +2,26 @@
 // For debugging - we might want this set to 0 in production
 ini_set('display_errors', 0);
 
+require_once(dirname(__FILE__) . '/ConfigClass.php');
+$config_file = dirname(__FILE__) . '/../config/config.php';
+if (file_exists($config_file)) {
+	$settings = new ConfigClass($config_file);
+} else {
+	if (strstr($_SERVER['REQUEST_URI'], 'settings.php') === false) {
+		// FIXME: Should this just redirect like everything else?
+		if (strstr($_SERVER['REQUEST_URI'], 'datafactory') !== false) {
+			// If we are in one of the datafactory files, just print a message
+			echo 'Config file not found';
+			trigger_error('PlexWatchWeb :: Config file not found.', E_USER_ERROR);
+		}
+		header('Location: settings.php');
+		exit; // FIXME: or return?
+	}
+}
+
+// Attempt to set the timezone
+date_default_timezone_set(@date_default_timezone_get());
+
 if (!isset($_SESSION)) {
 	session_start();
 }
@@ -11,9 +31,10 @@ if (!isset($_SESSION)) {
  * If a user doesn't close the browser, this will never update
  */
 function loadPwConfig() {
+	// FIXME: Expire the cache after an appropriate amount of time
 	if (!isset($_SESSION['pwc'])) {
 		$database = dbconnect();
-		$query = "SELECT json from config";
+		$query = "SELECT json FROM config";
 		$result = getResults($database, $query);
 		if ($result = $result->fetchColumn()) {
 			if ($json = json_decode($result)) {
@@ -29,7 +50,6 @@ function loadPwConfig() {
 function FriendlyName($user, $platform = NULL) {
 	$user = strtolower($user);
 	$platform = strtolower($platform);
-
 	$config = loadPwConfig();
 	if (is_object($config)) {
 		$friendlyName = $config->{'user_display'};
@@ -48,7 +68,7 @@ function FriendlyName($user, $platform = NULL) {
 
 /* DB connector */
 function dbconnect() {
-	global $plexWatch;
+	global $settings;
 
 	if (!extension_loaded('PDO')) {
 		$error_msg = 'PHP PDO is not enabled. Please enable this ' .
@@ -64,7 +84,7 @@ function dbconnect() {
 	}
 
 	try {
-		$database = new PDO('sqlite:' . $plexWatch['plexWatchDb']);
+		$database = new PDO('sqlite:' . $settings->getPlexWatchDb());
 		// Throw exceptions on errors
 		$database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		// Wait up to 5 seconds before giving up on getting a lock
@@ -80,23 +100,27 @@ function dbconnect() {
 
 /* DBtable -- processed or grouped */
 function dbTable($groupType = 'global') {
-	global $plexWatch;
+	global $settings;
 	switch ($groupType) {
 		case 'global':
+			if ($settings->getGlobalGrouping()) {
+				return 'grouped';
+			}
+			break;
 		case 'user':
-			if ($plexWatch[$groupType.'HistoryGrouping'] == "yes") {
-				return "grouped";
+			if ($settings->getUserGrouping()) {
+				return 'grouped';
 			}
 			break;
 		case 'charts':
-			if ($plexWatch['chartsGrouping'] == "yes") {
-				return "grouped";
+			if ($settings->getChartsGrouping()) {
+				return 'grouped';
 			}
 			break;
 		default:
 			break;
 	}
-	return "processed";
+	return 'processed';
 }
 
 function getResults($database, $query, $params = NULL) {
@@ -143,46 +167,18 @@ function getResults($database, $query, $params = NULL) {
 
 // Determine the current PMS URL to use, and cache in the session
 function getPmsURL() {
-	global $plexWatch;
-	if (isset($_SESSION['pmsUrl'])) {
-		return $_SESSION['pmsUrl'];
-	} else {
-		$_SESSION['pmsUrl'] = false;
-	}
-	$prefix = array('https://', 'http://');
-	$status = '/status/sessions'; // Just to determine if the server is up
-	if (!empty($plexWatch['myPlexAuthToken'])) {
-		$myPlexAuthToken = '?X-Plex-Token='.$plexWatch['myPlexAuthToken'];
-	} else {
-		$myPlexAuthToken = '';
-	}
-	for ($i = 0; $i < count($prefix); $i++) {
-		$pmsUrl = $prefix[$i] . $plexWatch['pmsIp'] . ':' . $plexWatch['pmsHttpPort'];
-		$curlHandle = curl_init($pmsUrl . $status . $myPlexAuthToken);
-		curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($curlHandle, CURLOPT_SSL_VERIFYHOST, false);
-		curl_setopt($curlHandle, CURLOPT_FORBID_REUSE, true);
-		$data = curl_exec($curlHandle);
-		if ($data === false || curl_getinfo($curlHandle, CURLINFO_HTTP_CODE) >= 400) {
-			curl_close($curlHandle);
-			continue; // Move on to the next prefix
-		}
-		curl_close($curlHandle);
-		$_SESSION['pmsUrl'] = $pmsUrl;
-	}
-	return $_SESSION['pmsUrl'];
+	// FIXME: Get from $settings
 }
 
 function getPMSData($path) {
-	global $plexWatch;
+	global $settings;
 	$tokenPrefix = '?';
 	if (strpos($path, '?')) {
 		$tokenPrefix = '&';
 	}
-	if (!empty($plexWatch['myPlexAuthToken'])) {
+	if (!empty($settings->getPlexAuthToken())) {
 		$myPlexAuthToken = $tokenPrefix .
-			'X-Plex-Token='.$plexWatch['myPlexAuthToken'];
+			'X-Plex-Token=' . $settings->getPlexAuthToken();
 	} else {
 		$myPlexAuthToken = '';
 	}

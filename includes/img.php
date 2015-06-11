@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__) . '/../config/config.php');
+require_once(dirname(__FILE__) . '/functions.php');
 
 $imgReq = filter_input(INPUT_GET, 'img', FILTER_SANITIZE_URL);
 if (!isset($imgReq) || $imgReq === false) {
@@ -7,14 +7,14 @@ if (!isset($imgReq) || $imgReq === false) {
 	echo '<p>' . $error_msg . '</p>';
 	trigger_error($error_msg, E_USER_ERROR);
 }
-$path = '/photo/:/transcode?url=http://127.0.0.1:' . $plexWatch['pmsHttpPort'] .
+$path = '/photo/:/transcode?url=http://127.0.0.1:' . $settings->getPmsPort() .
 	$imgReq;
 
 /**********************
  * FIXME: This should use getPMSData(), but we need the content-type
  */
-if (!empty($plexWatch['myPlexAuthToken'])) {
-	$myPlexAuthToken = '&X-Plex-Token='.$plexWatch['myPlexAuthToken'];
+if (!empty($settings->getPlexAuthToken())) {
+	$myPlexAuthToken = '&X-Plex-Token=' . $settings->getPlexAuthToken();
 } else {
 	$myPlexAuthToken = '';
 }

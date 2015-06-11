@@ -1,13 +1,5 @@
 <?php
-date_default_timezone_set(@date_default_timezone_get());
-
-$guisettingsFile = dirname(__FILE__) . '/config/config.php';
-if (file_exists($guisettingsFile)) {
-	require_once($guisettingsFile);
-} else {
-	header("Location: settings.php");
-	return;
-}
+require_once(dirname(__FILE__) . '/includes/functions.php');
 require_once(dirname(__FILE__) . '/includes/timeago.php');
 ?>
 <!DOCTYPE html>

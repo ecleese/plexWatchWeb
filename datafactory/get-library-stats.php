@@ -1,14 +1,5 @@
 <?php
-date_default_timezone_set(@date_default_timezone_get());
-
-$guisettingsFile = dirname(__FILE__) . '/../config/config.php';
-if (file_exists($guisettingsFile)) {
-	require_once($guisettingsFile);
-} else {
-	error_log('PlexWatchWeb :: Config file not found.');
-	echo 'Config file not found';
-	exit;
-}
+require_once(dirname(__FILE__) . '/../includes/functions.php');
 
 $database = dbconnect();
 $query = "SELECT count(DISTINCT user) as users FROM processed";

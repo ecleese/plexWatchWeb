@@ -1,12 +1,9 @@
 <?php
-$guisettingsFile = dirname(__FILE__) . '/config/config.php';
-if (file_exists($guisettingsFile)) {
-	require_once($guisettingsFile);
-}
+require_once(dirname(__FILE__) . '/includes/functions.php');
 
 function printSettings() {
-	global $guisettingsFile;
-	$haveConfig = file_exists($guisettingsFile);
+	global $functionsFile;
+	$haveConfig = file_exists($functionsFile);
 	echo '<div class="row-fluid">';
 		echo '<div class="span3">';
 			echo '<ul class="nav nav-list">';
@@ -73,7 +70,7 @@ function printVersions() {
 }
 
 function printGeneralSettings($haveConfig) {
-	global $plexWatch;
+	global $settings;
 	echo '<div class="wellbg">';
 		echo '<div class="wellheader">';
 			echo '<div class="dashboard-wellheader">';
@@ -95,7 +92,7 @@ function printGeneralSettings($haveConfig) {
 					'placeholder="M/D/YYYY" class="input-small" required="" ' .
 					'value="';
 					if ($haveConfig) {
-						echo $plexWatch['dateFormat'];
+						echo $settings->getDateFormat();
 					} else {
 						echo 'M/D/YYYY';
 					}
@@ -108,7 +105,7 @@ function printGeneralSettings($haveConfig) {
 				echo '<input id="timeFormat" name="timeFormat" type="text" '.
 					'placeholder="hh:mm a" class="input-mini" required="" value="';
 					if ($haveConfig) {
-						echo $plexWatch['timeFormat'];
+						echo $settings->getTimeFormat();
 					} else {
 						echo 'hh:mm a';
 					}
@@ -242,7 +239,7 @@ function printDTRows() {
 }
 
 function printPMSSettings($haveConfig) {
-	global $plexWatch;
+	global $settings;
 	echo '<div class="wellbg">';
 		echo '<div class="wellheader">';
 			echo '<div class="dashboard-wellheader">';
@@ -255,7 +252,7 @@ function printPMSSettings($haveConfig) {
 				echo '<input id="pmsIp" name="pmsIp" type="text" placeholder="0.0.0.0" ' .
 					'class="input-xlarge" required=""';
 					if ($haveConfig) {
-						echo ' value="' . $plexWatch['pmsIp'] . '"';
+						echo ' value="' . $settings->getPmsIp() . '"';
 					}
 					echo '>';
 				echo '<p class="help-block">';
@@ -269,7 +266,7 @@ function printPMSSettings($haveConfig) {
 				echo '<input id="pmsHttpPort" name="pmsHttpPort" type="text" ' .
 					'placeholder="32400" class="input-mini" required="" value="';
 					if ($haveConfig) {
-						echo $plexWatch['pmsHttpPort'];
+						echo $settings->getPmsPort();
 					} else {
 						echo '32400';
 					}
@@ -284,7 +281,7 @@ function printPMSSettings($haveConfig) {
 				'placeholder="/opt/plexWatch/plexWatch.db" class="input-xlarge" ' .
 				'required="" value="';
 					if ($haveConfig) {
-						echo $plexWatch['plexWatchDb'];
+						echo $settings->getPlexWatchDb();
 					} else {
 						echo '/opt/plexWatch/plexWatch.db';
 					}
@@ -296,7 +293,7 @@ function printPMSSettings($haveConfig) {
 }
 
 function printPlexAuthSettings($haveConfig) {
-	global $plexWatch;
+	global $settings;
 	echo '<div class="wellbg">';
 		echo '<div class="wellheader">';
 			echo '<div class="dashboard-wellheader">';
@@ -317,7 +314,7 @@ function printPlexAuthSettings($haveConfig) {
 				echo '<input id="myPlexUser" name="myPlexUser" type="text"';
 					'placeholder="" class="input-xlarge" ';
 					if ($haveConfig) {
-						echo ' value="' .$plexWatch['myPlexUser']. '"';
+						echo ' value="' .$settings->getPlexUser(). '"';
 					}
 					echo '>';
 			echo '</div>';
@@ -333,18 +330,18 @@ function printPlexAuthSettings($haveConfig) {
 }
 
 function printGroupingSettings($haveConfig) {
-	global $plexWatch;
+	global $settings;
 	$globalGrouping = '';
 	$userGrouping = '';
 	$chartsGrouping = '';
 	if ($haveConfig) {
-		if ($plexWatch['globalHistoryGrouping'] == 'yes') {
+		if ($settings->getGlobalGrouping()) {
 			$globalGrouping = ' checked';
 		}
-		if ($plexWatch['userHistoryGrouping'] == 'yes') {
+		if ($settings->getHistoryGrouping()) {
 			$userGrouping = ' checked';
 		}
-		if ($plexWatch['chartsGrouping'] == 'yes') {
+		if ($settings->getChartsGrouping()) {
 			$chartsGrouping = ' checked';
 		}
 	}
@@ -450,11 +447,8 @@ function printPHPSupport() {
 	echo '<li>';
 		$phpVersion = phpversion();
 		if (!empty($phpVersion)) {
-			// Minimum required: 5.3.3
-			if (defined('PHP_MAJOR_VERSION') && // >= 5.2.7
-				((PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION == 3 && PHP_RELEASE_VERSION >= 3) ||
-				(PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 3) ||
-				(PHP_MAJOR_VERSION > 5))) {
+			$minPHP = '5.3.3';
+			if (version_compare(PHP_VERSION, $minPHP, '>=')) {
 				echo '<i class="icon icon-ok"></i> ';
 				echo 'PHP Version: <strong>';
 					echo '<span class="label label-success">';
@@ -465,7 +459,7 @@ function printPHPSupport() {
 				echo '<i class="icon icon-warning-sign"></i> ';
 				echo 'PHP Version: <strong>';
 					echo '<span class="label label-important">';
-						echo 'v' . $phpVersion . ' (Min: 5.3.3)';
+						echo 'v' . $phpVersion . ' (Min: ' . $minPHP . ')';
 					echo '</span>';
 				echo '</strong>';
 			}
@@ -648,7 +642,7 @@ function printJSONSupport() {
 								'this and try again.' . $errorEnd;
 						}
 						printSettings();
-						if (!file_exists($guisettingsFile) && !isset($_GET['e'])) {
+						if (!file_exists($functionsFile) && !isset($_GET['e'])) {
 							printWelcomeModal();
 						}
 						?>
