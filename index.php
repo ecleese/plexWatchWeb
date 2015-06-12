@@ -1,3 +1,10 @@
+<?php
+$config_file = dirname(__FILE__) . '/config/config.php';
+if (!file_exists($config_file)) {
+	header('Location: settings.php');
+	exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>

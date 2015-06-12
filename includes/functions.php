@@ -76,7 +76,7 @@ function dbconnect() {
 		echo '<div class="alert alert-warning ">' . $error_msg . '</div>';
 		trigger_error($error_msg, E_USER_ERROR);
 	}
-	if (!extension_loaded('pdo_sqlite')) {
+	if (!in_array('sqlite', PDO::getAvailableDrivers(), true)) {
 		$error_msg = 'PDO SQlite driver is not installed. Please install this ' .
 			'requirement and restart your webserver before continuing.';
 		echo '<div class="alert alert-warning ">' . $error_msg . '</div>';
@@ -130,7 +130,7 @@ function getResults($database, $query, $params = NULL) {
 			$results = $database->query($query);
 		} catch (PDOException $e) {
 			$error_msg = 'There was a problem running "' . $query . "\".\n" .
-				"Error: " . $e->getMessage() . "\n" .
+				'Error: ' . $e->getMessage() . "\n" .
 				"Stack Trace:\n" . $e->getTraceAsString();
 			echo '<p>' . $error_msg . '</p>';
 			trigger_error($error_msg, E_USER_ERROR);
@@ -141,7 +141,7 @@ function getResults($database, $query, $params = NULL) {
 			$statement = $database->prepare($query);
 		} catch (PDOException $e) {
 			$error_msg = 'There was a problem preparing "' . $query . "\".\n" .
-				"Error: " . $e->getMessage() . "\n" .
+				'Error: ' . $e->getMessage() . "\n" .
 				"Stack Trace:\n" . $e->getTraceAsString();
 			echo '<p>' . $error_msg . '</p>';
 			trigger_error($error_msg, E_USER_ERROR);
@@ -151,7 +151,7 @@ function getResults($database, $query, $params = NULL) {
 			$results = $statement;
 		} catch (PDOException $e) {
 			$error_msg = 'There was a problem executing "' . $query . "\".\n" .
-				"Error: " . $e->getMessage() . "\n" .
+				'Error: ' . $e->getMessage() . "\n" .
 				"Stack Trace:\n" . $e->getTraceAsString();
 			echo '<p>' . $error_msg . '</p>';
 			trigger_error($error_msg, E_USER_ERROR);
@@ -176,7 +176,7 @@ function getPMSData($path) {
 	if (strpos($path, '?')) {
 		$tokenPrefix = '&';
 	}
-	if (!empty($settings->getPlexAuthToken())) {
+	if (strlen($settings->getPlexAuthToken()) > 0) {
 		$myPlexAuthToken = $tokenPrefix .
 			'X-Plex-Token=' . $settings->getPlexAuthToken();
 	} else {
