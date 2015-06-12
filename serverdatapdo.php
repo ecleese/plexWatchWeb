@@ -170,7 +170,8 @@ class ServerDataPDO
         } else {
           $friendlyName = array();
         }
-        $friendlyName_json = json_encode($friendlyName);
+        $json_opts = JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_HEX_TAG;
+        $friendlyName_json = json_encode($friendlyName, $json_opts);
         /* Edit Jqeury Here */
         $js=  <<<EOT
 <!-- Start generated Jquery from $ajax_source_url  -->
