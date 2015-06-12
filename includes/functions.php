@@ -8,7 +8,6 @@ if (file_exists($config_file)) {
 	$settings = new ConfigClass($config_file);
 } else {
 	if (strstr($_SERVER['REQUEST_URI'], 'settings.php') === false) {
-		// FIXME: Should this just redirect like everything else?
 		if (strstr($_SERVER['REQUEST_URI'], 'datafactory') !== false) {
 			// If we are in one of the datafactory files, just print a message
 			echo 'Config file not found';

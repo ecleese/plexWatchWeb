@@ -261,9 +261,9 @@ function printPMSSettings($haveConfig) {
 			echo '</div>';
 		echo '</div>';
 		echo '<div class="control-group">';
-			echo '<label class="control-label" for="pmsHttpPort">PMS Web Port</label>';
+			echo '<label class="control-label" for="pmsPort">PMS Web Port</label>';
 			echo '<div class="controls">';
-				echo '<input id="pmsHttpPort" name="pmsHttpPort" type="text" ' .
+				echo '<input id="pmsPort" name="pmsPort" type="text" ' .
 					'placeholder="32400" class="input-mini" required="" value="';
 					if ($haveConfig) {
 						echo $settings->getPmsPort();
@@ -309,9 +309,9 @@ function printPlexAuthSettings($haveConfig) {
 				echo 'password are required in order to access your server\'s data.';
 			echo '</p>';
 			echo '<br>';
-			echo '<label class="control-label" for="myPlexUser">Username (optional)</label>';
+			echo '<label class="control-label" for="plexUser">Username (optional)</label>';
 			echo '<div class="controls">';
-				echo '<input id="myPlexUser" name="myPlexUser" type="text"';
+				echo '<input id="plexUser" name="plexUser" type="text"';
 					'placeholder="" class="input-xlarge" ';
 					if ($haveConfig) {
 						echo ' value="' .$settings->getPlexUser(). '"';
@@ -320,9 +320,9 @@ function printPlexAuthSettings($haveConfig) {
 			echo '</div>';
 		echo '</div>';
 		echo '<div class="control-group">';
-			echo '<label class="control-label" for="myPlexPass">Password (optional)</label>';
+			echo '<label class="control-label" for="plexPass">Password (optional)</label>';
 			echo '<div class="controls">';
-				echo '<input id="myPlexPass" name="myPlexPass" type="password" ' .
+				echo '<input id="plexPass" name="plexPass" type="password" ' .
 					'placeholder="" class="input-xlarge" value="">';
 			echo '</div>';
 		echo '</div>';
@@ -352,19 +352,19 @@ function printGroupingSettings($haveConfig) {
 			echo '</div>';
 		echo '</div>';
 		echo '<div class="control-group">';
-			echo '<label class="control-label" for="globalHistoryGrouping-0">' .
+			echo '<label class="control-label" for="globalGrouping-0">' .
 				'Global History (optional)</label>';
 			echo '<div class="controls">';
-				echo '<label class="checkbox inline" for="globalHistoryGrouping-0">';
-					echo '<input type="checkbox" name="globalHistoryGrouping" ' .
-						'id="globalHistoryGrouping-0" value="yes"' . $globalGrouping .'>';
+				echo '<label class="checkbox inline" for="globalGrouping-0">';
+					echo '<input type="checkbox" name="globalGrouping" ' .
+						'id="globalGrouping-0" value="yes"' . $globalGrouping .'>';
 					echo '<span class="help-block">Enable global history grouping</span>';
 				echo '</label>';
-				echo '<label class="control-label" for="userHistoryGrouping-0">' .
+				echo '<label class="control-label" for="userGrouping-0">' .
 					'User History (optional)</label>';
-				echo '<label class="checkbox inline" for="userHistoryGrouping-0">';
-					echo '<input type="checkbox" name="userHistoryGrouping" ' .
-						'id="userHistoryGrouping-0" value="yes"' .$userGrouping .'>';
+				echo '<label class="checkbox inline" for="userGrouping-0">';
+					echo '<input type="checkbox" name="userGrouping" ' .
+						'id="userGrouping-0" value="yes"' . $userGrouping .'>';
 					echo '<span class="help-block">Enable user history grouping</span>';
 				echo '</label>';
 				echo '<label class="control-label" for="chartsGrouping-0">';
@@ -372,7 +372,7 @@ function printGroupingSettings($haveConfig) {
 				echo '</label>';
 				echo '<label class="checkbox inline" for="chartsGrouping-0">';
 					echo '<input type="checkbox" name="chartsGrouping" ' .
-						'id="chartsGrouping-0" value="yes"' .$chartsGrouping. '>';
+						'id="chartsGrouping-0" value="yes"' . $chartsGrouping. '>';
 					echo '<span class="help-block">Enable charts grouping</span>';
 				echo '</label>';
 			echo '</div>';
@@ -402,7 +402,7 @@ function printWelcomeModal() {
 			printJSONSupport();
 			echo '<li>';
 				echo '<i class="icon icon-ok"></i> ';
-				echo 'Your server"s timezone: <strong>';
+				echo 'Your server\'s timezone: <strong>';
 					echo '<span class="label label-warning">';
 						echo @date_default_timezone_get();
 					echo '</span>';
@@ -445,21 +445,20 @@ function printServerSupport() {
 
 function printPHPSupport() {
 	echo '<li>';
-		$phpVersion = phpversion();
-		if (!empty($phpVersion)) {
+		if (defined('PHP_VERSION')) {
 			$minPHP = '5.3.3';
 			if (version_compare(PHP_VERSION, $minPHP, '>=')) {
 				echo '<i class="icon icon-ok"></i> ';
 				echo 'PHP Version: <strong>';
 					echo '<span class="label label-success">';
-						echo 'v' . $phpVersion;
+						echo 'v' . PHP_VERSION;
 					echo '</span>';
 				echo '</strong>';
 			} else {
 				echo '<i class="icon icon-warning-sign"></i> ';
 				echo 'PHP Version: <strong>';
 					echo '<span class="label label-important">';
-						echo 'v' . $phpVersion . ' (Min: ' . $minPHP . ')';
+						echo 'v' . PHP_VERSION . ' (Min: ' . $minPHP . ')';
 					echo '</span>';
 				echo '</strong>';
 			}

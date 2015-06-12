@@ -217,12 +217,24 @@ class ConfigClass {
 		$dateFormat = $_POST['dateFormat'];
 		$timeFormat = $_POST['timeFormat'];
 		$pmsIp = $_POST['pmsIp'];
-		$pmsPort = $_POST['pmsHttpPort'];
+		$pmsPort = $_POST['pmsPort'];
 		$plexUser = $_POST['plexUser'];
 		$plexPass = $_POST['plexPass'];
-		$globalGrouping = $_POST['globalGrouping'];
-		$userGrouping = $_POST['userGrouping'];
-		$chartsGrouping = $_POST['chartsGrouping'];
+		if (isset($_POST['globalGrouping']) && $_POST['globalGrouping'] == 'yes') {
+			$globalGrouping = true;
+		} else {
+			$globalGrouping = false;
+		}
+		if (isset($_POST['userGrouping']) && $_POST['userGrouping'] == 'yes') {
+			$userGrouping = true;
+		} else {
+			$userGrouping = false;
+		}
+		if (isset($_POST['chartsGrouping']) && $_POST['chartsGrouping'] == 'yes') {
+			$chartsGrouping = true;
+		} else {
+			$chartsGrouping = false;
+		}
 
 		$this->setPlexWatchDb($plexWatchDb);
 		$this->setDateFormat($dateFormat);
