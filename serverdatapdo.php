@@ -176,12 +176,16 @@ class ServerDataPDO
         $js=  <<<EOT
 <!-- Start generated Jquery from $ajax_source_url  -->
 <script type="text/javascript">
-function FriendlyName(user) {
+function FriendlyName(user, platform) {
   if (!FriendlyName.hasOwnProperty('source')) {
     FriendlyName.source = JSON.parse('$friendlyName_json');
   }
-  if (FriendlyName.source.hasOwnProperty(user.toLowerCase())) {
-    return FriendlyName.source[user.toLowerCase()];
+  var userSearch = user.toLowerCase()
+  var userPlatformSearch = (user + '+' + platform).toLowerCase();
+  if (FriendlyName.source.hasOwnProperty(userPlatformSearch)) {
+    return FriendlyName.source[userPlatformSearch];
+  } else if (FriendlyName.source.hasOwnProperty(userSearch)) {
+    return FriendlyName.source[userSearch];
   } else {
     return user;
   }
@@ -241,7 +245,12 @@ function FriendlyName(user) {
                     "aTargets": [ 2 ],
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
                         if (sData !== '') {
-                            $(nTd).html('<a href="user.php?user='+sData+'">'+FriendlyName(sData)+'</a>');
+                            $(nTd).html('<a href="user.php?user='+sData+'">' +
+                            FriendlyName(
+                              oData[iCol], // Name
+                              oData[iCol + 1] // Platform
+                            ) +
+                            '</a>');
                         }
                     },
                     "sWidth": '10%'
