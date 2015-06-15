@@ -18,7 +18,7 @@ if (!empty($settings->getPlexAuthToken())) {
 } else {
 	$myPlexAuthToken = '';
 }
-$url = getPmsURL() . $path . $myPlexAuthToken;
+$url = $settings->getPmsURL() . $path . $myPlexAuthToken;
 $curlHandle = curl_init($url);
 curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);

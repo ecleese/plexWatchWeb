@@ -82,7 +82,8 @@ class ConfigClass {
 
 	// ************** Private Functions *****************
 	private function sendError($error_msg) {
-		header('Location: ../settings.php?e=' . urlencode($error_msg));
+		// FIXME: Redirect properly if on settings page
+		header('Location: settings.php?e=' . urlencode($error_msg));
 		trigger_error($error_msg, E_USER_ERROR);
 	}
 
@@ -96,7 +97,8 @@ class ConfigClass {
 			$error_msg = 'ConfigClass :: Error reading config file.';
 			$this->sendError($error_msg);
 		}
-		$data = json_decode($config);
+		// Attempt to read the settings into an associative array
+		$data = json_decode($config, true);
 		if ($data === NULL) {
 			// Original setting file, or broken
 			readOldSettings($config);
@@ -123,7 +125,7 @@ class ConfigClass {
 		$this->setPmsIP($data['pmsIp']);
 		$this->setPmsPort($data['pmsPort']);
 		$this->setPlexUser($data['plexUser']);
-		$this->setPlexPass($data['plexPass']);
+		$this->setPlexPass(base64_decode($data['plexPass']));
 		$this->setAuthToken($data['plexAuthToken']);
 		$this->setPmsUrl();
 		$this->setGlobalGrouping($data['globalGrouping']);
@@ -158,7 +160,7 @@ class ConfigClass {
 		$this->setPmsIP($data['pmsIp']);
 		$this->setPmsPort($data['pmsHttpPort']);
 		$this->setPlexUser($data['myPlexUser']);
-		$this->setPlexPass($data['myPlexPass']);
+		$this->setPlexPass(base64_decode($data['myPlexPass']));
 		$this->setAuthToken($data['myPlexAuthToken']);
 		$this->setPmsUrl();
 		$this->setGlobalGrouping($data['globalHistoryGrouping']);
@@ -291,7 +293,7 @@ class ConfigClass {
 	}
 
 	private function setPlexPass($pass) {
-		$this->plexPass = base64_decode($pass);
+		$this->plexPass = $pass;
 		// FIXME: Validate length?
 	}
 
@@ -391,7 +393,7 @@ class ConfigClass {
 					'authentication code.';
 				$this->sendError($error_msg);
 			}
-			$plexAuthToken = $xml['authenticationToken'];
+			$plexAuthToken = (string) $xml['authenticationToken'][0];
 			if (empty($plexAuthToken)) {
 				$errorCode = 'Error: Could not find authentication code in the Plex.tv ' .
 					'response.';

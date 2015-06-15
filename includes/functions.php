@@ -164,11 +164,6 @@ function getResults($database, $query, $params = NULL) {
 	return $results;
 }
 
-// Determine the current PMS URL to use, and cache in the session
-function getPmsURL() {
-	// FIXME: Get from $settings
-}
-
 function getPMSData($path) {
 	global $settings;
 	$tokenPrefix = '?';
@@ -181,7 +176,7 @@ function getPMSData($path) {
 	} else {
 		$myPlexAuthToken = '';
 	}
-	$url = getPmsURL() . $path . $myPlexAuthToken;
+	$url = $settings->getPmsURL() . $path . $myPlexAuthToken;
 	$curlHandle = curl_init($url);
 	curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
