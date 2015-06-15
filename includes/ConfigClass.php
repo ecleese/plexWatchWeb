@@ -3,7 +3,6 @@ ini_set('auto_detect_line_endings', true);
 define('PWW_MAJOR_VERSION', 1);
 define('PWW_MINOR_VERSION', 7);
 define('PWW_RELEASE_VERSION', 0);
-define('PWW_DEVELOPMENT', true);
 
 class ConfigClass {
 	private $path;
@@ -105,10 +104,10 @@ class ConfigClass {
 			return;
 		}
 		// FIXME: Verify attributes exist before access
-		$versionCompare = version_compare(
-			$this->getVersionString($data['majorVersion'], $data['minorVersion'],
-				$data['releaseVersion']),
-			$this->getVersionString());
+		$fileVersion = $this->getVersionString($data['majorVersion'],
+			$data['minorVersion'], $data['releaseVersion']);
+		$currentVersion = $this->getVersionString();
+		$versionCompare = version_compare($fileVersion, $currentVersion);
 		if ($versionCompare > 0) {
 			// FIXME: Attempt to read anyway?
 			$error_msg = 'Settings file newer than we know how to handle.';
@@ -183,8 +182,7 @@ class ConfigClass {
 			'chartsGrouping'=>$this->chartsGrouping,
 			'majorVersion'=>PWW_MAJOR_VERSION,
 			'minorVersion'=>PWW_MINOR_VERSION,
-			'releaseVersion'=>PWW_RELEASE_VERSION,
-			'development'=>PWW_DEVELOPMENT
+			'releaseVersion'=>PWW_RELEASE_VERSION
 		);
 		$json_opts = JSON_NUMERIC_CHECK;
 		if (defined(JSON_PRETTY_PRINT)) {
@@ -405,9 +403,8 @@ class ConfigClass {
 
 	// Utility Functions
 	private function getVersionString($maj = NULL, $min = NULL, $rel = NULL) {
-		if (!!empty($maj) && !!empty($min) && !!empty($rel)) {
-			return PWW_MAJOR_VERSION . '.' . PWW_MINOR_VERSION . '.' .
-				PWW_RELEASE_VERSION . (PWW_DEVELOPMENT ? ' dev' : '');
+		if (empty($maj) && empty($min) && empty($rel)) {
+			return PWW_MAJOR_VERSION . '.' . PWW_MINOR_VERSION . '.' . PWW_RELEASE_VERSION;
 		} else {
 			return $maj . '.' . $min . '.' . $rel;
 		}

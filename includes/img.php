@@ -13,7 +13,7 @@ $path = '/photo/:/transcode?url=http://127.0.0.1:' . $settings->getPmsPort() .
 /**********************
  * FIXME: This should use getPMSData(), but we need the content-type
  */
-if (!empty($settings->getPlexAuthToken())) {
+if ($settings->getPlexAuthToken()) {
 	$myPlexAuthToken = '&X-Plex-Token=' . $settings->getPlexAuthToken();
 } else {
 	$myPlexAuthToken = '';
