@@ -3,6 +3,7 @@ ini_set('auto_detect_line_endings', true);
 define('PWW_MAJOR_VERSION', 1);
 define('PWW_MINOR_VERSION', 7);
 define('PWW_RELEASE_VERSION', 0);
+define('PWW_DEVELOPMENT', true); //FIXME: WHen released
 
 class ConfigClass {
 	private $path;
@@ -82,7 +83,7 @@ class ConfigClass {
 	// ************** Private Functions *****************
 	private function sendError($error_msg) {
 		// FIXME: Redirect properly if on settings page
-		header('Location: settings.php?e=' . urlencode($error_msg));
+		header('Location: ' . getBase() . '/settings.php?e=' . urlencode($error_msg));
 		trigger_error($error_msg, E_USER_ERROR);
 	}
 
@@ -241,14 +242,21 @@ class ConfigClass {
 		$this->setTimeFormat($timeFormat);
 		$this->setPmsIP($pmsIp);
 		$this->setPmsPort($pmsPort);
-		$this->setPlexUser($plexUser);
-		$this->setPlexPass($plexPass);
+		if (($_POST['plexUser'] != '') && ($_POST['plexPass'] != '')) {
+			$this->plexAuthToken = '';
+			$this->setPlexUser($plexUser);
+			$this->setPlexPass($plexPass);
+		} else {
+			if (!($this->plexUser) || !($this->plexPass)) {
+				trigger_error('User or pass completely missing.');
+			}
+		}
 		$this->setAuthToken();
 		$this->setPmsUrl();
 		$this->setGlobalGrouping($globalGrouping);
 		$this->setUserGrouping($userGrouping);
 		$this->setChartsGrouping($chartsGrouping);
-		$this->path = '../config/config.php';
+		$this->path = dirname(__FILE__) . '/../config/config.php';
 	}
 
 	// Setter functions
@@ -268,7 +276,7 @@ class ConfigClass {
 		// Check if the date format is still using the old PHP formats
 		if (strpos($settings->getTimeFormat(),"g") !== false ||
 			strpos($settings->getTimeFormat(),"G") !== false) {
-			header("Location: settings.php?error=datetime");
+			header("Location: /settings.php?error=datetime");
 		}
 		*/
 		$this->timeFormat = $format;
@@ -402,7 +410,7 @@ class ConfigClass {
 	}
 
 	// Utility Functions
-	private function getVersionString($maj = NULL, $min = NULL, $rel = NULL) {
+	public function getVersionString($maj = NULL, $min = NULL, $rel = NULL) {
 		if (empty($maj) && empty($min) && empty($rel)) {
 			return PWW_MAJOR_VERSION . '.' . PWW_MINOR_VERSION . '.' . PWW_RELEASE_VERSION;
 		} else {
@@ -462,6 +470,19 @@ class ConfigClass {
 			$this->sendError($error_msg);
 		}
 		return true;
+	}
+}
+
+function getBase($previous = NULL) {
+	if ($previous) {
+		$current = dirname($previous);
+		if ($current == '/' || $current == '\\') {
+			return $previous;
+		} else {
+			return getBase($current);
+		}
+	} else {
+		return getBase($_SERVER['REQUEST_URI']);
 	}
 }
 ?>

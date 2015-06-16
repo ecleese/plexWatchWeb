@@ -2,8 +2,12 @@
 require_once(dirname(__FILE__) . '/includes/functions.php');
 
 function printSettings() {
-	global $functionsFile;
-	$haveConfig = file_exists($functionsFile);
+	global $settings;
+	if ($settings) {
+		$haveConfig = true;
+	} else {
+		$haveConfig = false;
+	}
 	echo '<div class="row-fluid">';
 		echo '<div class="span3">';
 			echo '<ul class="nav nav-list">';
@@ -47,6 +51,7 @@ function printSettings() {
 }
 
 function printVersions() {
+	global $settings;
 	$database = dbconnect();
 	echo '<div class="wellbg">';
 		echo '<div class="wellheader">';
@@ -57,7 +62,9 @@ function printVersions() {
 		echo '<div class="settings-general-info">';
 			echo '<ul>';
 				// FIXME: Version should be specified in the settings
-				echo '<li>plexWatch/Web Version: <strong>v1.7.0.2 dev</strong></li>';
+				echo '<li>plexWatch/Web Version: <strong>v';
+					echo $settings->getVersionString();
+				echo '</strong></li>';
 				$query = "SELECT version FROM config";
 				$results = getResults($database, $query);
 				$plexWatchVersion = $results->fetchColumn();
@@ -338,7 +345,7 @@ function printGroupingSettings($haveConfig) {
 		if ($settings->getGlobalGrouping()) {
 			$globalGrouping = ' checked';
 		}
-		if ($settings->getHistoryGrouping()) {
+		if ($settings->getUserGrouping()) {
 			$userGrouping = ' checked';
 		}
 		if ($settings->getChartsGrouping()) {
@@ -636,12 +643,9 @@ function printJSONSupport() {
 							// check for a form error
 							$error = filter_input(INPUT_GET, 'e', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 							echo $errorStart . $error . $errorEnd;
-						} elseif (isset($_GET['error']) && ($_GET['error'] === 'datetime')) {
-							echo $errorStart . 'Error in date/time format. Please correct ' .
-								'this and try again.' . $errorEnd;
 						}
 						printSettings();
-						if (!file_exists($functionsFile) && !isset($_GET['e'])) {
+						if (!($settings) && !isset($_GET['e'])) {
 							printWelcomeModal();
 						}
 						?>

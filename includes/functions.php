@@ -13,7 +13,7 @@ if (file_exists($config_file)) {
 			echo 'Config file not found';
 			trigger_error('PlexWatchWeb :: Config file not found.', E_USER_ERROR);
 		}
-		header('Location: settings.php');
+		header('Location: ' . getBase() . '/settings.php');
 		exit; // FIXME: or return?
 	}
 }
