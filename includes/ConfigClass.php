@@ -3,8 +3,48 @@ ini_set('auto_detect_line_endings', true);
 define('PWW_MAJOR_VERSION', 1);
 define('PWW_MINOR_VERSION', 7);
 define('PWW_RELEASE_VERSION', 0);
-define('PWW_DEVELOPMENT', true); //FIXME: WHen released
+define('PWW_DEVELOPMENT', true);
 
+class Setting {
+	public $modTime;
+	public $value;
+	public $filter;
+	public $filterOpts;
+
+	public function __construct($filter = NULL, $opts = NULL) {
+		if ($filter) {
+			$this->filter = $filter;
+		}
+		if ($opts) {
+			$this->filterOpts = $opts;
+		} else {
+			$this->filterOpts = array();
+		}
+	}
+
+	public function set($value) {
+		if (is_array($value)) {
+			$this->value = $value['value'];
+			$this->modTime = $value['mod'];
+		} else {
+			if ($this->filter) {
+				$this->value = filter_var($value, $this->filter, $this->filterOpts);
+			} else {
+				$this->value = $value;
+			}
+			$this->modTime = time();
+		}
+	}
+
+	public function getData() {
+		return array('value'=>$this->value, 'mod'=>$this->modTime);
+	}
+}
+
+/**
+* Suppress PHPMD warnings about the complexity of this class
+* @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+*/
 class ConfigClass {
 	private $path;
 	private $plexWatchDb;
@@ -19,8 +59,41 @@ class ConfigClass {
 	private $globalGrouping;
 	private $userGrouping;
 	private $chartsGrouping;
+	private $newerSettings;
 
 	public function __construct($path = NULL) {
+		// Set up the settings
+		$this->plexWatchDb = new Setting(FILTER_SANITIZE_STRING);
+		$this->dateFormat = new Setting(FILTER_SANITIZE_STRING,
+			array('flags'=>FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH |
+				FILTER_FLAG_ENCODE_LOW | FILTER_FLAG_ENCODE_HIGH | FILTER_FLAG_ENCODE_AMP
+		));
+		$this->timeFormat = new Setting(FILTER_SANITIZE_STRING,
+			array('flags'=>FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH |
+				FILTER_FLAG_ENCODE_LOW | FILTER_FLAG_ENCODE_HIGH | FILTER_FLAG_ENCODE_AMP
+		));
+		$this->pmsIp = new Setting(FILTER_SANITIZE_STRING,
+			array('flags'=>FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH |
+				FILTER_FLAG_ENCODE_LOW | FILTER_FLAG_ENCODE_HIGH | FILTER_FLAG_ENCODE_AMP
+		));
+		$this->pmsPort = new Setting(FILTER_VALIDATE_INT,
+			array('min_range'=>1, 'max_range'=>65535)
+		);
+		$this->plexUser = new Setting(FILTER_UNSAFE_RAW);
+		$this->plexPass = new Setting(FILTER_UNSAFE_RAW);
+		$this->plexAuthToken = new Setting();
+		$this->pmsUrl = new Setting();
+		$this->globalGrouping = new Setting(FILTER_VALIDATE_BOOLEAN,
+			array('flags'=>FILTER_NULL_ON_FAILURE));
+		$this->userGrouping = new Setting(FILTER_VALIDATE_BOOLEAN,
+			array('flags'=>FILTER_NULL_ON_FAILURE));
+		$this->chartsGrouping = new Setting(FILTER_VALIDATE_BOOLEAN,
+			array('flags'=>FILTER_NULL_ON_FAILURE));
+
+		// Set the flag for whether we are processing a settings file newer than us
+		$this->newerSettings = false;
+
+		// If a path was specified, attempt to read it in
 		if (!empty($path)) {
 			$this->path = $path;
 			$this->readFromFile();
@@ -33,69 +106,105 @@ class ConfigClass {
 	}
 
 	public function getPlexWatchDb() {
-		return $this->plexWatchDb;
+		return $this->plexWatchDb->value;
 	}
 
 	public function getDateFormat() {
-		return $this->dateFormat;
+		return $this->dateFormat->value;
 	}
 
 	public function getTimeFormat() {
-		return $this->timeFormat;
+		return $this->timeFormat->value;
 	}
 
 	public function getPmsIp() {
-		return $this->pmsIp;
+		return $this->pmsIp->value;
 	}
 
 	public function getPmsPort() {
-		return $this->pmsPort;
+		return $this->pmsPort->value;
 	}
 
 	public function getPlexUser() {
-		return $this->plexUser;
+		return $this->plexUser->value;
 	}
 
 	public function getPlexPass() {
-		return $this->plexPass;
+		return base64_decode($this->plexPass->value);
 	}
 
 	public function getPlexAuthToken() {
-		return $this->plexAuthToken;
+		return $this->plexAuthToken->value;
 	}
 
 	public function getPmsUrl() {
-		return $this->pmsUrl;
+		return $this->pmsUrl->value;
 	}
 
 	public function getGlobalGrouping() {
-		return $this->globalGrouping;
+		return $this->globalGrouping->value;
 	}
 
 	public function getUserGrouping() {
-		return $this->userGrouping;
+		return $this->userGrouping->value;
 	}
 
 	public function getChartsGrouping() {
-		return $this->chartsGrouping;
+		return $this->chartsGrouping->value;
 	}
 
 	// ************** Private Functions *****************
-	private function sendError($error_msg) {
-		// FIXME: Redirect properly if on settings page
-		header('Location: ' . getBase() . '/settings.php?e=' . urlencode($error_msg));
-		trigger_error($error_msg, E_USER_ERROR);
+	private function writeToFile() {
+		if ($this->newerSettings) {
+			// Never overwrite a settings file that is newer than us
+			return;
+		}
+		$data = array(
+			'plexWatchDb'=>$this->plexWatchDb->getData(),
+			'dateFormat'=>$this->dateFormat->getData(),
+			'timeFormat'=>$this->timeFormat->getData(),
+			'pmsIp'=>$this->pmsIp->getData(),
+			'pmsPort'=>$this->pmsPort->getData(),
+			'plexUser'=>$this->plexUser->getData(),
+			'plexPass'=>$this->plexPass->getData(),
+			'plexAuthToken'=>$this->plexAuthToken->getData(),
+			'globalGrouping'=>$this->globalGrouping->getData(),
+			'userGrouping'=>$this->userGrouping->getData(),
+			'chartsGrouping'=>$this->chartsGrouping->getData(),
+			'majorVersion'=>PWW_MAJOR_VERSION,
+			'minorVersion'=>PWW_MINOR_VERSION,
+			'releaseVersion'=>PWW_RELEASE_VERSION
+		);
+		$json_opts = JSON_NUMERIC_CHECK;
+		if (defined(JSON_PRETTY_PRINT)) {
+			// Pretty print the config file if we are operating under PHP >= 5.4.0.
+			$json_opts = $json_opts | JSON_PRETTY_PRINT;
+		}
+		$json_data = json_encode($data, $json_opts);
+		if ($json_data === false) {
+			$error_msg = 'Error converting settings to JSON: ' . json_last_error_msg();
+			sendError($error_msg);
+		}
+		if (isOpenable($this->path)) {
+			$file = file_put_contents($this->path, $json_data);
+		} else {
+			$file = false;
+		}
+		if ($file === false) {
+			$error_msg = 'Failed to write the configuration to disk.';
+			sendError($error_msg);
+		}
 	}
 
 	private function readFromFile() {
 		if (!file_exists($this->path)) {
 			$error_msg = 'Attempted to read non-existent settings!';
-			$this->sendError($error_msg);
+			sendError($error_msg);
 		}
 		$config = file_get_contents($this->path);
 		if ($config === false) {
 			$error_msg = 'ConfigClass :: Error reading config file.';
-			$this->sendError($error_msg);
+			sendError($error_msg);
 		}
 		// Attempt to read the settings into an associative array
 		$data = json_decode($config, true);
@@ -104,150 +213,163 @@ class ConfigClass {
 			readOldSettings($config);
 			return;
 		}
-		// FIXME: Verify attributes exist before access
-		$fileVersion = $this->getVersionString($data['majorVersion'],
-			$data['minorVersion'], $data['releaseVersion']);
+		$fileVersion = '0.0.0';
+		if (array_key_exists('majorVersion', $data) &&
+			array_key_exists('minorVersion', $data) &&
+			array_key_exists('releaseVersion', $data)) {
+			$fileVersion = $this->getVersionString($data['majorVersion'],
+				$data['minorVersion'], $data['releaseVersion']);
+		}
 		$currentVersion = $this->getVersionString();
 		$versionCompare = version_compare($fileVersion, $currentVersion);
 		if ($versionCompare > 0) {
-			// FIXME: Attempt to read anyway?
-			$error_msg = 'Settings file newer than we know how to handle.';
-			$this->sendError($error_msg);
+			// Newer settings file, disable overwriting
+			$this->newerSettings = true;
 		} else if ($versionCompare < 0) {
 			// Settings older than our current version
 			$this->readOldSettings($config, $data['majorVersion'],
 				$data['minorVersion'], $data['releaseVersion']);
 			return;
 		}
-		$this->setPlexWatchDb($data['plexWatchDb']);
-		$this->setDateFormat($data['dateFormat']);
-		$this->setTimeFormat($data['timeFormat']);
-		$this->setPmsIP($data['pmsIp']);
-		$this->setPmsPort($data['pmsPort']);
-		$this->setPlexUser($data['plexUser']);
-		$this->setPlexPass(base64_decode($data['plexPass']));
-		$this->setAuthToken($data['plexAuthToken']);
-		$this->setPmsUrl();
-		$this->setGlobalGrouping($data['globalGrouping']);
-		$this->setUserGrouping($data['userGrouping']);
-		$this->setChartsGrouping($data['chartsGrouping']);
+		$this->setSettings($data);
 	}
 
+	/**
+	* Suppress PHPMD warnings about the complexity of this function
+	* @SuppressWarnings(PHPMD.CyclomaticComplexity)
+	* @SuppressWarnings(PHPMD.NPathComplexity)
+	*/
+	private function setSettings($data) {
+		if (array_key_exists('plexWatchDb', $data)) {
+			$this->setPlexWatchDb($data['plexWatchDb']);
+		}
+		if (array_key_exists('dateFormat', $data)) {
+			$this->setDateFormat($data['dateFormat']);
+		}
+		if (array_key_exists('timeFormat', $data)) {
+			$this->setTimeFormat($data['timeFormat']);
+		}
+		if (array_key_exists('pmsIp', $data)) {
+			$this->setPmsIP($data['pmsIp']);
+		}
+		if (array_key_exists('pmsPort', $data)) {
+			$this->setPmsPort($data['pmsPort']);
+		}
+		if (array_key_exists('plexUser', $data)) {
+			$this->setPlexUser($data['plexUser']);
+		}
+		if (array_key_exists('plexPass', $data)) {
+			$this->setPlexPass($data['plexPass']);
+		}
+		if (array_key_exists('plexAuthToken', $data)) {
+			$this->setAuthToken($data['plexAuthToken']);
+		}
+		if (array_key_exists('globalGrouping', $data)) {
+			$this->setGlobalGrouping($data['globalGrouping']);
+		}
+		if (array_key_exists('userGrouping', $data)) {
+			$this->setUserGrouping($data['userGrouping']);
+		}
+		if (array_key_exists('chartsGrouping', $data)) {
+			$this->setChartsGrouping($data['chartsGrouping']);
+		}
+		// Generate a PMS URL, validating the other related settings
+		$this->setPmsUrl();
+	}
+
+	/**
+	 * Suppress warnings about unused variables, remove when we have functions
+	 * for specific versions in the future.
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+	*/
 	private function readOldSettings($config, $maj = NULL, $min = NULL, $rel = NULL) {
 		if (empty($maj)) {
 			// Parsing an original settings file
 			$this->readOrigSettings($config);
 		}
-		//FIXME: Delete the following, just here to shut the linter up
-		$min = -1;
-		$rel = -1;
 	}
 
+	/**
+	* Suppress PHPMD warnings about the complexity of this function
+	* @SuppressWarnings(PHPMD.CyclomaticComplexity)
+	* @SuppressWarnings(PHPMD.NPathComplexity)
+	*/
 	private function readOrigSettings($config) {
-		$data = array();
+		$origData = array();
 		foreach (preg_split("/((\r?\n)|(\r\n?))/", $config) as $line) {
 			if (substr($line, 0, 1) === '$') {
 				$config_line = explode(" = ", $line);
 				preg_match("/\[\'([^\]]*)\'\]/", $config_line[0], $matches);
 				preg_match("/\'(.*)\'/", $config_line[1], $matches2);
-				$data[$matches[1]] = $matches2[1];
+				$origData[$matches[1]] = $matches2[1];
 			}
 		}
-		// FIXME: Verify attributes exist before access
-		$this->setPlexWatchDb();
-		$this->setDateFormat($data['dateFormat']);
-		$this->setTimeFormat($data['timeFormat']);
-		$this->setPmsIP($data['pmsIp']);
-		$this->setPmsPort($data['pmsHttpPort']);
-		$this->setPlexUser($data['myPlexUser']);
-		$this->setPlexPass(base64_decode($data['myPlexPass']));
-		$this->setAuthToken($data['myPlexAuthToken']);
-		$this->setPmsUrl();
-		$this->setGlobalGrouping($data['globalHistoryGrouping']);
-		$this->setUserGrouping($data['userHistoryGrouping']);
-		$this->setChartsGrouping($data['chartsGrouping']);
-	}
-
-	private function writeToFile() {
 		$data = array(
-			'plexWatchDb'=>$this->plexWatchDb,
-			'dateFormat'=>$this->dateFormat,
-			'timeFormat'=>$this->timeFormat,
-			'pmsIp'=>$this->pmsIp,
-			'pmsPort'=>$this->pmsPort,
-			'plexUser'=>$this->plexUser,
-			'plexPass'=>base64_encode($this->plexPass),
-			'plexAuthToken'=>$this->plexAuthToken,
-			'globalGrouping'=>$this->globalGrouping,
-			'userGrouping'=>$this->userGrouping,
-			'chartsGrouping'=>$this->chartsGrouping,
-			'majorVersion'=>PWW_MAJOR_VERSION,
-			'minorVersion'=>PWW_MINOR_VERSION,
-			'releaseVersion'=>PWW_RELEASE_VERSION
+			'plexWatchDb'=>(array_key_exists('plexWatchDb', $origData) ?
+				$origData['plexWatchDb'] : null),
+			'dateFormat'=>(array_key_exists('dateFormat', $origData) ?
+				$origData['dateFormat'] : null),
+			'timeFormat'=>(array_key_exists('timeFormat', $origData) ?
+				$origData['timeFormat'] : null),
+			'pmsIp'=>(array_key_exists('pmsIp', $origData) ?
+				$origData['pmsIp'] : null),
+			'pmsPort'=>(array_key_exists('pmsHttpPort', $origData) ?
+				$origData['pmsHttpPort'] : null),
+			'plexUser'=>(array_key_exists('myPlexUser', $origData) ?
+				$origData['myPlexUser'] : null),
+			'plexPass'=>(array_key_exists('myPlexPass', $origData) ?
+				base64_decode($origData['myPlexPass']) : null),
+			'plexAuthToken'=>(array_key_exists('myPlexAuthToken', $origData) ?
+				$origData['myPlexAuthToken'] : null),
+			'globalGrouping'=>(array_key_exists('globalHistoryGrouping', $origData) ?
+				$origData['globalHistoryGrouping'] : null),
+			'userGrouping'=>(array_key_exists('userHistoryGrouping', $origData) ?
+				$origData['userHistoryGrouping'] : null),
+			'chartsGrouping'=>(array_key_exists('chartsHistoryGrouping', $origData) ?
+				$origData['chartsHistoryGrouping'] : null)
 		);
-		$json_opts = JSON_NUMERIC_CHECK;
-		if (defined(JSON_PRETTY_PRINT)) {
-			// Pretty print the config file if we are operating under PHP > 5.4.0.
-			$json_opts = $json_opts | JSON_PRETTY_PRINT;
-		}
-		$json_data = json_encode($data, $json_opts);
-		if ($json_data === false) {
-			$error_msg = 'Error converting settings to JSON: ' . json_last_error_msg();
-			$this->sendError($error_msg);
-		}
-		// FIXME: Ensure the path is in the open_basedir()
-		$file = file_put_contents($this->path, $json_data);
-		if ($file === false) {
-			$error_msg = 'Failed to write the configuration to disk.';
-			$this->sendError($error_msg);
-		}
+		$this->setSettings($data);
 	}
 
+	/**
+	* Suppress PHPMD warnings about the complexity of this function
+	* @SuppressWarnings(PHPMD.CyclomaticComplexity)
+	* @SuppressWarnings(PHPMD.NPathComplexity)
+	*/
 	private function setFromPOST() {
-		/*
-		$itemId = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT,
-			array('options'=>array('min_range'=>1)));
-		if (!!empty($itemId) || $itemId === false) {
-			echo "<p>ID field is required.</p>";
-			$error_msg = 'PlexWatchWeb :: POST parameter "id" not found or invalid.';
-			trigger_error($error_msg, E_USER_ERROR);
-		}
-		*/
-		// FIXME: Again, the entire thing
-		$plexWatchDb = $_POST['plexWatchDb'];
-		$dateFormat = $_POST['dateFormat'];
-		$timeFormat = $_POST['timeFormat'];
-		$pmsIp = $_POST['pmsIp'];
-		$pmsPort = $_POST['pmsPort'];
-		$plexUser = $_POST['plexUser'];
-		$plexPass = $_POST['plexPass'];
-		if (isset($_POST['globalGrouping']) && $_POST['globalGrouping'] == 'yes') {
-			$globalGrouping = true;
-		} else {
-			$globalGrouping = false;
-		}
-		if (isset($_POST['userGrouping']) && $_POST['userGrouping'] == 'yes') {
-			$userGrouping = true;
-		} else {
-			$userGrouping = false;
-		}
-		if (isset($_POST['chartsGrouping']) && $_POST['chartsGrouping'] == 'yes') {
-			$chartsGrouping = true;
-		} else {
-			$chartsGrouping = false;
-		}
+		// Validation is handled in the set functions
+		$plexWatchDb = array_key_exists('plexWatchDb', $_POST) ?
+			$_POST['plexWatchDb'] : null;
+		$dateFormat = array_key_exists('dateFormat', $_POST) ?
+			$_POST['dateFormat'] : null;
+		$timeFormat = array_key_exists('timeFormat', $_POST) ?
+			$_POST['timeFormat'] : null;
+		$pmsIp = array_key_exists('pmsIp', $_POST) ?
+			$_POST['pmsIp'] : null;
+		$pmsPort = array_key_exists('pmsPort', $_POST) ?
+			$_POST['pmsPort'] : null;
+		$plexUser = array_key_exists('plexUser', $_POST) ?
+			$_POST['plexUser'] : null;
+		$plexPass = array_key_exists('plexPass', $_POST) ?
+			$_POST['plexPass'] : null;
+		$globalGrouping = array_key_exists('globalGrouping', $_POST) ?
+			$_POST['globalGrouping'] : false;
+		$userGrouping = array_key_exists('userGrouping', $_POST) ?
+			$_POST['userGrouping'] : false;
+		$chartsGrouping = array_key_exists('chartsGrouping', $_POST) ?
+			$_POST['chartsGrouping'] : false;
 
 		$this->setPlexWatchDb($plexWatchDb);
 		$this->setDateFormat($dateFormat);
 		$this->setTimeFormat($timeFormat);
 		$this->setPmsIP($pmsIp);
 		$this->setPmsPort($pmsPort);
-		if (($_POST['plexUser'] != '') && ($_POST['plexPass'] != '')) {
-			$this->plexAuthToken = '';
+		if (($plexUser != '') && ($plexPass != '')) {
+			$this->plexAuthToken->set('');
 			$this->setPlexUser($plexUser);
 			$this->setPlexPass($plexPass);
 		} else {
-			if (!($this->plexUser) || !($this->plexPass)) {
+			if (!($this->getPlexUser()) || !($this->getPlexPass())) {
 				trigger_error('User or pass completely missing.');
 			}
 		}
@@ -259,107 +381,170 @@ class ConfigClass {
 		$this->path = dirname(__FILE__) . '/../config/config.php';
 	}
 
-	// Setter functions
+	// *********** Setter functions ***********
 	private function setPlexWatchDb($path) {
-		$this->plexWatchDb = $path;
-		// FIXME: Ensure the file exists, is a SQLite3 database, and has PW data
-		// 		and is in open_basedir()
+		if (is_array($path)) {
+			$this->plexWatchDb->set($path);
+			return;
+		}
+		if ($this->plexWatchDb->value === $path) {
+			return;
+		}
+		if (!isOpenable($path)) {
+			sendError('Database path is not able to be opened');
+		}
+		try {
+			$database = new PDO('sqlite:' . $path);
+			$database = null;
+		} catch (PDOException $e) {
+			sendError('Database is not valid: ' . $e->getMessage());
+		}
+		$this->plexWatchDb->set($path);
 	}
 
 	private function setDateFormat($format) {
-		$this->dateFormat = $format;
+		if (is_array($format)) {
+			$this->dateFormat->set($format);
+			return;
+		}
+		if ($this->dateFormat->value === $format) {
+			return;
+		}
+		$this->dateFormat->set($format);
 		// FIXME: Validate format?
 	}
 
 	private function setTimeFormat($format) {
-		/*
-		// Check if the date format is still using the old PHP formats
-		if (strpos($settings->getTimeFormat(),"g") !== false ||
-			strpos($settings->getTimeFormat(),"G") !== false) {
-			header("Location: /settings.php?error=datetime");
+		if (is_array($format)) {
+			$this->timeFormat->set($format);
+			return;
 		}
-		*/
-		$this->timeFormat = $format;
+		if ($this->timeFormat->value === $format) {
+			return;
+		}
+		// Check if the date format is still using the old PHP formats
+		if (strpos($format, 'g') !== false ||
+			strpos($format, 'G') !== false) {
+			sendError('Invalid time format');
+		}
+		$this->timeFormat->set($format);
 		// FIXME: Validate format?
 	}
 
 	private function setPmsIP($ipAddr) {
-		$this->pmsIp = $ipAddr;
+		if (is_array($ipAddr)) {
+			$this->pmsIp->set($ipAddr);
+			return;
+		}
+		if ($this->pmsIp->value === $ipAddr) {
+			return;
+		}
+		$this->pmsIp->set($ipAddr);
 		// FIXME: Validate as valid hostname/IP.
 	}
 
 	private function setPmsPort($port) {
-		$this->pmsPort = $port;
-		// FIXME: Validate int within port range
+		if (is_array($port)) {
+			$this->pmsPort->set($port);
+			return;
+		}
+		if ($this->pmsPort->value === $port) {
+			return;
+		}
+		$this->pmsPort->set($port);
 	}
 
 	private function setPlexUser($user) {
-		$this->plexUser = $user;
-		// FIXME: Validate... length?
+		if (is_array($user)) {
+			$this->plexUser->set($user);
+			return;
+		}
+		if ($this->plexUser->value === $user) {
+			return;
+		}
+		$this->plexUser->set($user);
 	}
 
 	private function setPlexPass($pass) {
-		$this->plexPass = $pass;
-		// FIXME: Validate length?
+		if (is_array($pass)) {
+			$this->plexPass->set($pass);
+			return;
+		}
+		if ($this->plexPass->value === $pass) {
+			return;
+		}
+		$this->plexPass->set(base64_encode($pass));
 	}
 
 	private function setGlobalGrouping($enabled) {
-		if ($enabled == 'yes') {
-			$this->globalGrouping = true;
-		} else if ($enabled == 'no') {
-			$this->globalGrouping = false;
-		} else {
-			$this->globalGrouping = (bool) $enabled;
+		if (is_array($enabled)) {
+			$this->globalGrouping->set($enabled);
+			return;
 		}
+		if ($this->globalGrouping->value === $enabled) {
+			return;
+		}
+		$this->globalGrouping->set($enabled);
 	}
 
 	private function setUserGrouping($enabled) {
-		if ($enabled == 'yes') {
-			$this->userGrouping = true;
-		} else if ($enabled == 'no') {
-			$this->userGrouping = false;
-		} else {
-			$this->userGrouping = (bool) $enabled;
+		if (is_array($enabled)) {
+			$this->userGrouping->set($enabled);
+			return;
 		}
+		if ($this->userGrouping->value === $enabled) {
+			return;
+		}
+		$this->userGrouping->set($enabled);
 	}
 
 	private function setChartsGrouping($enabled) {
-		if ($enabled == 'yes') {
-			$this->chartsGrouping = true;
-		} else if ($enabled == 'no') {
-			$this->chartsGrouping = false;
-		} else {
-			$this->chartsGrouping = (bool) $enabled;
+		if (is_array($enabled)) {
+			$this->chartsGrouping->set($enabled);
+			return;
 		}
+		if ($this->chartsGrouping->value === $enabled) {
+			return;
+		}
+		$this->chartsGrouping->set($enabled);
 	}
 
 	// Authenitcation Token Functions
 	private function setAuthToken($token = NULL) {
-		if (!empty($token) && $this->checkAuthToken($token)) {
-			$this->plexAuthToken = $token;
+		if (is_array($token)) {
+			$this->plexAuthToken->set($token);
 			return;
 		}
-		if (empty($this->plexAuthToken) || !$this->checkAuthToken()) {
-			$this->plexAuthToken = $this->getNewAuthToken();
+		if ($this->plexAuthToken->value === $token) {
+			return;
+		}
+		if (!empty($token) && $this->checkAuthToken($token)) {
+			$this->plexAuthToken->set($token);
+			return;
+		}
+		if (empty($this->plexAuthToken->value) || !$this->checkAuthToken()) {
+			$this->plexAuthToken->set($this->getNewAuthToken());
 			return;
 		}
 	}
 
 	private function checkAuthToken($token = NULL) {
-		$currentToken = $this->plexAuthToken;
+		$currentToken = $this->plexAuthToken->getData();
 		if (!empty($token)) {
-			$this->plexAuthToken = $token;
+			$this->plexAuthToken->set($token);
 		}
 		$valid = $this->setPmsUrl(true);
 		if (!$valid) {
-			$this->plexAuthToken = $currentToken;
+			$this->plexAuthToken->set($currentToken);
 		}
 		return $valid;
 	}
 
 	private function getNewAuthToken() {
 		$plexAuthToken = '';
-		if (empty($this->plexUser) || empty($this->plexPass)) {
+		$user = $this->getPlexUser();
+		$pass = $this->getPlexPass();
+		if (empty($user) || empty($pass)) {
 			return $plexAuthToken;
 		}
 		$host = 'https://plex.tv/users/sign_in.xml';
@@ -374,7 +559,8 @@ class ConfigClass {
 		));
 		curl_setopt($process, CURLOPT_HEADER, false);
 		curl_setopt($process, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-		curl_setopt($process, CURLOPT_USERPWD, $this->plexUser . ':' . $this->plexPass);
+		curl_setopt($process, CURLOPT_USERPWD,
+			$user . ':' . $pass);
 		curl_setopt($process, CURLOPT_TIMEOUT, 30);
 		curl_setopt($process, CURLOPT_HTTPGET, true);
 		curl_setopt($process, CURLOPT_POST, true);
@@ -387,23 +573,23 @@ class ConfigClass {
 			// Authentication failure
 			$error_msg = 'Plex.tv authentication failed. Check your Plex.tv ' .
 				'username and password.';
-			$this->sendError($error_msg);
+			sendError($error_msg);
 		} else if ($curlError != 0) {
 			// cURL error
 			$error_msg = 'cURL error while retrieving data from plex.tv: ' . $curlError;
-			$this->sendError($error_msg);
+			sendError($error_msg);
 		} else {
 			$xml = simplexml_load_string($data);
 			if ($xml === false) {
 				$errorCode = 'Error: Could not parse Plex.tv XML to retrieve ' .
 					'authentication code.';
-				$this->sendError($error_msg);
+				sendError($error_msg);
 			}
 			$plexAuthToken = (string) $xml['authenticationToken'][0];
 			if (empty($plexAuthToken)) {
 				$errorCode = 'Error: Could not find authentication code in the Plex.tv ' .
 					'response.';
-				$this->sendError($error_msg);
+				sendError($error_msg);
 			}
 		}
 		return $plexAuthToken;
@@ -419,22 +605,21 @@ class ConfigClass {
 	}
 
 	private function setPmsUrl($checking = false) {
-		if (!empty($this->pmsUrl)) {
-			return $this->pmsUrl;
-		}
 		$prefixList = array('https://', 'http://');
 		foreach ($prefixList as $prefix) {
-			$pmsUrl = $prefix . $this->pmsIp . ':' . $this->pmsPort;
+			$pmsUrl = $prefix . $this->pmsIp->value . ':' . $this->pmsPort->value;
 			if ($this->verifyPmsUrl($pmsUrl)) {
-				$this->pmsUrl = $pmsUrl;
+				if (!$checking) {
+					$this->pmsUrl->set($pmsUrl);
+				}
 				return true;
 			} else {
 				continue;
 			}
 		}
-		if (empty($this->pmsUrl) && !$checking) {
+		if (empty($this->pmsUrl->value) && !$checking) {
 			$error_msg = 'Error: Unable to determine a valid URL for the PMS server.';
-			$this->sendError($error_msg);
+			sendError($error_msg);
 		}
 		return false;
 	}
@@ -443,8 +628,8 @@ class ConfigClass {
 		if (empty($pmsUrl)) {
 			return false;
 		}
-		if (!empty($this->plexAuthToken)) {
-			$myPlexAuthToken = '?X-Plex-Token='.$this->plexAuthToken;
+		if (!empty($this->plexAuthToken->value)) {
+			$myPlexAuthToken = '?X-Plex-Token='.$this->plexAuthToken->value;
 		} else {
 			$myPlexAuthToken = '';
 		}
@@ -461,22 +646,24 @@ class ConfigClass {
 		$xml = simplexml_load_string($data);
 		if ($xml === false) {
 			$error_msg = 'Error: Could not parse XML from PMS server.';
-			$this->sendError($error_msg);
+			sendError($error_msg);
 		}
 		$machineId = $xml['machineIdentifier'];
 		if (empty($machineId) || strlen($machineId) < 1) {
 			$error_msg = 'Error: Could not parse Plex.tv XML to retrieve ' .
 				'authentication code.';
-			$this->sendError($error_msg);
+			sendError($error_msg);
 		}
 		return true;
 	}
 }
 
+// Get the base path of the current site
 function getBase($previous = NULL) {
 	if ($previous) {
 		$current = dirname($previous);
 		if ($current == '/' || $current == '\\') {
+			// If the site is already at the base $previous will also be /
 			return $previous;
 		} else {
 			return getBase($current);
@@ -484,5 +671,34 @@ function getBase($previous = NULL) {
 	} else {
 		return getBase($_SERVER['REQUEST_URI']);
 	}
+}
+
+// Redirect the user to the settings page with an error message
+function sendError($error_msg) {
+	// FIXME: Redirect properly if on settings page
+	header('Location: ' . getBase() . '/settings.php?e=' . urlencode($error_msg));
+	trigger_error($error_msg, E_USER_ERROR);
+}
+
+
+// Attempts to determine whether a path is readable
+function isOpenable($path) {
+	$basedir = ini_get('open_basedir');
+	if ($basedir == '') {
+		return true;
+	} else {
+		$info = pathinfo($path, PATHINFO_DIRNAME);
+		$bd_paths = explode(PATH_SEPARATOR, $basedir);
+		foreach ($bd_paths as $bd_path) {
+			if (strstr($info, $bd_path) !== false) {
+				if (realpath($path) !== false) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+	}
+	return false;
 }
 ?>
