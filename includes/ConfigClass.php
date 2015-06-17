@@ -393,11 +393,25 @@ class ConfigClass {
 		if (!isOpenable($path)) {
 			sendError('Database path is not able to be opened');
 		}
+		if (realpath($path) === false) {
+			sendError('Database file is not able to be opened');
+		}
+		$query = "SELECT name " .
+			"FROM sqlite_master " .
+			"WHERE type='table' " .
+			"AND name='config';";
 		try {
 			$database = new PDO('sqlite:' . $path);
+			$database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$database->setAttribute(PDO::ATTR_TIMEOUT, 5);
+			$result = $database->query($query);
+			$col = $result->fetchColumn();
 			$database = null;
 		} catch (PDOException $e) {
 			sendError('Database is not valid: ' . $e->getMessage());
+		}
+		if ($col != 'config') {
+			sendError('Database is not valid');
 		}
 		$this->plexWatchDb->set($path);
 	}
