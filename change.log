@@ -1,4 +1,4 @@
-1.7.0.2 dev
+1.7.0-2 dev
 * Change:	more UI tweaks
 * Add:		Add sorting icons to users table header (Arcanemagus)
 * Fix:		Fix sorting user list by time (Arcanemagus)
@@ -17,13 +17,13 @@
 * Add:		Show all IP addresses in user page (Arcanemagus)
 * Change:	Upgrade Font-Awesome to v4.3
 
-1.7.0.1 dev
+1.7.0-1 dev
 * Change:	Switch to using PDO for database access (Arcanemagus)
 * Change:	Adjust status variable in getPMSUrl (timrettop)
 * Change:	Error handling update (Arcanemagus)
 * Add:		Plex HTTPS support (Arcanemagus)
 * Fix:		Fix Season thumbnails (Arcanemagus)
-* Fix:		Fix issue where times are displayed incorrectly in certain areas if php's timezone is different than the system's. (ghost)
+* Fix:		Fix issue where times are displayed incorrectly in certain areas if PHP's timezone is different than the system's. (ghost)
 
 1.7.0 dev
 * New:		global: icon support for KODI, Sony Playstation, and Opera clients
@@ -144,7 +144,7 @@
 1.5.0.3 dev
 * Add:		php5-json to readme requirements. Check for json support in settings welcome modal
 * Change:	hard coded plexWatch/Web version number into settings.php so users don't have to re-save their config after every update in order to see the proper version number
-* Change:	history.php: chart widths are now dynamically set for better tablet and mobile viewing 
+* Change:	history.php: chart widths are now dynamically set for better tablet and mobile viewing
 
 1.5.0.2 dev
 * Add:		user.php: separated ip address information from user history by including a new tab
@@ -152,14 +152,11 @@
 * Add:		history.php: max hourly plays (ljunkie)
 * Fix:		index.php: fix hardcoded library section (ljunkie)
 
-
 1.5.0.1 dev
 * Remove:	index.php: Plex status which was really just a placeholder
 * Add:		index.php: Plex Media Server stat section counts (movies,tv shows, users)
 * Change:	global: minor font size changes
 * Change:	charts.php: Top 10 episodes now use show poster rather than season poster
-
-
 
 1.4.1 master
 * Fix:		global: attempt to correct error related to simplexml_load_file (billimek / sunnyd71)
@@ -169,7 +166,7 @@
 
 1.4.0.11 dev
 * Add:		myplex.php: xml parse error checking when trying to authenticate with myPlex
-* Add:		settings.php: php-curl error checking when trying to authenticate with myPlex 
+* Add:		settings.php: php-curl error checking when trying to authenticate with myPlex
 
 1.4.0.10 dev
 * Change:	info.php: icons for table heading
@@ -179,15 +176,15 @@
 * Add:		user.php: included a few more platform checks from db platform if xml platform is empty (apple tv)
 * Change:	user.php: changed geo location providers since ipinfo.io seems unstable
 * Add:		user.php: initial platform play count stats
-* Add:		user.php platform column for user public ip address history 
+* Add:		user.php platform column for user public ip address history
 * Add:		user.php: check for region name result for public ips. display "n/a" and remove link if result is empty
-* Add:		user.php: play count column for user public ip address history 
+* Add:		user.php: play count column for user public ip address history
 * Fix:		user.php: ip addresses were being filter incorrectly
 * Change:	index.php: *BETA, NEEDS MORE TESTING* recently added items now display a dynamic amount based on row width. This used to be a fix amount (10). (ljunkie)
 * Add:		global: friendly name+platform support (ljunkie)
 * Change:	settings.php: now includes a navigation list
 * Add:		history.php: hourly, daily and monthly play count charts
-* Change:	global: modified the way plexWatch/Web retrieves image from PMS to hide myPlex authentication token	(thanks to ljunkie, ryanc, dashbad & *=Matt=* for their ideas and examples)	
+* Change:	global: modified the way plexWatch/Web retrieves image from PMS to hide myPlex authentication token	(thanks to ljunkie, ryanc, dashbad & *=Matt=* for their ideas and examples)
 * Add:		myPlex authentication support for accessing plexWatch/Web from remote networks
 * Add:		introduction welcome screen modal with requirements quick test and briefing
 * Change:	charts.php: minor css adjustments to help with alignment issues
@@ -196,14 +193,12 @@
 * Add:		grouping support which is user selectable for history, user history and charts
 * Add:		settings.php: new page with full support for configuring plexWatch/Web. config.php is written dynamically by settings.php and was relocated to /config/config.php. This file no longer needs to be edited by the user.
 
-
-
 1.3.0
 * Fix:		info.php: if content was deleted from PMS and watching history links to info.php with this information, an error to the connection was displayed. a message now lets the user know "This media is no longer available in the Plex Media Server database"
 * Add:		info.php: season episode list if displaying season information
 * Fix:		info.php: if "genres" variable is not available it throws an error
 * Fix:		info.php: if "actors" variable is not available it throws an error
-* Fix:		index.php: recently added season & episode information was incorrect. PMS does auto grouping of episodes for a season so only the season # is available when using this method. 
+* Fix:		index.php: recently added season & episode information was incorrect. PMS does auto grouping of episodes for a season so only the season # is available when using this method.
 * Fix:		current_activity.php: movie stream activity would not appear
 * Fix:		more divide by zero fixes (rcork)
 * Add:		global: link logo to main page (rcork)
@@ -215,30 +210,24 @@
 * Add:		config.php: Plex Media Server http/https support including independant port numbers
 * Add:		index.php: current activity now supports "clips" from your myPlex queue
 * Fix:		info.php: if "writers" variable is not available it throws an error
-* Add:		global: check if PMS server and plexWatch database are accessible. print error output to user if they are not  	
+* Add:		global: check if PMS server and plexWatch database are accessible. print error output to user if they are not
 * Add:		config.php: Plex Media Server port# variable added for users using non-standard PMS ports
-
-
 
 1.2.0
 * Fix:		index.php: first recently added result was getting cut off on left side, changed episode image to season thumb
 * Fix:		global: updated images in Plex/Web would not appear in plexWatchWeb
 * Change:	user.php: general usage stats changed from minutes to days, hours, minutes
-* Add:		user.php: user profile tab with avatar image, general usage stats and recently watched list 
+* Add:		user.php: user profile tab with avatar image, general usage stats and recently watched list
 * Change:	user.php: history table has been moved to a seperate tab to make room for profile and chart tabs
 * Add:		tables: in-progress streams are now reported in the date column as "Currently watching..."
 * Change:	table row and cell colors altered to allow for better identity of important elements and links
-* Fix:		tables: "Stopped" time would show and incorrect value if row element was empty due to an in-progress stream		
+* Fix:		tables: "Stopped" time would show and incorrect value if row element was empty due to an in-progress stream
 * Fix: 		inconsistent timezones between history.php, user.php and info.php
-* Change:   timezones are now automatically checked and set to webserver's default timezone 
+* Change:   timezones are now automatically checked and set to webserver's default timezone
 * Wiki:		information for XAMPP users	about setting timezone and password protection
-
-
 
 1.1.0
 * initial public release
-
-
 
 1.0.0
 * initial internal version
