@@ -2,10 +2,28 @@
 // For debugging - we might want this set to 0 in production
 ini_set('display_errors', 0);
 
+// Include the config class before starting the session
 require_once(dirname(__FILE__) . '/ConfigClass.php');
+
+if (!isset($_SESSION)) {
+	session_start();
+}
+
+// Load in the settings file
 $config_file = dirname(__FILE__) . '/../config/config.php';
 if (file_exists($config_file)) {
-	$settings = new ConfigClass($config_file);
+	if (array_key_exists('settingsMod', $_SESSION)) {
+		// Refresh settings every 60s
+		if ($_SESSION['settingsMod'] < (time() - 60)) {
+			$_SESSION['settings'] = new ConfigClass($config_file);
+			$_SESSION['settingsMod'] = time();
+		} else {
+		}
+	} else {
+		$_SESSION['settings'] = new ConfigClass($config_file);
+		$_SESSION['settingsMod'] = time();
+	}
+	$settings = $_SESSION['settings'];
 } else {
 	if (strstr($_SERVER['REQUEST_URI'], 'settings.php') === false) {
 		if (strstr($_SERVER['REQUEST_URI'], 'datafactory') !== false) {
@@ -20,10 +38,6 @@ if (file_exists($config_file)) {
 
 // Attempt to set the timezone
 date_default_timezone_set(@date_default_timezone_get());
-
-if (!isset($_SESSION)) {
-	session_start();
-}
 
 /* Either load or return the plexWatch config
  * we might want to time this at some point.
@@ -221,7 +235,12 @@ function &keysToLower(&$obj) {
 	return $obj;
 }
 
-/* Takes in a parsed session xml and returns the platform image URL */
+/**
+	* Takes in a parsed session xml and returns the platform image URL
+	*
+	* Suppress PHPMD warnings about the complexity of this function
+	* @SuppressWarnings(PHPMD.CyclomaticComplexity)
+	*/
 function getPlatformImage($xml) {
 	if (strstr($xml->Player['platform'], 'Roku')) {
 		return "images/platforms/roku.png";
