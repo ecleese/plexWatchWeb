@@ -689,7 +689,12 @@ function getBase($previous = NULL) {
 
 // Redirect the user to the settings page with an error message
 function sendError($error_msg) {
-	header('Location: ' . getBase() . '/settings.php?e=' . urlencode($error_msg));
+	if (strstr($_SERVER['REQUEST_URI'], 'includes') === false &&
+			strstr($_SERVER['REQUEST_URI'], 'datafactory') === false) {
+		header('Location: ' . getBase() . '/settings.php?e=' . urlencode($error_msg));
+	} else {
+		echo 'Error encountered loading settings, please verify on the settings page!';
+	}
 	if (array_key_exists('e', $_GET)) {
 		trigger_error($error_msg);
 	} else {
