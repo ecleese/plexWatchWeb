@@ -689,11 +689,13 @@ function getBase($previous = NULL) {
 
 // Redirect the user to the settings page with an error message
 function sendError($error_msg) {
-	// FIXME: Redirect properly if on settings page
 	header('Location: ' . getBase() . '/settings.php?e=' . urlencode($error_msg));
-	trigger_error($error_msg, E_USER_ERROR);
+	if (array_key_exists('e', $_GET)) {
+		trigger_error($error_msg);
+	} else {
+		trigger_error($error_msg, E_USER_ERROR);
+	}
 }
-
 
 // Attempts to determine whether a path is readable
 function isOpenable($path) {
