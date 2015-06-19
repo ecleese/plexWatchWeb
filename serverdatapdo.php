@@ -164,10 +164,32 @@ class ServerDataPDO
         if (isset($aDBInfo))
             $serializd_db=base64_encode(serialize($aDBInfo));
 
+        $config = loadPwConfig();
+        if (is_object($config)) {
+        	$friendlyName = $config->{'user_display'};
+        } else {
+          $friendlyName = array();
+        }
+        $json_opts = JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_HEX_TAG;
+        $friendlyName_json = json_encode($friendlyName, $json_opts);
         /* Edit Jqeury Here */
         $js=  <<<EOT
 <!-- Start generated Jquery from $ajax_source_url  -->
 <script type="text/javascript">
+function FriendlyName(user, platform) {
+  if (!FriendlyName.hasOwnProperty('source')) {
+    FriendlyName.source = JSON.parse('$friendlyName_json');
+  }
+  var userSearch = user.toLowerCase()
+  var userPlatformSearch = (user + '+' + platform).toLowerCase();
+  if (FriendlyName.source.hasOwnProperty(userPlatformSearch)) {
+    return FriendlyName.source[userPlatformSearch];
+  } else if (FriendlyName.source.hasOwnProperty(userSearch)) {
+    return FriendlyName.source[userSearch];
+  } else {
+    return user;
+  }
+}
     $(document).ready(function() {
         var $table_id=$('#$table_id').dataTable( {
             "fnServerData": function ( sSource, aoData, fnCallback ) {
@@ -223,7 +245,12 @@ class ServerDataPDO
                     "aTargets": [ 2 ],
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
                         if (sData !== '') {
-                            $(nTd).html('<a href="user.php?user='+sData+'">'+sData+'</a>');
+                            $(nTd).html('<a href="user.php?user='+sData+'">' +
+                            FriendlyName(
+                              oData[iCol], // Name
+                              oData[iCol + 1] // Platform
+                            ) +
+                            '</a>');
                         }
                     },
                     "sWidth": '10%'
