@@ -99,13 +99,13 @@ require_once(dirname(__FILE__) . '/includes/timeago.php');
 												echo '<a href="user.php?user=' . $user['user'] . '">';
 												if (empty($userXml->User['thumb'])) {
 													if (file_exists($plexWatch['userPicturesPath'].'/'.$user['user'].'.jpg')) {
-														echo '<img src="'.$plexWatch['userPicturesPath'].'/'.$user['user'].'.jpg">';
+														echo '<img src="'.$plexWatch['userPicturesPath'].'/'.$user['user'].'.jpg" ';
 													} else if (file_exists($plexWatch['userPicturesPath'].'/'.$user['user'].'.png')) {
-														echo '<img src="'.$plexWatch['userPicturesPath'].'/'.$user['user'].'.png">';
+														echo '<img src="'.$plexWatch['userPicturesPath'].'/'.$user['user'].'.png" ';
 													} else {
-														echo '<img src="images/gravatar-default-80x80.png" ' .
-														'alt="User Logo" />';
+														echo '<img src="images/gravatar-default-80x80.png" ';
 													}
+													echo 'alt="User Logo" />';
 												} else {
 													echo '<img src="' . $userXml->User['thumb'] . '" ' .
 														'onerror="this.src=\'images/gravatar-default-80x80.png\'"' .
