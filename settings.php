@@ -26,7 +26,7 @@ function printSettings() {
 					printGeneralSettings($haveConfig);
 					printDateTimeFormat();
 					printPMSSettings($haveConfig);
-					printPlexAuthSettings($haveConfig);
+					printPlexAuthSettings();
 					printGroupingSettings($haveConfig);
 					echo '<div class="form-actions">';
 						echo '<div class="control-group">';
@@ -299,8 +299,7 @@ function printPMSSettings($haveConfig) {
 	echo '</div>';
 }
 
-function printPlexAuthSettings($haveConfig) {
-	global $settings;
+function printPlexAuthSettings() {
 	echo '<div class="wellbg">';
 		echo '<div class="wellheader">';
 			echo '<div class="dashboard-wellheader">';
@@ -318,12 +317,8 @@ function printPlexAuthSettings($haveConfig) {
 			echo '<br>';
 			echo '<label class="control-label" for="plexUser">Username (optional)</label>';
 			echo '<div class="controls">';
-				echo '<input id="plexUser" name="plexUser" type="text"';
-					'placeholder="" class="input-xlarge" ';
-					if ($haveConfig) {
-						echo ' value="' .$settings->getPlexUser(). '"';
-					}
-					echo '>';
+				echo '<input id="plexUser" name="plexUser" type="text" placeholder="" ' .
+					'class="input-xlarge">';
 			echo '</div>';
 		echo '</div>';
 		echo '<div class="control-group">';
