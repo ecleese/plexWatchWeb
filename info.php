@@ -612,8 +612,8 @@ function printSeasonEpisodes($xml) {
 								if (type === 'set') {
 									source.date = val;
 									// Store the computed dislay and filter values for efficiency
-									source.date_display = val === "" ? "" : moment(val, "X").format("
-										<?php echo $settings->getDateFormat(); ?>");
+									source.date_display = val === "" ? "" :
+										moment(val, "X").format("<?php echo $settings->getDateFormat(); ?>");
 									source.date_filter = val === "" ? "" : val;
 									return;
 								} else if (type === 'display') {
@@ -631,14 +631,18 @@ function printSeasonEpisodes($xml) {
 						{
 							"bUseRendered": false,
 							"mRender": function ( data, type, row ) {
-								return moment(data,"X").format("<?php echo $settings->getTimeFormat(); ?>");
+								return moment(data,"X").format(
+									"<?php echo $settings->getTimeFormat(); ?>"
+								);
 							}
 						},
 						null,
 						{
 							"bUseRendered": false,
 							"mRender": function ( data, type, row ) {
-								return moment(data,"X").format("<?php echo $settings->getTimeFormat(); ?>");
+								return moment(data,"X").format(
+									"<?php echo $settings->getTimeFormat(); ?>"
+								);
 							}
 						},
 						null,
