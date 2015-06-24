@@ -7,8 +7,4 @@ if (file_exists($config_file)) {
 	$config = new ConfigClass();
 }
 $config->save();
-
-// Send the user back to the form
-header('Location: ../settings.php?s=' . urlencode('Settings saved.'));
-exit;
 ?>

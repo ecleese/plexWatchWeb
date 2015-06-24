@@ -4,6 +4,8 @@ define('PWW_MAJOR_VERSION', 1);
 define('PWW_MINOR_VERSION', 7);
 define('PWW_RELEASE_VERSION', 0);
 define('PWW_DEVELOPMENT', true);
+define('DEBUG', false);
+$errorTriggered = false;
 
 class Setting {
 	public $modTime;
@@ -130,7 +132,6 @@ class ConfigClass {
 	}
 
 	public function getPmsUrl() {
-// error_log('Sending back this URL: ' . $this->pmsUrl->value);
 		return $this->pmsUrl->value;
 	}
 
@@ -148,8 +149,13 @@ class ConfigClass {
 
 	// ************** Private Functions *****************
 	private function writeToFile() {
+		global $errorTriggered;
+		debug_dump('Writing to file, current flags:', array($this->newerSettings, $errorTriggered));
 		if ($this->newerSettings) {
 			// Never overwrite a settings file that is newer than us
+			return;
+		}
+		if ($errorTriggered) {
 			return;
 		}
 		$data = array(
@@ -184,6 +190,9 @@ class ConfigClass {
 		if ($file === false) {
 			$error_msg = 'Failed to write the configuration to disk.';
 			sendError($error_msg);
+		}
+		if (!$errorTriggered) {
+			header('Location: ../settings.php?s=' . urlencode('Settings saved.'));
 		}
 	}
 
@@ -491,20 +500,24 @@ class ConfigClass {
 	* @SuppressWarnings(PHPMD.NPathComplexity)
 	*/
 	private function setAuthToken($param1 = null, $pass = null) {
+		debug_dump('setAuthToken(): ', array($param1, $pass));
+		debug_dump('Current token: ', $this->plexAuthToken->value);
 		// If no password was specified, assume $param1 is a token
 		if (!empty($param1) && empty($pass)) {
 			$token = $param1;
 		} else {
 			$token = '';
 		}
-		if ($this->plexAuthToken->value === $token) {
+		if (!empty($this->plexAuthToken->value) &&
+				$this->plexAuthToken->value === $token) {
+			debug_dump('Token matched current, returning.');
 			return; // FIXME: Valid for empty token?
 		}
 		// Assume an array is from the Setting->getData() and fast-track out
 		if (is_array($token)) {
-// error_log('token array specified');
 			$this->plexAuthToken->set($token);
 			if ($this->fileParsed) {
+				debug_dump('File already parsed once, simple page reload.');
 				return;
 			} else {
 				$token = $this->plexAuthToken->value;
@@ -512,25 +525,24 @@ class ConfigClass {
 		}
 		// If both parameters were specified assume they are user/pass
 		if (!empty($param1) && !empty($pass)) {
-// error_log('user/pass specified');
+			debug_dump('Getting a new token with the credentials.');
 			// Set a new token, validate on the local server later in the function
 			$this->plexAuthToken->set($this->getNewAuthToken($param1, $pass));
 			return;
 		}
 		// If the current token is valid, just use that
 		if ($this->checkAuthToken()) {
-// error_log('Current token valid');
+			debug_dump('Current token valid.');
 			return;
 		}
 		// If a valid token was specified, use that
 		if (!empty($token) && $this->checkAuthToken($token)) {
-// error_log('Input token valid');
+			debug_dump('Valid token specified.');
 			$this->plexAuthToken->set($token);
 			return;
 		}
 		// If a token still hasn't been set by now, try a blank token
 		if ($this->checkAuthToken('')) {
-// error_log('Attempting a blank token');
 			$this->plexAuthToken->set('');
 			return;
 		} else {
@@ -580,26 +592,31 @@ class ConfigClass {
 			// Authentication failure
 			$error_msg = 'Plex.tv authentication failed. Check your Plex.tv ' .
 				'username and password.';
+			debug_dump($error_msg, $authCode);
 			sendError($error_msg);
 		} else if ($curlError != 0) {
 			// cURL error
 			$error_msg = 'cURL error while retrieving data from plex.tv: ' . $curlError;
+			debug_dump($error_msg);
 			sendError($error_msg);
 		} else {
 			$xml = simplexml_load_string($data);
 			if ($xml === false) {
-				$errorCode = 'Error: Could not parse Plex.tv XML to retrieve ' .
+				$error_msg = 'Error: Could not parse Plex.tv XML to retrieve ' .
 					'authentication code.';
+				debug_dump($error_msg);
 				sendError($error_msg);
 			}
 			$plexAuthToken = (string) $xml['authenticationToken'][0];
 		}
 		// Return the Plex token if found, send an error if unable to retrieve.
 		if (empty($plexAuthToken)) {
-			$errorCode = 'Error: Could not find authentication code in the Plex.tv ' .
+			$error_msg = 'Error: Could not find authentication code in the Plex.tv ' .
 				'response.';
+			debug_dump($error_msg);
 			sendError($error_msg);
 		} else {
+			debug_dump('Found a valid Plex Token: ', $plexAuthToken);
 			return $plexAuthToken;
 		}
 	}
@@ -608,8 +625,8 @@ class ConfigClass {
 		$prefixList = array('https://', 'http://');
 		foreach ($prefixList as $prefix) {
 			$pmsUrl = $prefix . $this->pmsIp->value . ':' . $this->pmsPort->value;
+			debug_dump('Checking URL: ', $pmsUrl);
 			if ($this->verifyPmsUrl($pmsUrl)) {
-// error_log('Setting PMS URL to: ' . $pmsUrl);
 				$this->pmsUrl->set($pmsUrl);
 				return true;
 			} else {
@@ -632,12 +649,15 @@ class ConfigClass {
 		} else {
 			$myPlexAuthToken = '';
 		}
+		debug_dump('Verifying URL: ', $pmsUrl . '/' . $myPlexAuthToken);
 		$curlHandle = curl_init($pmsUrl . '/' . $myPlexAuthToken);
 		curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($curlHandle, CURLOPT_SSL_VERIFYHOST, false);
 		$data = curl_exec($curlHandle);
-		if ($data === false || curl_getinfo($curlHandle, CURLINFO_HTTP_CODE) >= 400) {
+		$httpCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
+		if ($data === false || $httpCode >= 400) {
+			debug_dump('Invalid authentication: ', $httpCode);
 			curl_close($curlHandle);
 			return false;
 		}
@@ -668,6 +688,8 @@ class ConfigClass {
 
 // Redirect the user to the settings page with an error message
 function sendError($error_msg) {
+	global $errorTriggered;
+	$errorTriggered = true;
 	if (strstr($_SERVER['REQUEST_URI'], 'includes') === false &&
 			strstr($_SERVER['REQUEST_URI'], 'datafactory') === false) {
 		header('Location: ' . getBase() . '/settings.php?e=' . urlencode($error_msg));
@@ -678,6 +700,19 @@ function sendError($error_msg) {
 		trigger_error($error_msg);
 	} else {
 		trigger_error($error_msg, E_USER_ERROR);
+	}
+}
+
+function debug_dump($msg, $var = NULL) {
+	if (DEBUG) {
+		if ($var) {
+			ob_start();
+			var_dump($var);
+			$result = ob_get_clean();
+			error_log($msg . $result);
+		} else {
+			error_log($msg);
+		}
 	}
 }
 
