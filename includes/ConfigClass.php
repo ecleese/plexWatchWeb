@@ -150,7 +150,8 @@ class ConfigClass {
 	// ************** Private Functions *****************
 	private function writeToFile() {
 		global $errorTriggered;
-		debug_dump('Writing to file, current flags:', array($this->newerSettings, $errorTriggered));
+		debug_dump('Writing to file, current flags:',
+			array('newSettings'=>$this->newerSettings, 'error'=>$errorTriggered));
 		if ($this->newerSettings) {
 			// Never overwrite a settings file that is newer than us
 			return;
@@ -192,7 +193,11 @@ class ConfigClass {
 			sendError($error_msg);
 		}
 		if (!$errorTriggered) {
-			header('Location: ../settings.php?s=' . urlencode('Settings saved.'));
+			if (strstr($_SERVER['REQUEST_URI'], 'process_settings.php') === false) {
+				header('Location: settings.php?s=' . urlencode('Settings saved.'));
+			} else {
+				header('Location: ../settings.php?s=' . urlencode('Settings saved.'));
+			}
 		}
 	}
 
@@ -210,7 +215,7 @@ class ConfigClass {
 		$data = json_decode($config, true);
 		if ($data === NULL) {
 			// Original setting file, or broken
-			readOldSettings($config);
+			$this->readOldSettings($config);
 			return;
 		}
 		$fileVersion = '0.0.0';
@@ -259,6 +264,7 @@ class ConfigClass {
 		if (array_key_exists('plexAuthToken', $data)) {
 			$this->setAuthToken($data['plexAuthToken']);
 		}
+		$this->setPmsUrl();
 		if (array_key_exists('globalGrouping', $data)) {
 			$this->setGlobalGrouping($data['globalGrouping']);
 		}
@@ -318,6 +324,8 @@ class ConfigClass {
 				$origData['chartsHistoryGrouping'] : null)
 		);
 		$this->setSettings($data);
+		// Overwrite with the new settings format
+		$this->writeToFile();
 	}
 
 	/**
@@ -356,9 +364,10 @@ class ConfigClass {
 		if (($plexUser != '') && ($plexPass != '')) {
 			$this->plexAuthToken->set('');
 			$this->setAuthToken($plexUser, $plexPass);
+		} else {
+			$this->setAuthToken();
 		}
-		$this->setAuthToken();
-		// Full PMS Url is set in the Auth Token steps
+		$this->setPmsUrl();
 		$this->setGlobalGrouping($globalGrouping);
 		$this->setUserGrouping($userGrouping);
 		$this->setChartsGrouping($chartsGrouping);
@@ -543,6 +552,7 @@ class ConfigClass {
 		}
 		// If a token still hasn't been set by now, try a blank token
 		if ($this->checkAuthToken('')) {
+			debug_dump('Blank token works, using that.');
 			$this->plexAuthToken->set('');
 			return;
 		} else {
@@ -556,7 +566,7 @@ class ConfigClass {
 		if (isset($token)) { // '' is a valid token if authentication is disabled!
 			$this->plexAuthToken->set($token);
 		}
-		$valid = $this->setPmsUrl();
+		$valid = $this->setPmsUrl(true);
 		if (!$valid) {
 			$this->plexAuthToken->set($currentToken);
 			$this->pmsUrl->set($currentUrl);
@@ -621,19 +631,21 @@ class ConfigClass {
 		}
 	}
 
-	private function setPmsUrl() {
+	private function setPmsUrl($checking = false) {
 		$prefixList = array('https://', 'http://');
 		foreach ($prefixList as $prefix) {
 			$pmsUrl = $prefix . $this->pmsIp->value . ':' . $this->pmsPort->value;
 			debug_dump('Checking URL: ', $pmsUrl);
 			if ($this->verifyPmsUrl($pmsUrl)) {
-				$this->pmsUrl->set($pmsUrl);
+				if (!$checking) {
+					$this->pmsUrl->set($pmsUrl);
+				}
 				return true;
 			} else {
 				continue;
 			}
 		}
-		if (empty($this->pmsUrl->value)) {
+		if (empty($this->pmsUrl->value) && !$checking) {
 			$error_msg = 'Error: Unable to determine a valid URL for the PMS server.';
 			sendError($error_msg);
 		}
@@ -669,7 +681,7 @@ class ConfigClass {
 		}
 		$machineId = $xml['machineIdentifier'];
 		if (empty($machineId) || strlen($machineId) < 1) {
-			$error_msg = 'Error: Could not parse Plex.tv XML to retrieve ' .
+			$error_msg = 'Error: Could not parse Plex XML to retrieve ' .
 				'authentication code.';
 			sendError($error_msg);
 		}
