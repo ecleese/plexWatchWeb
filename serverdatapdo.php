@@ -9,18 +9,10 @@
 * with this source code in the file LICENSE.
 */
 
-$guisettingsFile = dirname(__FILE__) . '/config/config.php';
-if (file_exists($guisettingsFile)) {
-    require_once($guisettingsFile);
-} else {
-    error_log('plexWatchWeb :: Config file not found.');
-    exit;
-}
-
-date_default_timezone_set(@date_default_timezone_get()); // Set default timezone
+require_once(dirname(__FILE__) . '/includes/functions.php');
 
 /* Change these to correspond to your database type (dsn) and access credentials, example below uses sqlite w/o pass */
-$db_dsn="sqlite:".$plexWatch['plexWatchDb'];  /* corresponds to PDO DSN strings refer to: http://www.php.net/manual/en/pdo.drivers.php */
+$db_dsn="sqlite:".$settings->getPlexWatchDb();  /* corresponds to PDO DSN strings refer to: http://www.php.net/manual/en/pdo.drivers.php */
 $db_user=null;
 $db_pass=null;
 
@@ -154,10 +146,10 @@ class ServerDataPDO
         $js=null;  //Holds the javascript string
         $dba=array("a","b");
 
-        global $plexWatch;
+        global $settings;
 
-        $dateFormat = $plexWatch['dateFormat'];
-        $timeFormat = $plexWatch['timeFormat'];
+        $dateFormat = $settings->getDateFormat();
+        $timeFormat = $settings->getTimeFormat();
 
         $ajax_source_url = is_null($ajax_source_url)? basename(__FILE__) : $ajax_source_url;
 

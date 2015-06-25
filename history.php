@@ -1,3 +1,4 @@
+<?php require_once('serverdatapdo.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -45,9 +46,6 @@
 		<link rel="apple-touch-icon" sizes="114x114" href="images/icon_iphone@2x.png">
 		<link rel="apple-touch-icon" sizes="144x144" href="images/icon_ipad@2x.png">
 	</head>
-
-	<?php include "serverdatapdo.php"; ?>
-
 	<body>
 		<div class="container">
 			<div class="navbar navbar-fixed-top">
@@ -64,8 +62,6 @@
 				</div>
 			</div>
 		</div>
-
-		
 		<div class="container-fluid">
 			<div class="row-fluid">
 				<div class="span12">
@@ -145,9 +141,9 @@
 		<?php
 		$plexWatchDbTable = dbTable();
 		$db_array = array(
-			"sql"=>"SELECT id|time|user|platform|ip_address|title|time|paused_counter|stopped|xml|round((julianday(datetime(stopped,'unixepoch', 'localtime')) - julianday(datetime(time,'unixepoch', 'localtime')))*86400)-(case when paused_counter is null then 0 else paused_counter end) from ".$plexWatchDbTable, /* Use | as delimiter. Spell out columns names no SELECT * Table */
-			"table"=>$plexWatchDbTable, /* DB table to use assigned by constructor*/
-			"idxcol"=>"id" /* Indexed column (used for fast and accurate table cardinality) */
+			'sql'=>"SELECT id|time|user|platform|ip_address|title|time|paused_counter|stopped|xml|round((julianday(datetime(stopped,'unixepoch', 'localtime')) - julianday(datetime(time,'unixepoch', 'localtime')))*86400)-(case when paused_counter is null then 0 else paused_counter end) from ".$plexWatchDbTable, /* Use | as delimiter. Spell out columns names no SELECT * Table */
+			'table'=>$plexWatchDbTable, /* DB table to use assigned by constructor*/
+			'idxcol'=>'id' /* Indexed column (used for fast and accurate table cardinality) */
 		);
 		$javascript = ServerDataPDO::build_jquery_datatable($db_array, 'history_datatable', 'datafactory/get-info-modal.php');
 

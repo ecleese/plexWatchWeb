@@ -1,7 +1,5 @@
 <?php
-date_default_timezone_set(@date_default_timezone_get());
-
-require_once(dirname(__FILE__) . '/../config/config.php');
+require_once(dirname(__FILE__) . '/functions.php');
 require_once(dirname(__FILE__) . '/timeago.php');
 
 $width = filter_input(INPUT_GET, 'width', FILTER_VALIDATE_INT,

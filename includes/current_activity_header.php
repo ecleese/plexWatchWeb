@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__) . '/../config/config.php');
+require_once(dirname(__FILE__) . '/functions.php');
 
 $fileContents = getPmsData('/status/sessions') or
 	die ("<div class='alert alert-warning'>Failed to access Plex Media Server. " .

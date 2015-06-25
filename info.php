@@ -1,12 +1,5 @@
 <?php
-date_default_timezone_set(@date_default_timezone_get());
-
-$guisettingsFile = dirname(__FILE__) . '/config/config.php';
-if (file_exists($guisettingsFile)) {
-	require_once($guisettingsFile);
-} else {
-	header('Location: settings.php');
-}
+require_once(dirname(__FILE__) . '/includes/functions.php');
 
 $database = dbconnect();
 $itemId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT,
@@ -619,7 +612,8 @@ function printSeasonEpisodes($xml) {
 								if (type === 'set') {
 									source.date = val;
 									// Store the computed dislay and filter values for efficiency
-									source.date_display = val === "" ? "" : moment(val,"X").format("<?php echo $plexWatch['dateFormat'];?>");
+									source.date_display = val === "" ? "" :
+										moment(val, "X").format("<?php echo $settings->getDateFormat(); ?>");
 									source.date_filter = val === "" ? "" : val;
 									return;
 								} else if (type === 'display') {
@@ -637,14 +631,18 @@ function printSeasonEpisodes($xml) {
 						{
 							"bUseRendered": false,
 							"mRender": function ( data, type, row ) {
-								return moment(data,"X").format("<?php echo $plexWatch['timeFormat'];?>");
+								return moment(data,"X").format(
+									"<?php echo $settings->getTimeFormat(); ?>"
+								);
 							}
 						},
 						null,
 						{
 							"bUseRendered": false,
 							"mRender": function ( data, type, row ) {
-								return moment(data,"X").format("<?php echo $plexWatch['timeFormat'];?>");
+								return moment(data,"X").format(
+									"<?php echo $settings->getTimeFormat(); ?>"
+								);
 							}
 						},
 						null,

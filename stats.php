@@ -1,13 +1,5 @@
 <?php
-date_default_timezone_set(@date_default_timezone_get());
-
-$guisettingsFile = dirname(__FILE__) . '/config/config.php';
-if (file_exists($guisettingsFile)) {
-	require_once($guisettingsFile);
-} else {
-	header("Location: settings.php");
-	return; // End execution of the current script.
-}
+require_once(dirname(__FILE__) . '/includes/functions.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -232,14 +224,14 @@ while ($row = $monthlyPlays->fetch(PDO::FETCH_ASSOC)) {
 					return d3.time.format('%Y-%m-%d %H').parse(x);
 				},
 				"tickFormatX": function (x) {
-					return moment(x).format('<?php echo $plexWatch['timeFormat']; ?>');
+					return moment(x).format('<?php echo $settings->getTimeFormat(); ?>');
 				},
 				"paddingLeft": ('35'),
 				"paddingRight": ('35'),
 				"paddingTop": ('10'),
 				"tickHintY": ('5'),
 				"mouseover": function(d, i) {
-					ttText(d, i, '<?php echo $plexWatch['timeFormat']; ?>', this);
+					ttText(d, i, '<?php echo $settings->getTimeFormat(); ?>', this);
 				},
 				"mouseout": function (x) {
 					$(tt).hide();
@@ -267,7 +259,7 @@ while ($row = $monthlyPlays->fetch(PDO::FETCH_ASSOC)) {
 				"paddingTop": ('10'),
 				"tickHintY": ('5'),
 				"mouseover": function(d, i) {
-					ttText(d, i, '<?php echo $plexWatch['timeFormat']; ?>', this);
+					ttText(d, i, '<?php echo $settings->getTimeFormat(); ?>', this);
 				},
 				"mouseout": function (x) {
 					$(tt).hide();

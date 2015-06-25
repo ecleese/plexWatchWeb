@@ -1,18 +1,9 @@
 <?php
-date_default_timezone_set(@date_default_timezone_get());
+require_once(dirname(__FILE__) . '/../includes/functions.php');
 
 if (!isset($_POST['user'])) {
 	echo "User field is required.";
 	trigger_error('PlexWatchWeb :: POST parameter "user" not found.', E_USER_ERROR);
-}
-
-$guisettingsFile = dirname(__FILE__) . '/../config/config.php';
-if (file_exists($guisettingsFile)) {
-	require_once($guisettingsFile);
-} else {
-	error_log('PlexWatchWeb :: Config file not found.');
-	echo "Config file not found";
-	exit;
 }
 
 class elapsedTimeResult {

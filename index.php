@@ -1,14 +1,8 @@
 <?php
-$guisettingsFile = dirname(__FILE__) . '/config/config.php';
-if (file_exists($guisettingsFile)) {
-	require_once($guisettingsFile);
-	// Check if the date format is still using the old PHP formats
-	if (strpos($plexWatch['timeFormat'],"g") !== false || strpos($plexWatch['timeFormat'],"G") !== false) {
-		header("Location: settings.php?error=datetime");
-	}
-} else {
-	header("Location: settings.php");
-	return;
+$config_file = dirname(__FILE__) . '/config/config.php';
+if (!file_exists($config_file)) {
+	header('Location: settings.php');
+	exit;
 }
 ?>
 <!DOCTYPE html>

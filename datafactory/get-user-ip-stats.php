@@ -1,17 +1,8 @@
 <?php
-date_default_timezone_set(@date_default_timezone_get());
-
-$guisettingsFile = dirname(__FILE__) . '/../config/config.php';
-if (file_exists($guisettingsFile)) {
-	require_once($guisettingsFile);
-} else {
-	error_log('PlexWatchWeb :: Config file not found.');
-	echo "Config file not found";
-	exit;
-}
+require_once(dirname(__FILE__) . '/../includes/functions.php');
 
 if (!isset($_POST['user'])) {
-	echo "User field is required.";
+	echo 'User field is required.';
 	trigger_error('PlexWatchWeb :: POST parameter "user" not found.', E_USER_ERROR);
 }
 
@@ -46,20 +37,20 @@ while ($row = $results->fetch(PDO::FETCH_ASSOC)) {
 			)
 		) {
 		// Private IP Address
-		$nrow[$i][] = "n/a";
-		$nrow[$i][] = "";
+		$nrow[$i][] = 'n/a';
+		$nrow[$i][] = '';
 	} else {
 		// Public, so attempt to geolocate
-		$rowUrl = "http://www.geoplugin.net/xml.gp?ip=" . $row['ip_address'];
+		$rowUrl = 'http://www.geoplugin.net/xml.gp?ip=' . $row['ip_address'];
 		$rowData = simplexml_load_file($rowUrl)
 			or die ('<div class="alert alert-warning ">Cannot access '.
 				'http://freegeoip.net</div>');
 		if (empty($rowData->geoplugin_city)) {
-			$nrow[$i][] = "n/a";
-			$nrow[$i][] = "";
+			$nrow[$i][] = 'n/a';
+			$nrow[$i][] = '';
 		} else {
-			$nrow[$i][] = $rowData->geoplugin_city . ", " . $rowData->geoplugin_region;
-			$nrow[$i][] = "https://maps.google.com/maps?q=" .
+			$nrow[$i][] = $rowData->geoplugin_city . ', ' . $rowData->geoplugin_region;
+			$nrow[$i][] = 'https://maps.google.com/maps?q=' .
 				urlencode($rowData->geoplugin_city . ", " . $rowData->geoplugin_region);
 		}
 	}

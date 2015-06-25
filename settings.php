@@ -1,12 +1,13 @@
 <?php
-$guisettingsFile = dirname(__FILE__) . '/config/config.php';
-if (file_exists($guisettingsFile)) {
-	require_once($guisettingsFile);
-}
+require_once(dirname(__FILE__) . '/includes/functions.php');
 
 function printSettings() {
-	global $guisettingsFile;
-	$haveConfig = file_exists($guisettingsFile);
+	global $settings;
+	if ($settings) {
+		$haveConfig = true;
+	} else {
+		$haveConfig = false;
+	}
 	echo '<div class="row-fluid">';
 		echo '<div class="span3">';
 			echo '<ul class="nav nav-list">';
@@ -25,7 +26,7 @@ function printSettings() {
 					printGeneralSettings($haveConfig);
 					printDateTimeFormat();
 					printPMSSettings($haveConfig);
-					printPlexAuthSettings($haveConfig);
+					printPlexAuthSettings();
 					printGroupingSettings($haveConfig);
 					echo '<div class="form-actions">';
 						echo '<div class="control-group">';
@@ -50,6 +51,7 @@ function printSettings() {
 }
 
 function printVersions() {
+	global $settings;
 	$database = dbconnect();
 	echo '<div class="wellbg">';
 		echo '<div class="wellheader">';
@@ -60,7 +62,9 @@ function printVersions() {
 		echo '<div class="settings-general-info">';
 			echo '<ul>';
 				// FIXME: Version should be specified in the settings
-				echo '<li>plexWatch/Web Version: <strong>v1.7.0.2 dev</strong></li>';
+				echo '<li>plexWatch/Web Version: <strong>v';
+					echo $settings->getVersionString();
+				echo '</strong></li>';
 				$query = "SELECT version FROM config";
 				$results = getResults($database, $query);
 				$plexWatchVersion = $results->fetchColumn();
@@ -73,7 +77,7 @@ function printVersions() {
 }
 
 function printGeneralSettings($haveConfig) {
-	global $plexWatch;
+	global $settings;
 	echo '<div class="wellbg">';
 		echo '<div class="wellheader">';
 			echo '<div class="dashboard-wellheader">';
@@ -95,7 +99,7 @@ function printGeneralSettings($haveConfig) {
 					'placeholder="M/D/YYYY" class="input-small" required="" ' .
 					'value="';
 					if ($haveConfig) {
-						echo $plexWatch['dateFormat'];
+						echo $settings->getDateFormat();
 					} else {
 						echo 'M/D/YYYY';
 					}
@@ -108,7 +112,7 @@ function printGeneralSettings($haveConfig) {
 				echo '<input id="timeFormat" name="timeFormat" type="text" '.
 					'placeholder="hh:mm a" class="input-mini" required="" value="';
 					if ($haveConfig) {
-						echo $plexWatch['timeFormat'];
+						echo $settings->getTimeFormat();
 					} else {
 						echo 'hh:mm a';
 					}
@@ -242,7 +246,7 @@ function printDTRows() {
 }
 
 function printPMSSettings($haveConfig) {
-	global $plexWatch;
+	global $settings;
 	echo '<div class="wellbg">';
 		echo '<div class="wellheader">';
 			echo '<div class="dashboard-wellheader">';
@@ -255,7 +259,7 @@ function printPMSSettings($haveConfig) {
 				echo '<input id="pmsIp" name="pmsIp" type="text" placeholder="0.0.0.0" ' .
 					'class="input-xlarge" required=""';
 					if ($haveConfig) {
-						echo ' value="' . $plexWatch['pmsIp'] . '"';
+						echo ' value="' . $settings->getPmsIp() . '"';
 					}
 					echo '>';
 				echo '<p class="help-block">';
@@ -264,12 +268,12 @@ function printPMSSettings($haveConfig) {
 			echo '</div>';
 		echo '</div>';
 		echo '<div class="control-group">';
-			echo '<label class="control-label" for="pmsHttpPort">PMS Web Port</label>';
+			echo '<label class="control-label" for="pmsPort">PMS Web Port</label>';
 			echo '<div class="controls">';
-				echo '<input id="pmsHttpPort" name="pmsHttpPort" type="text" ' .
+				echo '<input id="pmsPort" name="pmsPort" type="text" ' .
 					'placeholder="32400" class="input-mini" required="" value="';
 					if ($haveConfig) {
-						echo $plexWatch['pmsHttpPort'];
+						echo $settings->getPmsPort();
 					} else {
 						echo '32400';
 					}
@@ -284,7 +288,7 @@ function printPMSSettings($haveConfig) {
 				'placeholder="/opt/plexWatch/plexWatch.db" class="input-xlarge" ' .
 				'required="" value="';
 					if ($haveConfig) {
-						echo $plexWatch['plexWatchDb'];
+						echo $settings->getPlexWatchDb();
 					} else {
 						echo '/opt/plexWatch/plexWatch.db';
 					}
@@ -295,8 +299,7 @@ function printPMSSettings($haveConfig) {
 	echo '</div>';
 }
 
-function printPlexAuthSettings($haveConfig) {
-	global $plexWatch;
+function printPlexAuthSettings() {
 	echo '<div class="wellbg">';
 		echo '<div class="wellheader">';
 			echo '<div class="dashboard-wellheader">';
@@ -312,20 +315,16 @@ function printPlexAuthSettings($haveConfig) {
 				echo 'password are required in order to access your server\'s data.';
 			echo '</p>';
 			echo '<br>';
-			echo '<label class="control-label" for="myPlexUser">Username (optional)</label>';
+			echo '<label class="control-label" for="plexUser">Username (optional)</label>';
 			echo '<div class="controls">';
-				echo '<input id="myPlexUser" name="myPlexUser" type="text"';
-					'placeholder="" class="input-xlarge" ';
-					if ($haveConfig) {
-						echo ' value="' .$plexWatch['myPlexUser']. '"';
-					}
-					echo '>';
+				echo '<input id="plexUser" name="plexUser" type="text" placeholder="" ' .
+					'class="input-xlarge">';
 			echo '</div>';
 		echo '</div>';
 		echo '<div class="control-group">';
-			echo '<label class="control-label" for="myPlexPass">Password (optional)</label>';
+			echo '<label class="control-label" for="plexPass">Password (optional)</label>';
 			echo '<div class="controls">';
-				echo '<input id="myPlexPass" name="myPlexPass" type="password" ' .
+				echo '<input id="plexPass" name="plexPass" type="password" ' .
 					'placeholder="" class="input-xlarge" value="">';
 			echo '</div>';
 		echo '</div>';
@@ -333,18 +332,18 @@ function printPlexAuthSettings($haveConfig) {
 }
 
 function printGroupingSettings($haveConfig) {
-	global $plexWatch;
+	global $settings;
 	$globalGrouping = '';
 	$userGrouping = '';
 	$chartsGrouping = '';
 	if ($haveConfig) {
-		if ($plexWatch['globalHistoryGrouping'] == 'yes') {
+		if ($settings->getGlobalGrouping()) {
 			$globalGrouping = ' checked';
 		}
-		if ($plexWatch['userHistoryGrouping'] == 'yes') {
+		if ($settings->getUserGrouping()) {
 			$userGrouping = ' checked';
 		}
-		if ($plexWatch['chartsGrouping'] == 'yes') {
+		if ($settings->getChartsGrouping()) {
 			$chartsGrouping = ' checked';
 		}
 	}
@@ -355,19 +354,19 @@ function printGroupingSettings($haveConfig) {
 			echo '</div>';
 		echo '</div>';
 		echo '<div class="control-group">';
-			echo '<label class="control-label" for="globalHistoryGrouping-0">' .
+			echo '<label class="control-label" for="globalGrouping-0">' .
 				'Global History (optional)</label>';
 			echo '<div class="controls">';
-				echo '<label class="checkbox inline" for="globalHistoryGrouping-0">';
-					echo '<input type="checkbox" name="globalHistoryGrouping" ' .
-						'id="globalHistoryGrouping-0" value="yes"' . $globalGrouping .'>';
+				echo '<label class="checkbox inline" for="globalGrouping-0">';
+					echo '<input type="checkbox" name="globalGrouping" ' .
+						'id="globalGrouping-0" value="yes"' . $globalGrouping .'>';
 					echo '<span class="help-block">Enable global history grouping</span>';
 				echo '</label>';
-				echo '<label class="control-label" for="userHistoryGrouping-0">' .
+				echo '<label class="control-label" for="userGrouping-0">' .
 					'User History (optional)</label>';
-				echo '<label class="checkbox inline" for="userHistoryGrouping-0">';
-					echo '<input type="checkbox" name="userHistoryGrouping" ' .
-						'id="userHistoryGrouping-0" value="yes"' .$userGrouping .'>';
+				echo '<label class="checkbox inline" for="userGrouping-0">';
+					echo '<input type="checkbox" name="userGrouping" ' .
+						'id="userGrouping-0" value="yes"' . $userGrouping .'>';
 					echo '<span class="help-block">Enable user history grouping</span>';
 				echo '</label>';
 				echo '<label class="control-label" for="chartsGrouping-0">';
@@ -375,7 +374,7 @@ function printGroupingSettings($haveConfig) {
 				echo '</label>';
 				echo '<label class="checkbox inline" for="chartsGrouping-0">';
 					echo '<input type="checkbox" name="chartsGrouping" ' .
-						'id="chartsGrouping-0" value="yes"' .$chartsGrouping. '>';
+						'id="chartsGrouping-0" value="yes"' . $chartsGrouping. '>';
 					echo '<span class="help-block">Enable charts grouping</span>';
 				echo '</label>';
 			echo '</div>';
@@ -405,7 +404,7 @@ function printWelcomeModal() {
 			printJSONSupport();
 			echo '<li>';
 				echo '<i class="icon icon-ok"></i> ';
-				echo 'Your server"s timezone: <strong>';
+				echo 'Your server\'s timezone: <strong>';
 					echo '<span class="label label-warning">';
 						echo @date_default_timezone_get();
 					echo '</span>';
@@ -448,24 +447,20 @@ function printServerSupport() {
 
 function printPHPSupport() {
 	echo '<li>';
-		$phpVersion = phpversion();
-		if (!empty($phpVersion)) {
-			// Minimum required: 5.3.3
-			if (defined('PHP_MAJOR_VERSION') && // >= 5.2.7
-				((PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION == 3 && PHP_RELEASE_VERSION >= 3) ||
-				(PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 3) ||
-				(PHP_MAJOR_VERSION > 5))) {
+		if (defined('PHP_VERSION')) {
+			$minPHP = '5.3.3';
+			if (version_compare(PHP_VERSION, $minPHP, '>=')) {
 				echo '<i class="icon icon-ok"></i> ';
 				echo 'PHP Version: <strong>';
 					echo '<span class="label label-success">';
-						echo 'v' . $phpVersion;
+						echo 'v' . PHP_VERSION;
 					echo '</span>';
 				echo '</strong>';
 			} else {
 				echo '<i class="icon icon-warning-sign"></i> ';
 				echo 'PHP Version: <strong>';
 					echo '<span class="label label-important">';
-						echo 'v' . $phpVersion . ' (Min: 5.3.3)';
+						echo 'v' . PHP_VERSION . ' (Min: ' . $minPHP . ')';
 					echo '</span>';
 				echo '</strong>';
 			}
@@ -643,12 +638,9 @@ function printJSONSupport() {
 							// check for a form error
 							$error = filter_input(INPUT_GET, 'e', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 							echo $errorStart . $error . $errorEnd;
-						} elseif (isset($_GET['error']) && ($_GET['error'] === 'datetime')) {
-							echo $errorStart . 'Error in date/time format. Please correct ' .
-								'this and try again.' . $errorEnd;
 						}
 						printSettings();
-						if (!file_exists($guisettingsFile) && !isset($_GET['e'])) {
+						if (!($settings) && !isset($_GET['e'])) {
 							printWelcomeModal();
 						}
 						?>

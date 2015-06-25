@@ -1,11 +1,5 @@
 <?php
-$guisettingsFile = dirname(__FILE__) . '/config/config.php';
-if (file_exists($guisettingsFile)) {
-	require_once($guisettingsFile);
-} else {
-	header("Location: settings.php");
-	return;
-}
+require_once(dirname(__FILE__) . '/includes/functions.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -360,7 +354,7 @@ if (file_exists($guisettingsFile)) {
 							"fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
 								if (sData != "Loading...") {
 									$(nTd).html(moment(sData, "X")
-										.format("<?php echo $plexWatch['dateFormat']; ?>"));
+										.format("<?php echo $settings->getDateFormat(); ?>"));
 								}
 							}
 						},
