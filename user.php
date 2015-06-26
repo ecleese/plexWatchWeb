@@ -53,6 +53,8 @@
 		</div>
     </div>
 	<?php
+		
+		include("includes/countries.php");
 	
 	date_default_timezone_set(@date_default_timezone_get());
 	
@@ -603,6 +605,7 @@
 									echo "<tr>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Last seen</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> IP Address</th>";
+										echo "<th align='left'><i class='icon-sort icon-white'></i> ISP</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Play Count</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Platform (Last Seen)</th>";
 										echo "<th align='left'><i class='icon-sort icon-white'></i> Location</th>";
@@ -623,12 +626,15 @@
 											
 											}else{ 
 												
-												$userIpAddressesUrl = "http://www.geoplugin.net/xml.gp?ip=".$userIpAddresses['ip_address']."";
-												$userIpAddressesData = simplexml_load_file($userIpAddressesUrl) or die ("<div class=\"alert alert-warning \">Cannot access http://www.geoplugin.net.</div>");
+												#$userIpAddressesUrl = "http://www.geoplugin.net/xml.gp?ip=".$userIpAddresses['ip_address']."";
+												#$userIpAddressesData = simplexml_load_file($userIpAddressesUrl) or die ("<div class=\"alert alert-warning \">Cannot access http://www.geoplugin.net.</div>");
+												
+												$ipinfo = json_decode(file_get_contents('http://ipinfo.io/'. $userIpAddresses['ip_address'] .'/json'));
 
 												echo "<tr>";
 													echo "<td data-order='".$userIpAddresses['date']."' align='left'>".date($plexWatch['dateFormat'],$userIpAddresses['time'])."</td>";
 													echo "<td align='left'>".$userIpAddresses['ip_address']."</td>";
+													echo "<td align='left'>". explode(" ", $ipinfo->org, 2)[1] ."</td>";
 													echo "<td align='left'>".$userIpAddresses['play_count']."</td>";
 
 													$userIpAddressesXml = simplexml_load_string($userIpAddresses['xml']); 
@@ -640,12 +646,24 @@
 													}
 
 													
-													if (empty($userIpAddressesData->geoplugin_city)) {
+													
+													
+													if (empty($ipinfo->country)) {
 														echo "<td align='left'>n/a</td>";
 													}else{
-														echo "<td align='left'><a href='https://maps.google.com/maps?q=".$userIpAddressesData->geoplugin_city.", ".$userIpAddressesData->geoplugin_region."'><i class='icon-map-marker icon-white'></i> ".$userIpAddressesData->geoplugin_city.", ".$userIpAddressesData->geoplugin_region."</a></td>";
+														
+														$userCountry = array();
+													
+														if($ipinfo->city) $userCountry[] = $ipinfo->city;
+														if($ipinfo->region) $userCountry[] = $ipinfo->region;
+														if($ipinfo->country) $userCountry[] = $countries[$ipinfo->country];
+													
+														echo "<td align='left'><img src='images/flags/". strtolower($ipinfo->country) .".png' alt='' /> <a href='https://maps.google.com/maps?q=".implode(", ", $userCountry)."'><i class='icon-map-marker icon-white'></i> ". implode(", ", $userCountry) ."</a></td>";
+														
+														#echo "<td align='left'><img src=> ". implode(", ", $userCountry) ."</a></td>";
 														
 													}
+													
 													
 												echo "</tr>";
 											}
