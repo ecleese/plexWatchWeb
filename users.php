@@ -90,8 +90,16 @@ require_once(dirname(__FILE__) . '/includes/timeago.php');
 											echo '<div class="users-poster-face">';
 												echo '<a href="user.php?user=' . $user['user'] . '">';
 												if (empty($userXml->User['thumb'])) {
-													echo '<img src="images/gravatar-default-80x80.png" ' .
-														'alt="User Logo" />';
+													// Checking for jpg user pictures.
+													if (file_exists($settings->getUserPicturesPath().'/'.$user['user'].'.jpg')) {
+														echo '<img src="'.$settings->getUserPicturesPath().'/'.$user['user'].'.jpg"';
+													// Checking for png user pictures.
+													} else if (file_exists($settings->getUserPicturesPath().'/'.$user['user'].'.png')) {
+														echo '<img src="'.$settings->getUserPicturesPath().'/'.$user['user'].'.png"';
+													} else {
+														echo '<img src="images/gravatar-default-80x80.png" ';
+													}
+													echo 'alt="User Logo" />';
 												} else {
 													echo '<img src="' . $userXml->User['thumb'] . '" ' .
 														'onerror="this.src=\'images/gravatar-default-80x80.png\'"' .
