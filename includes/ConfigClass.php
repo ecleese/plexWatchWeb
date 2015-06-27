@@ -52,6 +52,7 @@ class ConfigClass {
 	private $plexWatchDb;
 	private $dateFormat;
 	private $timeFormat;
+	private $userPicturesPath;
 	private $pmsIp;
 	private $pmsPort;
 	private $plexAuthToken;
@@ -74,6 +75,7 @@ class ConfigClass {
 			array('flags'=>FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH |
 				FILTER_FLAG_ENCODE_LOW | FILTER_FLAG_ENCODE_HIGH | FILTER_FLAG_ENCODE_AMP
 		));
+		$this->userPicturesPath = new Setting(FILTER_SANITIZE_STRING);
 		$this->pmsIp = new Setting(FILTER_SANITIZE_STRING,
 			array('flags'=>FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH |
 				FILTER_FLAG_ENCODE_LOW | FILTER_FLAG_ENCODE_HIGH | FILTER_FLAG_ENCODE_AMP
@@ -117,6 +119,10 @@ class ConfigClass {
 
 	public function getTimeFormat() {
 		return $this->timeFormat->value;
+	}
+
+	public function getUserPicturesPath() {
+		return $this->userPicturesPath->value;
 	}
 
 	public function getPmsIp() {
@@ -163,6 +169,7 @@ class ConfigClass {
 			'plexWatchDb'=>$this->plexWatchDb->getData(),
 			'dateFormat'=>$this->dateFormat->getData(),
 			'timeFormat'=>$this->timeFormat->getData(),
+			'userPicturesPath'=>$this->userPicturesPath->getData(),
 			'pmsIp'=>$this->pmsIp->getData(),
 			'pmsPort'=>$this->pmsPort->getData(),
 			'plexAuthToken'=>$this->plexAuthToken->getData(),
@@ -255,6 +262,9 @@ class ConfigClass {
 		if (array_key_exists('timeFormat', $data)) {
 			$this->setTimeFormat($data['timeFormat']);
 		}
+		if (array_key_exists('userPicturesPath', $data)) {
+			$this->setUserPicturesPath($data['userPicturesPath']);
+		}
 		if (array_key_exists('pmsIp', $data)) {
 			$this->setPmsIP($data['pmsIp']);
 		}
@@ -310,6 +320,8 @@ class ConfigClass {
 				$origData['dateFormat'] : null),
 			'timeFormat'=>(array_key_exists('timeFormat', $origData) ?
 				$origData['timeFormat'] : null),
+			'userPicturesPath'=>(array_key_exists('userPicturesPath', $origData) ?
+				$origData['userPicturesPath'] : null),
 			'pmsIp'=>(array_key_exists('pmsIp', $origData) ?
 				$origData['pmsIp'] : null),
 			'pmsPort'=>(array_key_exists('pmsHttpPort', $origData) ?
@@ -341,6 +353,8 @@ class ConfigClass {
 			$_POST['dateFormat'] : null;
 		$timeFormat = array_key_exists('timeFormat', $_POST) ?
 			$_POST['timeFormat'] : null;
+		$userPicturesPath = array_key_exists('userPicturesPath', $_POST) ?
+			$_POST['userPicturesPath'] : null;
 		$pmsIp = array_key_exists('pmsIp', $_POST) ?
 			$_POST['pmsIp'] : null;
 		$pmsPort = array_key_exists('pmsPort', $_POST) ?
@@ -359,6 +373,7 @@ class ConfigClass {
 		$this->setPlexWatchDb($plexWatchDb);
 		$this->setDateFormat($dateFormat);
 		$this->setTimeFormat($timeFormat);
+		$this->setUserPicturesPath($userPicturesPath);
 		$this->setPmsIP($pmsIp);
 		$this->setPmsPort($pmsPort);
 		if (($plexUser != '') && ($plexPass != '')) {
@@ -444,6 +459,20 @@ class ConfigClass {
 		}
 		$this->timeFormat->set($format);
 		// FIXME: Validate format?
+	}
+
+	private function setUserPicturesPath($Path) {
+		if ($this->userPicturesPath->value === $Path) {
+			return;
+		}
+		if (is_array($Path)) {
+			$this->userPicturesPath->set($Path);
+			return;
+		}
+		if (!isOpenable($Path)) {
+			sendError('Path can not be opened');
+		}
+		$this->userPicturesPath->set($Path);
 	}
 
 	private function setPmsIP($ipAddr) {
