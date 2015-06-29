@@ -461,18 +461,18 @@ class ConfigClass {
 		// FIXME: Validate format?
 	}
 
-	private function setUserPicturesPath($Path) {
-		if ($this->userPicturesPath->value === $Path) {
+	private function setUserPicturesPath($path) {
+		if ($this->userPicturesPath->value === $path) {
 			return;
 		}
-		if (is_array($Path)) {
-			$this->userPicturesPath->set($Path);
+		if (is_array($path)) {
+			$this->userPicturesPath->set($path);
 			return;
 		}
-		if (!isOpenable($Path)) {
-			sendError('Path can not be opened');
+		if (!isOpenable($path)) {
+			sendError('Custom profile pictures path can not be opened');
 		}
-		$this->userPicturesPath->set($Path);
+		$this->userPicturesPath->set($path);
 	}
 
 	private function setPmsIP($ipAddr) {
