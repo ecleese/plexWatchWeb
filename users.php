@@ -91,10 +91,10 @@ require_once(dirname(__FILE__) . '/includes/timeago.php');
 												echo '<a href="user.php?user=' . $user['user'] . '">';
 												if (empty($userXml->User['thumb'])) {
 													// Checking for jpg user pictures.
-													if (file_exists('images/users/'.$user['user'].'.jpg')) {
+													if (file_exists(dirname(__FILE__).'/images/users/'.$user['user'].'.jpg')) {
 														echo '<img src="images/users/'.$user['user'].'.jpg"';
 													// Checking for png user pictures.
-													} else if (file_exists('images/users/'.$user['user'].'.png')) {
+													} else if (file_exists(dirname(__FILE__).'/images/users/'.$user['user'].'.png')) {
 														echo '<img src="images/users/'.$user['user'].'.png"';
 													} else {
 														echo '<img src="images/gravatar-default-80x80.png" ';
