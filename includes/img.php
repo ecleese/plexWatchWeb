@@ -13,16 +13,13 @@ $path = '/photo/:/transcode?url=http://127.0.0.1:' . $settings->getPmsPort() .
 /**********************
  * FIXME: This should use getPMSData(), but we need the content-type
  */
-if ($settings->getPlexAuthToken()) {
-	$myPlexAuthToken = '&X-Plex-Token=' . $settings->getPlexAuthToken();
-} else {
-	$myPlexAuthToken = '';
-}
-$url = $settings->getPmsUrl() . $path . $myPlexAuthToken;
+$url = $settings->getPmsUrl() . $path;
 $curlHandle = curl_init($url);
 curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($curlHandle, CURLOPT_SSL_VERIFYHOST, false);
+curl_setopt($curlHandle, CURLOPT_HTTPHEADER,
+	array('X-Plex-Token: ' . $settings->getPlexAuthToken()));
 $img = curl_exec($curlHandle);
 if ($img === false || curl_getinfo($curlHandle, CURLINFO_HTTP_CODE) >= 400) {
 	curl_close($curlHandle);

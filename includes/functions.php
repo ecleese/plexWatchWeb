@@ -180,24 +180,13 @@ function getResults($database, $query, $params = NULL) {
 
 function getPMSData($path) {
 	global $settings;
-	if (strpos($path, '?')) {
-		$tokenPrefix = '&';
-	} else {
-		$tokenPrefix = '?';
-	}
-	if (strlen($settings->getPlexAuthToken()) > 0) {
-		$myPlexAuthToken = $tokenPrefix .
-			'X-Plex-Token=' . $settings->getPlexAuthToken();
-	} else {
-		$myPlexAuthToken = '';
-	}
-	$pmsUrl = $settings->getPmsUrl();
-// error_log('PMS URL: ' . $pmsUrl);
-	$url = $pmsUrl . $path . $myPlexAuthToken;
+	$url = $settings->getPmsUrl() . $path;
 	$curlHandle = curl_init($url);
 	curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
 	curl_setopt($curlHandle, CURLOPT_SSL_VERIFYHOST, false);
+	curl_setopt($curlHandle, CURLOPT_HTTPHEADER,
+		array('X-Plex-Token: ' . $settings->getPlexAuthToken()));
 	$data = curl_exec($curlHandle);
 	if ($data === false || curl_getinfo($curlHandle, CURLINFO_HTTP_CODE) >= 400) {
 		curl_close($curlHandle);
