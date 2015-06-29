@@ -98,11 +98,11 @@ require_once(dirname(__FILE__) . '/includes/functions.php');
 							echo '<div class="user-info-poster-face">';
 								if (empty($userInfoXmlField->User['thumb'])) {
 									// Checking for jpg user picture.
-									if (file_exists($settings->getUserPicturesPath().'/'.$user.'.jpg')) {
-										echo '<img src="'.$settings->getUserPicturesPath().'/'.$user.'.jpg">';
+									if (file_exists('images/users/'.$user.'.jpg')) {
+										echo '<img src="images/users/'.$user.'.jpg">';
 									// Checking for png user picture.
-									} else if (file_exists($settings->getUserPicturesPath().'/'.$user.'.png')) {
-										echo '<img src="'.$settings->getUserPicturesPath().'/'.$user.'.png">';
+									} else if (file_exists('images/users/'.$user.'.png')) {
+										echo '<img src="images/users/'.$user.'.png">';
 									} else {
 										echo '<img src="images/gravatar-default-80x80.png">';
 									}
