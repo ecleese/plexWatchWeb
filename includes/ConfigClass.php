@@ -320,8 +320,6 @@ class ConfigClass {
 				$origData['dateFormat'] : null),
 			'timeFormat'=>(array_key_exists('timeFormat', $origData) ?
 				$origData['timeFormat'] : null),
-			'userPicturesPath'=>(array_key_exists('userPicturesPath', $origData) ?
-				$origData['userPicturesPath'] : null),
 			'pmsIp'=>(array_key_exists('pmsIp', $origData) ?
 				$origData['pmsIp'] : null),
 			'pmsPort'=>(array_key_exists('pmsHttpPort', $origData) ?
