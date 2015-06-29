@@ -28,6 +28,7 @@ function printSettings() {
 					printPMSSettings($haveConfig);
 					printPlexAuthSettings();
 					printGroupingSettings($haveConfig);
+					printPersonalUserPictures();
 					echo '<div class="form-actions">';
 						echo '<div class="control-group">';
 							echo '<label class="control-label" for="submit"></label>';
@@ -379,6 +380,19 @@ function printGroupingSettings($haveConfig) {
 				echo '</label>';
 			echo '</div>';
 		echo '</div>';
+	echo '</div>';
+}
+
+function printPersonalUserPictures() {
+	echo '<div class="wellbg">';
+		echo '<div class="wellheader">';
+			echo '<div class="dashboard-wellheader">';
+				echo '<h3><a id="personalUserPictures">Personal User Pictures</a></h3>';
+			echo '</div>';
+		echo '</div>';
+		echo '<p class="help-block">';
+		echo 'If you want your own user pictures, save them in images/users in jpg or png format. Size of the pictures should be 80x80 pixels. The name of each user picture has to be the same as the user\'s <a href="https://plex.tv/users/sign_in">Plex.tv</a> username (in matching caseing). Extension should always be in lowercase.';
+		echo '</p>';
 	echo '</div>';
 }
 

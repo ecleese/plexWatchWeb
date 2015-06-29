@@ -97,7 +97,15 @@ require_once(dirname(__FILE__) . '/includes/functions.php');
 							$userInfoXmlField = simplexml_load_string($userInfoXml);
 							echo '<div class="user-info-poster-face">';
 								if (empty($userInfoXmlField->User['thumb'])) {
-									echo '<img src="images/gravatar-default-80x80.png">';
+									// Checking for jpg user picture.
+									if (file_exists(dirname(__FILE__).'/images/users/'.$user.'.jpg')) {
+										echo '<img src="/images/users/'.$user.'.jpg">';
+									// Checking for png user picture.
+									} else if (file_exists(dirname(__FILE__).'/images/users/'.$user.'.png')) {
+										echo '<img src="images/users/'.$user.'.png">';
+									} else {
+										echo '<img src="images/gravatar-default-80x80.png">';
+									}
 								} else {
 									echo '<img src="' . $userInfoXmlField->User['thumb'] .
 										'" onerror="this.src=\'images/gravatar-default-80x80.png\'">';
