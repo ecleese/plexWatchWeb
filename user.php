@@ -64,7 +64,7 @@ require_once(dirname(__FILE__) . '/includes/functions.php');
 						<li><a href="charts.php"><i class="fa fa-bar-chart fa-2x" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
 						<li><a href="settings.php"><i class="fa fa-cogs fa-2x" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
 					</ul>
-				</div>
+				</div>
 			</div>
 		</div>
 		<?php
@@ -99,7 +99,7 @@ require_once(dirname(__FILE__) . '/includes/functions.php');
 								if (empty($userInfoXmlField->User['thumb'])) {
 									// Checking for jpg user picture.
 									if (file_exists(dirname(__FILE__).'/images/users/'.$user.'.jpg')) {
-										echo '<img src="/images/users/'.$user.'.jpg">';
+										echo '<img src="images/users/'.$user.'.jpg">';
 									// Checking for png user picture.
 									} else if (file_exists(dirname(__FILE__).'/images/users/'.$user.'.png')) {
 										echo '<img src="images/users/'.$user.'.png">';
