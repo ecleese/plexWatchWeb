@@ -64,7 +64,7 @@ require_once(dirname(__FILE__) . '/includes/functions.php');
 						<li><a href="charts.php"><i class="fa fa-bar-chart fa-2x" data-toggle="tooltip" data-placement="bottom" title="Charts" id="charts"></i></a></li>
 						<li><a href="settings.php"><i class="fa fa-cogs fa-2x" data-toggle="tooltip" data-placement="bottom" title="Settings" id="settings"></i></a></li>
 					</ul>
-				</div>
+				</div>
 			</div>
 		</div>
 		<?php
