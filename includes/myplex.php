@@ -20,7 +20,8 @@ if (file_exists($guisettingsFile)) {
 		curl_setopt($process, CURLOPT_HTTPHEADER, array('Content-Type: application/xml; charset=utf-8', 'Content-Length: 0', 'X-Plex-Client-Identifier: plexWatchWeb'));
 		curl_setopt($process, CURLOPT_HEADER, 0);
 		curl_setopt($process, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-		curl_setopt($process, CURLOPT_USERPWD, $username . ":" . $password);
+		curl_setopt($process, CURLOPT_USERNAME, $username);
+                curl_setopt($process, CURLOPT_PASSWORD, $password);
 		curl_setopt($process, CURLOPT_TIMEOUT, 30);
 		curl_setopt($process, CURLOPT_HTTPGET, TRUE);
 		curl_setopt($process, CURLOPT_POST, 1);
