@@ -17,8 +17,8 @@
         
         $plexWatchDb = "\$plexWatch['plexWatchDb'] = '".$_POST['plexWatchDb']."';";
         
-        $myPlexUser = "\$plexWatch['myPlexUser'] = '".$_POST['myPlexUser']."';";        
-        $myPlexPass = "\$plexWatch['myPlexPass'] = '".$_POST['myPlexPass']."';"; 
+        $myPlexUser = "\$plexWatch['myPlexUser'] = '".addslashes($_POST['myPlexUser'])."';";        
+        $myPlexPass = "\$plexWatch['myPlexPass'] = '".addslashes($_POST['myPlexPass'])."';"; 
         
         
         if (!isset($_POST['globalHistoryGrouping'])) {
