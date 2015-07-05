@@ -588,8 +588,13 @@ class ConfigClass {
 		));
 		curl_setopt($process, CURLOPT_HEADER, false);
 		curl_setopt($process, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-		curl_setopt($process, CURLOPT_USERNAME, $user);
-                curl_setopt($process, CURLOPT_PASSWORD, $pass);
+		if (defined('CURLOPT_USERNAME') && defined('CURLOPT_PASSWORD')) {  // only defined for some versions of php-curl
+			curl_setopt($process, CURLOPT_USERNAME, $user);
+			curl_setopt($process, CURLOPT_PASSWORD, $pass);
+		}
+		else {
+			curl_setopt($process, CURLOPT_USERPWD, $user . ':' . $pass);
+		}
 		curl_setopt($process, CURLOPT_TIMEOUT, 30);
 		curl_setopt($process, CURLOPT_HTTPGET, true);
 		curl_setopt($process, CURLOPT_POST, true);
