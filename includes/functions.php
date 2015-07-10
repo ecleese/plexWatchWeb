@@ -290,6 +290,8 @@ function getPlatformImage($xml) {
 			 *   [Generation: 1 letter][Model: 4 digits]
 			 */
 			return "images/platforms/samsung.png";
+		} else if (strstr($xml->Player['title'], 'Sony Bravia')) {
+			return "images/platforms/bravia.png";
 		}
 	}
 	return "images/platforms/default.png";
