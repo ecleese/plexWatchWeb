@@ -52,7 +52,7 @@ echo '<ul>';
 	$plays = $playsresults->fetchColumn();
 
 	echo '<li>';
-		echo '<h1>'.$plays.'</h1>';
+		echo '<h1>' . $plays . '</h1>';
 		echo '<h5>Total Plays</h5>';
 	echo '</li>';
 
