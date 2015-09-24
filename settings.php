@@ -609,7 +609,7 @@ function printJSONSupport() {
 	</head>
 	<body>
 
-	<?php include 'header.php' ?>
+	<?php $page = 'settings'; include 'header.php' ?>
 
 		<div class="clear"></div>
 		<div class="container">

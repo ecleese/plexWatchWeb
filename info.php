@@ -534,7 +534,7 @@ function printSeasonEpisodes($xml) {
 	</head>
 	<body>
 
-	<?php include 'header.php' ?>
+	<?php $page = 'info'; include 'header.php' ?>
 
 		<div class="clear"></div>
 		<?php

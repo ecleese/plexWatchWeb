@@ -48,7 +48,7 @@
 	</head>
 	<body>
 
-	<?php include 'header.php' ?>
+	<?php $page = 'history'; include 'header.php' ?>
 
 		<div class="container-fluid">
 			<div class="row-fluid">

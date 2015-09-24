@@ -35,7 +35,7 @@ require_once(dirname(__FILE__) . '/includes/timeago.php');
 	</head>
 	<body>
 
-	<?php include 'header.php' ?>
+	<?php $page = 'users'; include 'header.php' ?>
 
 		<div class="container-fluid">
 			<div class="row-fluid">

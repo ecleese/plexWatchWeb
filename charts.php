@@ -100,7 +100,7 @@ function printTop10($query, $type = null) {
 	</head>
 	<body>
 
-	<?php include 'header.php' ?>
+	<?php $page = 'charts'; include 'header.php' ?>
 
 		<div class="container-fluid">
 			<div class="row-fluid">

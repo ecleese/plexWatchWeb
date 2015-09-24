@@ -35,7 +35,7 @@ require_once(dirname(__FILE__) . '/includes/functions.php');
 	</head>
 	<body>
 
-	<?php include 'header.php' ?>
+	<?php $page = 'stats'; include 'header.php' ?>
 
 		<div class="container-fluid">
 			<div class="row-fluid">

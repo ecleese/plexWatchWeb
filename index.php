@@ -41,7 +41,7 @@ if (!file_exists($config_file)) {
 	</head>
 	<body>
 	
-	<?php include 'header.php' ?>
+	<?php $page = 'index'; include 'header.php' ?>
 
 		<div class="container-fluid">
 			<div class="row-fluid">

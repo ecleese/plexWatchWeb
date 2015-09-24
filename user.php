@@ -53,7 +53,7 @@ require_once(dirname(__FILE__) . '/includes/functions.php');
 	</head>
 	<body>
 
-	<?php include 'header.php' ?>
+	<?php $page = 'users'; include 'header.php' ?>
 	
 		<?php
 		include 'serverdatapdo.php';
