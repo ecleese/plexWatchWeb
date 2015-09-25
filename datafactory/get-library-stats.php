@@ -46,5 +46,15 @@ echo '<ul>';
 			echo '</li>';
 		}
 	}
+
+	$playsquery = "SELECT count(*) FROM processed";
+	$playsresults = getResults($database, $playsquery);
+	$plays = $playsresults->fetchColumn();
+
+	echo '<li>';
+		echo '<h1>' . $plays . '</h1>';
+		echo '<h5>Total Plays</h5>';
+	echo '</li>';
+
 echo '</ul>';
 ?>
