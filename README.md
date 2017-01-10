@@ -1,5 +1,14 @@
-plexWatch/Web - v1.5.4.2
-========================
+# plexWatch/Web - **Deprecated**
+
+----
+
+plexWatch/Web has been deprecated, users are recommended to move to [PlexPy][]
+as a much better replacement for the functionality plexWatch/Web used to
+provide.
+
+Thanks for using plexWatch/Web!
+
+----
 
 A web front-end for plexWatch.
 
@@ -98,3 +107,4 @@ A web front-end for plexWatch.
 
 Navigate to: <http://ip-of-web-server/plexWatch>
 
+[PlexPy]: https://github.com/JonnyWong16/plexpy
